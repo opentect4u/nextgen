@@ -57,7 +57,7 @@ async def db_Insert(table_name, fields, values, where, flag):
         conn.commit()
         conn.close()
         cursor.close()
-
+        print(cursor.rowcount,'rowcount')
         if cursor.rowcount>0:
             res_dt = {"suc":1, "msg":msg, "lastId":cursor.lastrowid}
         else:
