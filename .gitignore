@@ -1,0 +1,9 @@
+/node_modules
+/assets
+/core
+/nextgenvenv
+package-lock.json
+*.html
+*.zip
+.env*
+*.sql
