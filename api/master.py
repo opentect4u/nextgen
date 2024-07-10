@@ -196,7 +196,7 @@ async def adddepartment(dt:getMaster):
         if(result['suc']>0):
             res_dt = {"suc": 1, "msg": "Department inserted successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": "Error while inserting!"}
+            res_dt = {"suc": 0, "msg": result['msg']}
     else:
         print(flag)
         fields=f'dept_name="{dt.name}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
@@ -205,7 +205,7 @@ async def adddepartment(dt:getMaster):
         if(result['suc']>0):
             res_dt = {"suc": 1, "msg": "Department updated successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": "Error while updating!"}
+            res_dt = {"suc": 0, "msg": result['msg']}
     return res_dt
 
 @masterRouter.post('/getdept')
