@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkdemoecomm=self.webpackChunkdemoecomm||[]).push([[7515],{7515:(e,t,a)=>{a.r(t),a.d(t,{default:()=>c});a(5043);var p=a(9023),m=a(3216),n=a(6487),s=a(7311),l=a(579);const c=function(){const e=(0,m.zy)();var t=e.pathname.split("/")[e.pathname.split("/").length-1],a=s.j[t];return(0,l.jsx)(n.A,{to:p.C.ADDDEPARTMENTS,templateData:a,template:t,_url:"/api/getdept"})}}}]);
+//# sourceMappingURL=7515.350edc72.chunk.js.map

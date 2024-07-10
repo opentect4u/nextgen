@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkdemoecomm=self.webpackChunkdemoecomm||[]).push([[6455],{6455:(e,t,a)=>{a.r(t),a.d(t,{default:()=>o});a(5043);var m=a(9023),p=a(3216),s=a(6487),l=a(7311),n=a(579);const o=()=>{const e=(0,p.zy)();var t=e.pathname.split("/")[e.pathname.split("/").length-1],a=l.j[t];return(0,n.jsx)(s.A,{to:m.C.ADDVENDORS,templateData:a,template:t,_url:"/api/getvendor"})}}}]);
+//# sourceMappingURL=6455.e30adec7.chunk.js.map

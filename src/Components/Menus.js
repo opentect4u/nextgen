@@ -28,7 +28,7 @@ import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import { routePaths } from "../Assets/Data/Routes";
 
-function Menus({theme,mode}) {
+function Menus({ theme, mode }) {
   const [current, setCurrent] = React.useState();
 
   const onClick = (e) => {
@@ -51,37 +51,6 @@ function Menus({theme,mode}) {
           type: "group",
           children: [
             {
-              key: "masters:1",
-              icon: <UserAddOutlined />,
-              label: <Link to={routePaths.USERS}>Company User </Link>,
-            },
-            {
-              key: "masters:2",
-              icon: <UserSwitchOutlined />,
-              label: <Link to={routePaths.CLIENTS}>Client </Link>,
-            },
-            {
-              key: "masters:5",
-              icon: <ShopOutlined />,
-              label: <Link to={routePaths.VENDORS}>Vendor</Link>,
-            },
-            // {
-            //   key: "masters:3",
-            //   icon: <ProjectOutlined />,
-            //   label: <Link to={routePaths.PROJECTS}>Projects</Link>,
-            // },
-
-            {
-              key: "masters:cat",
-              icon: <BlockOutlined />,
-              label: <Link to={routePaths.CATEGORIES}>Category</Link>,
-            },
-            {
-              key: "masters:unit",
-              icon: <PayCircleOutlined />,
-              label: <Link to={routePaths.UNITS}>Unit</Link>,
-            },
-            {
               key: "masters:dept",
               icon: <BankOutlined />,
               label: <Link to={routePaths.DEPARTMENTS}>Department</Link>,
@@ -92,9 +61,42 @@ function Menus({theme,mode}) {
               label: <Link to={routePaths.DESIGNATIONS}>Designation</Link>,
             },
             {
-              key: "masters:4",
+              key: "masters:cat",
+              icon: <BlockOutlined />,
+              label: <Link to={routePaths.CATEGORIES}>Category</Link>,
+            },
+            // {
+            //   key: "masters:3",
+            //   icon: <ProjectOutlined />,
+            //   label: <Link to={routePaths.PROJECTS}>Projects</Link>,
+            // },
+
+            {
+              key: "masters:unit",
+              icon: <PayCircleOutlined />,
+              label: <Link to={routePaths.UNITS}>Unit</Link>,
+            },
+            {
+              key: "masters:product",
               icon: <ToolOutlined />,
               label: <Link to={routePaths.PRODUCTS}>Product</Link>,
+
+            },
+            {
+              key: "masters:vendor",
+              icon: <ShopOutlined />,
+              label: <Link to={routePaths.VENDORS}>Vendor</Link>,
+
+            },
+            {
+              key: "masters:client",
+              icon: <UserSwitchOutlined />,
+              label: <Link to={routePaths.CLIENTS}>Client </Link>,
+            },
+            {
+              key: "masters:user",
+              icon: <UserAddOutlined />,
+              label: <Link to={routePaths.USERS}>Company User </Link>,
             },
           ],
         },
@@ -109,9 +111,12 @@ function Menus({theme,mode}) {
           type: "group",
           children: [
             {
-              key: "client-order",
-              icon: <UserOutlined />,
-              label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
+              // key: "client-order",
+              // icon: <UserOutlined />,
+              // label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
+              key: "master:projects",
+              icon: <ProjectOutlined />,
+              label: <Link to={routePaths.PROJECTS}>Projects</Link>,
             },
             {
               label: <Link to={routePaths.PURCHASEORDER}>Purchase Orders</Link>,
@@ -126,50 +131,50 @@ function Menus({theme,mode}) {
       label: "Stock",
       key: "sub5",
       icon: <HddOutlined />,
-      children: [
-        {
-          type: "group",
-          children: [
-            {
-              label: <Link to={routePaths.STOCKASSIGNVIEW}>Assign</Link>,
-              key: "stock-assign",
-              icon: <ReconciliationOutlined />,
-            },
-            {
-              label: <Link to={routePaths.STOCKINVIEW}>Stock In</Link>,
-              key: "stock-in",
-              icon: <ArrowRightOutlined />,
-            },
-            {
-              label:  <Link to={routePaths.STOCKOUTVIEW}>Stock Out</Link>,
-              key: "stock-out",
-              icon: <ArrowLeftOutlined />,
-            },
-            {
-              label: "Transfer",
-              key: "stock-trans",
-              icon: <SwapOutlined />,
-              children: [
-                {
-                  type: "group",
-                  children: [
-                    {
-                      label: <Link to={routePaths.REQUISITIONSENTVIEW}>Requisitions sent</Link>,
-                      key: "req-mk",
-                      icon: <NodeExpandOutlined />,
-                    },
-                    {
-                      label: <Link to={routePaths.REQUISITIONRCVDVIEW}>Requisitions received</Link>,
-                      key: "req-rec",
-                      icon: <NodeCollapseOutlined />,
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      // children: [
+      //   {
+      //     type: "group",
+      //     children: [
+      //       {
+      //         label: <Link to={routePaths.STOCKASSIGNVIEW}>Assign</Link>,
+      //         key: "stock-assign",
+      //         icon: <ReconciliationOutlined />,
+      //       },
+      //       {
+      //         label: <Link to={routePaths.STOCKINVIEW}>Stock In</Link>,
+      //         key: "stock-in",
+      //         icon: <ArrowRightOutlined />,
+      //       },
+      //       {
+      //         label: <Link to={routePaths.STOCKOUTVIEW}>Stock Out</Link>,
+      //         key: "stock-out",
+      //         icon: <ArrowLeftOutlined />,
+      //       },
+      //       {
+      //         label: "Transfer",
+      //         key: "stock-trans",
+      //         icon: <SwapOutlined />,
+      //         children: [
+      //           {
+      //             type: "group",
+      //             children: [
+      //               {
+      //                 label: <Link to={routePaths.REQUISITIONSENTVIEW}>Requisitions sent</Link>,
+      //                 key: "req-mk",
+      //                 icon: <NodeExpandOutlined />,
+      //               },
+      //               {
+      //                 label: <Link to={routePaths.REQUISITIONRCVDVIEW}>Requisitions received</Link>,
+      //                 key: "req-rec",
+      //                 icon: <NodeCollapseOutlined />,
+      //               },
+      //             ],
+      //           },
+      //         ],
+      //       },
+      //     ],
+      //   },
+      // ],
     },
     ,
     {

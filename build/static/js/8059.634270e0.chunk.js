@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkdemoecomm=self.webpackChunkdemoecomm||[]).push([[8059],{8059:(e,t,a)=>{a.r(t),a.d(t,{default:()=>c});a(5043);var l=a(9023),m=a(3216),p=a(6487),s=a(7311),n=a(579);const c=()=>{const e=(0,m.zy)();var t=e.pathname.split("/")[e.pathname.split("/").length-1],a=s.j[t];return(0,n.jsx)(p.A,{to:l.C.ADDCLIENTS,templateData:a,template:t,_url:"/api/getclient"})}}}]);
+//# sourceMappingURL=8059.634270e0.chunk.js.map

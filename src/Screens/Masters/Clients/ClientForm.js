@@ -18,42 +18,12 @@ import axios from "axios";
 
 function ClientForm() {
     const [loading, setLoading] = useState(false);
+    
 
     const params = useParams()
     console.log(params, 'params')
-    const formItemLayout = {
-        labelCol: {
-            xs: {
-                span: 24,
-            },
-            sm: {
-                span: 4,
-            },
-        },
-        wrapperCol: {
-            xs: {
-                span: 24,
-            },
-            sm: {
-                span: 20,
-            },
-        },
-    };
-    const formItemLayoutWithOutLabel = {
-        wrapperCol: {
-            xs: {
-                span: 24,
-                offset: 0,
-            },
-            sm: {
-                span: 20,
-                offset: 4,
-            },
-        },
-    };
-    const onFinish = (values) => {
-        console.log('Received values of form:', values);
-    };
+   
+
     const initialValues = {
         clnt_name: "",
         clnt_email: "",
@@ -63,9 +33,11 @@ function ClientForm() {
         gst: "",
         pan: "",
         reg_no: "",
-        // cont_person: "",
         dynamicFields: [{ poc_name: '', poc_designation: "", poc_department: "", poc_email: "", poc_direct_no: "", poc_ext_no: "", poc_ph_1: "", poc_ph_2: "" }]
     };
+  const [formValues, setValues] = useState(initialValues);
+
+
     const onSubmit = (values) => {
         setLoading(true)
         console.log(values);
@@ -118,11 +90,32 @@ function ClientForm() {
     });
 
     const formik = useFormik({
-        initialValues,
+        initialValues: +params.id > 0 ? formValues : initialValues,
         onSubmit,
         validationSchema,
         validateOnMount: true,
+        enableReinitialize:true
     });
+    useEffect(()=>{
+        if(+params.id>0){
+          setLoading(true)
+            axios.post(url+'/api/getclient',{id:params.id}).then(res=>{
+          console.log(res.data.msg,'getclient show')
+          setLoading(false)
+          setValues({
+            clnt_name: res?.data?.msg.client_name,
+            clnt_email: res?.data?.msg.client_email,
+            clnt_phn: res?.data?.msg.client_phone,
+            clnt_loc: res?.data?.msg.client_location,
+            delvry_add: res?.data?.msg.client_address,
+            gst: res?.data?.msg.client_gst,
+            pan: res?.data?.msg.client_pan,
+            reg_no: res?.data?.msg.client_reg,  
+          });
+        })
+      }
+      console.log(formValues,'formValues')
+        },[])
     return (
 
         <section className="bg-white dark:bg-[#001529]">
@@ -135,9 +128,10 @@ function ClientForm() {
                             spinning={loading}
                         >
                     <Formik
-                        initialValues={initialValues}
+                        // initialValues={+params.id > 0 ? formValues : initialValues}
+                        initialValues={formik.initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={onSubmit}
+                        onSubmit={onSubmit} 
                         validateOnMount
                     >
                         {formik => (
@@ -155,6 +149,7 @@ function ClientForm() {
                                             handleBlur={formik.handleBlur}
                                             mode={1}
                                         />
+                                        
                                         {formik.errors.clnt_name && formik.touched.clnt_name ? (
                                             <VError title={formik.errors.clnt_name} />
                                         ) : null}
@@ -265,7 +260,7 @@ function ClientForm() {
                                             <VError title={formik.errors.pan} />
                                         ) : null}
                                     </div>
-                                    <div className="w-full">
+                                    <div className="w-full sm:col-span-2">
                                         <TDInputTemplate
                                             placeholder="Type Reg No."
                                             type="text"
@@ -285,7 +280,7 @@ function ClientForm() {
                                             <>
                                                 {formik.values.dynamicFields.map((field, index) => (
                                                     <React.Fragment key={index}>
-                                                        <div className="w-full sm:col-span-2">
+                                                        <div>
                                                             <TDInputTemplate
                                                                 placeholder="Type the name of Contact Person..."
                                                                 type="text"
@@ -297,7 +292,7 @@ function ClientForm() {
                                                                 mode={1}
                                                             />
                                                         </div>
-                                                        <div className="w-full sm:col-span-2">
+                                                        <div>
                                                             <TDInputTemplate
                                                                 placeholder="Type POC Designation..."
                                                                 type="text"
@@ -313,7 +308,7 @@ function ClientForm() {
                                                     ) : null} */}
 
                                                         </div>
-                                                        <div className="w-full sm:col-span-2" >
+                                                        <div >
                                                             <TDInputTemplate
                                                                 placeholder="Type POC department..."
                                                                 type="text"
@@ -328,7 +323,7 @@ function ClientForm() {
                                                         <VError title={formik.errors.dynamicFields[index].designation} />
                                                     ) : null} */}
                                                         </div>
-                                                        <div className="w-full sm:col-span-2" >
+                                                        <div >
                                                             <TDInputTemplate
                                                                 placeholder="Type POC Email..."
                                                                 type="text"
@@ -340,7 +335,7 @@ function ClientForm() {
                                                                 mode={1}
                                                             />
                                                         </div>
-                                                        <div className="w-full sm:col-span-2" >
+                                                        <div >
                                                             <TDInputTemplate
                                                                 placeholder="Type POC Direct No."
                                                                 type="text"
@@ -352,7 +347,7 @@ function ClientForm() {
                                                                 mode={1}
                                                             />
                                                         </div>
-                                                        <div className="w-full sm:col-span-2" >
+                                                        <div>
                                                             <TDInputTemplate
                                                                 placeholder="Type POC Extension No."
                                                                 type="text"
@@ -364,7 +359,7 @@ function ClientForm() {
                                                                 mode={1}
                                                             />
                                                         </div>
-                                                        <div className="w-full sm:col-span-2" >
+                                                        <div >
                                                             <TDInputTemplate
                                                                 placeholder="Type POC Primary Phone No."
                                                                 type="text"
@@ -376,7 +371,7 @@ function ClientForm() {
                                                                 mode={1}
                                                             />
                                                         </div>
-                                                        <div className="w-full sm:col-span-2" >
+                                                        <div>
                                                             <TDInputTemplate
                                                                 placeholder="Type POC Secondary Phone No."
                                                                 type="text"

@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkdemoecomm=self.webpackChunkdemoecomm||[]).push([[3635],{3635:(e,t,a)=>{a.r(t),a.d(t,{default:()=>r});a(5043);var s=a(9023),m=a(3216),p=a(6487),l=a(7311),n=a(579);const r=()=>{const e=(0,m.zy)();var t=e.pathname.split("/")[e.pathname.split("/").length-1],a=l.j[t];return(0,n.jsx)(p.A,{to:s.C.ADDUSERS,templateData:a,template:t,_url:"/api/getuser"})}}}]);
+//# sourceMappingURL=3635.b1cb64b2.chunk.js.map

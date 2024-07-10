@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkdemoecomm=self.webpackChunkdemoecomm||[]).push([[9207],{9207:(t,e,a)=>{a.r(e),a.d(e,{default:()=>u});a(5043);var n=a(9023),m=a(3216),p=a(6487),s=a(7311),l=a(579);const u=function(){const t=(0,m.zy)();var e=t.pathname.split("/")[t.pathname.split("/").length-1],a=s.j[e];return(0,l.jsx)(p.A,{to:n.C.ADDUNITS,templateData:a,template:e,_url:"/api/getunit"})}}}]);
+//# sourceMappingURL=9207.d24016cd.chunk.js.map

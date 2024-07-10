@@ -5,7 +5,7 @@ function TDInputTemplate(props) {
   const [selectedCountry, setSelectedCountry] = useState(null);
   return (
     <>
-      <label className="block mb-2 text-sm font-medium text-gray-800 dark:text-gray-100">
+      <label className="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
         {" "}
         {props.label}
       </label>
@@ -52,7 +52,6 @@ function TDInputTemplate(props) {
     placeholder={props.placeholder}
     options={props?.data} 
     onBlur={props.handleBlur}
-    
     >
     <option selected>{props.placeholder}</option>
     {props?.data?.map((item, index) => ( 
