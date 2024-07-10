@@ -58,10 +58,10 @@ async def db_Insert(table_name, fields, values, where, flag):
         conn.close()
         cursor.close()
         print(cursor.rowcount,'rowcount')
-        if cursor.rowcount>0:
-            res_dt = {"suc":1, "msg":msg, "lastId":cursor.lastrowid}
-        else:
-            res_dt = {"suc":0, "msg":errMsg, "lastId":0}
+        # if cursor.rowcount>0:
+        res_dt = {"suc":1, "msg":msg, "lastId":cursor.lastrowid}
+        # else:
+        #     res_dt = {"suc":0, "msg":errMsg, "lastId":0}
 
         print(res_dt,"##############")
     except mysql.connector.Error as err:
