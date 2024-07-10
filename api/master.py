@@ -127,7 +127,7 @@ async def getcategory(id:getData):
     select = "*"
     schema = "md_category"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
-    order = ""
+    order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -171,7 +171,7 @@ async def getunit(id:getData):
     select = "*"
     schema = "md_unit"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
-    order = ""
+    order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -217,7 +217,7 @@ async def getunit(id:getData):
     select = "*"
     schema = "md_department"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
-    order = ""
+    order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -261,7 +261,7 @@ async def getunit(id:getData):
     select = "*"
     schema = "md_designation"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
-    order = ""
+    order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -305,7 +305,7 @@ async def getunit(id:getData):
     select = "*"
     schema = "md_vendor"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
-    order = ""
+    order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -349,7 +349,7 @@ async def getunit(id:getData):
     select = "*"
     schema = "md_product"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
-    order = ""
+    order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -396,7 +396,7 @@ async def getunit(id:getData):
     select = "*"
     schema = "md_user"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
-    order = ""
+    order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -479,7 +479,7 @@ async def getunit(id:getData):
     select = "*"
     schema = "md_client"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
-    order = ""
+    order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
