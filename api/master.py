@@ -136,6 +136,7 @@ async def getcategory(id:getData):
 @masterRouter.post('/addunit')
 async def addunit(dt:getMaster):
     print(dt)
+    res_dt = {}
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'unit_name,created_by,created_at'
@@ -179,6 +180,8 @@ async def getunit(id:getData):
 @masterRouter.post('/adddept')
 async def adddepartment(dt:getMaster):
     print(dt)
+    res_dt = {}
+
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'dept_name,created_by,created_at'
@@ -189,6 +192,7 @@ async def adddepartment(dt:getMaster):
 
     if(dt.id==0):
         result = await db_Insert(table_name, fields, values, whr, flag)
+        print(result)
         if(result['suc']>0):
             res_dt = {"suc": 1, "msg": "Department inserted successfully!"}
         else:
@@ -221,6 +225,8 @@ async def getunit(id:getData):
 @masterRouter.post('/adddesig')
 async def adddesignation(dt:getMaster):
     print(dt)
+    res_dt = {}
+
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'desig_name,created_by,created_at'
@@ -264,6 +270,8 @@ async def getunit(id:getData):
 @masterRouter.post('/addvendor')
 async def addvendor(data:addVendor):
     print(data)
+    res_dt = {}
+
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'vendor_name,vendor_email,vendor_contact,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks, vendor_address,created_by,created_at'
@@ -306,6 +314,8 @@ async def getunit(id:getData):
 @masterRouter.post('/addproduct')
 async def addvendor(data:addProduct):
     print(data)
+    res_dt = {}
+
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,stk_cnt, prod_desc,created_by,created_at'
@@ -349,6 +359,8 @@ async def getunit(id:getData):
 @masterRouter.post('/adduser')
 async def addvendor(data:addUser):
     print(data)
+    res_dt = {}
+
     current_datetime = datetime.now()
     password=random.choice(pass_alphabets)+random.choice(pass_alphabets)+random.choice(pass_alphabets)+random.choice(pass_alphabets)+random.choice(pass_alphabets)+random.choice(pass_alphabets)
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
