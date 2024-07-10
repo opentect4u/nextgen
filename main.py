@@ -15,6 +15,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    "https://nextgen.opentech4u.co.in"
 ]
 
 if __name__ == "__main__":
