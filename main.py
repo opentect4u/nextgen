@@ -4,12 +4,13 @@ import uvicorn
 from api.main import router as apiRouter
 # from admin.main import router as adminRouter
 from fastapi.staticfiles import StaticFiles
-
+# import ssl
 # testing git
 app = FastAPI()
 # app.mount("/uploads", StaticFiles(directory="upload_file"), name="uploads")
 
-
+# ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+# ssl_context.load_cert_chain('./ssl_apinextgen_100724/apinextgen.pem', keyfile='./ssl_apinextgen_100724/private-key.pem')
 
 origins = [
     "http://localhost",
@@ -17,7 +18,8 @@ origins = [
 ]
 
 if __name__ == "__main__":
-   uvicorn.run("main:app", host="0.0.0.0", port=3005, reload=True)
+   uvicorn.run("main:app", host="0.0.0.0", port=8001, ssl_keyfile='./ssl_apinextgen_100724/private-key.pem',
+        ssl_certfile='./ssl_apinextgen_100724/apinextgen.pem', reload=True)
 
 app.add_middleware(
     CORSMiddleware,
