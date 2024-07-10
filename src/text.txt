@@ -1,0 +1,120 @@
+   Sign Up Page
+   
+   {/* {!isshow &&
+        <div className='grid grid-cols-2 gap-0'>
+          <div className='hidden md:block md:col-span-1'>
+            <div className='mt-24 mb-10 bg-white  h-auto w-full text-black p-8 font-semibold text-xl'>
+              <img src={`${REGIMG}`} className='h-[412px] w-86' />
+
+            </div>
+          </div>
+          <div className='md:col-span-1 col-span-2'>
+            <div className='mt-24 mb-10 bg-white w-96 h-auto text-gray-600 p-8 font-semibold text-xl'>
+              <div className='flex items-center justify-center'>
+                <img src={LOGO} className="h-16" alt="Flowbite Logo" />
+              </div>
+
+
+              <form className="max-w-md mx-auto" onSubmit={regformik.handleSubmit}>
+                <div className="relative z-0 w-full mb-5 group">
+                  <label for="user_id" className="text-sm text-gray-600">User ID</label>
+                  <input name="user_id" id="user_id" className="block border-gray-300 text-[13px] p-1 rounded-lg h- w-full border " placeholder="Enter the user ID" required onChange={regformik.handleChange} onBlur={regformik.handleBlur} />
+                
+                  <label for="user_name" className="text-sm text-gray-600">User Name</label>
+                  <input name="user_name" id="user_name" className="block border-gray-300 text-[13px]  p-1 rounded-lg h- w-full border " placeholder="Enter your name" required value={formik.values.user_name} onChange={formik.handleChange} onBlur={formik.handleBlur} />
+                
+                  <label for="pass" className="text-sm text-gray-600">Password</label>
+                  <input name="pass" id="pass" className="block border-gray-300 text-[13px]  p-1 rounded-lg h- w-full border " placeholder="*******" required value={formik.values.pass} onChange={formik.handleChange} onBlur={formik.handleBlur} />
+                  <label for="confirm_pass" className="text-sm text-gray-600">Confirm Password</label>
+                  <input name="confirm_pass" id="confirm_pass" className="block border-gray-300 text-[13px]  p-1 rounded-lg h- w-full border " placeholder="*******" required value={formik.values.confirm_pass} onChange={formik.handleChange} onBlur={formik.handleBlur} />
+                </div>
+                <div className='pt-1 pb-1 block text-sm'>
+                  <button disabled={!formik.isValid} type="submit" className='bg-green-900 hover:bg-green-800 w-full text-white p-2 rounded-md disabled:bg-green-200'>Sign up</button>
+                </div>
+              </form>
+              <p className='text-sm text-gray-500'>
+                Already have an account? <a className='text-sm pl-2 text-green-900 hover:underline cursor-pointer' onClick={showReg}>Login here</a>
+              </p>
+            </div>
+          </div>
+        </div>} */}
+
+        sign in
+
+         // <div className='bg-green-800 flex justify-center items-center min-h-screen min-w-screen p-2'>
+
+    //     <div className='grid grid-cols-2 gap-0 h-auto'>
+    //       <div className='hidden md:block md:col-span-1'>
+    //         <div className='mt-24 mb-10 bg-white  w-full text-black p-8 font-semibold text-xl'>
+    //           <img src={`${IMG}`} className='w-96 h-96 rounded-l-lg ' />
+    //         </div>
+    //       </div>
+    //       <div className='md:col-span-1 col-span-2'>
+    //         <div className='mt-24 mb-10 bg-white w-96 h-auto text-gray-600 p-8 font-semibold text-xl'>
+    //           <div className='flex items-center justify-center'>
+    //             <img src={LOGO} className="h-16" alt="Flowbite Logo" />
+    //           </div>
+    //           <form onSubmit={formik.handleSubmit}>
+    //             <div className='pt-6 block'>
+    //               <label className="text-sm text-gray-600">Your email</label>
+    //               <input type="text" name='email' value={formik.values.email} className="block border-gray-300 text-[13px] pt-2 p-1 rounded-lg h- w-full border focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300" placeholder="name@company.com" onChange={formik.handleChange} onBlur={formik.handleBlur} />
+    //               {formik.errors.email && formik.touched.email ? <VError title={formik.errors.email}/> : null}
+    //             </div>
+    //             <div className='pt-6 block'>
+    //               <label className="text-sm text-gray-600">Your password</label>
+    //               <input type="password" name='password' value={formik.values.password} className="block border-gray-300 text-[13px] pt-1 p-1 rounded-lg h- w-full border  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300" placeholder="*******" onChange={formik.handleChange} onBlur={formik.handleBlur} />
+    //               {formik.errors.password && formik.touched.password ? <VError title={formik.errors.password}/> : null}
+    //             </div>
+    //             <div className='pt-2'>
+    //               <Link to={routePaths.FORGOTPASS}>
+    //                 <p className='text-xs text-gray-500 hover:underline cursor-pointer'>Forgot password?</p>
+    //               </Link>
+    //             </div>
+    //             <div className='pt-5 pb-4 block text-sm'>
+    //               <button disabled={!formik.isValid} type="submit" className='bg-green-900 hover:bg-green-800 w-full text-white p-3 rounded-md disabled:bg-green-200'>Login to your account</button>
+    //             </div>
+    //           </form>
+
+    //         </div>
+    //       </div>
+
+    //     </div>
+
+    // </div>
+
+    label
+    {/* <LabelTemplate htmlfor={'catnm'} title={'Category name'}/>
+                          <input type="text" name="catnm" id="catnm" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type Category name" required="" /> */}
+
+    select 
+
+    {/* <label
+                  for="proj_id"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Project
+                </label> */}
+                {/* <Select
+                  showSearch
+                className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 "
+
+                  placeholder="Select a project"
+                  optionFilterProp="label"
+                  onChange={onChange}
+                  onSearch={onSearch}
+                  size={'large'}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "tom",
+                      label: "Tom",
+                    },
+                  ]}
+                /> */}
