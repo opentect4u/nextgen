@@ -7,3 +7,4 @@ package-lock.json
 *.zip
 .env*
 *.sql
+__pycache__
