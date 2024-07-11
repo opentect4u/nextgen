@@ -123,9 +123,10 @@ async def getcategory(id:getData):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
-
-    select = "*"
-    schema = "md_category"
+    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
+    select = "@a:=@a+1 serial_number, catg_name, created_by,created_at,modified_by,modified_at,sl_no"
+    # select = "@a:=@a+1 serial_number, *"
+    schema = "md_category,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
@@ -168,7 +169,7 @@ async def getunit(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "*"
+    select = "@a:=@a+1 serial_number, unit_name, created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_unit"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
     order = "ORDER BY created_at DESC"
@@ -214,7 +215,7 @@ async def getunit(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "*"
+    select = "@a:=@a+1 serial_number, dept_name, created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_department"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
     order = "ORDER BY created_at DESC"
@@ -258,7 +259,7 @@ async def getunit(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "*"
+    select = "@a:=@a+1 serial_number, desig_name, created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_designation"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
     order = "ORDER BY created_at DESC"
@@ -302,7 +303,7 @@ async def getunit(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "*"
+    select = "@a:=@a+1 serial_number, vendor_name,vendor_email,vendor_contact,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks, vendor_address,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_vendor"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
     order = "ORDER BY created_at DESC"
@@ -346,7 +347,8 @@ async def getunit(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "*"
+    select = "@a:=@a+1 serial_number, prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,stk_cnt, prod_desc,created_by,created_at,modified_by,modified_at,sl_no"
+
     schema = "md_product"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
     order = "ORDER BY created_at DESC"
@@ -393,7 +395,8 @@ async def getunit(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "*"
+    select = "@a:=@a+1 serial_number, user_name,user_location,user_dept,user_desig,user_phone,user_permission,user_email,user_password, user_type,first_login_flag,created_by,created_at,modified_by,modified_at,sl_no"
+
     schema = "md_user"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
     order = "ORDER BY created_at DESC"
@@ -476,7 +479,7 @@ async def getunit(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "*"
+    select = "@a:=@a+1 serial_number, client_name,client_email,client_phone,client_gst,client_pan,client_reg,client_location, client_address,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_client"
     where = f"sl_no='{id.id}'" if id.id>0 else ""
     order = "ORDER BY created_at DESC"
