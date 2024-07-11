@@ -17,6 +17,10 @@ class getMaster(BaseModel):
 
 class getData(BaseModel):
     id:int
+
+class deleteData(BaseModel):
+    id:int
+    user:str
 class getPocId(BaseModel):
     client_id:int
 class addVendor(BaseModel):
@@ -134,6 +138,23 @@ async def getcategory(id:getData):
     print(result, 'RESULT')
     return result
 
+@masterRouter.post('/deletecategory')
+async def deletecategory(id:deleteData):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "md_category"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0):
+        res_dt = {"suc": 1, "msg": "Category deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+   return res_dt
+
 @masterRouter.post('/addunit')
 async def addunit(dt:getMaster):
     print(dt)
@@ -170,7 +191,7 @@ async def getunit(id:getData):
     res_dt = {}
 
     select = "@a:=@a+1 serial_number, unit_name, created_by,created_at,modified_by,modified_at,sl_no"
-    schema = "md_unit"
+    schema = "md_unit,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
@@ -178,6 +199,22 @@ async def getunit(id:getData):
     print(result, 'RESULT')
     return result
 
+@masterRouter.post('/deleteunit')
+async def deleteunit(id:deleteData):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "md_unit"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0):
+        res_dt = {"suc": 1, "msg": "Unit deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+   return res_dt
 @masterRouter.post('/adddept')
 async def adddepartment(dt:getMaster):
     print(dt)
@@ -216,13 +253,31 @@ async def getunit(id:getData):
     res_dt = {}
 
     select = "@a:=@a+1 serial_number, dept_name, created_by,created_at,modified_by,modified_at,sl_no"
-    schema = "md_department"
+    schema = "md_department,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@masterRouter.post('/deletedept')
+async def deletedept(id:deleteData):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "md_department"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0):
+        res_dt = {"suc": 1, "msg": "Department deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+   return res_dt
+
 @masterRouter.post('/adddesig')
 async def adddesignation(dt:getMaster):
     print(dt)
@@ -260,13 +315,30 @@ async def getunit(id:getData):
     res_dt = {}
 
     select = "@a:=@a+1 serial_number, desig_name, created_by,created_at,modified_by,modified_at,sl_no"
-    schema = "md_designation"
+    schema = "md_designation,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@masterRouter.post('/deletedesig')
+async def deletedesig(id:deleteData):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "md_designation"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0):
+        res_dt = {"suc": 1, "msg": "Designation deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+   return res_dt
 
 @masterRouter.post('/addvendor')
 async def addvendor(data:addVendor):
@@ -304,13 +376,30 @@ async def getunit(id:getData):
     res_dt = {}
 
     select = "@a:=@a+1 serial_number, vendor_name,vendor_email,vendor_contact,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks, vendor_address,created_by,created_at,modified_by,modified_at,sl_no"
-    schema = "md_vendor"
+    schema = "md_vendor,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@masterRouter.post('/deletevendor')
+async def deletevendor(id:deleteData):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "md_vendor"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0):
+        res_dt = {"suc": 1, "msg": "Vendor deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+   return res_dt
 
 @masterRouter.post('/addproduct')
 async def addvendor(data:addProduct):
@@ -349,7 +438,7 @@ async def getunit(id:getData):
 
     select = "@a:=@a+1 serial_number, prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,stk_cnt, prod_desc,created_by,created_at,modified_by,modified_at,sl_no"
 
-    schema = "md_product"
+    schema = "md_product,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
@@ -357,6 +446,22 @@ async def getunit(id:getData):
     print(result, 'RESULT')
     return result
 
+@masterRouter.post('/deleteproduct')
+async def deleteproduct(id:deleteData):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "md_product"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0):
+        res_dt = {"suc": 1, "msg": "Product deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+   return res_dt
 
 @masterRouter.post('/adduser')
 async def addvendor(data:addUser):
@@ -397,13 +502,30 @@ async def getunit(id:getData):
 
     select = "@a:=@a+1 serial_number, user_name,user_location,user_dept,user_desig,user_phone,user_permission,user_email,user_password, user_type,first_login_flag,created_by,created_at,modified_by,modified_at,sl_no"
 
-    schema = "md_user"
+    schema = "md_user,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@masterRouter.post('/deleteuser')
+async def deleteuser(id:deleteData):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "md_user"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0):
+        res_dt = {"suc": 1, "msg": "User deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+   return res_dt
 
 @masterRouter.post('/addclient')
 async def addclient(data:addClient):
@@ -480,13 +602,29 @@ async def getunit(id:getData):
     res_dt = {}
 
     select = "@a:=@a+1 serial_number, client_name,client_email,client_phone,client_gst,client_pan,client_reg,client_location, client_address,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
-    schema = "md_client"
+    schema = "md_client,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+@masterRouter.post('/deleteclient')
+async def deleteproduct(id:deleteData):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "md_client"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0):
+        res_dt = {"suc": 1, "msg": "Client deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+   return res_dt
 
 @masterRouter.post('/getclientpoc')
 async def getunit(id:getData):
