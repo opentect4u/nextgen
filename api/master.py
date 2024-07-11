@@ -127,7 +127,7 @@ async def getcategory(id:getData):
     select = "@a:=@a+1 serial_number, catg_name, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "md_category,(SELECT @a:= 0) AS a"
-    where = f"sl_no='{id.id}' and delete_flag=N" if id.id>0 else "delete_flag=N"
+    where = f"sl_no='{id.id}' and delete_flag='N'" if id.id>0 else "delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -171,7 +171,7 @@ async def getunit(id:getData):
 
     select = "@a:=@a+1 serial_number, unit_name, created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_unit"
-    where = f"sl_no='{id.id}'and delete_flag=N" if id.id>0 else "delete_flag=N"
+    where = f"sl_no='{id.id}'and delete_flag='N'" if id.id>0 else "delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -217,7 +217,7 @@ async def getunit(id:getData):
 
     select = "@a:=@a+1 serial_number, dept_name, created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_department"
-    where = f"sl_no='{id.id}'and delete_flag=N" if id.id>0 else "delete_flag=N"
+    where = f"sl_no='{id.id}'and delete_flag='N'" if id.id>0 else "delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -261,7 +261,7 @@ async def getunit(id:getData):
 
     select = "@a:=@a+1 serial_number, desig_name, created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_designation"
-    where = f"sl_no='{id.id}'and delete_flag=N" if id.id>0 else "delete_flag=N"
+    where = f"sl_no='{id.id}'and delete_flag='N'" if id.id>0 else "delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -305,7 +305,7 @@ async def getunit(id:getData):
 
     select = "@a:=@a+1 serial_number, vendor_name,vendor_email,vendor_contact,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks, vendor_address,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_vendor"
-    where = f"sl_no='{id.id}'and delete_flag=N" if id.id>0 else "delete_flag=N"
+    where = f"sl_no='{id.id}'and delete_flag='N'" if id.id>0 else "delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -350,7 +350,7 @@ async def getunit(id:getData):
     select = "@a:=@a+1 serial_number, prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,stk_cnt, prod_desc,created_by,created_at,modified_by,modified_at,sl_no"
 
     schema = "md_product"
-    where = f"sl_no='{id.id}'and delete_flag=N" if id.id>0 else "delete_flag=N"
+    where = f"sl_no='{id.id}'and delete_flag='N'" if id.id>0 else "delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -398,7 +398,7 @@ async def getunit(id:getData):
     select = "@a:=@a+1 serial_number, user_name,user_location,user_dept,user_desig,user_phone,user_permission,user_email,user_password, user_type,first_login_flag,created_by,created_at,modified_by,modified_at,sl_no"
 
     schema = "md_user"
-    where = f"sl_no='{id.id}'and delete_flag=N" if id.id>0 else "delete_flag=N"
+    where = f"sl_no='{id.id}'and delete_flag='N'" if id.id>0 else "delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -481,7 +481,7 @@ async def getunit(id:getData):
 
     select = "@a:=@a+1 serial_number, client_name,client_email,client_phone,client_gst,client_pan,client_reg,client_location, client_address,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_client"
-    where = f"sl_no='{id.id}'and delete_flag=N" if id.id>0 else "delete_flag=N"
+    where = f"sl_no='{id.id}'and delete_flag='N'" if id.id>0 else "delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
