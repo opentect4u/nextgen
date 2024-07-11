@@ -8,6 +8,9 @@ module.exports = {
   theme: {
     // extend: {
       extend: {
+        // colors:{
+        //  'bg-row':'#82e3af'
+        // },
         backgroundColor:{
         //   green:{
         //     50: '#fdf8f6',
