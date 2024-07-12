@@ -5,7 +5,7 @@ export const masterheaders={
     headers: [
       { name: "sl_no", value: "ID" },
       { name: "catg_name", value: "Category" },
-    ],
+    ]
   },
   'designations': {
     title: "Designations",

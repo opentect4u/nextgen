@@ -11,9 +11,12 @@ import { url } from "../../../Address/BaseUrl";
 import { Message } from "../../../Components/Message";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import PrintComp from "../../../Components/PrintComp";
 function ProductForm() {
   const [cat, setCat] = useState([]);
   var categories = [];
+  const [count,setCount]=useState(0)
+    const [data,setData]=useState()
   const [loading, setLoading] = useState(false);
   const initialValues = {
     cat_id: "",
@@ -92,6 +95,7 @@ function ProductForm() {
 
       axios.post(url + "/api/getproduct", { id: params.id }).then((res) => {
         console.log(res.data.msg);
+        setData(res.data?.msg)
         setLoading(false);
         setValues({
           cat_id: res?.data?.msg.prod_cat,
@@ -106,7 +110,7 @@ function ProductForm() {
         });
       });
     }
-  }, []);
+  }, [count]);
   // const onChange = (value) => {
   //   console.log(`selected ${value}`);
   // };
@@ -116,6 +120,7 @@ function ProductForm() {
   // };
   return (
     <section className="bg-white dark:bg-[#001529]">
+       {params.id>0 && data && <PrintComp toPrint={data}/>}
       <div className="py-8 mx-auto w-5/6 lg:py-16">
         <HeadingTemplate
           text={params.id > 0 ? "Update product" : "Add product"}
@@ -274,6 +279,30 @@ function ProductForm() {
                   <VError title={formik.errors.prod_des} />
                 ) : null}
               </div>
+              <div className="w-full">
+            <label className="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
+         Created By
+      </label>
+              <input  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_by}/>
+            </div>
+            <div className="w-full">
+            <label className="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
+         Created At
+      </label>
+              <input  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_at?.split('T').join( ' ')}/>
+            </div>
+            <div className="w-full">
+            <label className="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
+         Modified By
+      </label>
+              <input  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_by}/>
+            </div>
+            <div className="w-full">
+            <label className="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
+       Modified at
+      </label>
+              <input  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_at?.split('T').join( ' ')}/>
+            </div>
             </div>
             <BtnComp
               mode={params.id > 0 ? "E" : "A"}

@@ -311,6 +311,7 @@ const UserAddForm = () => {
                 <VError title={formik.errors.user_permission} />
               ) : null}
             </div>
+            
           </div>
           <BtnComp
             mode={params.id > 0 ? "E" : "A"}
