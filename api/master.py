@@ -143,16 +143,28 @@ async def deletecategory(id:deleteData):
    current_datetime = datetime.now()
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
-   table_name = "md_category"
-   flag = 1 
-   values=''
-   whr=f'sl_no="{id.id}"'
-   result = await db_Insert(table_name, fields, values, whr, flag)
-   if(result['suc']>0):
-        res_dt = {"suc": 1, "msg": "Category deleted successfully!"}
+
+   select = "count(*) as cnt"
+   schema = "md_product"
+   where = f"prod_cat='{id.id}'"
+   order = ""
+   flag = 0 if id.id>0 else 1
+   result = await db_select(select, schema, where, order, flag)
+   print(result['msg']['cnt'])
+   if result['msg']['cnt']==0:
+        fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+        table_name = "md_category"
+        flag = 1 
+        values=''
+        whr=f'sl_no="{id.id}"'
+        result = await db_Insert(table_name, fields, values, whr, flag)
+        if(result['suc']>0):
+                res_dt = {"suc": 1, "msg": "Category deleted successfully!"}
+        else:
+                res_dt = {"suc": 0, "msg": "Error while deleting!"}
    else:
-        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+            res_dt = {"suc": 0, "msg": "Item cannot be deleted, it is already in use!"}
+       
    return res_dt
 
 @masterRouter.post('/addunit')
@@ -266,16 +278,28 @@ async def deletedept(id:deleteData):
    current_datetime = datetime.now()
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
-   table_name = "md_department"
-   flag = 1 
-   values=''
-   whr=f'sl_no="{id.id}"'
-   result = await db_Insert(table_name, fields, values, whr, flag)
-   if(result['suc']>0):
-        res_dt = {"suc": 1, "msg": "Department deleted successfully!"}
+
+   select = "count(*) as cnt"
+   schema = "md_user"
+   where = f"user_dept='{id.id}'"
+   order = ""
+   flag = 0 if id.id>0 else 1
+   result = await db_select(select, schema, where, order, flag)
+   print(result['msg']['cnt'])
+   if result['msg']['cnt']==0:
+        fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+        table_name = "md_department"
+        flag = 1 
+        values=''
+        whr=f'sl_no="{id.id}"'
+        result = await db_Insert(table_name, fields, values, whr, flag)
+        if(result['suc']>0):
+                res_dt = {"suc": 1, "msg": "Department deleted successfully!"}
+        else:
+                res_dt = {"suc": 0, "msg": "Error while deleting!"}
+        return res_dt
    else:
-        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+         res_dt = {"suc": 0, "msg": "Item cannot be deleted, it is already in use!"} 
    return res_dt
 
 @masterRouter.post('/adddesig')
@@ -328,16 +352,27 @@ async def deletedesig(id:deleteData):
    current_datetime = datetime.now()
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
-   table_name = "md_designation"
-   flag = 1 
-   values=''
-   whr=f'sl_no="{id.id}"'
-   result = await db_Insert(table_name, fields, values, whr, flag)
-   if(result['suc']>0):
-        res_dt = {"suc": 1, "msg": "Designation deleted successfully!"}
+   select = "count(*) as cnt"
+   schema = "md_user"
+   where = f"user_desig='{id.id}'"
+   order = ""
+   flag = 0 if id.id>0 else 1
+   result = await db_select(select, schema, where, order, flag)
+   print(result['msg']['cnt'])
+   if result['msg']['cnt']==0:
+        fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+        table_name = "md_designation"
+        flag = 1 
+        values=''
+        whr=f'sl_no="{id.id}"'
+        result = await db_Insert(table_name, fields, values, whr, flag)
+        if(result['suc']>0):
+                res_dt = {"suc": 1, "msg": "Designation deleted successfully!"}
+        else:
+                res_dt = {"suc": 0, "msg": "Error while deleting!"}
    else:
-        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+        res_dt = {"suc": 0, "msg": "Item cannot be deleted, it is already in use!"}
+       
    return res_dt
 
 @masterRouter.post('/addvendor')
