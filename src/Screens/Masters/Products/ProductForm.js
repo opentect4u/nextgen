@@ -25,7 +25,7 @@ function ProductForm() {
     pr_no: "",
     md_no: "",
     hsn_code: "",
-    stk_cnt: "",
+    // stk_cnt: "",
     prod_make: "",
     prod_des: "",
   };
@@ -45,7 +45,7 @@ function ProductForm() {
         p_model: values.md_no,
         p_part: values.pr_no,
         p_hsn: values.hsn_code,
-        p_stock: values.stk_cnt.toString(),
+        // p_stock: values.stk_cnt.toString(),
         p_make: values.prod_make,
         p_detailed: values.prod_des,
       })
@@ -65,7 +65,7 @@ function ProductForm() {
     prodnm: Yup.string().required("Product description is required"),
     hsn_code: Yup.string().required("HSN Code is required"),
     prod_make: Yup.string().required("Product make is required"),
-    stk_cnt: Yup.number().min(1),
+    // stk_cnt: Yup.number().min(1),
   });
 
   const formik = useFormik({
@@ -104,7 +104,7 @@ function ProductForm() {
           pr_no: res?.data?.msg.part_no,
           md_no: res?.data?.msg.model_no,
           hsn_code: res?.data?.msg.hsn_code,
-          stk_cnt: res?.data?.msg.stk_cnt,
+          // stk_cnt: res?.data?.msg.stk_cnt,
           prod_make: res?.data?.msg.prod_make,
           prod_des: res?.data?.msg.prod_desc,
         });
@@ -249,7 +249,7 @@ function ProductForm() {
                   <VError title={formik.errors.hsn_code} />
                 ) : null}
               </div>
-              <div>
+              {/* <div>
                 <TDInputTemplate
                   placeholder="99999"
                   type="number"
@@ -264,7 +264,7 @@ function ProductForm() {
                 {formik.errors.stk_cnt && formik.touched.stk_cnt ? (
                   <VError title={formik.errors.stk_cnt} />
                 ) : null}
-              </div>
+              </div> */}
               <div className="sm:col-span-2">
                 <TDInputTemplate
                   placeholder="Type description..."

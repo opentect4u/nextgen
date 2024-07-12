@@ -18,24 +18,25 @@ import axios from "axios";
 
 function ClientForm() {
     const [loading, setLoading] = useState(false);
-    
+
 
     const params = useParams()
     console.log(params, 'params')
-   
+
 
     const initialValues = {
         clnt_name: "",
         clnt_email: "",
         clnt_phn: "",
-        clnt_loc: "",
-        delvry_add: "",
         gst: "",
         pan: "",
         reg_no: "",
-        dynamicFields: [{ poc_name: '', poc_designation: "", poc_department: "", poc_email: "", poc_direct_no: "", poc_ext_no: "", poc_ph_1: "", poc_ph_2: "" }]
+        dynamicFields: [{
+            poc_name: '', poc_designation: "", poc_department: "", poc_email: "", poc_direct_no: "", poc_ext_no: "", poc_ph_1: "", poc_ph_2: "", clnt_loc: "", delvry_add: ""
+
+        }]
     };
-  const [formValues, setValues] = useState(initialValues);
+    const [formValues, setValues] = useState(initialValues);
 
 
     const onSubmit = (values) => {
@@ -48,8 +49,8 @@ function ClientForm() {
                 c_name: values.clnt_name,
                 c_phone: values.clnt_phn.toString(),
                 c_email: values.clnt_email,
-                c_location: values.clnt_loc,
-                c_address: values.delvry_add,
+                // c_location: values.clnt_loc,
+                // c_address: values.delvry_add,
                 c_gst: values.gst,
                 c_pan: values.pan,
                 c_reg: values.reg_no,
@@ -70,13 +71,14 @@ function ClientForm() {
         clnt_name: Yup.string().required("Client's name is required"),
         clnt_email: Yup.string().required("Client's email is required"),
         clnt_phn: Yup.string().required("Client's phone no. is required"),
-        clnt_loc: Yup.string().required("Client location is required"),
-        delvry_add: Yup.string().required("Delivery address is required"),
+        // clnt_loc: Yup.string().required("Client location is required"),
+        // delvry_add: Yup.string().required("Delivery address is required"),
         gst: Yup.string().required("GST is required"),
         pan: Yup.string().required("PAN is required"),
         reg_no: Yup.string().required("Registration no. is required"),
         dynamicFields: Yup.array().of(
             Yup.object().shape({
+  
                 poc_name: Yup.string().optional(),
                 poc_designation: Yup.string().optional(),
                 poc_department: Yup.string().optional(),
@@ -85,6 +87,8 @@ function ClientForm() {
                 poc_ext_no: Yup.string().optional(),
                 poc_ph_1: Yup.string().optional(),
                 poc_ph_2: Yup.string().optional(),
+                clnt_loc: Yup.string().required("Client location is required"),
+                delvry_add: Yup.string().required("Delivery address is required"),
             })
         )
     });
@@ -94,48 +98,49 @@ function ClientForm() {
         onSubmit,
         validationSchema,
         validateOnMount: true,
-        enableReinitialize:true
+        enableReinitialize: true
     });
-    useEffect(()=>{
-        if(+params.id>0){
-          setLoading(true)
-            axios.post(url+'/api/getclient',{id:params.id}).then(res=>{
-          console.log(res.data.msg,'getclient show')
-          setLoading(false)
-          setValues({
-            clnt_name: res?.data?.msg.client_name,
-            clnt_email: res?.data?.msg.client_email,
-            clnt_phn: res?.data?.msg.client_phone,
-            clnt_loc: res?.data?.msg.client_location,
-            delvry_add: res?.data?.msg.client_address,
-            gst: res?.data?.msg.client_gst,
-            pan: res?.data?.msg.client_pan,
-            reg_no: res?.data?.msg.client_reg,  
-          });
-        })
-      }
-      console.log(formValues,'formValues')
-        },[])
+    useEffect(() => {
+        if (+params.id > 0) {
+            setLoading(true)
+            axios.post(url + '/api/getclient', { id: params.id }).then(res => {
+                console.log(res.data.msg, 'getclient show')
+                setLoading(false)
+                setValues({
+                    clnt_name: res?.data?.msg.client_name,
+                    clnt_email: res?.data?.msg.client_email,
+                    clnt_phn: res?.data?.msg.client_phone,
+                    // clnt_loc: res?.data?.msg.client_location,
+                    // delvry_add: res?.data?.msg.client_address,
+                    gst: res?.data?.msg.client_gst,
+                    pan: res?.data?.msg.client_pan,
+                    reg_no: res?.data?.msg.client_reg,
+                });
+            })
+        }
+        console.log(formValues, 'formValues')
+        console.log(params.id,'params.id')
+    }, [params.id])
     return (
 
         <section className="bg-white dark:bg-[#001529]">
             <div className="py-8 mx-auto w-5/6 lg:py-16">
                 <HeadingTemplate text={params.id > 0 ? 'Update client' : 'Add client'} />
                 <Spin
-                            indicator={<LoadingOutlined spin />}
-                            size="large"
-                            className="text-green-900 dark:text-gray-400"
-                            spinning={loading}
-                        >
+                    indicator={<LoadingOutlined spin />}
+                    size="large"
+                    className="text-green-900 dark:text-gray-400"
+                    spinning={loading}
+                >
                     <Formik
-                        // initialValues={+params.id > 0 ? formValues : initialValues}
-                        initialValues={formik.initialValues}
+                        initialValues={+params.id > 0 ? formValues : initialValues}
+                        // initialValues={formik.initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={onSubmit} 
+                        onSubmit={onSubmit}
                         validateOnMount
                     >
                         {formik => (
-                          
+
                             <form onSubmit={formik.handleSubmit}>
                                 <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                                     <div className="sm:col-span-2">
@@ -149,7 +154,7 @@ function ClientForm() {
                                             handleBlur={formik.handleBlur}
                                             mode={1}
                                         />
-                                        
+
                                         {formik.errors.clnt_name && formik.touched.clnt_name ? (
                                             <VError title={formik.errors.clnt_name} />
                                         ) : null}
@@ -200,36 +205,7 @@ function ClientForm() {
                                     <VError title={formik.errors.cont_person} />
                                 ) : null}
                             </div> */}
-                                    <div>
-                                        <TDInputTemplate
-                                            placeholder="Type Client Location..."
-                                            type="text"
-                                            label="Client Location"
-                                            name="clnt_loc"
-                                            formControlName={formik.values.clnt_loc}
-                                            handleChange={formik.handleChange}
-                                            handleBlur={formik.handleBlur}
-                                            mode={3}
-                                        />
-                                        {formik.errors.clnt_loc && formik.touched.clnt_loc ? (
-                                            <VError title={formik.errors.clnt_loc} />
-                                        ) : null}
-                                    </div>
-                                    <div>
-                                        <TDInputTemplate
-                                            placeholder="Type Delivery Address..."
-                                            type="text"
-                                            label="Delivery Address"
-                                            name="delvry_add"
-                                            formControlName={formik.values.delvry_add}
-                                            handleChange={formik.handleChange}
-                                            handleBlur={formik.handleBlur}
-                                            mode={3}
-                                        />
-                                        {formik.errors.delvry_add && formik.touched.delvry_add ? (
-                                            <VError title={formik.errors.delvry_add} />
-                                        ) : null}
-                                    </div>
+                                    
                                     <div>
                                         <TDInputTemplate
                                             placeholder="Type GST"
@@ -383,6 +359,36 @@ function ClientForm() {
                                                                 mode={1}
                                                             />
                                                         </div>
+                                                        <div>
+                                        <TDInputTemplate
+                                            placeholder="Type Client Location..."
+                                            type="text"
+                                            label="Client Location"
+                                            name="clnt_loc"
+                                            formControlName={formik.values.clnt_loc}
+                                            handleChange={formik.handleChange}
+                                            handleBlur={formik.handleBlur}
+                                            mode={3}
+                                        />
+                                        {formik.errors.clnt_loc && formik.touched.clnt_loc ? (
+                                            <VError title={formik.errors.clnt_loc} />
+                                        ) : null}
+                                    </div>
+                                    <div>
+                                        <TDInputTemplate
+                                            placeholder="Type Delivery Address..."
+                                            type="text"
+                                            label="Delivery Address"
+                                            name="delvry_add"
+                                            formControlName={formik.values.delvry_add}
+                                            handleChange={formik.handleChange}
+                                            handleBlur={formik.handleBlur}
+                                            mode={3}
+                                        />
+                                        {formik.errors.delvry_add && formik.touched.delvry_add ? (
+                                            <VError title={formik.errors.delvry_add} />
+                                        ) : null}
+                                    </div>
                                                         <div className="sm:col-span-2">
                                                             <MinusCircleOutlined onClick={() => remove(index)} />
                                                         </div>
@@ -405,9 +411,9 @@ function ClientForm() {
                             </form>
                         )}
                     </Formik>
-                    </Spin>
+                </Spin>
 
-                
+
             </div>
         </section>
     )

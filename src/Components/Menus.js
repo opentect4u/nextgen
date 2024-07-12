@@ -93,11 +93,11 @@ function Menus({ theme, mode }) {
               icon: <UserSwitchOutlined />,
               label: <Link to={routePaths.CLIENTS}>Client </Link>,
             },
-            {
-              key: "masters:user",
-              icon: <UserAddOutlined />,
-              label: <Link to={routePaths.USERS}>Company User </Link>,
-            },
+            // {
+            //   key: "masters:user",
+            //   icon: <UserAddOutlined />,
+            //   label: <Link to={routePaths.USERS}>Company User </Link>,
+            // },
           ],
         },
       ],

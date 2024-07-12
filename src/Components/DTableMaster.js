@@ -7,6 +7,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
+
 import { ContextMenu } from 'primereact/contextmenu';
 import {SearchOutlined,PrinterOutlined,MoreOutlined} from '@ant-design/icons'
 import { Dropdown, Space } from 'antd';
@@ -56,6 +57,7 @@ function DTableMaster({ headers,
   };
 
   const onRowSelect = (event) => {
+    console.log(event,'event')
     id = event.data;
     navigate(to+id.sl_no)
   };
@@ -97,6 +99,13 @@ function DTableMaster({ headers,
     }, 10);
   
   }
+  const renderTooltip = (rowData, field) => {
+    return (
+      <Tooltip title="Click to view details" arrow>
+      <span>{rowData[field]}</span>
+    </Tooltip>
+    );
+  };
   return (
     <section className="bg-white dark:bg-[#001529] p-3 sm:p-5 w-full">
    {title && 
@@ -163,12 +172,12 @@ function DTableMaster({ headers,
       }
       <div>
         <div className="card  w-full">
-        <ContextMenu className='dark:bg-gray-800 dark:text-white hover:text-green-900' model={menuModel} ref={cm} onHide={() => setSelectedItem(null)} />
+        {/* <ContextMenu className='dark:bg-gray-800 dark:text-white hover:text-green-900' model={menuModel} ref={cm} onHide={() => setSelectedItem(null)} /> */}
           <DataTable
             value={data}
-            onContextMenu={(e) => cm.current.show(e.originalEvent)} 
-            contextMenuSelection={selectedItem} 
-            onContextMenuSelectionChange={(e) => setSelectedItem(e.value)} 
+            // onContextMenu={(e) => cm.current.show(e.originalEvent)} 
+            // contextMenuSelection={selectedItem} 
+            // onContextMenuSelectionChange={(e) => setSelectedItem(e.value)} 
             showGridlines={true}
             stripedRows
             stickyHeader="true"
@@ -177,7 +186,8 @@ function DTableMaster({ headers,
             rows={10}
             
             rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
-            rowClassName='dark:bg-gray-800 dark:text-gray-300 border border-b-gray-300 dark:border-green-900 active:border-0'
+            rowClassName='dark:bg-gray-800 dark:text-gray-300 border border-b-gray-300 dark:border-green-900 active:border-0 hover:bg-[#eafaf2] hover:font-semibold dark:hover:bg-[#1e4834]'
+            
             tableStyle={{ minWidth: "100%",fontSize:'14px' }}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             paginatorClassName='dark:bg-gray-800 dark:text-gray-300'
@@ -195,12 +205,14 @@ function DTableMaster({ headers,
           >
             {headers.map((item, index) => (
               // <>
+              
               <Column
                 key={index}
                 field={item.name}
                 header={item.value}
                 headerClassName={theme>0?`bg-color-theme-${theme} text-green-800 dark:bg-gray-700 dark:text-white dark:font-bold`:'text-green-800 bg-gray-300 dark:bg-gray-700 dark:text-white dark:font-bold'}
                 style={{ width: "10%" }}
+                body={(rowData) => renderTooltip(rowData, item.name)}
               ></Column>
             ))}
             {flag == 1 && (
@@ -226,9 +238,9 @@ function DTableMaster({ headers,
         <div className='hidden w-full' id='tablePrint'>
         <DataTable
             value={data}
-            onContextMenu={(e) => cm.current.show(e.originalEvent)} 
-            contextMenuSelection={selectedItem} 
-            onContextMenuSelectionChange={(e) => setSelectedItem(e.value)} 
+            // onContextMenu={(e) => cm.current.show(e.originalEvent)} 
+            // contextMenuSelection={selectedItem} 
+            // onContextMenuSelectionChange={(e) => setSelectedItem(e.value)} 
             showGridlines={true}
             stripedRows
             stickyHeader="true"
@@ -237,7 +249,7 @@ function DTableMaster({ headers,
             rows={data?.length}
             
             rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
-            rowClassName='dark:bg-gray-800 dark:text-gray-300 border border-b-gray-300 dark:border-green-900 active:border-0'
+            rowClassName='dark:bg-gray-800 dark:text-gray-300 border border-b-gray-300 dark:border-green-900 active:border-0 hover:bg-[#eafaf2] hover:font-semibold dark:hover:bg-[#1e4834]'
             tableStyle={{ minWidth: "100%",fontSize:'14px' }}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             paginatorClassName='dark:bg-gray-800 dark:text-gray-300'
