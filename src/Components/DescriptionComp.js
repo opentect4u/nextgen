@@ -1,12 +1,12 @@
 import React from 'react'
 import { Descriptions } from 'antd';
-function DescriptionComp({printData}) {
+function DescriptionComp({printData,title}) {
     console.log(printData)
    
 
   return (
-    <div>
-      <Descriptions title="User Info" items={printData} />
+    <div className='mt-5'>
+      <Descriptions title={title} items={printData} />
     </div>
   )
 }

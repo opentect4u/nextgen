@@ -90,7 +90,7 @@ function UnitForm() {
   });
   return (
     <section className="bg-white dark:bg-[#001529]">
-       {params.id>0 && data && <PrintComp toPrint={data}/>}
+       {params.id>0 && data && <PrintComp toPrint={data} title={'Unit'}/>}
       <div className="py-8 mx-auto w-5/6 lg:py-16">
         <HeadingTemplate text={params.id > 0 ? "Update unit" : "Add unit"} />
         <Spin indicator={<LoadingOutlined spin />} size="large" className="text-green-900 dark:text-gray-400" spinning={loading}>   

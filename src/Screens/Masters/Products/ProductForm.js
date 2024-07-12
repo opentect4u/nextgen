@@ -120,7 +120,7 @@ function ProductForm() {
   // };
   return (
     <section className="bg-white dark:bg-[#001529]">
-       {params.id>0 && data && <PrintComp toPrint={data}/>}
+       {params.id>0 && data && <PrintComp toPrint={data} title={'Product'}/>}
       <div className="py-8 mx-auto w-5/6 lg:py-16">
         <HeadingTemplate
           text={params.id > 0 ? "Update product" : "Add product"}
