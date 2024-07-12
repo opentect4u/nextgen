@@ -5,8 +5,8 @@ export const masterheaders={
     headers: [
       { name: "serial_number", value: "#" },
       { name: "catg_name", value: "Category" },
-      { name: "created_by", value: "Created by" },
-    ],
+    ]
+
   },
   'designations': {
     title: "Designations",
