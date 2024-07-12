@@ -259,7 +259,7 @@ async def adddepartment(dt:getMaster):
     return res_dt
 
 @masterRouter.post('/getdept')
-async def getunit(id:getData):
+async def getdept(id:getData):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
@@ -406,7 +406,7 @@ async def addvendor(data:addVendor):
     return res_dt
 
 @masterRouter.post('/getvendor')
-async def getunit(id:getData):
+async def getvendor(id:getData):
     print(id.id)
     res_dt = {}
 
@@ -437,7 +437,7 @@ async def deletevendor(id:deleteData):
    return res_dt
 
 @masterRouter.post('/addproduct')
-async def addvendor(data:addProduct):
+async def addproduct(data:addProduct):
     print(data)
     res_dt = {}
 
@@ -467,7 +467,7 @@ async def addvendor(data:addProduct):
     return res_dt
 
 @masterRouter.post('/getproduct')
-async def getunit(id:getData):
+async def getproduct(id:getData):
     print(id.id)
     res_dt = {}
 
@@ -499,7 +499,7 @@ async def deleteproduct(id:deleteData):
    return res_dt
 
 @masterRouter.post('/adduser')
-async def addvendor(data:addUser):
+async def adduser(data:addUser):
     print(data)
     res_dt = {}
 
@@ -531,7 +531,7 @@ async def addvendor(data:addUser):
 
 
 @masterRouter.post('/getuser')
-async def getunit(id:getData):
+async def getuser(id:getData):
     print(id.id)
     res_dt = {}
 
@@ -632,7 +632,7 @@ async def addclient(data:addClient):
 
 
 @masterRouter.post('/getclient')
-async def getunit(id:getData):
+async def getclient(id:getData):
     print(id.id)
     res_dt = {}
 
@@ -645,7 +645,7 @@ async def getunit(id:getData):
     print(result, 'RESULT')
     return result
 @masterRouter.post('/deleteclient')
-async def deleteproduct(id:deleteData):
+async def deleteclient(id:deleteData):
    current_datetime = datetime.now()
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -662,7 +662,7 @@ async def deleteproduct(id:deleteData):
    return res_dt
 
 @masterRouter.post('/getclientpoc')
-async def getunit(id:getData):
+async def getclientpoc(id:getData):
     print(id.id)
     res_dt = {}
 
@@ -670,21 +670,21 @@ async def getunit(id:getData):
     schema = "md_client_poc"
     where = f"client_id='{id.id}'" if id.id>0 else ""
     order = ""
-    flag = 0 if id.id>0 else 1
+    flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
 
-@masterRouter.post('/getpoc')
-async def getunit(id:getPocId):
-    print(id.client_id)
-    res_dt = {}
+# @masterRouter.post('/getpoc')
+# async def getunit(id:getPocId):
+#     print(id.client_id)
+#     res_dt = {}
 
-    select = "*"
-    schema = "md_client_poc"
-    where = f"client_id='{id.client_id}'" 
-    order = ""
-    flag = 0 if id.client_id>0 else 1
-    result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
-    return result
+#     select = "*"
+#     schema = "md_client_poc"
+#     where = f"client_id='{id.client_id}'" 
+#     order = ""
+#     flag = 0 if id.client_id>0 else 1
+#     result = await db_select(select, schema, where, order, flag)
+#     print(result, 'RESULT')
+#     return result
