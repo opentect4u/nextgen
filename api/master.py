@@ -61,6 +61,7 @@ class addUser(BaseModel):
       user:str
 
 class addPoc(BaseModel):
+      sl_no:int
       c_id:int
       poc_name:str
       poc_designation:str
@@ -70,6 +71,8 @@ class addPoc(BaseModel):
       poc_ext_no:str
       poc_ph_1:str
       poc_ph_2:str
+      poc_address:str
+      poc_location:str
 
 class addClient(BaseModel):
       c_id:int
@@ -568,7 +571,7 @@ async def addclient(data:addClient):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'client_name="{data.c_name}",client_email="{data.c_email}",client_phone="{data.c_phone}",client_gst="{data.c_gst}",client_pan="{data.c_pan}",client_reg="{data.c_reg}",client_location="{data.c_location}",client_address="{data.c_address}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.c_id > 0 else f'client_name,client_email,client_phone,client_gst,client_pan,client_reg,client_location, client_address,created_by,created_at'
+    fields= f'client_name="{data.c_name}",client_email="{data.c_email}",client_phone="{data.c_phone}",client_gst="{data.c_gst}",client_pan="{data.c_pan}",client_reg="{data.c_reg}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.c_id > 0 else f'client_name,client_email,client_phone,client_gst,client_pan,client_reg,client_location, client_address,created_by,created_at'
     values = f'"{data.c_name}","{data.c_email}","{data.c_phone}","{data.c_gst}","{data.c_pan}","{data.c_reg}","{data.c_location}","{data.c_address}","{data.user}","{formatted_dt}"'
     table_name = "md_client"
     whr = f'sl_no="{data.c_id}"' if data.c_id > 0 else None
@@ -583,8 +586,8 @@ async def addclient(data:addClient):
     # del_qry = await db_Delete(del_table_name, del_whr)
 
     for c in data.c_poc:
-        fields= f'poc_name="{c.poc_name}",poc_email="{c.poc_email}",poc_designation="{c.poc_designation}",poc_department="{c.poc_department}",poc_direct_no="{c.poc_direct_no}",poc_ext_no="{c.poc_ext_no}", poc_ph_1="{c.poc_ph_1}",poc_ph_2="{c.poc_ph_2}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,created_by,created_at'
-        values = f'"{lastID}","{c.poc_name}","{c.poc_email}","{c.poc_designation}","{c.poc_department}","{c.poc_direct_no}","{c.poc_ext_no}","{c.poc_ph_1}","{c.poc_ph_2}","{data.user}","{formatted_dt}"'
+        fields= f'poc_name="{c.poc_name}",poc_email="{c.poc_email}",poc_designation="{c.poc_designation}",poc_department="{c.poc_department}",poc_direct_no="{c.poc_direct_no}",poc_ext_no="{c.poc_ext_no}", poc_ph_1="{c.poc_ph_1}",poc_ph_2="{c.poc_ph_2}",poc_delivery="{c.poc_address}",poc_location="{c.location}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_delivery,poc_location,created_by,created_at'
+        values = f'"{lastID}","{c.poc_name}","{c.poc_email}","{c.poc_designation}","{c.poc_department}","{c.poc_direct_no}","{c.poc_ext_no}","{c.poc_ph_1}","{c.poc_ph_2}","{c.poc_address}","{c.poc_location}","{data.user}","{formatted_dt}"'
         table_name = "md_client_poc"
         whr =  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
         result = await db_Insert(table_name, fields, values, whr, flag)
@@ -636,7 +639,7 @@ async def getunit(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number, client_name,client_email,client_phone,client_gst,client_pan,client_reg,client_location, client_address,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number, client_name,client_email,client_phone,client_gst,client_pan,client_reg,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_client,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
