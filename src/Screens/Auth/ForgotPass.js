@@ -1,21 +1,34 @@
 import React from 'react'
-import LOGO from '../../Assets/Images/Logo.png'
+import LOGO from '../../Assets/Images/inverted.png'
+import TDInputTemplate from '../../Components/TDInputTemplate'
+import { motion } from "framer-motion"
+
 const ForgotPass = () => {
     return (
-        <div className='bg-[#004900] flex justify-center items-center h-screen w-screen'>
-            <div className='bg-white h-64 w-96 px-6 rounded-lg shadow-lg'  >
+        <div className='bg-gray-700 flex justify-center items-center h-screen w-screen'>
+            <motion.div  initial={{opacity:0,scale:1.3}} animate={{opacity:1,scale:1}} transition={{delay:0.5,type:'spring'
+      }} className='bg-gray-800 h-64 w-96 px-6 rounded-3xl shadow-lg'  >
                 <div className='flex items-center justify-center'>
                     <img src={LOGO} className="h-20 mt-4" alt="Flowbite Logo" />
                 </div>
-                <div className='flex justify-center mt-3'>          
-                <input type="text" name='email' className="block border-gray-300 text-[13px] pt-2 p-1 rounded-lg  w-full border m-3 focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300" placeholder="name@company.com" />
+                <div className='my-3'>          
+                <TDInputTemplate
+                    placeholder="youremail@gmail.com"
+                    type="email"
+                    label="Your email"
+                    name="email"
+                    formControlName=''
+                    handleChange=''
+                    handleBlur=''
+                    mode={1}
+                  />
                 </div>
                 <div className='block text-sm'>
                     <div className='flex justify-center'>
-                  <button type="submit" className='bg-green-900 hover:bg-green-800 m-3 h-10 w-full text-white p-3 rounded-md disabled:bg-green-200'>Submit</button>
+                  <button type="submit" className="bg-green-500 hover:duration-500 w-full hover:scale-105 hover:bg-green-800  text-white p-3 rounded-full">Submit</button>
                   </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     )
 }

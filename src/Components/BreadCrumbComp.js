@@ -10,7 +10,7 @@ function BreadCrumbComp() {
       (e) => isNaN(e) && pathnames.push({ title: pathMap[e],label:e })
     );
   
-  return <Breadcrumb className="ml-6 dark:text-gray-400" separator=">" items={pathnames} />
+  return <Breadcrumb className="ml-1 dark:text-gray-400 my-2 -mt-5" separator=">" items={pathnames} />
 }
 
 export default BreadCrumbComp;

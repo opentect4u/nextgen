@@ -6,12 +6,8 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DialogBox from "./DialogBox";
-import Menus from "./Menus";
 import { routePaths } from "../Assets/Data/Routes";
 import { Button, Dropdown, Space } from "antd";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import Backbtn from "./Backbtn";
 function Header() {
   const [visible, setVisible] = useState(false);
   const [dark, setDark] = React.useState(false);
@@ -157,7 +153,8 @@ function Header() {
   var col = "#C2EFB3";
   return (
     <div className="sticky top-0 z-10 ">
-      <nav className={localStorage.getItem('col')!=0 && localStorage.getItem('col')?`bg-color-theme-${localStorage.getItem('col')} border-gray-200 px-5 pb-2 dark:bg-gray-800`:`bg-gray-300 border-gray-200 px-5 pb-2 dark:bg-gray-800`}>
+      {/* <nav className={localStorage.getItem('col')!=0 && localStorage.getItem('col')?`bg-color-theme-${localStorage.getItem('col')} border-gray-200 px-5 pb-2 dark:bg-gray-800`:`bg-gray-300 border-gray-200 px-5 pb-2 dark:bg-gray-800`}> */}
+      <nav className={`bg-gray-700 border-gray-200 px-5 pb-2 dark:bg-gray-800`}>
         <div className="flex flex-wrap justify-between items-center mx-auto min-w-screen-xl p-4">
           <Link
             to={routePaths.HOME}
@@ -170,31 +167,21 @@ function Header() {
             />
           </Link>
           <div className="flex items-center space-x-6 rtl:space-x-reverse -mr-3">
-            {dark ? (
-              <LightModeIcon
-                className="text-gray-400 active:animate-spin"
-                onClick={() => darkModeHandler()}
-              />
-            ) : (
-              <DarkModeIcon
-                className="text-green-800 active:animate-spin"
-                onClick={() => darkModeHandler()}
-              />
-            )}
+           
             <Dropdown menu={{ items }} placement="bottomLeft" arrow>
               <span className="relative inline-flex items-center">
-                <NotificationsActiveIcon className="text-green-800 dark:text-gray-400 transition duration-0 hover:duration-150 cursor-pointer hover:scale-125 hover:animate-bounce hover:text-green-900" />
+                <NotificationsActiveIcon className="text-green-500 dark:text-gray-400 cursor-pointer" />
               </span>
             </Dropdown>
 
-            <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 hover:shadow-lg transition duration-0 hover:duration-500 hover:scale-110 ">
+            <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-[#C05746] rounded-full dark:bg-gray-600 hover:shadow-lg transition duration-0 hover:duration-500 hover:scale-110 ">
               <span
                 id="basic-button"
                 aria-controls={openProfile ? "basic-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={openProfile ? "true" : undefined}
                 onClick={handleClickProfile}
-                className="font-medium text-green-800   dark:text-gray-300 cursor-pointer"
+                className="font-medium text-gray-300  dark:text-gray-300 cursor-pointer"
               >
                 PM
               </span>
@@ -238,10 +225,10 @@ function Header() {
            
           </div>
         </div>
-        <nav className="bg-white rounded-full dark:bg-[#001529] px-5 shadow-lg  hidden sm:block">
+        {/* <nav className="bg-white rounded-full dark:bg-[#001529] px-5 shadow-lg  hidden sm:block">
           <Menus theme={dark ? "dark" : "light"} mode={"horizontal"} />
           {!(paths.length == 2 && paths[1] == "home") && <Backbtn/>}
-        </nav>
+        </nav> */}
       </nav>
       <DialogBox
         visible={visible}

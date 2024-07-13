@@ -5,7 +5,8 @@ function TDInputTemplate(props) {
   const [selectedCountry, setSelectedCountry] = useState(null);
   return (
     <>
-      <label className="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
+      {/* <label className="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-100"> */}
+      <label className="block mb-2 text-sm font-semibold text-gray-300 dark:text-gray-100">
         {" "}
         {props.label}
       </label>
@@ -14,7 +15,8 @@ function TDInputTemplate(props) {
           type={props.type}
           name={props.name}
           value={props.formControlName}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          // className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          className="bg-gray-700 border-1 border-green-500 text-white text-sm rounded-full  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
           placeholder={props.placeholder}
           onChange={props.handleChange}
           onBlur={props.handleBlur}
