@@ -22,6 +22,7 @@ function App() {
       //   colorPrimary:'#22543d',
       //   colorPrimaryHover:'#22543d'
       // },
+     
       Select: {
         colorPrimary: '#22543d',
         colorPrimaryHover: '#22543d',
@@ -38,7 +39,7 @@ function App() {
         hoverBorderColor:'#22543d',
         colorPrimary:'#22543d'
       },
-      Breadcrumb:{separatorColor:'#22543d',lastItemColor:'#22543d'},
+      Breadcrumb:{separatorColor:'#D1D5DB', itemColor:'#D1D5DB', lastItemColor:'#01AB01',fontSize:15},
       Menu: {
         // itemSelectedBg:'#e4eae1',
         // itemSelectedColor:'#025129',
@@ -46,12 +47,22 @@ function App() {
         // horizontalItemSelectedColor:'#025129',
 
         // itemSelectedBg:'#e4eae1',
-        itemSelectedBg:'#e4eae1',
-        itemSelectedColor:'#22543d',
+        itemBg:'#374151',
+        subMenuItemBg:'#374151',
+        subMenuItemBorderRadius:50,
+        popupBg:'#374151',
+        itemColor:'#D1D5DB',
+        itemSelectedBg:'#01AB01',
+        itemBorderRadius:50,
+        itemMarginInline:20,
+        itemHoverBg:'#C05746',
+        itemSelectedColor:'#D1D5DB',
+        itemHoverColor:'#D1D5DB',
         horizontalItemHoverColor:'#22543d',
         horizontalItemSelectedColor:'#22543d',
         darkItemSelectedBg:'#22543d'
       },
+     
       Switch:{
         // colorPrimary:'#025129',
         // colorPrimaryHover:'#025129'
@@ -60,14 +71,25 @@ function App() {
         colorPrimaryHover:'#22543d'
       },
       Descriptions:{
-        titleColor:'#22543d',
-        labelBg:'#22543d'
+        titleColor:'#01AB01',
+        colorTextLabel:'#01AB01',
+        colorText:'white',
+        colorSplit:'white',
+        labelBg:'#01AB01'
+        
       },
       Tabs:{
-        inkBarColor:'#22543d',
-        itemColor:'#22543d',
-        itemSelectedColor:'#22543d',
-        itemHoverColor:'#22543d',
+        inkBarColor:'#01AB01',
+        itemColor:'#01AB01',
+        itemSelectedColor:'#01AB01',
+        itemHoverColor:'#01AB01',
+        itemActiveColor:'#01AB01'
+      },
+      Dropdown:{
+        colorBgElevated:'#374151',
+        colorText:'#D1D5DB',
+        controlItemBgHover:'#C05746'
+
       }
     },
   }}>

@@ -22,7 +22,7 @@ export const masterheaders={
     btnText:'Add departments',
     headers: [
       { name: "serial_number", value: "#" },
-      { name: "dept_name", value: "Depatment" },
+      { name: "dept_name", value: "Department" },
       { name: "created_by", value: "Created by" },
     ],
   },

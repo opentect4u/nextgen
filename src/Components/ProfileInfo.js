@@ -5,38 +5,38 @@ const ProfileInfo = () => {
     const items= [
         {
           key: '1',
-          label: <div className=' text-green-900 font-bold'>Name</div>,
+          label: 'Name',
           children: <p>{localStorage.getItem("user_name")}</p>,
         },
         {
           key: '2',
-          label: <div className=' text-green-900 font-bold'>Phone</div>,
+          label: 'Phone',
           children: <p>{localStorage.getItem("user_phone")}</p>,
         },
         {
           key: '3',
-          label: <div className=' text-green-900 font-bold'>Email</div>,
+          label: 'Email',
           children: <p>{localStorage.getItem("email")}</p>,
         },
         {
           key: '4',
-          label: <div className=' text-green-900 font-bold'>Department</div>,
+          label: 'Department',
           children: <p>{localStorage.getItem("dept_name")}</p>,
         },
         {
           key: '5',
-          label: <div className=' text-green-900 font-bold'>Designation</div>,
+          label: 'Designation',
           children: <p>{localStorage.getItem("desig_name")}</p>,
         },
         {
           key: '6',
-          label: <div className=' text-green-900 font-bold'>Type</div>,
+          label: 'Type',
           children: <p>{localStorage.getItem("user_type")=='AD'?'Admin':(localStorage.getItem("user_type")=='PM'?'Purchase Manager':((localStorage.getItem("user_type")=='PuM'?'Purchase Manager':(localStorage.getItem("user_type")=='WM'?'Warehouse Manager':'General User'))))}</p>,
         },
       ];
   return (
     <>
-    <Descriptions title="User Info" items={items} />
+    <Descriptions title="Your profile" labelStyle={{color:'#01AB01'}} items={items} />
     </>
   )
 }

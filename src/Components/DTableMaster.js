@@ -11,6 +11,8 @@ import Tooltip from '@mui/material/Tooltip';
 import { ContextMenu } from 'primereact/contextmenu';
 import {SearchOutlined,PrinterOutlined,MoreOutlined} from '@ant-design/icons'
 import { Dropdown, Space } from 'antd';
+import { motion } from "framer-motion"
+
 function DTableMaster({ headers,
     data,
     flag,
@@ -107,15 +109,18 @@ function DTableMaster({ headers,
     );
   };
   return (
-    <section className="bg-white dark:bg-[#001529] p-3 sm:p-5 w-full">
+    <motion.section initial={{opacity:0,y:1000}} animate={{opacity:1,y:0}} transition={{delay:0.5,type:'tween',stiffness:100}} className="bg-transparent dark:bg-[#001529] py-3 sm:py-5 w-full -mt-5">
    {title && 
-   <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-tr-lg rounded-tl-lg overflow-hidden">
-    <div className="flex flex-col bg-[#22543d] dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+   <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
+    {/* <div className="flex flex-col bg-[#C05746] dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
+    <div className="flex flex-col bg-green-500 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1">
+    {/* <div className="flex flex-col bg-gray-800 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
       <div class="w-full">
         <div class="flex items-center justify-evenly">
-          <h2 className="text-xl font-bold text-white dark:text-white sm:block hidden mx-5">
+          <motion.h2 initial={{opacity:0,y:-50}} animate={{opacity:1,y:0}} transition={{delay:1, type:'just'}} className="text-xl font-bold text-white dark:text-white sm:block hidden mx-5">
+          {/* <h2 className="text-xl font-bold text-green-500 dark:text-white sm:block hidden mx-5"> */}
             {title}
-          </h2>
+          </motion.h2>
 
           <label for="simple-search" class="sr-only">
             Search
@@ -136,30 +141,33 @@ function DTableMaster({ headers,
                 />
               </svg>
             </div>
-            <input
+            <motion.input
               type="text"
               id="simple-search"
-              className="bg-gray-50 border rounded-full border-gray-300 text-gray-900 text-sm focus:ring-gray-600 focus:border-gray-600 block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4 focus:border-1 duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              initial={{opacity:0,width:0}} animate={{opacity:1,width:'95%'}} transition={{delay:1.1, type:'just'}}
+              className="bg-gray-800 border rounded-full border-gray-800 text-gray-300 text-sm focus:ring-gray-800 focus:border-gray-800 block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4 focus:border-1 duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              //  className="bg-gray-800 border rounded-full border-green-500 text-gray-300 text-sm focus:ring-gray-800 focus:border-gray-800 block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4 focus:border-1 duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Search"
               required=""
               // value={search}
               onChange={(text) => setSearch(text.target.value)}
             />
           </div>
-        {btnText &&  <div class="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+        {btnText &&  <motion.div  initial={{opacity:0,y:50}} animate={{opacity:1,y:0}} transition={{delay:1.3, type:'just'}} class="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
             <Tooltip title={btnText}>
               <Link to={to+0}
                 type="submit"
                 // onClick={() => onclick()}
-               className="flex items-center justify-center text-gray-600 bg-white hover:bg-primary-800 focus:ring-green-900 font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
+               className="flex items-center justify-center text-gray-300 bg-gray-800 hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
+                  // className="flex items-center justify-center text-gray-300 bg-green-500 hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
               >
                 <AddIcon /> {btnText}
               </Link>
             </Tooltip>
-          </div>}
+          </motion.div>}
           <div className='p-1'>
           <Dropdown menu={{ items }} placement="bottomLeft" arrow>
-          <MoreOutlined className=' className="flex items-center justify-center  text-white   rounded-full  text-3xl font-bold px-2 h-10 w-10 py-2 dark:text-white focus:outline-none  transition duration-0 hover:duration-500 dark:focus:ring-primary-800' />
+          <MoreOutlined className='flex items-center justify-center  text-white   rounded-full  text-3xl font-bold px-2 h-10 w-10 py-2 dark:text-white focus:outline-none  transition duration-0 hover:duration-500 dark:focus:ring-primary-800' />
           </Dropdown>
          {/* <button className=' className="flex items-center justify-center text-gray-600 bg-white hover:bg-primary-800 focus:ring-green-900 font-medium rounded-full hover:scale-110 text-sm px-2 h-10 w-10 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800' >
           <PrinterOutlined onClick={()=>print()}/>
@@ -171,7 +179,7 @@ function DTableMaster({ headers,
       </div>
       }
       <div>
-        <div className="card  w-full">
+        <div className="card w-full mt-5">
         {/* <ContextMenu className='dark:bg-gray-800 dark:text-white hover:text-green-900' model={menuModel} ref={cm} onHide={() => setSelectedItem(null)} /> */}
           <DataTable
             value={data}
@@ -186,15 +194,15 @@ function DTableMaster({ headers,
             rows={10}
             
             rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
-            rowClassName='dark:bg-gray-800 dark:text-gray-300 border border-b-gray-300 dark:border-green-900 active:border-0 hover:bg-[#eafaf2] hover:font-semibold dark:hover:bg-[#1e4834]'
-            
+            rowClassName='bg-gray-800 text-gray-300 border border-b-gray-700 border-r-gray-700 border-l-gray-700 active:border-0 hover:bg-gray-700  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
             tableStyle={{ minWidth: "100%",fontSize:'14px' }}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            paginatorClassName='dark:bg-gray-800 dark:text-gray-300'
+            paginatorClassName='bg-gray-800 text-gray-300'
             currentPageReportTemplate="{first} to {last} of {totalRecords}"
             paginatorLeft={paginatorLeft}
             paginatorRight={paginatorRight}
-            styleClass="p-datatable-gridlines dark:bg-gray-800 dark:text-gray-300"
+            styleClass="p-datatable-gridlines dark:bg-gray-800 dark:text-gray-300 shadow-lg"
+            className='shadow-lg rounded-lg'
             selectionMode="single"
             selection={selectedItem}
             onSelectionChange={(e) => setSelectedItem(e.value)}
@@ -210,7 +218,7 @@ function DTableMaster({ headers,
                 key={index}
                 field={item.name}
                 header={item.value}
-                headerClassName={theme>0?`bg-color-theme-${theme} text-green-800 dark:bg-gray-700 dark:text-white dark:font-bold`:'text-green-800 bg-gray-300 dark:bg-gray-700 dark:text-white dark:font-bold'}
+                headerClassName={'text-gray-300 bg-gray-800 border-b-green-500  dark:bg-gray-700 dark:text-white dark:font-bold'}
                 style={{ width: "10%" }}
                 body={(rowData) => renderTooltip(rowData, item.name)}
               ></Column>
@@ -296,7 +304,7 @@ function DTableMaster({ headers,
           </DataTable>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 

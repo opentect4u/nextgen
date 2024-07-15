@@ -1,9 +1,11 @@
 import React from 'react'
 import { Alert } from 'antd';
+import {motion} from 'framer-motion'
+import { Opacity } from '@mui/icons-material';
 function VError({title}) {
   return (
-    // <div className='text-red-500 text-sm py-2 px-2'>{title}!</div>
-    <Alert message={title} type="error" showIcon className='my-2'/>
+    <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}}  transition={{delay:0.1,type:'tween',stiffness:500}} className='text-[#C05746] text-sm py-2 px-2'>{title}!</motion.div>
+    // <Alert message={title} type="error" showIcon className='my-2'/>
   )
 }
 

@@ -1,14 +1,16 @@
 import React from 'react'
 import Tooltip from '@mui/material/Tooltip';
-import {PrinterOutlined} from '@ant-design/icons'
+import {PrinterOutlined,MoreOutlined} from '@ant-design/icons'
 import { FloatButton } from 'antd';
 import DescriptionComp from './DescriptionComp';
 import { printMap } from '../Assets/Data/PrintColumns';
 import PrintHeader from './PrintHeader';
+import { Dropdown, Space } from 'antd';
 
 function PrintComp({toPrint,title}) {
     console.log(toPrint)
     var items=[]
+   
     for(let i of Object.keys(toPrint)){
         if(i!='serial_number')
         items.push({key:i,label:printMap[i]+' - ',children:toPrint[i]})
@@ -45,18 +47,22 @@ function PrintComp({toPrint,title}) {
         }, 10);
       
       }
+      
   return (
     <>
       <FloatButton icon={<PrinterOutlined />} onClick={()=>print()} className='sm:hidden' type="primary" style={{ right: 24, bottom: 80 }} />
-      <div className="hidden sm:flex sm:justify-end items-center sm:-mt-5 ">
+      {/* <div className="hidden sm:flex sm:justify-end items-center"> */}
         <Tooltip title="Print">
-          <button onClick={()=>print()} className="mt-5 inline-flex items-center justify-center mr-4 sm:mr-1 mb-1 sm:mt-[4px] text-sm font-medium text-center text-white bg-primary-700 h-9 w-9  bg-green-800 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 hover:bg-gray-600 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" ><PrinterOutlined /></button>
+          <button onClick={()=>print()} className=" inline-flex items-center justify-center mr-4 sm:mr-1  text-sm font-medium text-center text-white bg-primary-700 h-9 w-9  bg-gray-700 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 hover:bg-gray-600 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" ><PrinterOutlined /></button>
         </Tooltip>
+         {/* <Dropdown menu={ menus } placement="bottomLeft" arrow>
+          <MoreOutlined className='flex items-center justify-center  text-white   rounded-full  text-3xl font-bold px-2 h-10 w-10 dark:text-white focus:outline-none  transition duration-0 hover:duration-500 dark:focus:ring-primary-800' />
+          </Dropdown> */}
         <div className='hidden justify-center' id='tablePrint'>
             <PrintHeader/>
             <DescriptionComp className="mt-5" title={title} printData={items}/>
         </div>
-      </div>
+      {/* </div> */}
     </>
   )
 }

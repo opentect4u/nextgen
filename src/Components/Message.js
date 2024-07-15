@@ -4,6 +4,7 @@ export const  Message = (type, msg) => {
     message.open({
         type: type,
         content: msg,
+
       });
 }
 

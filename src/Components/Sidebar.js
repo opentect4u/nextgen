@@ -1,9 +1,12 @@
 import React,{ useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
-import LOGO from '../Assets/Images/Logo.png'
+import LOGO from '../Assets/Images/inverted.png'
+import sidebar1 from '../Assets/Images/sidebar1.png'
+import sidebar2 from '../Assets/Images/sidebar2.png'
 import Menus from './Menus';
 import { Divider } from '@mui/material';
 import { Drawer } from "antd";
+import { motion } from "framer-motion"
 
 
 function Sidebar() {
@@ -28,7 +31,7 @@ function Sidebar() {
   };
   const drawerWidth = 257;
   return (
-    <div className={theme>0?`bg-color-theme-${theme} dark:bg-gray-800`:` bg-gray-300 dark:bg-gray-800 `}>
+    <div className='bg-gray-700 dark:bg-gray-800 '>
         
 <button onClick={showDrawer} data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar" aria-controls="sidebar-multi-level-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
    <span className="sr-only">Open sidebar</span>
@@ -45,22 +48,28 @@ function Sidebar() {
         key={'left'}
       >
        
-        <div className='flex items-center justify-center p-3'>
+        <motion.div  initial={{opacity:0,scale:1.5}} animate={{opacity:1,scale:1}} transition={{delay:0.5, type:'spring'}}  className='flex items-center justify-center p-3'>
                 <img src={LOGO} className="h-16" alt="Flowbite Logo" />
-              </div>
+              </motion.div>
         <Divider />
         <Menus mode={'vertical'} theme={'light'} />
 
         <Divider/>
       </Drawer>
-<aside id="sidebar-multi-level-sidebar" className="hidden fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-   <div className="h-full px-3 py-4 overflow-y-auto bg-gray-300 dark:bg-gray-800">
+<aside  id="sidebar-multi-level-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+   <div className="h-full px-3 py-4 overflow-y-auto bg-gray-700 dark:bg-gray-800">
    
       <div className='flex items-center justify-center p-3'>
-                <img src={LOGO} className="h-14" alt="Flowbite Logo" />
+                <motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5, type:'spring'
+              }} src={LOGO} className="h-14" alt="Flowbite Logo" />
       </div>
-     <Menus/>
+     <Menus  />
+{/* <img className='absolute bottom-0 h-40 blur-1' src={sidebar2} alt="Flowbite Logo" /> */}
+
    </div>
+                {/* <motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5, type:'spring'
+              }} src={sidebar1} className="h-14" alt="Flowbite Logo" /> */}
+
 </aside>
     </div>
   )

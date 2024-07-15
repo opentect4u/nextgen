@@ -22,14 +22,15 @@ import {
   ReconciliationOutlined,
   PayCircleOutlined,
   IdcardOutlined,
-  BankOutlined
+  BankOutlined,
+  MailOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import { routePaths } from "../Assets/Data/Routes";
 
-function Menus({ theme, mode }) {
-  const [current, setCurrent] = React.useState();
+function Menus({ theme}) {
+  const [current, setCurrent] = React.useState('sub1');
 
   const onClick = (e) => {
     console.log("click ", e);
@@ -184,13 +185,20 @@ function Menus({ theme, mode }) {
     },
   ];
 
+ 
+
   return (
-    <div>
+    <div >
       <Menu
-        theme={theme}
+        
+        // onClick={onClick}
+        // selectedKeys={[current]}
+        // items={items}
+
         onClick={onClick}
+        // openKeys={['sub1']}
         selectedKeys={[current]}
-        mode={mode}
+        // mode="vertical"
         items={items}
       />
     </div>
