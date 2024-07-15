@@ -33,7 +33,6 @@ def firstRoute():
 @userRouter.post('/login')
 async def firstRoute(user:getUser):
     print(user)
-    res_dt = {}
     select = "user_password"
     schema = "md_user"
     where = f"user_email='{user.id}'" 
@@ -41,18 +40,22 @@ async def firstRoute(user:getUser):
     flag = 0
     result = await db_select(select, schema, where, order, flag)
     print(result['msg']['user_password'])
-    check=verify_password(user.password,result['msg']['user_password'])
-    select = "a.first_login_flag,a.user_email,a.user_phone,a.user_name,a.user_type,b.desig_name,c.dept_name"
-    schema = "md_user a,md_designation b, md_department c"
-    where = f"user_email='{user.id}' and a.user_dept=c.sl_no and a.user_desig=b.sl_no" 
-    order = ""
-    flag = 1
-    if check==True:
-        result = await db_select(select, schema, where, order, flag)
-        print(result, 'RESULT')
-        return result
+    if result['suc']!=1 :
+        check=verify_password(user.password,result['msg']['user_password'])
+        select = "a.first_login_flag,a.user_email,a.user_phone,a.user_name,a.user_type,b.desig_name,c.dept_name"
+        schema = "md_user a,md_designation b, md_department c"
+        where = f"user_email='{user.id}' and a.user_dept=c.sl_no and a.user_desig=b.sl_no" 
+        order = ""
+        flag = 1
+        if check==True:
+            result = await db_select(select, schema, where, order, flag)
+            print(result, 'RESULT')
+            return result
+        else:
+            return {'suc':0,'msg':'Invalid credentials'}
     else:
         return {'suc':0,'msg':'Invalid credentials'}
+
 
 @userRouter.post('/get_login_flag')
 async def firstRoute(user:getFlag):
