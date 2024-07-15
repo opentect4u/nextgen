@@ -22,7 +22,28 @@ function ClientForm() {
 
     const params = useParams()
     console.log(params, 'params')
-
+  const [data,setData]=useState()
+  const [formValues, setValues] = useState({
+    clnt_name: "",
+    clnt_email: "",
+    clnt_phn: "",
+    gst: "",
+    pan: "",
+    reg_no: "",
+    dynamicFields: [{
+        sl_no: 0,
+        poc_name: '',
+        poc_designation: "",
+        poc_department: "",
+        poc_email: "",
+        poc_direct_no: "",
+        poc_ext_no: "",
+        poc_ph_1: "",
+        poc_ph_2: "",
+        poc_location: "",
+        poc_address: ""
+    }]
+});
 
     const initialValues = {
         clnt_name: "",
@@ -36,10 +57,10 @@ function ClientForm() {
 
         }]
     };
-    const [formValues, setValues] = useState(initialValues);
+   
 
 
-    const onSubmit = (values) => {
+    const onSubmit = (values,) => {
         console.log('onSubmit')
         setLoading(true)
         console.log(values);
@@ -58,6 +79,7 @@ function ClientForm() {
             })
             .then((res) => {
                 setLoading(false);
+                setData(res.data?.msg)
                 if (res.data.suc > 0) {
                     Message("success", res.data.msg);
                     // if (params.id == 0) formik.handleReset();
@@ -77,7 +99,6 @@ function ClientForm() {
         reg_no: Yup.string().required("Registration no. is required"),
         dynamicFields: Yup.array().of(
             Yup.object().shape({
-  
                 poc_name: Yup.string().optional(),
                 poc_designation: Yup.string().optional(),
                 poc_department: Yup.string().optional(),
@@ -104,6 +125,7 @@ function ClientForm() {
             setLoading(true)
             axios.post(url + '/api/getclient', { id: params.id }).then(res => {
                 console.log(res.data.msg, 'getclient show')
+                setData(res.data?.msg)
                 setLoading(false)
                 setValues({
                     ...initialValues,
@@ -148,9 +170,15 @@ function ClientForm() {
     }, [params.id])
     return (
 
-        <section className="bg-white dark:bg-[#001529]">
-        <div className="py-8 mx-auto w-5/6 lg:py-16">
-            <HeadingTemplate text={params.id > 0 ? 'Update client' : 'Add client'} />
+        <section  className="bg-gray-700 dark:bg-[#001529]">
+          {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
+          <HeadingTemplate
+              text={params.id > 0 ? "Update client" : "Add client"}
+              mode={params.id>0?1:0}
+              title={'Client'}
+              data={params.id && data?data:''}
+            />
+          <div className="w-full bg-gray-800 p-6 rounded-2xl">
             <Spin
                 indicator={<LoadingOutlined spin />}
                 size="large"
@@ -163,6 +191,7 @@ function ClientForm() {
                     onSubmit={onSubmit}
                     validateOnMount={true}
                     enableReinitialize={true}
+                    
                 >
                     {({ values, handleChange, handleBlur,handleSubmit, errors, touched }) => (
                         <form onSubmit={handleSubmit}>
@@ -390,7 +419,6 @@ function ClientForm() {
                                             ))}
                                             <div className="sm:col-span-2">
                                                 <Button
-                                                    type="dashed"
                                                     onClick={() => push({ sl_no: 0, poc_name: "", poc_designation: "", poc_department: "", poc_email: "", poc_direct_no: "", poc_ext_no: "", poc_ph_1: "", poc_ph_2: "", poc_location: "", poc_address: "" })}
                                                     icon={<PlusOutlined />}
                                                 >
@@ -400,8 +428,34 @@ function ClientForm() {
                                         </>
                                     )}
                                 </FieldArray>
+                                 { params.id>0 &&   <>
+                <div className="w-full">
+            <label className="block mb-2 text-sm font-semibold text-gray-300 dark:text-gray-100">
+         Created By
+      </label>
+              <input  className="bg-gray-700 border border-green-500 text-gray-300 rounded-full text-sm   focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_by}/>
+            </div>
+            <div className="w-full">
+            <label className="block mb-2 text-sm font-semibold text-gray-300 dark:text-gray-100">
+         Created At
+      </label>
+              <input  className="bg-gray-700 border border-green-500 text-gray-300 rounded-full text-sm   focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_at?.split('T').join( ' ')}/>
+            </div>
+            <div className="w-full">
+            <label className="block mb-2 text-sm font-semibold text-gray-300 dark:text-gray-100">
+         Modified By
+      </label>
+              <input  className="bg-gray-700 border border-green-500 text-gray-300 rounded-full text-sm   focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_by}/>
+            </div>
+            <div className="w-full">
+            <label className="block mb-2 text-sm font-semibold text-gray-300 dark:text-gray-100">
+       Modified at
+      </label>
+              <input  className="bg-gray-700 border border-green-500 text-gray-300 rounded-full text-sm   focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_at?.split('T').join( ' ')}/>
+            </div>
+              </>}
                             </div>
-                            <BtnComp />
+                            <BtnComp mode={params.id>0?'E':'A'}  />
                         </form>
                     )}
                 </Formik>
