@@ -44,7 +44,6 @@ class addProduct(BaseModel):
       p_part:str
       p_model:str
       p_article:str
-      p_stock:str
       p_detailed:str
       p_hsn:str
       user:str
@@ -457,7 +456,7 @@ async def addproduct(data:addProduct):
             res_dt = {"suc": 0, "msg": "Error while inserting!"}
     else:
         print(flag)
-        fields=f'prod_name="{data.p_name}",prod_cat="{data.p_cat}",prod_make="{data.p_make}",part_no="{data.p_part}",model_no="{data.p_model}",article_no="{data.p_article}",hsn_code="{data.p_hsn}",stk_cnt="{data.p_stock}",prod_desc="{data.p_detailed}",modified_by="{data.user}",modified_at="{formatted_dt}"'
+        fields=f'prod_name="{data.p_name}",prod_cat="{data.p_cat}",prod_make="{data.p_make}",part_no="{data.p_part}",model_no="{data.p_model}",article_no="{data.p_article}",hsn_code="{data.p_hsn}",prod_desc="{data.p_detailed}",modified_by="{data.user}",modified_at="{formatted_dt}"'
         whr=f'sl_no="{data.p_id}"'
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
@@ -471,7 +470,7 @@ async def getproduct(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number, prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,stk_cnt, prod_desc,created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number, prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,prod_desc,created_by,created_at,modified_by,modified_at,sl_no"
 
     schema = "md_product,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
@@ -590,9 +589,9 @@ async def addclient(data:addClient):
         result = await db_Insert(table_name, fields, values, whr, flag)
 
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "Client inserted successfully!"}
+            res_dt = {"suc": 1, "msg": f"Client inserted successfully!" if c.sl_no==0 else f"Client updated successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": "Error while inserting!"}
+            res_dt = {"suc": 0, "msg": f"Error while inserting!" if c.sl==0 else f"Error while updating"}
 
     return res_dt
 

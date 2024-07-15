@@ -52,7 +52,7 @@ async def firstRoute(user:getUser):
         print(result, 'RESULT')
         return result
     else:
-        return []
+        return {'suc':0,'msg':'Invalid credentials'}
 
 @userRouter.post('/get_login_flag')
 async def firstRoute(user:getFlag):
