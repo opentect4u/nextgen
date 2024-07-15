@@ -22,6 +22,7 @@ function App() {
       //   colorPrimary:'#22543d',
       //   colorPrimaryHover:'#22543d'
       // },
+     
       Select: {
         colorPrimary: '#22543d',
         colorPrimaryHover: '#22543d',
@@ -38,7 +39,7 @@ function App() {
         hoverBorderColor:'#22543d',
         colorPrimary:'#22543d'
       },
-      Breadcrumb:{separatorColor:'#D1D5DB', itemColor:'#D1D5DB', lastItemColor:'#01AB01',fontSize:16},
+      Breadcrumb:{separatorColor:'#D1D5DB', itemColor:'#D1D5DB', lastItemColor:'#01AB01',fontSize:15},
       Menu: {
         // itemSelectedBg:'#e4eae1',
         // itemSelectedColor:'#025129',
@@ -61,6 +62,7 @@ function App() {
         horizontalItemSelectedColor:'#22543d',
         darkItemSelectedBg:'#22543d'
       },
+     
       Switch:{
         // colorPrimary:'#025129',
         // colorPrimaryHover:'#025129'
@@ -69,14 +71,19 @@ function App() {
         colorPrimaryHover:'#22543d'
       },
       Descriptions:{
-        titleColor:'#22543d',
-        labelBg:'#22543d'
+        titleColor:'#01AB01',
+        colorTextLabel:'#01AB01',
+        colorText:'white',
+        colorSplit:'white',
+        labelBg:'#01AB01'
+        
       },
       Tabs:{
-        inkBarColor:'#22543d',
-        itemColor:'#22543d',
-        itemSelectedColor:'#22543d',
-        itemHoverColor:'#22543d',
+        inkBarColor:'#01AB01',
+        itemColor:'#01AB01',
+        itemSelectedColor:'#01AB01',
+        itemHoverColor:'#01AB01',
+        itemActiveColor:'#01AB01'
       },
       Dropdown:{
         colorBgElevated:'#374151',

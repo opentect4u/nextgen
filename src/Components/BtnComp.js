@@ -5,7 +5,7 @@ function BtnComp({onReset,mode,onDelete}) {
     <div className="flex justify-center">
     {mode=='A' &&  <button
         type="reset"
-        className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-green-500 border border-green-500 bg-gray-300 hover:duration-500 hover:scale-110  rounded-full focus:ring-gray-600 hover:border-gray-600 hover:text-gray-600  dark:focus:ring-primary-900 "
+       className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#C05746] bg-[#C05746] hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900"
         onClick={onReset}
     >   
     <ReloadOutlined className='mr-2'/> 

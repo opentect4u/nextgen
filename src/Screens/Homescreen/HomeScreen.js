@@ -79,7 +79,7 @@ function HomeScreen() {
           class="relative bg-gray-300 rounded-lg flex justify-center py-5 dark:border-gray-600 h-32 md:h-64 shadow-2xl"
         >
        <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween',duration:1.5}} className="text-green-500 text-md font-bold">
-       Welcome somnath
+       Welcome {localStorage.getItem('user_name')}
 
        </motion.h2>
 
@@ -98,14 +98,14 @@ function HomeScreen() {
           class=" flex rounded-lg bg-gray-700 col-span-2 dark:border-gray-600  h-32 md:h-64"
         >
           <div className="flex flex-col">
-          <motion.div whileHover={{scale:1.1,backgroundColor:'#C05746'}} initial={{y:-600}} animate={{y:0}} transition={{delay:0.5, type:'spring', stiffness:20}} className="hover:-translate-y-1 hover:scale-110 bg-gray-300 h-40 w-32 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer">
+          <motion.div whileHover={{scale:1.1,backgroundColor:'#C05746'}} initial={{y:-600}} animate={{y:0}} transition={{delay:0.5, type:'spring', stiffness:20}} className="hover:-translate-y-1 hover:scale-110 bg-gray-300 h-40 sm:w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer">
           <SolutionOutlined className="text-5xl mb-2 text-green-500"/>
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-green-500 ">
        Create PO
 
        </motion.h2>
           </motion.div>
-          <motion.div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-20 mt-3 w-32 rounded-lg shadow-lg flex flex-col items-center justify-center">
+          <motion.div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-20 mt-3 w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center">
           <UserAddOutlined className="text-2xl mb-2 text-gray-300"/>
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
        Users
@@ -114,7 +114,7 @@ function HomeScreen() {
           </motion.div>
           </div>
           <div className="ml-3 flex flex-col">
-          <motion.div initial={{opacity:0,x:200}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#C05746] h-20 w-32 shadow-lg rounded-lg flex flex-col items-center justify-center">
+          <motion.div initial={{opacity:0,x:200}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#C05746] h-20 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col items-center justify-center">
           <ProjectOutlined className="text-2xl mb-2 text-gray-300"/>
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
        Open a project
@@ -122,7 +122,7 @@ function HomeScreen() {
        </motion.h2>
           </motion.div>
 
-          <motion.div initial={{opacity:0,x:-200}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-40 mt-3 w-32 shadow-lg rounded-lg flex flex-col justify-center items-center">
+          <motion.div initial={{opacity:0,x:-200}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-40 mt-3 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col justify-center items-center">
           <SwapOutlined className="text-5xl mb-2 text-gray-300"/>
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
        Transfer request
@@ -131,7 +131,7 @@ function HomeScreen() {
           </motion.div>
           </div>
           <div className="ml-3 flex flex-col">
-          <motion.div initial={{opacity:0,scale:1.5}} animate={{opacity:1,scale:1}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-32 w-56 rounded-lg shadow-lg flex flex-col items-center justify-center">
+          <motion.div initial={{opacity:0,scale:1.5}} animate={{opacity:1,scale:1}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-32 w-56 2xl:w-60 rounded-lg shadow-lg flex flex-col items-center justify-center">
           <BellOutlined className="text-5xl mb-2 text-gray-300"/>
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
        Unread notifications
@@ -139,7 +139,7 @@ function HomeScreen() {
        </motion.h2>
           </motion.div>
           <div className="flex mt-3">
-          <motion.div initial={{opacity:0,y:-100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-gray-300 mr-3 h-28 w-1/2 shadow-lg rounded-lg flex flex-col items-center justify-center">
+          <motion.div initial={{opacity:0,y:-100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-gray-300 mr-3 h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col items-center justify-center">
           <InfoCircleOutlined className="text-2xl mb-2 text-[#C05746]"/>
 
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-[#C05746] text-xs ">
@@ -147,7 +147,7 @@ function HomeScreen() {
 
        </motion.h2>
           </motion.div>
-          <motion.div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#C05746] h-28 w-1/2 shadow-lg rounded-lg flex flex-col justify-center items-center">
+          <motion.div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#C05746] h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col justify-center items-center">
           <InfoCircleOutlined className="text-2xl mb-2 text-gray-300"/>
 
 <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-xs ">

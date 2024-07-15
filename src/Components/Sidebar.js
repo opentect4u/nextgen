@@ -1,6 +1,8 @@
 import React,{ useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import LOGO from '../Assets/Images/inverted.png'
+import sidebar1 from '../Assets/Images/sidebar1.png'
+import sidebar2 from '../Assets/Images/sidebar2.png'
 import Menus from './Menus';
 import { Divider } from '@mui/material';
 import { Drawer } from "antd";
@@ -46,9 +48,9 @@ function Sidebar() {
         key={'left'}
       >
        
-        <div className='flex items-center justify-center p-3'>
+        <motion.div  initial={{opacity:0,scale:1.5}} animate={{opacity:1,scale:1}} transition={{delay:0.5, type:'spring'}}  className='flex items-center justify-center p-3'>
                 <img src={LOGO} className="h-16" alt="Flowbite Logo" />
-              </div>
+              </motion.div>
         <Divider />
         <Menus mode={'vertical'} theme={'light'} />
 
@@ -62,7 +64,12 @@ function Sidebar() {
               }} src={LOGO} className="h-14" alt="Flowbite Logo" />
       </div>
      <Menus  />
+{/* <img className='absolute bottom-0 h-40 blur-1' src={sidebar2} alt="Flowbite Logo" /> */}
+
    </div>
+                {/* <motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5, type:'spring'
+              }} src={sidebar1} className="h-14" alt="Flowbite Logo" /> */}
+
 </aside>
     </div>
   )

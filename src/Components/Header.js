@@ -8,6 +8,9 @@ import MenuItem from "@mui/material/MenuItem";
 import DialogBox from "./DialogBox";
 import { routePaths } from "../Assets/Data/Routes";
 import { Button, Dropdown, Space } from "antd";
+import {motion} from 'framer-motion'
+import '../Styles/styles.css'
+import { Opacity } from "@mui/icons-material";
 function Header() {
   const [visible, setVisible] = useState(false);
   const [dark, setDark] = React.useState(false);
@@ -28,6 +31,7 @@ function Header() {
     document.body.classList.toggle("dark");
   };
   useEffect(()=>{
+    console.log(paths)
     console.log(localStorage.getItem('first_login'))
     // axios.post
     if(localStorage.getItem('first_login')=='Y'){
@@ -114,23 +118,23 @@ function Header() {
     {
       key: "1",
       label: (
-        <a
+        <div
           className="text-green-900 hover:text-green-900"
-          onClick={() => handleCloseProfile("", 2)}
+          // onClick={() => handleCloseProfile("", 2)}
         >
           Profile
-        </a>
+        </div>
       ),
     },
     {
       key: "2",
       label: (
-        <a
+        <div
           className="text-green-900 hover:text-green-900"
-          onClick={() => handleCloseProfile("/", 1)}
+          // onClick={() => handleCloseProfile("/", 1)}
         >
           Sign Out
-        </a>
+        </div>
       ),
     },
   ];
@@ -152,10 +156,10 @@ function Header() {
   };
   var col = "#C2EFB3";
   return (
-    <div className="sticky top-0 z-10 ">
+    <div className="sticky top-0 z-10">
       {/* <nav className={localStorage.getItem('col')!=0 && localStorage.getItem('col')?`bg-color-theme-${localStorage.getItem('col')} border-gray-200 px-5 pb-2 dark:bg-gray-800`:`bg-gray-300 border-gray-200 px-5 pb-2 dark:bg-gray-800`}> */}
-      <nav className={`bg-gray-700 border-gray-200 px-5 pb-2 dark:bg-gray-800`}>
-        <div className="flex flex-wrap justify-between items-center mx-auto min-w-screen-xl p-4">
+      <nav className={`bg-gray-700 border-gray-200  px-5 pb-2 dark:bg-gray-800`}>
+        <div  className="flex flex-wrap justify-between items-center mx-auto min-w-screen-xl p-4">
           <Link
             to={routePaths.HOME}
             className="flex items-center space-x-3"
@@ -166,15 +170,16 @@ function Header() {
               alt="Flowbite Logo"
             />
           </Link>
-          <div className="flex items-center space-x-6 rtl:space-x-reverse -mr-3">
-           
+          <div className="flex items-center space-x-6 rtl:space-x-reverse mr-4">
+           {/* {paths.length!=2 && <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1, y:0}} transition={{type:'spring', delay:0.2, stiffness:500}} className="rounded-l-full rounded-r-full bg-gray-700  text-gray-300 shadow-xl h-10 w-auto p-3 justify-center item-center border-2 text-sm border-green-500">Hello, {localStorage.getItem('user_name')}</motion.div>} */}
             <Dropdown menu={{ items }} placement="bottomLeft" arrow>
               <span className="relative inline-flex items-center">
                 <NotificationsActiveIcon className="text-green-500 dark:text-gray-400 cursor-pointer" />
               </span>
             </Dropdown>
+           
 
-            <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-[#C05746] rounded-full dark:bg-gray-600 hover:shadow-lg transition duration-0 hover:duration-500 hover:scale-110 ">
+            <div className="relative inline-flex border-2 border-green-500 items-center justify-center w-10 h-10 overflow-hidden bg-gray-700 rounded-full dark:bg-gray-600 hover:shadow-lg transition duration-0 hover:duration-500 hover:scale-110 ">
               <span
                 id="basic-button"
                 aria-controls={openProfile ? "basic-menu" : undefined}
@@ -194,19 +199,7 @@ function Header() {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <MenuItem
-                  className="text-green-900 flex justify-evenly hover:text-green-900"
-                  onClick={() => handleCloseProfile("", 0)}
-                >
-                  <div className="h-6 w-6 bg-gray-300 rounded-full" onClick={()=>{localStorage.setItem('col',0);window.location.reload()}}></div>
-                  <div className="h-6 w-6 bg-color-theme-1 rounded-full"  onClick={()=>{localStorage.setItem('col',1);window.location.reload()}}></div>
-                  {/* <div className="h-6 w-6 bg-color-theme-2 rounded-full"  onClick={()=>{localStorage.setItem('col',2);window.location.reload()}}></div>
-                  <div className="h-6 w-6 bg-color-theme-3 rounded-full"  onClick={()=>{localStorage.setItem('col',3);window.location.reload()}}></div> */}
-                  <div className="h-6 w-6 bg-color-theme-4 rounded-full"  onClick={()=>{localStorage.setItem('col',4);window.location.reload()}}></div>
-                  <div className="h-6 w-6 bg-color-theme-5 rounded-full"  onClick={()=>{localStorage.setItem('col',5);window.location.reload()}}></div>
-                  {/* <div className="h-6 w-6 bg-color-theme-6 rounded-full"  onClick={()=>{localStorage.setItem('col',6);window.location.reload()}}></div>
-                  <div className="h-6 w-6 bg-color-theme-7 rounded-full"  onClick={()=>{localStorage.setItem('col',7);window.location.reload()}}></div> */}
-                </MenuItem>
+               
                 <MenuItem
                   className="text-green-900 hover:text-green-900"
                   onClick={() => handleCloseProfile("", 2)}

@@ -5,6 +5,7 @@ import { Tabs } from 'antd';
 import ProfileInfo from './ProfileInfo';
 import PasswordComp from './PasswordComp';
 import { routePaths } from '../Assets/Data/Routes';
+import '../Styles/styles.css'
 const DialogBox = ({ visible, flag, onPress,onDelete }) => {
   const navigate = useNavigate();
   const onChange = (key) => {
@@ -23,15 +24,17 @@ const DialogBox = ({ visible, flag, onPress,onDelete }) => {
     }
   ];
   return (
-    <div>
-      <Dialog closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900 font-bold':'text-green-900 font-bold w-20'}>{flag==1?'Profile Information':'Warning!'}</div>} visible={visible} maximizable style={{ width: '50vw' }} onHide={() => {if (!visible) return; onPress() }}>
+      <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-500  font-bold':'text-green-500  font-bold w-20'}>{flag!=2?'Warning!':'Information!'}</div>} visible={visible} maximizable style={{
+         width: '50vw',
+         background:'black'
+         }} onHide={() => {if (!visible) return; onPress() }}>
          {flag==1 && 
              <p className="m-0">Do you want to logout?
              <div className='flex justify-center'>
-             <button type="reset" onClick={onPress} className="inline-flex mr-3 bg-white items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-green-900 border border-green-900 bg-primary-700 rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+             <button type="reset" onClick={onPress} className="inline-flex mr-3 bg-[#C05746] items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white border border-[#C05746] bg-primary-700 rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
                 No
              </button>
-             <button type="submit" onClick={()=>{localStorage.clear();navigate(routePaths.LANDING)}}className="inline-flex bg-green-900 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+             <button type="submit" onClick={()=>{localStorage.clear();navigate(routePaths.LANDING)}}className="inline-flex bg-green-500 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
                 Yes
              </button>
              </div>
@@ -46,17 +49,16 @@ const DialogBox = ({ visible, flag, onPress,onDelete }) => {
         {flag==4 && 
           <p className="m-0">Do you want to delete this item?
           <div className='flex justify-center'>
-          <button type="reset" onClick={onPress} className="inline-flex mr-3 bg-white items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-green-900 border border-green-900 bg-primary-700 rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+          <button type="reset" onClick={onPress} className="inline-flex mr-3 bg-[#C05746] items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white border border-[#C05746] bg-primary-700 rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
              No
           </button>
-          <button type="submit" onClick={onDelete} className="inline-flex bg-green-900 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+          <button type="submit" onClick={onDelete} className="inline-flex bg-green-500 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
              Yes
           </button>
           </div>
           </p>
         }
       </Dialog>
-    </div>
   );
 };
 

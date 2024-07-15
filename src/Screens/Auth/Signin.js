@@ -30,7 +30,7 @@ function Signin() {
       .then((res) => {
         console.log(res);
         setLoading(false);
-        if (res?.data?.msg?.length <= 0) {
+        if (res?.data?.suc <= 0) {
           Message("error", "Invalid credentials");
         } else {
           navigate(routePaths.HOME);
@@ -85,7 +85,7 @@ function Signin() {
                 flex-col items-center justify-center mt-7
                 `}
           >
-            <div className="flex-col items-center justify-center ml-7">
+            <div className="flex-col items-center justify-center ml-7 2xl:ml-36 2xl:mt-20">
               <motion.h2 className="text-green-500 text-4xl mt-14 ml-24 font-bold" initial={{opacity:1}} animate={{opacity:0,y:-20}} transition={{delay:4, type:'tween'
               }}>Welcome</motion.h2>
               <motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:4, type:'spring'
@@ -95,7 +95,7 @@ function Signin() {
            
               <form
                 onSubmit={formik.handleSubmit}
-                className="w-full py-6 sm:ml-10"
+                className="w-full py-6 sm:ml-10 2xl:mt-20"
               >
                 <div className="pt-1 block ">
                   <TDInputTemplate

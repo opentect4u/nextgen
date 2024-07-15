@@ -114,11 +114,13 @@ function DTableMaster({ headers,
    <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
     {/* <div className="flex flex-col bg-[#C05746] dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
     <div className="flex flex-col bg-green-500 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1">
+    {/* <div className="flex flex-col bg-gray-800 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
       <div class="w-full">
         <div class="flex items-center justify-evenly">
-          <h2 className="text-xl font-bold text-white dark:text-white sm:block hidden mx-5">
+          <motion.h2 initial={{opacity:0,y:-50}} animate={{opacity:1,y:0}} transition={{delay:1, type:'just'}} className="text-xl font-bold text-white dark:text-white sm:block hidden mx-5">
+          {/* <h2 className="text-xl font-bold text-green-500 dark:text-white sm:block hidden mx-5"> */}
             {title}
-          </h2>
+          </motion.h2>
 
           <label for="simple-search" class="sr-only">
             Search
@@ -139,30 +141,33 @@ function DTableMaster({ headers,
                 />
               </svg>
             </div>
-            <input
+            <motion.input
               type="text"
               id="simple-search"
+              initial={{opacity:0,width:0}} animate={{opacity:1,width:'95%'}} transition={{delay:1.1, type:'just'}}
               className="bg-gray-800 border rounded-full border-gray-800 text-gray-300 text-sm focus:ring-gray-800 focus:border-gray-800 block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4 focus:border-1 duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              //  className="bg-gray-800 border rounded-full border-green-500 text-gray-300 text-sm focus:ring-gray-800 focus:border-gray-800 block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4 focus:border-1 duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Search"
               required=""
               // value={search}
               onChange={(text) => setSearch(text.target.value)}
             />
           </div>
-        {btnText &&  <div class="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+        {btnText &&  <motion.div  initial={{opacity:0,y:50}} animate={{opacity:1,y:0}} transition={{delay:1.3, type:'just'}} class="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
             <Tooltip title={btnText}>
               <Link to={to+0}
                 type="submit"
                 // onClick={() => onclick()}
                className="flex items-center justify-center text-gray-300 bg-gray-800 hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
+                  // className="flex items-center justify-center text-gray-300 bg-green-500 hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
               >
                 <AddIcon /> {btnText}
               </Link>
             </Tooltip>
-          </div>}
+          </motion.div>}
           <div className='p-1'>
           <Dropdown menu={{ items }} placement="bottomLeft" arrow>
-          <MoreOutlined className=' className="flex items-center justify-center  text-white   rounded-full  text-3xl font-bold px-2 h-10 w-10 py-2 dark:text-white focus:outline-none  transition duration-0 hover:duration-500 dark:focus:ring-primary-800' />
+          <MoreOutlined className='flex items-center justify-center  text-white   rounded-full  text-3xl font-bold px-2 h-10 w-10 py-2 dark:text-white focus:outline-none  transition duration-0 hover:duration-500 dark:focus:ring-primary-800' />
           </Dropdown>
          {/* <button className=' className="flex items-center justify-center text-gray-600 bg-white hover:bg-primary-800 focus:ring-green-900 font-medium rounded-full hover:scale-110 text-sm px-2 h-10 w-10 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800' >
           <PrinterOutlined onClick={()=>print()}/>
