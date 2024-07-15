@@ -39,8 +39,8 @@ async def firstRoute(user:getUser):
     order = ""
     flag = 0
     result = await db_select(select, schema, where, order, flag)
-    print(result['msg']['user_password'])
-    if result['suc']!=1 :
+    print(result['msg'])
+    if result['suc']==1 :
         check=verify_password(user.password,result['msg']['user_password'])
         select = "a.first_login_flag,a.user_email,a.user_phone,a.user_name,a.user_type,b.desig_name,c.dept_name"
         schema = "md_user a,md_designation b, md_department c"
