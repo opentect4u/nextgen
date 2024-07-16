@@ -23,18 +23,7 @@ class deleteData(BaseModel):
     user:str
 class getPocId(BaseModel):
     client_id:int
-class addVendor(BaseModel):
-      v_id:int
-      v_name: str
-      v_email:str
-      v_contact:str
-      v_phone:str
-      v_gst:str
-      v_pan:str
-      v_reg:str
-      v_remarks:str
-      v_address:str
-      user:str
+
 
 class addProduct(BaseModel):
       p_id:int
@@ -83,7 +72,29 @@ class addClient(BaseModel):
       c_poc:list[addPoc] 
       user:str
 
-
+class addVPoc(BaseModel):
+      sl_no:int
+      poc_name:str
+    #   poc_designation:str
+    #   poc_department:str
+    #   poc_email:str
+    #   poc_direct_no:str
+    #   poc_ext_no:str
+      poc_ph_1:str
+      poc_ph_2:str
+    #   poc_address:str
+    #   poc_location:str
+class addVendor(BaseModel):
+      v_id:int
+      v_name: str
+      v_phone:str
+      v_email:str
+      v_gst:str
+      v_pan:str
+      v_reg:str
+      v_poc:list[addVPoc] 
+      v_remarks:str
+      user:str
 pass_alphabets=[
     'A','B','C','D','E','F','G','H','I','J','K','L',
     'M','N','O','P','Q','R','S','T','U','V','W','X',
@@ -374,35 +385,35 @@ async def deletedesig(id:deleteData):
        
    return res_dt
 
-@masterRouter.post('/addvendor')
-async def addvendor(data:addVendor):
-    print(data)
-    res_dt = {}
+# @masterRouter.post('/addvendor')
+# async def addvendor(data:addVendor):
+#     print(data)
+#     res_dt = {}
 
-    current_datetime = datetime.now()
-    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'vendor_name,vendor_email,vendor_contact,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks, vendor_address,created_by,created_at'
-    values = f'"{data.v_name}","{data.v_email}","{data.v_contact}","{data.v_phone}","{data.v_gst}","{data.v_pan}","{data.v_reg}","{data.v_remarks}","{data.v_address}","{data.user}","{formatted_dt}"'
-    table_name = "md_vendor"
-    whr =  None
-    flag = 1 if data.v_id>0 else 0
+#     current_datetime = datetime.now()
+#     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+#     fields= f'vendor_name,vendor_email,vendor_contact,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks, vendor_address,created_by,created_at'
+#     values = f'"{data.v_name}","{data.v_email}","{data.v_contact}","{data.v_phone}","{data.v_gst}","{data.v_pan}","{data.v_reg}","{data.v_remarks}","{data.v_address}","{data.user}","{formatted_dt}"'
+#     table_name = "md_vendor"
+#     whr =  None
+#     flag = 1 if data.v_id>0 else 0
 
-    if(data.v_id==0):
-        result = await db_Insert(table_name, fields, values, whr, flag)
-        if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "Vendor inserted successfully!"}
-        else:
-            res_dt = {"suc": 0, "msg": "Error while inserting!"}
-    else:
-        print(flag)
-        fields=f'vendor_name="{data.v_name}",vendor_email="{data.v_email}",vendor_contact="{data.v_contact}",vendor_phone="{data.v_phone}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_reg="{data.v_reg}",vendor_remarks="{data.v_remarks}",vendor_address="{data.v_address}",modified_by="{data.user}",modified_at="{formatted_dt}"'
-        whr=f'sl_no="{data.v_id}"'
-        result = await db_Insert(table_name, fields, values, whr, flag)
-        if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "Vendor updated successfully!"}
-        else:
-            res_dt = {"suc": 0, "msg": "Error while updating!"}
-    return res_dt
+#     if(data.v_id==0):
+#         result = await db_Insert(table_name, fields, values, whr, flag)
+#         if(result['suc']>0):
+#             res_dt = {"suc": 1, "msg": "Vendor inserted successfully!"}
+#         else:
+#             res_dt = {"suc": 0, "msg": "Error while inserting!"}
+#     else:
+#         print(flag)
+#         fields=f'vendor_name="{data.v_name}",vendor_email="{data.v_email}",vendor_contact="{data.v_contact}",vendor_phone="{data.v_phone}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_reg="{data.v_reg}",vendor_remarks="{data.v_remarks}",vendor_address="{data.v_address}",modified_by="{data.user}",modified_at="{formatted_dt}"'
+#         whr=f'sl_no="{data.v_id}"'
+#         result = await db_Insert(table_name, fields, values, whr, flag)
+#         if(result['suc']>0):
+#             res_dt = {"suc": 1, "msg": "Vendor updated successfully!"}
+#         else:
+#             res_dt = {"suc": 0, "msg": "Error while updating!"}
+#     return res_dt
 
 @masterRouter.post('/getvendor')
 async def getvendor(id:getData):
@@ -591,7 +602,7 @@ async def addclient(data:addClient):
         if(result['suc']>0):
             res_dt = {"suc": 1, "msg": f"Client inserted successfully!" if c.sl_no==0 else f"Client updated successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": f"Error while inserting!" if c.sl==0 else f"Error while updating"}
+            res_dt = {"suc": 0, "msg": f"Error while inserting!" if c.sl_no==0 else f"Error while updating"}
 
     return res_dt
 
@@ -673,6 +684,42 @@ async def getclientpoc(id:getData):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+@masterRouter.post('/addVendor')
+async def addvendor(data:addVendor):
+    res_dt = {}
+    print(data)
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    fields= f'vendor_name="{data.v_name}",vendor_email="{data.v_email}",vendor_phone="{data.v_phone}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_reg="{data.v_reg}",vendor_remarks="{data.v_remarks}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_reg,created_by,created_at'
+    values = f'"{data.v_name}","{data.v_email}","{data.v_phone}","{data.v_gst}","{data.v_pan}","{data.v_reg}","{data.v_remarks}","{data.user}","{formatted_dt}"'
+    table_name = "md_vendor"
+    whr = f'sl_no="{data.v_id}"' if data.v_id > 0 else None
+    flag = 1 if data.v_id>0 else 0
+
+    result = await db_Insert(table_name, fields, values, whr, flag)
+
+    lastID=data.v_id if data.v_id>0 else result["lastId"]
+
+    # del_table_name = 'md_client_poc'
+    # del_whr = f"sl_no not in()"
+    # del_qry = await db_Delete(del_table_name, del_whr)
+
+    for v in data.v_poc:
+        fields= f'poc_name="{v.poc_name}",", poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_ph_1,poc_ph_2,poc_address,poc_location,created_by,created_at'
+        values = f'"{lastID}","{v.poc_name}","{v.poc_ph_1}","{v.poc_ph_2}","{data.user}","{formatted_dt}"'
+        table_name = "md_vendor_poc"
+        whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
+        result = await db_Insert(table_name, fields, values, whr, flag)
+
+        if(result['suc']>0):
+            res_dt = {"suc": 1, "msg": f"Vendor inserted successfully!" if v.sl_no==0 else f"Vendor updated successfully!"}
+        else:
+            res_dt = {"suc": 0, "msg": f"Error while inserting!" if v.sl_no==0 else f"Error while updating"}
+
+    return res_dt
+
 
 # @masterRouter.post('/getpoc')
 # async def getunit(id:getPocId):
