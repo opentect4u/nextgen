@@ -31,10 +31,10 @@ const DialogBox = ({ visible, flag, onPress,onDelete }) => {
          {flag==1 && 
              <p className="m-0">Do you want to logout?
              <div className='flex justify-center'>
-             <button type="reset" onClick={onPress} className="inline-flex mr-3 bg-[#C05746] items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white border border-[#C05746] bg-primary-700 rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+             <button type="reset" onClick={onPress} className="inline-flex mr-3 bg-[#f37373] items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white border border-[#f37373] bg-primary-700 rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
                 No
              </button>
-             <button type="submit" onClick={()=>{localStorage.clear();navigate(routePaths.LANDING)}}className="inline-flex bg-green-500 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+             <button type="submit" onClick={()=>{localStorage.clear();navigate(routePaths.LANDING)}}className="inline-flex bg-emerald-500 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
                 Yes
              </button>
              </div>
@@ -49,10 +49,10 @@ const DialogBox = ({ visible, flag, onPress,onDelete }) => {
         {flag==4 && 
           <p className="m-0">Do you want to delete this item?
           <div className='flex justify-center'>
-          <button type="reset" onClick={onPress} className="inline-flex mr-3 bg-[#C05746] items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white border border-[#C05746] bg-primary-700 rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+          <button type="reset" onClick={onPress} className="inline-flex mr-3 bg-[#f37373] items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white border border-[#f37373] bg-primary-700 rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
              No
           </button>
-          <button type="submit" onClick={onDelete} className="inline-flex bg-green-500 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+          <button type="submit" onClick={onDelete} className="inline-flex bg-emerald-500 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
              Yes
           </button>
           </div>

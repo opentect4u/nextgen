@@ -91,7 +91,7 @@ function DeptForm() {
         enableReinitialize:true
       });
       return (
-        <section  className="bg-gray-700 dark:bg-[#001529]">
+        <section  className="bg-transparent dark:bg-[#001529]">
           {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
           <HeadingTemplate
               text={params.id > 0 ? "Update department" : "Add department"}
@@ -99,7 +99,7 @@ function DeptForm() {
               title={'Department'}
               data={params.id && data?data:''}
             />
-          <div className="w-full bg-gray-800 p-6 rounded-2xl">
+          <div className="w-full bg-white p-6 rounded-2xl">
            
             <Spin indicator={<LoadingOutlined spin />} size="large" className="text-green-900 dark:text-gray-400" spinning={loading}>
             <form onSubmit={formik.handleSubmit}>
@@ -123,28 +123,28 @@ function DeptForm() {
                 </div>
             { params.id>0 &&   <>
                 <div className="w-full">
-            <label className="block mb-2 text-sm font-semibold text-gray-300 dark:text-gray-100">
+            <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
          Created By
       </label>
-              <input  className="bg-gray-700 border border-green-500 text-gray-300 rounded-full text-sm   focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_by}/>
+              <input  className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-full  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_by}/>
             </div>
             <div className="w-full">
-            <label className="block mb-2 text-sm font-semibold text-gray-300 dark:text-gray-100">
+            <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
          Created At
       </label>
-              <input  className="bg-gray-700 border border-green-500 text-gray-300 rounded-full text-sm   focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_at?.split('T').join( ' ')}/>
+              <input  className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-full  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_at?.split('T').join( ' ')}/>
             </div>
             <div className="w-full">
-            <label className="block mb-2 text-sm font-semibold text-gray-300 dark:text-gray-100">
+            <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
          Modified By
       </label>
-              <input  className="bg-gray-700 border border-green-500 text-gray-300 rounded-full text-sm   focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_by}/>
+              <input  className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-full  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_by}/>
             </div>
             <div className="w-full">
-            <label className="block mb-2 text-sm font-semibold text-gray-300 dark:text-gray-100">
+            <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
        Modified at
       </label>
-              <input  className="bg-gray-700 border border-green-500 text-gray-300 rounded-full text-sm   focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_at?.split('T').join( ' ')}/>
+              <input  className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-full  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_at?.split('T').join( ' ')}/>
             </div>
               </>}
                 </div>

@@ -110,10 +110,10 @@ function DTableMaster({ headers,
   };
   return (
     <motion.section initial={{opacity:0,y:1000}} animate={{opacity:1,y:0}} transition={{delay:0.5,type:'tween',stiffness:100}} className="bg-transparent dark:bg-[#001529] py-3 sm:py-5 w-full -mt-5">
-   {title && 
+   {title && data &&
    <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
     {/* <div className="flex flex-col bg-[#C05746] dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
-    <div className="flex flex-col bg-green-500 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1">
+    <div className="flex flex-col bg-emerald-500 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1">
     {/* <div className="flex flex-col bg-gray-800 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
       <div class="w-full">
         <div class="flex items-center justify-evenly">
@@ -145,7 +145,7 @@ function DTableMaster({ headers,
               type="text"
               id="simple-search"
               initial={{opacity:0,width:0}} animate={{opacity:1,width:'95%'}} transition={{delay:1.1, type:'just'}}
-              className="bg-gray-800 border rounded-full border-gray-800 text-gray-300 text-sm focus:ring-gray-800 focus:border-gray-800 block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4 focus:border-1 duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="bg-white border rounded-full border-emerald-500 text-gray-800 text-sm  block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4  duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               //  className="bg-gray-800 border rounded-full border-green-500 text-gray-300 text-sm focus:ring-gray-800 focus:border-gray-800 block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4 focus:border-1 duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Search"
               required=""
@@ -158,7 +158,7 @@ function DTableMaster({ headers,
               <Link to={to+0}
                 type="submit"
                 // onClick={() => onclick()}
-               className="flex items-center justify-center text-gray-300 bg-gray-800 hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
+               className="flex items-center justify-center text-emerald-500 bg-white hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
                   // className="flex items-center justify-center text-gray-300 bg-green-500 hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
               >
                 <AddIcon /> {btnText}
@@ -181,7 +181,7 @@ function DTableMaster({ headers,
       <div>
         <div className="card w-full mt-5">
         {/* <ContextMenu className='dark:bg-gray-800 dark:text-white hover:text-green-900' model={menuModel} ref={cm} onHide={() => setSelectedItem(null)} /> */}
-          <DataTable
+         {data && <DataTable
             value={data}
             // onContextMenu={(e) => cm.current.show(e.originalEvent)} 
             // contextMenuSelection={selectedItem} 
@@ -194,10 +194,10 @@ function DTableMaster({ headers,
             rows={10}
             
             rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
-            rowClassName='bg-gray-800 text-gray-300 border border-b-gray-700 border-r-gray-700 border-l-gray-700 active:border-0 hover:bg-gray-700  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
+            rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-emerald-500 hover:text-white  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
             tableStyle={{ minWidth: "100%",fontSize:'14px' }}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            paginatorClassName='bg-gray-800 text-gray-300'
+            paginatorClassName='bg-white text-emerald-500'
             currentPageReportTemplate="{first} to {last} of {totalRecords}"
             paginatorLeft={paginatorLeft}
             paginatorRight={paginatorRight}
@@ -218,7 +218,7 @@ function DTableMaster({ headers,
                 key={index}
                 field={item.name}
                 header={item.value}
-                headerClassName={'text-gray-300 bg-gray-800 border-b-green-500  dark:bg-gray-700 dark:text-white dark:font-bold'}
+                headerClassName={'text-emerald-500 bg-white border-b-green-500  dark:bg-gray-700 dark:text-white dark:font-bold'}
                 style={{ width: "10%" }}
                 body={(rowData) => renderTooltip(rowData, item.name)}
               ></Column>
@@ -241,7 +241,10 @@ function DTableMaster({ headers,
                 frozen
               ></Column>
             )}
-          </DataTable>
+          </DataTable>}
+          <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{type:'spring',stiffness:400}}>
+          
+          </motion.div>
         </div>
         <div className='hidden w-full' id='tablePrint'>
         <DataTable
@@ -257,10 +260,10 @@ function DTableMaster({ headers,
             rows={data?.length}
             
             rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
-            rowClassName='dark:bg-gray-800 dark:text-gray-300 border border-b-gray-300 dark:border-green-900 active:border-0 hover:bg-[#eafaf2] hover:font-semibold dark:hover:bg-[#1e4834]'
+            rowClassName=' border border-b-gray-300 dark:border-green-900 hover:bg-emerald-500 hover:font-semibold dark:hover:bg-[#1e4834]'
             tableStyle={{ minWidth: "100%",fontSize:'14px' }}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            paginatorClassName='dark:bg-gray-800 dark:text-gray-300'
+            paginatorClassName='dark:bg-white dark:text-gray-700'
             currentPageReportTemplate="{first} to {last} of {totalRecords}"
             paginatorLeft={paginatorLeft}
             paginatorRight={paginatorRight}
