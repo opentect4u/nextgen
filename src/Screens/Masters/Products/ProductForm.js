@@ -138,6 +138,7 @@ function ProductForm() {
           <form onSubmit={formik.handleSubmit}>
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
               <div className="sm:col-span-2">
+  
                 <TDInputTemplate
                   placeholder="Select category..."
                   type="text"
@@ -148,6 +149,7 @@ function ProductForm() {
                   handleBlur={formik.handleBlur}
                   data={cat}
                   mode={2}
+                  disabled={params.id > 0}
                 />
                 {formik.errors.cat_id && formik.touched.cat_id ? (
                   <VError title={formik.errors.cat_id} />
@@ -179,6 +181,7 @@ function ProductForm() {
                   handleChange={formik.handleChange}
                   handleBlur={formik.handleBlur}
                   mode={1}
+                  disabled={params.id > 0}
                 />
 
                 {formik.errors.prod_make && formik.touched.prod_make ? (

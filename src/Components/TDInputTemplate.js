@@ -20,6 +20,7 @@ function TDInputTemplate(props) {
           placeholder={props.placeholder}
           onChange={props.handleChange}
           onBlur={props.handleBlur}
+          disabled={props.disabled}
         />
       )}
       {props.mode == 2 && (
@@ -54,6 +55,7 @@ function TDInputTemplate(props) {
     placeholder={props.placeholder}
     options={props?.data} 
     onBlur={props.handleBlur}
+    disabled={props.disabled}
     >
     <option selected>{props.placeholder}</option>
     {props?.data?.map((item, index) => ( 

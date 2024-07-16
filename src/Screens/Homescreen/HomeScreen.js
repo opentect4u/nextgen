@@ -120,6 +120,7 @@ function HomeScreen() {
           }}
           class=" rounded-lg bg-transparent col-span-1 dark:border-gray-600 p-4 h-32 md:h-64"
         >
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -148,12 +149,21 @@ function HomeScreen() {
           {/* <div className="flex flex-col">
           <motion.div whileHover={{scale:1.1,backgroundColor:'#C05746'}} initial={{y:-600}} animate={{y:0}} transition={{delay:0.5, type:'spring', stiffness:20}} className="hover:-translate-y-1 hover:scale-110 bg-white h-40 sm:w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer">
           <SolutionOutlined className="text-5xl mb-2 text-[#052d27]"/>
-          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-[#052d27] ">
+         <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-[#052d27] ">
+
+          <div className="flex flex-col">
+          <motion.div whileHover={{scale:1.1,backgroundColor:'#C05746'}} initial={{y:-600}} animate={{y:0}} transition={{delay:0.5, type:'spring', stiffness:20}} className="hover:-translate-y-1 hover:scale-110 bg-gray-300 h-40 sm:w-32 xl:w-48 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer">
+          <SolutionOutlined className="text-5xl mb-2 text-green-500"/>
+          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-green-500 ">
+
        Create PO
 
        </motion.h2>
           </motion.div>
-          <motion.div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#052d27] h-20 mt-3 w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center">
+
+        
+          <motion.div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-20 mt-3 xl:w-48  w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center">
+
           <UserAddOutlined className="text-2xl mb-2 text-gray-300"/>
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
        Users
