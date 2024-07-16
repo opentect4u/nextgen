@@ -91,7 +91,7 @@ function DesignationForm() {
         enableReinitialize:true
       });
       return (
-        <section className="bg-gray-700 dark:bg-[#001529]">
+        <section className="bg-transparent dark:bg-[#001529]">
            {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Designation'}/>} */}
            <HeadingTemplate
               text={params.id > 0 ? "Update designation" : "Add designation"}
@@ -99,7 +99,7 @@ function DesignationForm() {
               title={'Designation'}
               data={params.id && data?data:''}
             />
-          <div className="w-full bg-gray-800 p-6 rounded-2xl">
+          <div className="w-full bg-white p-6 rounded-2xl">
              <Spin indicator={<LoadingOutlined spin />} size="large" className="text-green-900 dark:text-gray-400" spinning={loading}>
             <form onSubmit={formik.handleSubmit}>
               <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">

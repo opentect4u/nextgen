@@ -1,111 +1,159 @@
 import React, { useEffect, useState } from "react";
-import { Chart } from 'primereact/chart';
+import { Chart } from "primereact/chart";
 import HELLO from "../../Assets/Images/hellooffice.png";
 import STAT from "../../Assets/Images/stat.png";
-import { motion } from "framer-motion"
-import {InfoCircleOutlined,SettingOutlined,CloseOutlined,SolutionOutlined,ProjectOutlined, BellOutlined ,UserAddOutlined, SwapOutlined  } from '@ant-design/icons'
-import { Flex, Progress } from 'antd';
+import { motion } from "framer-motion";
+import {
+  InfoCircleOutlined,
+  SettingOutlined,
+  CloseOutlined,
+  SolutionOutlined,
+  ProjectOutlined,
+  BellOutlined,
+  UserAddOutlined,
+  SwapOutlined,
+} from "@ant-design/icons";
+import { Flex, Progress } from "antd";
+import { WidthFull } from "@mui/icons-material";
 function HomeScreen() {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
 
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    const textColor = documentStyle.getPropertyValue("--text-color");
+    const textColorSecondary = documentStyle.getPropertyValue(
+      "--text-color-secondary"
+    );
+    const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
     const data = {
-        labels: ['', '', '', '', '', '', ''],
-        datasets: [
-            {
-                label: '1',
-                backgroundColor: '#01AB01',
-                borderColor: '#01AB01',
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-            {
-                label: '2',
-                backgroundColor:'#C05746',
-                borderColor:'#C05746',
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }
-        ]
+      labels: ["", "", "", "", "", "", ""],
+      datasets: [
+        {
+          label: "1",
+          backgroundColor: "#052d27",
+          borderColor: "#052d27",
+          data: [65, 59, 80, 81, 56, 55, 40],
+        },
+        {
+          label: "2",
+          backgroundColor: "#347865",
+          borderColor: "#347865",
+          data: [28, 48, 40, 19, 86, 27, 90],
+        },
+      ],
     };
     const options = {
-        indexAxis: 'y',
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        plugins: {
-            legend: {
-                labels: {
-                    fontColor: textColor
-                }
-            }
+      indexAxis: "y",
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      WidthFull,
+      plugins: {
+        legend: {
+          labels: {
+            fontColor: textColor,
+          },
         },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary,
-                    font: {
-                        weight: 500
-                    }
-                },
-                grid: {
-                    display: false,
-                    drawBorder: false
-                }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+            font: {
+              weight: 500,
             },
-            y: {
-                // ticks: {
-                //     color: textColorSecondary
-                // },
-                // grid: {
-                //     color: surfaceBorder,
-                //     drawBorder: false
-                // }
-            }
-        }
+          },
+          grid: {
+            display: false,
+            drawBorder: false,
+          },
+        },
+        y: {
+          // ticks: {
+          //     color: textColorSecondary
+          // },
+          // grid: {
+          //     color: surfaceBorder,
+          //     drawBorder: false
+          // }
+        },
+      },
     };
 
-    setChartData(data)
+    setChartData(data);
     setChartOptions(options);
-}, []);
+  }, []);
 
   return (
-    
     <main class="px-4 h-auto ">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <motion.div initial={{x:-500}} animate={{x:0}} transition={{delay:0.5, type:'spring',stiffness:20}}
-          class="relative bg-gray-300 rounded-lg flex justify-center py-5 dark:border-gray-600 h-32 md:h-64 shadow-2xl"
+        <motion.div
+          initial={{ x: -500 }}
+          animate={{ x: 0 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 20 }}
+          class="relative bg-white rounded-lg flex justify-center py-5 dark:border-gray-600 h-32 md:h-64 shadow-2xl"
         >
-       <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween',duration:1.5}} className="text-green-500 text-md font-bold">
-       Welcome {localStorage.getItem('user_name')}
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, type: "tween", duration: 1.5 }}
+            className="text-emerald-800 text-md font-bold"
+          >
+            Welcome {localStorage.getItem("user_name")}
+          </motion.h2>
 
-       </motion.h2>
-
-<img className="absolute bottom-0 h-52 w-full" src={`${HELLO}`} alt="" />
-
+          <img
+            className="absolute bottom-0 p-2 h-52 w-full"
+            src={`${HELLO}`}
+            alt=""
+          />
         </motion.div>
-       
-        <motion.div initial={{y:-500}} animate={{y:0}} transition={{delay:0.5, type:'spring',stiffness:20}}
-          class="bg-green-500 relative rounded-lg shadow-lg dark:border-gray-600 h-32 md:h-64 flex justify-center items-center"
-        >
- <Progress strokeLinecap="butt" type="circle" strokeColor={'white'} percent={75} />
-{/* <img className="absolute bottom-0 right-0 h-24 w-24" src={`${STAT}`} alt="" /> */}
 
-        </motion.div>
-         <div 
-          class=" flex rounded-lg bg-gray-700 col-span-2 dark:border-gray-600  h-32 md:h-64"
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{
+            delay: 0.5,
+            duration: 0.5,
+            type: "spring",
+            stiffness: 20,
+          }}
+          class=" rounded-lg bg-transparent col-span-1 dark:border-gray-600 p-4 h-32 md:h-64"
         >
-          <div className="flex flex-col">
-          <motion.div whileHover={{scale:1.1,backgroundColor:'#C05746'}} initial={{y:-600}} animate={{y:0}} transition={{delay:0.5, type:'spring', stiffness:20}} className="hover:-translate-y-1 hover:scale-110 bg-gray-300 h-40 sm:w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer">
-          <SolutionOutlined className="text-5xl mb-2 text-green-500"/>
-          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-green-500 ">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, type: "spring", stiffness: 10 }}
+            className="card flex-col text-xs flex-wrap items-center justify-evenly space-y-3 gap-4 overflow-clip max-h-full -mt-2"
+          >
+            <div className="px-5 bg-white text-emerald-800 font-thin text-sm h-12 w-full rounded-lg flex justify-start items-center shadow-xl">
+              <SettingOutlined className="mr-4 rounded-lg text-emerald-800 text-sm" />{" "}
+              Materials delivered
+            </div>
+            <div className="px-5 bg-white text-emerald-800 h-12 w-full rounded-lg text-sm flex justify-start items-center shadow-xl">
+              <CloseOutlined className="mr-4 bg-white rounded-lg text-emerald-800 text-sm" />{" "}
+              Delivery date nearing
+            </div>
+            <div className="px-5 bg-white text-emerald-800 h-12 w-full rounded-lg flex justify-start items-center shadow-xl">
+              <InfoCircleOutlined className="mr-4 bg-white rounded-lg text-emerald-800 text-sm" />{" "}
+              New project awaiting review
+            </div>
+            <div className="px-5 bg-white text-emerald-800 font-thin h-12 w-full rounded-lg flex justify-start items-center shadow-xl">
+              <SettingOutlined className="mr-4 rounded-lg text-emerald-800 text-sm" />{" "}
+              Nut bolts have been delivered
+            </div>
+          </motion.div>
+        </motion.div>
+        <div class=" flex rounded-lg col-span-2 bg-white dark:border-gray-600  h-32 md:h-64">
+          {/* <div className="flex flex-col">
+          <motion.div whileHover={{scale:1.1,backgroundColor:'#C05746'}} initial={{y:-600}} animate={{y:0}} transition={{delay:0.5, type:'spring', stiffness:20}} className="hover:-translate-y-1 hover:scale-110 bg-white h-40 sm:w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer">
+          <SolutionOutlined className="text-5xl mb-2 text-[#052d27]"/>
+          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-[#052d27] ">
        Create PO
 
        </motion.h2>
           </motion.div>
-          <motion.div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-20 mt-3 w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center">
+          <motion.div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#052d27] h-20 mt-3 w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center">
           <UserAddOutlined className="text-2xl mb-2 text-gray-300"/>
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
        Users
@@ -122,7 +170,7 @@ function HomeScreen() {
        </motion.h2>
           </motion.div>
 
-          <motion.div initial={{opacity:0,x:-200}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-40 mt-3 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col justify-center items-center">
+          <motion.div initial={{opacity:0,x:-200}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#052d27] h-40 mt-3 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col justify-center items-center">
           <SwapOutlined className="text-5xl mb-2 text-gray-300"/>
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
        Transfer request
@@ -131,7 +179,7 @@ function HomeScreen() {
           </motion.div>
           </div>
           <div className="ml-3 flex flex-col">
-          <motion.div initial={{opacity:0,scale:1.5}} animate={{opacity:1,scale:1}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-32 w-56 2xl:w-60 rounded-lg shadow-lg flex flex-col items-center justify-center">
+          <motion.div initial={{opacity:0,scale:1.5}} animate={{opacity:1,scale:1}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#052d27] h-32 w-56 2xl:w-60 rounded-lg shadow-lg flex flex-col items-center justify-center">
           <BellOutlined className="text-5xl mb-2 text-gray-300"/>
           <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
        Unread notifications
@@ -158,18 +206,28 @@ Reset Password
           </div>
          
 
-          {/* <div className="bg-green-500 h-40 mt-3 w-32 rounded-lg"></div> */}
+         
           </div>
-       
+        */}
+          {/* <motion.div initial={{opacity:0,x:-100}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}}
+          class="bg-white col-span-2 rounded-lg shadow-lg dark:border-gray-600 h-32 md:h-64"
+        > */}
 
+          <Chart
+            type="bar"
+            className="h-64"
+            data={chartData}
+            options={chartOptions}
+          />
 
+          {/* </motion.div> */}
         </div>
-         <motion.div initial={{scale:0}} animate={{scale:1}} transition={{delay:0.5,duration:0.5, type:'spring',stiffness:20}}
+        {/* <motion.div initial={{scale:0}} animate={{scale:1}} transition={{delay:0.5,duration:0.5, type:'spring',stiffness:20}}
           class="shadow-xl rounded-lg bg-[#C05746] col-span-2 dark:border-gray-600 p-4 h-32 md:h-64"
         >
          <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'spring',stiffness:10}} className="card flex-col flex-wrap items-center justify-evenly space-y-5 gap-4 overflow-clip max-h-full">
-            <div className="px-5 bg-white text-green-500 font-thin h-12 w-full rounded-full flex justify-start items-center shadow-xl">
-            <SettingOutlined  className="mr-4 rounded-full text-green-500 text-2xl" /> Nut bolts have been delivered
+            <div className="px-5 bg-white text-[#052d27] font-thin h-12 w-full rounded-full flex justify-start items-center shadow-xl">
+            <SettingOutlined  className="mr-4 rounded-full text-[#052d27] text-2xl" /> Nut bolts have been delivered
             </div>
              <div className="px-5 bg-white text-[#FF5449] h-12 w-full rounded-full flex justify-start items-center shadow-xl">
             <CloseOutlined className="mr-4 bg-white rounded-full text-[#FF5449] text-2xl" /> Delivery date overstepped
@@ -177,8 +235,8 @@ Reset Password
             <div className="px-5 bg-white text-[#22A0A6] h-12 w-full rounded-full flex justify-start items-center shadow-xl">
             <InfoCircleOutlined className="mr-4 bg-white rounded-full text-[#22A0A6] text-2xl" /> New project awaiting review
             </div>
-            <div className="px-5 bg-white text-green-500 font-thin h-12 w-full rounded-full flex justify-start items-center shadow-xl">
-            <SettingOutlined  className="mr-4 rounded-full text-green-500 text-2xl" /> Nut bolts have been delivered
+            <div className="px-5 bg-white text-[#052d27] font-thin h-12 w-full rounded-full flex justify-start items-center shadow-xl">
+            <SettingOutlined  className="mr-4 rounded-full text-[#052d27] text-2xl" /> Nut bolts have been delivered
             </div>
            
             
@@ -188,54 +246,151 @@ Reset Password
             
         </motion.div>
 
-        </motion.div>
-        <motion.div initial={{opacity:0,x:-100}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}}
-          class="bg-gray-300 rounded-lg shadow-lg dark:border-gray-600 h-32 md:h-64"
+        </motion.div> */}
+        <motion.div
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1, type: "spring", stiffness: 20 }}
+          class="bg-white rounded-lg shadow-lg dark:border-gray-600 h-32 md:h-64"
         >
-
-<Chart type="bar" className="h-64" data={chartData} options={chartOptions} />
-
+          <Chart
+            type="bar"
+            className="h-64"
+            data={chartData}
+            options={chartOptions}
+          />
         </motion.div>
-         <motion.div initial={{opacity:0,x:600}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}}
-          class="bg-green-500 flex justify-center items-center shadow-lg rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"
+        <motion.div
+          initial={{ opacity: 0, x: 600 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1, type: "spring", stiffness: 20 }}
+          class="bg-white flex justify-center col-span-1 items-center shadow-lg rounded-lg border-white dark:border-gray-600 h-32 md:h-64"
         >
- <Progress strokeLinecap="butt" type="circle" strokeColor={'white'} percent={75} />
-
+          <Progress
+            strokeLinecap="butt"
+            type="circle"
+            strokeColor={"#347865"}
+            percent={75}
+          />
         </motion.div>
+        <div class="col-span-2 overflow-x-auto shadow-md sm:rounded-lg">
+          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-emerald-500 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-emerald-500">
+                  Product name
+                </th>
+                <th scope="col" class="px-6 py-3 text-emerald-500">
+                  Color
+                </th>
+                <th scope="col" class="px-6 py-3 text-emerald-500">
+                  Category
+                </th>
+                <th scope="col" class="px-6 py-3 text-emerald-500">
+                  Price
+                </th>
+                <th scope="col" class="px-6 py-3 text-emerald-500">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Apple MacBook Pro 17"
+                </th>
+                <td class="px-6 py-4">Silver</td>
+                <td class="px-6 py-4">Laptop</td>
+                <td class="px-6 py-4">$2999</td>
+                <td class="px-6 py-4">
+                  <a
+                    href="#"
+                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >
+                    Edit
+                  </a>
+                </td>
+              </tr>
+              <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Microsoft Surface Pro
+                </th>
+                <td class="px-6 py-4">White</td>
+                <td class="px-6 py-4">Laptop PC</td>
+                <td class="px-6 py-4">$1999</td>
+                <td class="px-6 py-4">
+                  <a
+                    href="#"
+                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >
+                    Edit
+                  </a>
+                </td>
+              </tr>
+              <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Magic Mouse 2
+                </th>
+                <td class="px-6 py-4">Black</td>
+                <td class="px-6 py-4">Accessories</td>
+                <td class="px-6 py-4">$99</td>
+                <td class="px-6 py-4">
+                  <a
+                    href="#"
+                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >
+                    Edit
+                  </a>
+                </td>
+              </tr>
+              <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Google Pixel Phone
+                </th>
+                <td class="px-6 py-4">Gray</td>
+                <td class="px-6 py-4">Phone</td>
+                <td class="px-6 py-4">$799</td>
+                <td class="px-6 py-4">
+                  <a
+                    href="#"
+                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >
+                    Edit
+                  </a>
+                </td>
+              </tr>
+             
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div
-        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4"
-      ></div>
+      <div class="border-2 grid-cols-1 border-dashed rounded-lg border-white dark:border-gray-600 h-96 mb-4">
+        
+      </div>
       <div class="grid grid-cols-2 gap-4 mb-4">
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
+        <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
+        <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
+        <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
+        <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
       </div>
-      <div
-        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4"
-      ></div>
+      <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-96 mb-4"></div>
       <div class="grid grid-cols-2 gap-4">
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
+        <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
+        <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
+        <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
+        <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
       </div>
     </main>
   );

@@ -62,15 +62,15 @@ function Signin() {
   });
 
   return (
-    <div className="bg-gray-700 p-20 flex justify-center min-h-screen min-w-screen">
+    <div className="bg-white p-20 flex justify-center min-h-screen min-w-screen">
       <motion.div  initial={{opacity:0,scale:1.3}} animate={{opacity:1,scale:1}} transition={{delay:0.5,type:'spring'
       }} className="grid grid-cols-2 gap-0 h-auto shadow-lg w-5/6">
-        <div className="hidden bg-gray-800 sm:block rounded-l-3xl">
+        <div className="hidden bg-emerald-800 sm:block rounded-l-3xl">
           <img className="ml-7 h-full w-full" src={`${IMG}`} alt="" />
         </div>
         <div
           className={`p-5 col-span-2 sm:col-span-1 
-        bg-gray-800 h-auto space-y-5 w-full
+        bg-emerald-800 h-auto space-y-5 w-full
          rounded-r-3xl
         `}
         >
@@ -86,7 +86,7 @@ function Signin() {
                 `}
           >
             <div className="flex-col items-center justify-center ml-7 2xl:ml-36 2xl:mt-20">
-              <motion.h2 className="text-green-500 text-4xl mt-14 ml-24 font-bold" initial={{opacity:1}} animate={{opacity:0,y:-20}} transition={{delay:4, type:'tween'
+              <motion.h2 className="text-white text-4xl mt-14 ml-24 font-bold" initial={{opacity:1}} animate={{opacity:0,y:-20}} transition={{delay:4, type:'tween'
               }}>Welcome</motion.h2>
               <motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:4, type:'spring'
               }} src={LOGO} className="h-20 -mt-16 ml-9" alt="Flowbite Logo" />
@@ -131,7 +131,7 @@ function Signin() {
                 </div>
                 <div className="pt-2">
                   <Link to={routePaths.FORGOTPASS}>
-                    <p className="text-xs text-green-500 hover:underline py-2 cursor-pointer">
+                    <p className="text-xs text-white hover:underline py-2 cursor-pointer">
                       Forgot password?
                     </p>
                   </Link>
@@ -140,7 +140,7 @@ function Signin() {
                   <button
                     disabled={!formik.isValid}
                     type="submit"
-                    className="bg-green-500 hover:duration-500 w-full hover:scale-105 hover:bg-[#C05746]  text-white p-3 rounded-full"
+                    className="bg-white hover:duration-500 w-full hover:scale-105  text-emerald-500 p-3 rounded-full"
                   >
                     Login to your account
                   </button>

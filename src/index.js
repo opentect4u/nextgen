@@ -359,11 +359,11 @@ root.render(
   <Democontext>
     <Suspense
       fallback={
-        <div className="bg-gray-700 h-screen flex justify-center items-center">
+        <div className="bg-emerald-50 h-screen flex justify-center items-center">
           <Spin
             indicator={<LoadingOutlined spin />}
             size="large"
-            style={{ color: "#01AB01" }}
+            style={{ color: "#052d27" }}
           />
         </div>
       }

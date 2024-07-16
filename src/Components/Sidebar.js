@@ -31,7 +31,7 @@ function Sidebar() {
   };
   const drawerWidth = 257;
   return (
-    <div className='bg-gray-700 dark:bg-gray-800 '>
+    <div className='bg-emerald-900 dark:bg-gray-800 '>
         
 <button onClick={showDrawer} data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar" aria-controls="sidebar-multi-level-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
    <span className="sr-only">Open sidebar</span>
@@ -57,11 +57,11 @@ function Sidebar() {
         <Divider/>
       </Drawer>
 <aside  id="sidebar-multi-level-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-   <div className="h-full px-3 py-4 overflow-y-auto bg-gray-700 dark:bg-gray-800">
+   <div className="h-full px-3 py-4 overflow-y-auto bg-emerald-800 dark:bg-gray-800">
    
-      <div className='flex items-center justify-center p-3'>
+      <div className='flex items-center justify-start p-3'>
                 <motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5, type:'spring'
-              }} src={LOGO} className="h-14" alt="Flowbite Logo" />
+              }} src={LOGO} className="h-14 mb-5" alt="Flowbite Logo" />
       </div>
      <Menus  />
 {/* <img className='absolute bottom-0 h-40 blur-1' src={sidebar2} alt="Flowbite Logo" /> */}

@@ -36,7 +36,7 @@
     transform: rotate(360deg);
   }
 }
-.p-dropdown{
+/* .p-dropdown{
   background: #1F2937 !important;
   color:white
 }
@@ -47,13 +47,13 @@
 .p-dropdown-items{
   background: #1F2937 !important;
    color:white
-}
-.p-dialog-content{
-   background: #1F2937 !important;
+}*/
+/* .p-dialog-content{
+   background: #347865 !important;
    color:white
   }
 .p-dialog-header{
-  background: #1F2937 !important;
+  background: #347865 !important;
 
 }
 .p-dialog-header-close{
@@ -62,7 +62,7 @@
 .p-dialog-header-maximize{
   color:white
   
-}
+}  */
 /* * {
   font-family: "Poppins", sans-serif;
   font-weight: 400;

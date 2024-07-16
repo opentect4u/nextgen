@@ -157,8 +157,7 @@ function Header() {
   var col = "#C2EFB3";
   return (
     <div className="sticky top-0 z-10">
-      {/* <nav className={localStorage.getItem('col')!=0 && localStorage.getItem('col')?`bg-color-theme-${localStorage.getItem('col')} border-gray-200 px-5 pb-2 dark:bg-gray-800`:`bg-gray-300 border-gray-200 px-5 pb-2 dark:bg-gray-800`}> */}
-      <nav className={`bg-gray-700 border-gray-200  px-5 pb-2 dark:bg-gray-800`}>
+      <nav className={`bg-emerald-50  px-5 pb-2 dark:bg-gray-800`}>
         <div  className="flex flex-wrap justify-between items-center mx-auto min-w-screen-xl p-4">
           <Link
             to={routePaths.HOME}
@@ -174,19 +173,19 @@ function Header() {
            {/* {paths.length!=2 && <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1, y:0}} transition={{type:'spring', delay:0.2, stiffness:500}} className="rounded-l-full rounded-r-full bg-gray-700  text-gray-300 shadow-xl h-10 w-auto p-3 justify-center item-center border-2 text-sm border-green-500">Hello, {localStorage.getItem('user_name')}</motion.div>} */}
             <Dropdown menu={{ items }} placement="bottomLeft" arrow>
               <span className="relative inline-flex items-center">
-                <NotificationsActiveIcon className="text-green-500 dark:text-gray-400 cursor-pointer" />
+                <NotificationsActiveIcon className="text-emerald-500 dark:text-gray-400 cursor-pointer" />
               </span>
             </Dropdown>
            
 
-            <div className="relative inline-flex border-2 border-green-500 items-center justify-center w-10 h-10 overflow-hidden bg-gray-700 rounded-full dark:bg-gray-600 hover:shadow-lg transition duration-0 hover:duration-500 hover:scale-110 ">
+            <div className="relative inline-flex border-2 border-emerald-500 items-center justify-center w-10 h-10 overflow-hidden bg-white rounded-full dark:bg-gray-600 hover:shadow-lg transition duration-0 hover:duration-500 hover:scale-110 ">
               <span
                 id="basic-button"
                 aria-controls={openProfile ? "basic-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={openProfile ? "true" : undefined}
                 onClick={handleClickProfile}
-                className="font-medium text-gray-300  dark:text-gray-300 cursor-pointer"
+                className="font-medium text-emerald-500  dark:text-gray-300 cursor-pointer"
               >
                 PM
               </span>
