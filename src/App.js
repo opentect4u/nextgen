@@ -88,9 +88,9 @@ function App() {
         itemActiveColor:'#347865'
       },
       Dropdown:{
-        colorBgElevated:'#374151',
-        colorText:'#D1D5DB',
-        controlItemBgHover:'#C05746'
+        colorBgElevated:'#347865',
+        colorText:'white',
+        controlItemBgHover:'#347865'
 
       }
     },

@@ -27,13 +27,14 @@ function VendorForm() {
     v_address: "",
     dynamicFields: [{
       sl_no: 0,
-      v_contact: "", v_phone: "",
+      poc_name: "", poc_ph_1: "",poc_ph_2:""
     }]
   });
 
   const initialValues = {
     v_name: "",
     v_email: "",
+    v_phone:"",
     v_gst: "",
     v_pan: "",
     v_reg: "",
@@ -41,7 +42,7 @@ function VendorForm() {
     v_address: "",
     dynamicFields: [{
       sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
-      v_contact: "", v_phone: "",
+      poc_name: "", poc_ph_1: "",poc_ph_2:""
     }]
   };
 
@@ -50,6 +51,7 @@ function VendorForm() {
     v_email: Yup.string()
       .required("Email is required")
       .email("Incorrect email format"),
+    v_phone:Yup.string().required("Phone is required").length(10),
     v_address: Yup.string().required("Address is required"),
     // v_pan:Yup.string().matches("[A-Z]{5}[0-9]{4}[A-Z]{1}"),
     v_pan: Yup.string(),
@@ -58,8 +60,10 @@ function VendorForm() {
     v_remarks: Yup.string(),
     dynamicFields: Yup.array().of(
       Yup.object().shape({
-        v_contact: Yup.string().required("Contact person is required"),
-        v_phone: Yup.string().required("Phone is required").length(10),
+        poc_name: Yup.string().required("Contact person is required"),
+        poc_ph_1: Yup.string().required("Phone is required").length(10),
+        poc_ph_2: Yup.string().required("Phone is required").length(10),
+
       })
     )
   });
@@ -74,8 +78,9 @@ function VendorForm() {
         setValues({
           v_name: res.data.msg.vendor_name,
           v_email: res.data.msg.vendor_email,
-          v_contact: res.data.msg.vendor_contact,
-          v_phone: res.data.msg.vendor_phone,
+          poc_name: res.data.msg.vendor_contact,
+          poc_ph_1: res.data.msg.vendor_phone,
+          poc_ph_2: res.data.msg.vendor_phone,
           v_remarks: res.data.msg.vendor_remarks,
           v_gst: res.data.msg.vendor_gst,
           v_pan: res.data.msg.vendor_pan,
@@ -91,18 +96,20 @@ function VendorForm() {
     console.log(values);
     setLoading(true);
     axios
-      .post(url + "/api/addvendor", {
+      .post(url + "/api/addVendor", {
         v_id: +params.id,
         user: localStorage.getItem("email"),
         v_name: values.v_name,
         v_email: values.v_email,
+        v_phone:values.v_phone.toString(),
         v_gst: values.v_gst,
         v_pan: values.v_pan,
         v_reg: values.v_reg,
         v_remarks: values.v_remarks,
         v_address: values.v_address,
-        // v_contact: values.v_contact,
-        // v_phone: values.v_phone.toString(),
+        v_poc:values.dynamicFields,
+        // poc_name: values.poc_name,
+        // poc_ph_1: values.poc_ph_1.toString(),
       })
       .then((res) => {
         setLoading(false);
@@ -151,8 +158,21 @@ function VendorForm() {
                     />
                     {errors.v_name && touched.v_name ? <VError title={errors.v_name} /> : null}
                   </div>
-                  <div className="sm:col-span-2">
+                  <div>
                     <TDInputTemplate
+                      placeholder="Type Phone No...."
+                      type="text"
+                      label="Vendor phone No."
+                      name="v_phone"
+                      formControlName={values.v_phone}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      mode={1}
+                    />
+                    {errors.v_phone && touched.v_phone ? <VError title={errors.v_phone} /> : null}
+                  </div>
+                  <div>
+                  <TDInputTemplate
                       placeholder="Type email..."
                       type="text"
                       label="Vendor email"
@@ -164,7 +184,6 @@ function VendorForm() {
                     />
                     {errors.v_email && touched.v_email ? <VError title={errors.v_email} /> : null}
                   </div>
-                  <div></div>
                   <div className="sm:col-span-2 -mt-4">
                     <div className="grid gap-4 sm:grid-cols-3 sm:gap-6">
                       <div className="sm:col-span-1">
@@ -244,29 +263,44 @@ function VendorForm() {
                                 placeholder="Type contact person name..."
                                 type="text"
                                 label="Contact person name"
-                                name={`dynamicFields[${index}].v_contact`}
-                                formControlName={field.v_contact}
+                                name={`dynamicFields[${index}].poc_name`}
+                                formControlName={field.poc_name}
                                 handleChange={handleChange}
                                 handleBlur={handleBlur}
                                 mode={1}
                               />
-                              {errors.dynamicFields?.[index]?.v_contact && touched.dynamicFields?.[index]?.v_contact ? (
-                                <VError title={errors.dynamicFields[index].v_contact} />
+                              {errors.dynamicFields?.[index]?.poc_name && touched.dynamicFields?.[index]?.poc_name ? (
+                                <VError title={errors.dynamicFields[index].poc_name} />
                               ) : null}
                             </div>
                             <div>
                               <TDInputTemplate
                                 placeholder="Type contact person phone..."
-                                type="number"
+                                type="text"
                                 label="Contact person phone no."
-                                name={`dynamicFields[${index}].v_phone`}
-                                formControlName={field.v_phone}
+                                name={`dynamicFields[${index}].poc_ph_1`}
+                                formControlName={field.poc_ph_1}
                                 handleChange={handleChange}
                                 handleBlur={handleBlur}
                                 mode={1}
                               />
-                              {errors.dynamicFields?.[index]?.v_phone && touched.dynamicFields?.[index]?.v_phone ? (
-                                <VError title={errors.dynamicFields[index].v_phone} />
+                              {errors.dynamicFields?.[index]?.poc_ph_1 && touched.dynamicFields?.[index]?.poc_ph_1 ? (
+                                <VError title={errors.dynamicFields[index].poc_ph_1} />
+                              ) : null}
+                            </div>
+                            <div>
+                              <TDInputTemplate
+                                placeholder="Type contact person phone..."
+                                type="text"
+                                label="Contact person phone no."
+                                name={`dynamicFields[${index}].poc_ph_2`}
+                                formControlName={field.poc_ph_2}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                mode={1}
+                              />
+                              {errors.dynamicFields?.[index]?.poc_ph_2 && touched.dynamicFields?.[index]?.poc_ph_2 ? (
+                                <VError title={errors.dynamicFields[index].poc_ph_2} />
                               ) : null}
                             </div>
                             <div className="sm:col-span-2">
@@ -275,7 +309,7 @@ function VendorForm() {
                           </React.Fragment>
                         ))}
                         <div className="sm:col-span-2">
-                          <Button type="dashed" onClick={() => push({ sl_no: 0, v_contact: "", v_phone: "" })} icon={<PlusOutlined />}>
+                          <Button type="dashed" onClick={() => push({ sl_no: 0, poc_name: "", poc_ph_1: "" })} icon={<PlusOutlined />}>
                             Add field
                           </Button>
                         </div>

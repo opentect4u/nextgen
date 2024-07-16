@@ -110,7 +110,7 @@ function DTableMaster({ headers,
   };
   return (
     <motion.section initial={{opacity:0,y:1000}} animate={{opacity:1,y:0}} transition={{delay:0.5,type:'tween',stiffness:100}} className="bg-transparent dark:bg-[#001529] py-3 sm:py-5 w-full -mt-5">
-   {title && data &&
+   {title && 
    <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
     {/* <div className="flex flex-col bg-[#C05746] dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
     <div className="flex flex-col bg-emerald-500 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1">
@@ -181,7 +181,7 @@ function DTableMaster({ headers,
       <div>
         <div className="card w-full mt-5">
         {/* <ContextMenu className='dark:bg-gray-800 dark:text-white hover:text-green-900' model={menuModel} ref={cm} onHide={() => setSelectedItem(null)} /> */}
-         {data && <DataTable
+          <DataTable
             value={data}
             // onContextMenu={(e) => cm.current.show(e.originalEvent)} 
             // contextMenuSelection={selectedItem} 
@@ -241,7 +241,7 @@ function DTableMaster({ headers,
                 frozen
               ></Column>
             )}
-          </DataTable>}
+          </DataTable>
           <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{type:'spring',stiffness:400}}>
           
           </motion.div>
