@@ -94,6 +94,7 @@ class addVendor(BaseModel):
       v_reg:str
       v_poc:list[addVPoc] 
       v_remarks:str
+      v_address:str
       user:str
 pass_alphabets=[
     'A','B','C','D','E','F','G','H','I','J','K','L',
@@ -692,8 +693,8 @@ async def addvendor(data:addVendor):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'vendor_name="{data.v_name}",vendor_email="{data.v_email}",vendor_phone="{data.v_phone}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_reg="{data.v_reg}",vendor_remarks="{data.v_remarks}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_reg,created_by,created_at'
-    values = f'"{data.v_name}","{data.v_email}","{data.v_phone}","{data.v_gst}","{data.v_pan}","{data.v_reg}","{data.v_remarks}","{data.user}","{formatted_dt}"'
+    fields= f'vendor_name="{data.v_name}",vendor_email="{data.v_email}",vendor_phone="{data.v_phone}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_reg="{data.v_reg}",vendor_remarks="{data.v_remarks}",vendor_address="{data.v_address}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks,vendor_address,created_by,created_at'
+    values = f'"{data.v_name}","{data.v_email}","{data.v_phone}","{data.v_gst}","{data.v_pan}","{data.v_reg}","{data.v_remarks}","{data.v_address}","{data.user}","{formatted_dt}"'
     table_name = "md_vendor"
     whr = f'sl_no="{data.v_id}"' if data.v_id > 0 else None
     flag = 1 if data.v_id>0 else 0
