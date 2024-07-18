@@ -81,4 +81,14 @@ export const masterheaders={
       { name: "created_by", value: "Created by" },
     ],
   },
+  'projects': {
+    title: "Projects",
+    btnText:'Add projects',
+    headers: [
+      { name: "serial_number", value: "#" },
+      { name: "Project_name", value: "Name" },
+      { name: "Project_manager", value: "Project Manager" },
+      { name: "created_by", value: "Created by" },
+    ],
+  },
 }

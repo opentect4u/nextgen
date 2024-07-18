@@ -21,6 +21,7 @@ function Home() {
       <Header />
       <Sidebar />
       <div className="px-6 w-auto sm:ml-60 bg-gray-200 dark:bg-gray-800 min-h-screen ">
+
         <div
           className={
             "p-4 h-auto rounded-3xl bg-transparent dark:border-gray-700 dark:bg-transparent dark:text-white min-w-screen-xl"

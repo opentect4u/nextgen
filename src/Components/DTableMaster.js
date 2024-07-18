@@ -114,6 +114,7 @@ function DTableMaster({ headers,
    <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
     {/* <div className="flex flex-col bg-[#C05746] dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
     <div className="flex flex-col bg-green-900 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
+
     {/* <div className="flex flex-col bg-gray-800 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
       <div class="w-full">
         <div class="flex items-center justify-evenly">
@@ -158,6 +159,7 @@ function DTableMaster({ headers,
                 type="submit"
                className="flex items-center justify-center text-green-900 bg-white hover:bg-primary-800  font-medium rounded-full transition ease-in-out hover:-translate-x-1 hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
               
+
               >
                 <AddIcon /> {btnText}
               </Link>
@@ -187,7 +189,9 @@ function DTableMaster({ headers,
             rows={10}
             
             rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
+
             rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-green-700 hover:text-white  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
+
             tableStyle={{ minWidth: "100%",fontSize:'14px' }}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             paginatorClassName='bg-white text-emerald-500'
@@ -210,6 +214,7 @@ function DTableMaster({ headers,
                 field={item.name}
                 header={item.value}
                 headerClassName={'text-green-900 bg-green-100 border-b-green-900  dark:bg-gray-700 dark:text-white dark:font-bold'}
+
                 style={{ width: "10%" }}
                 body={(rowData) => renderTooltip(rowData, item.name)}
               ></Column>

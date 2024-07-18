@@ -4,8 +4,11 @@ import BtnComp from "../../../Components/BtnComp";
 import HeadingTemplate from "../../../Components/HeadingTemplate";
 import VError from "../../../Components/VError";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
+
 import { useNavigate } from "react-router-dom";
 import { useFormik, Formik, FieldArray } from "formik";
+
+import { Formik, FieldArray } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Message } from "../../../Components/Message";
@@ -74,6 +77,7 @@ function VendorForm() {
     if (+params.id > 0) {
       setLoading(true);
 
+
       axios.post(url + "/api/getvendor", { id: params.id })
       .then((res) => {
         console.log(res.data.msg.desig_name);
@@ -92,6 +96,38 @@ function VendorForm() {
 
         });
       }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
+
+      axios.post(url + "/api/getvendor", { id: params.id }).then((res) => {
+        console.log(res.data.msg.desig_name);
+        setLoading(false);
+        setValues({
+          ...initialValues,
+          v_name: res.data.msg.vendor_name,
+          v_email: res.data.msg.vendor_email,
+          v_phone: res.data.msg.vendor_phone,
+          v_gst: res.data.msg.vendor_gst,
+          v_pan: res.data.msg.vendor_pan,
+          v_reg: res.data.msg.vendor_reg,
+          v_remarks: res.data.msg.vendor_remarks,        
+          v_address: res.data.msg.vendor_address,
+          // poc_name: res.data.msg.vendor_contact,
+          // poc_ph_1: res.data.msg.vendor_phone,
+          // poc_ph_2: res.data.msg.vendor_phone,
+        });
+      });
+      axios.post(url + "/api/getvendorpoc", { id: params.id }).then((res) => {
+        console.log(res.data.msg[0],'res getvendorpoc');
+        setValues(prevValues => ({
+          ...prevValues,
+          dynamicFields: res.data.msg.map((item) => ({
+            sl_no: item.sl_no,
+            poc_name: item.poc_name,
+            poc_ph_1: item.poc_ph_1,
+            poc_ph_2: item.poc_ph_2,
+          }))
+        }));
+        setLoading(false);
+      });
     }
   }, []);
   const onSubmit = (values) => {
