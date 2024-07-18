@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Chart } from "primereact/chart";
-import HELLO from "../../Assets/Images/hellooffice.png";
-import CIRCLE from "../../Assets/Images/circle.png";
+import HELLO from "../../Assets/Images/hellooffice1.png";
 import STAT from "../../Assets/Images/stat.png";
 import { motion } from "framer-motion";
+import { Segmented } from "antd";
 import {
   InfoCircleOutlined,
   SettingOutlined,
@@ -13,46 +13,53 @@ import {
   BellOutlined,
   UserAddOutlined,
   SwapOutlined,
+  InboxOutlined,
+  UserSwitchOutlined,
+  FileSearchOutlined,
+  BarChartOutlined,
+  ExceptionOutlined
 } from "@ant-design/icons";
 import { Flex, Progress } from "antd";
 import { WidthFull } from "@mui/icons-material";
+import DialogBox from "../../Components/DialogBox";
+import { routePaths } from "../../Assets/Data/Routes";
+import { Link } from "react-router-dom";
 function HomeScreen() {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
-
+  const [visible, setVisible] = useState(false);
+  const [flag, setFlag] = useState(2);
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue("--text-color");
-    const textColorSecondary = documentStyle.getPropertyValue(
-      "--text-color-secondary"
-    );
+    const textColor = documentStyle.getPropertyValue("#08453c");
+    const textColorSecondary = documentStyle.getPropertyValue("#08453c");
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
     const data = {
-      labels: ["", "", "", "", "", "", ""],
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
       datasets: [
         {
-          label: "1",
-          backgroundColor: "#052d27",
-          borderColor: "#052d27",
+          label: "First Dataset",
           data: [65, 59, 80, 81, 56, 55, 40],
+          fill: false,
+          borderColor: "#15803D",
+          tension: 0.4,
         },
         {
-          label: "2",
-          backgroundColor: "#347865",
-          borderColor: "#347865",
+          label: "Second Dataset",
           data: [28, 48, 40, 19, 86, 27, 90],
+          fill: false,
+          borderColor: "#EAB308",
+          tension: 0.4,
         },
       ],
     };
     const options = {
-      indexAxis: "y",
       maintainAspectRatio: false,
-      aspectRatio: 0.8,
-      WidthFull,
+      aspectRatio: 0.6,
       plugins: {
         legend: {
           labels: {
-            fontColor: textColor,
+            color: textColor,
           },
         },
       },
@@ -60,23 +67,18 @@ function HomeScreen() {
         x: {
           ticks: {
             color: textColorSecondary,
-            font: {
-              weight: 500,
-            },
           },
           grid: {
-            display: false,
-            drawBorder: false,
+            color: surfaceBorder,
           },
         },
         y: {
-          // ticks: {
-          //     color: textColorSecondary
-          // },
-          // grid: {
-          //     color: surfaceBorder,
-          //     drawBorder: false
-          // }
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
         },
       },
     };
@@ -88,31 +90,105 @@ function HomeScreen() {
   return (
     <main class="px-4 h-auto ">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-      <div
-  initial={{ x: -500 }}
-  animate={{ x: 0 }}
-  transition={{ delay: 0.5, type: "spring", stiffness: 20 }}
-  className="relative bg-white rounded-2xl  flex justify-center py-5 dark:border-gray-600 h-48 md:h-80 4 shadow-3xl"
->
-  <img
-    className="absolute bottom-0  h-full w-full rounded-3xl"
-    src={`${HELLO}`}
-    alt=""
-  />
+        <Link to={routePaths.PROJECTS} class="relative cursor-pointer  border-dashed transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 2xl:h-32 flex  items-center">
+          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#92140C]">
+            <ProjectOutlined className="text-white text-5xl" />
+          </div>
+          <div className="text-gray-800 text-sm 2xl:text-2xl  absolute right-3 top-3 font-bold">
+            Projects Opened
+          </div>
+          <div className="text-[#92140C] text-4xl ml-14 mt-9 font-bold">89</div>
+        </Link>
+        <Link to={routePaths.USERS} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
+          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-green-700">
+            <UserAddOutlined className="text-white text-5xl" />
+          </div>
+          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+            Users
+          </div>
+          <div className="text-green-700 text-4xl ml-14 mt-9 font-bold">153</div>
+        </Link>
+        <Link to={routePaths.VENDORS} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
+          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-yellow-500">
+            <InboxOutlined className="text-white text-5xl" />
+          </div>
+          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+            Vendors
+          </div>
+          <div className="text-yellow-500 text-4xl ml-14 mt-9 font-bold">25</div>
+        </Link>
+        <Link to={routePaths.CLIENTS} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
+          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#6564DB]">
+            <UserSwitchOutlined className="text-white text-5xl" />
+          </div>
+          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+            Clients
+          </div>
+          <div className="text-[#6564DB] text-4xl ml-14 mt-9 font-bold">52</div>
+        </Link>
+        <Link to={routePaths.PURCHASEORDER} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
+          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-green-700">
+            <FileSearchOutlined className="text-white text-5xl" />
+          </div>
+          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+            Inspections
+          </div>
+          <div className="text-green-700 text-4xl ml-14 mt-9 font-bold">12</div>
+        </Link>
+        <Link to={routePaths.STOCKASSIGNVIEW} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
+          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#6564DB]">
+            <BarChartOutlined className="text-white text-5xl" />
+          </div>
+          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+            Stock Levels
+          </div>
+          <div className="text-[#6564DB] text-4xl ml-14 mt-9 font-bold">2352</div>
+        </Link>
+        <Link to={routePaths.PROJECTS} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
+          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#92140C]">
+            <ProjectOutlined className="text-white text-5xl" />
+          </div>
+          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+            Projects Running
+          </div>
+          <div className="text-[#92140C] text-4xl ml-14 mt-9 font-bold">63</div>
+        </Link>
+        <Link to={routePaths.PURCHASEORDER} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
+          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-yellow-500">
+            <ExceptionOutlined className="text-white text-5xl" />
+          </div>
+          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+            Pending POs
+          </div>
+          <div className="text-yellow-500 text-4xl ml-14 mt-9 font-bold">15</div>
+        </Link>
+      </div>
 
-  <div className="absolute inset-0 bg-black bg-opacity-15 flex  justify-center rounded-2xl">
-    <motion.h2
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1.5, type: "tween", duration: 1.5 }}
-      className="text-white text-xl font-bold mt-6 font-serif"
-    >
-      Welcome {localStorage.getItem("user_name")}
-    </motion.h2>
-  </div>
-</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        {/* <div
+          initial={{ x: -500 }}
+          animate={{ x: 0 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 20 }}
+          class="relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-800 rounded-lg flex justify-center py-5 dark:border-gray-600 h-32 md:h-64 shadow-2xl cursor-pointer"
+          onClick={() => setVisible(true)}
+        >
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, type: "tween", duration: 1.5 }}
+            className="text-emerald-100 font-sans text-lg font-thin"
+          >
+            Welcome {localStorage.getItem("user_name")}
+          </motion.h2>
 
-        <div
+          <img
+            className="absolute bottom-0 p-2 h-52 w-full"
+            src={`${HELLO}`}
+            alt=""
+          />
+        </div>  */}
+
+        {/* <div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
@@ -121,145 +197,171 @@ function HomeScreen() {
             type: "spring",
             stiffness: 20,
           }}
-          class=" rounded-xl bg-transparent col-span-1 dark:border-gray-600 p-4 h-48 md:h-80"
+          class=" rounded-lg bg-transparent col-span-1 dark:border-gray-600 p-4 h-44 md:h-64"
         >
-
           <div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, type: "spring", stiffness: 10 }}
-            className="card flex-col text-xs flex-wrap items-center justify-evenly space-y-3 gap-4 overflow-clip max-h-full -mt-2"
+            className="card flex-col text-xs flex-wrap items-center justify-evenly space-y-2 gap-4  max-h-full -mt-3"
           >
-            <div className="px-5 bg-white text-emerald-800 font-thin text-sm h-14 w-full rounded-xl flex justify-start items-center shadow-xl">
-              <img src={CIRCLE} alt="Circle"/>
-              <span className="ml-2">Materials delivered</span>
+            <div className="px-5 bg-white text-emerald-800 font-thin text-sm h-14 w-full rounded-lg flex justify-start items-center shadow-xl">
+              <SettingOutlined className="mr-4 bg-emerald-700 text-white rounded-full text-normal p-2" />{" "}
+              Materials delivered
             </div>
-            <div className="px-5 bg-white text-emerald-800 h-14 w-full rounded-xl text-sm flex justify-start items-center shadow-xl">
-              <CloseOutlined className="mr-4 bg-white rounded-xl text-emerald-800 text-sm" />{" "}
-              Delivery date nearing
+            <div className="px-5 bg-white text-emerald-800 h-14 w-full rounded-lg text-sm flex justify-start items-center shadow-xl">
+              <CloseOutlined className="mr-4 bg-purple-950 text-white rounded-full text-normal p-2" />{" "}
+              Date nearing
             </div>
-            <div className="px-5 bg-white text-emerald-800 h-14 w-full rounded-xl flex justify-start items-center shadow-xl">
-              <InfoCircleOutlined className="mr-4 bg-white rounded-lg text-emerald-800 text-sm" />{" "}
-              New project awaiting review
+            <div className="px-5 bg-white text-emerald-800 h-14 w-full rounded-lg flex justify-start items-center shadow-xl ">
+              <InfoCircleOutlined className="mr-4 bg-emerald-300 text-white rounded-full text-normal p-2" />{" "}
+              New project opened
             </div>
-            <div className="px-5 bg-white text-emerald-800 font-thin h-14 w-full rounded-lg flex justify-start items-center shadow-xl">
-              <SettingOutlined className="mr-4 rounded-lg text-emerald-800 text-sm" />{" "}
-              Nut bolts have been delivered
+            <div className="px-5 bg-white text-emerald-800 font-thin h-14 w-full rounded-lg flex justify-start items-center shadow-xl text-sm">
+              <SettingOutlined className="mr-4 bg-[#F4EF88] text-emerald-700 rounded-full text-normal p-2" />{" "}
+              Nut bolts delivered
             </div>
           </div>
         </div>
-        <div class=" flex rounded-lg col-span-2 bg-white dark:border-gray-600  h-32 md:h-64">
-          {/* <div className="flex flex-col">
-          <div whileHover={{scale:1.1,backgroundColor:'#C05746'}} initial={{y:-600}} animate={{y:0}} transition={{delay:0.5, type:'spring', stiffness:20}} className="hover:-translate-y-1 hover:scale-110 bg-white h-40 sm:w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer">
-          <SolutionOutlined className="text-5xl mb-2 text-[#052d27]"/>
-         <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-[#052d27] ">
-
+        {/* <div class=" flex rounded-lg col-span-2 bg-transparent dark:border-gray-600  h-32 md:h-64">
           <div className="flex flex-col">
-          <div whileHover={{scale:1.1,backgroundColor:'#C05746'}} initial={{y:-600}} animate={{y:0}} transition={{delay:0.5, type:'spring', stiffness:20}} className="hover:-translate-y-1 hover:scale-110 bg-gray-300 h-40 sm:w-32 xl:w-48 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer">
-          <SolutionOutlined className="text-5xl mb-2 text-green-500"/>
-          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-green-500 ">
-
-       Create PO
-
-       </motion.h2>
-          </div>
-
-        
-          <div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-green-500 h-20 mt-3 xl:w-48  w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center">
-
-          <UserAddOutlined className="text-2xl mb-2 text-gray-300"/>
-          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
-       Users
-
-       </motion.h2>
-          </div>
+            <div
+              whileHover={{ scale: 1.1, backgroundColor: "#C05746" }}
+              initial={{ y: -600 }}
+              animate={{ y: 0 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 20 }}
+              className="hover:-translate-y-1 hover:scale-110 bg-gradient-to-tr from-white to-gray-100 h-40 sm:w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer"
+            >
+              <span className="text-5xl mb-2 text-emerald-700">32</span>
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5, type: "tween" }}
+                className="text-emerald-700 font-sans "
+              >
+                Clients
+              </motion.h2>
+            </div>
+            <div
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, type: "spring", stiffness: 20 }}
+              className="bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-800 h-20 mt-3 w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center"
+            >
+              <span className="text-2xl mb-2 text-white">78</span>
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5, type: "tween" }}
+                className="text-gray-300 text-sm "
+              >
+                Vendors
+              </motion.h2>
+            </div>
           </div>
           <div className="ml-3 flex flex-col">
-          <div initial={{opacity:0,x:200}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#C05746] h-20 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col items-center justify-center">
-          <ProjectOutlined className="text-2xl mb-2 text-gray-300"/>
-          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
-       Open a project
+            <div
+              initial={{ opacity: 0, x: 200 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1, type: "spring", stiffness: 20 }}
+              className="bg-[#F3DE8A] h-20 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col items-center justify-center"
+            >
+              <span className="text-3xl mb-1 text-emerald-700">12</span>
 
-       </motion.h2>
-          </div>
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5, type: "tween" }}
+                className="text-emerald-700 text-sm "
+              >
+                Running projects
+              </motion.h2>
+            </div>
 
-          <div initial={{opacity:0,x:-200}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#052d27] h-40 mt-3 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col justify-center items-center">
-          <SwapOutlined className="text-5xl mb-2 text-gray-300"/>
-          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
-       Transfer request
+            <div
+              initial={{ opacity: 0, x: -200 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1, type: "spring", stiffness: 20 }}
+              className="bg-gradient-to-b from-emerald-600 via-emerald-700 to-emerald-800  h-40 mt-3 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col justify-center items-center"
+            >
+              <span className="text-5xl  text-gray-300">8</span>
 
-       </motion.h2>
-          </div>
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5, type: "tween" }}
+                className="text-gray-300 text-sm "
+              >
+                Pending POs
+              </motion.h2>
+            </div>
           </div>
           <div className="ml-3 flex flex-col">
-          <div initial={{opacity:0,scale:1.5}} animate={{opacity:1,scale:1}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#052d27] h-32 w-56 2xl:w-60 rounded-lg shadow-lg flex flex-col items-center justify-center">
-          <BellOutlined className="text-5xl mb-2 text-gray-300"/>
-          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-sm ">
-       Unread notifications
+            <div
+              initial={{ opacity: 0, scale: 1.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1, type: "spring", stiffness: 20 }}
+              className="bg-gradient-to-t from-emerald-600 via-emerald-700 to-emerald-800 h-32 w-56 2xl:w-60 rounded-lg shadow-lg flex flex-col items-center justify-center"
+            >
+              <span className="text-5xl  text-gray-300">2393</span>
 
-       </motion.h2>
-          </div>
-          <div className="flex mt-3">
-          <div initial={{opacity:0,y:-100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-gray-300 mr-3 h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col items-center justify-center">
-          <InfoCircleOutlined className="text-2xl mb-2 text-[#C05746]"/>
-
-          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-[#C05746] text-xs ">
-       Reset Password
-
-       </motion.h2>
-          </div>
-          <div initial={{opacity:0,y:100}} animate={{opacity:1,y:0}} transition={{delay:1, type:'spring', stiffness:20}} className="bg-[#C05746] h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col justify-center items-center">
-          <InfoCircleOutlined className="text-2xl mb-2 text-gray-300"/>
-
-<motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'tween'}} className="text-gray-300 text-xs ">
-Reset Password
-
-</motion.h2>
-          </div>
-          </div>
-         
-
-         
-          </div>
-        */}
-          {/* <div initial={{opacity:0,x:-100}} animate={{opacity:1,x:0}} transition={{delay:1, type:'spring', stiffness:20}}
-          class="bg-white col-span-2 rounded-lg shadow-lg dark:border-gray-600 h-32 md:h-64"
-        > */}
-
-          <Chart
-            type="bar"
-            className="h-64"
-            data={chartData}
-            options={chartOptions}
-          />
-
-          {/* </div> */}
-        </div>
-        {/* <div initial={{scale:0}} animate={{scale:1}} transition={{delay:0.5,duration:0.5, type:'spring',stiffness:20}}
-          class="shadow-xl rounded-lg bg-[#C05746] col-span-2 dark:border-gray-600 p-4 h-32 md:h-64"
-        >
-         <div initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.5, type:'spring',stiffness:10}} className="card flex-col flex-wrap items-center justify-evenly space-y-5 gap-4 overflow-clip max-h-full">
-            <div className="px-5 bg-white text-[#052d27] font-thin h-12 w-full rounded-full flex justify-start items-center shadow-xl">
-            <SettingOutlined  className="mr-4 rounded-full text-[#052d27] text-2xl" /> Nut bolts have been delivered
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5, type: "tween" }}
+                className="text-gray-300 text-sm "
+              >
+                Stock Levels
+              </motion.h2>
             </div>
-             <div className="px-5 bg-white text-[#FF5449] h-12 w-full rounded-full flex justify-start items-center shadow-xl">
-            <CloseOutlined className="mr-4 bg-white rounded-full text-[#FF5449] text-2xl" /> Delivery date overstepped
-            </div>
-            <div className="px-5 bg-white text-[#22A0A6] h-12 w-full rounded-full flex justify-start items-center shadow-xl">
-            <InfoCircleOutlined className="mr-4 bg-white rounded-full text-[#22A0A6] text-2xl" /> New project awaiting review
-            </div>
-            <div className="px-5 bg-white text-[#052d27] font-thin h-12 w-full rounded-full flex justify-start items-center shadow-xl">
-            <SettingOutlined  className="mr-4 rounded-full text-[#052d27] text-2xl" /> Nut bolts have been delivered
-            </div>
-           
-            
-           
-            
-           
-            
-        </div>
+            <div className="flex mt-3">
+              <div
+                initial={{ opacity: 0, y: -100 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, type: "spring", stiffness: 20 }}
+                className="bg-gradient-to-tr from-white to-gray-100 mr-3 h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col items-center justify-center"
+              >
+                <span className="text-2xl mb-2 text-emerald-700">5</span>
 
+                <motion.h2
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.5, type: "tween" }}
+                  className="text-emerald-700 text-xs "
+                >
+                  Pending Deliveries
+                </motion.h2>
+              </div>
+              <div
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, type: "spring", stiffness: 20 }}
+                className="bg-[#F3DE8A] h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col justify-center items-center"
+              >
+                <span className="text-2xl mb-2 text-emerald-700">5</span>
+
+                <motion.h2
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.5, type: "tween" }}
+                  className="text-emerald-700 text-xs "
+                >
+                  Inspections
+                </motion.h2>
+              </div>
+            </div>
+          </div>
         </div> */}
+
+        <div className="col-span-4 space-y-2">
+          <Segmented
+            itemActiveBg="#08453c"
+            options={["Daily", "Weekly", "Monthly", "Quarterly", "Yearly"]}
+            onChange={(value) => {
+              console.log(value); // string
+            }}
+          />
+        </div>
         <div
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -267,7 +369,7 @@ Reset Password
           class="bg-white rounded-lg shadow-lg dark:border-gray-600 h-32 md:h-64"
         >
           <Chart
-            type="bar"
+            type="line"
             className="h-64"
             data={chartData}
             options={chartOptions}
@@ -277,33 +379,30 @@ Reset Password
           initial={{ opacity: 0, x: 600 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1, type: "spring", stiffness: 20 }}
-          class="bg-white flex justify-center col-span-1 items-center shadow-lg rounded-lg border-white dark:border-gray-600 h-32 md:h-64"
+          class="bg-green-700 flex justify-center col-span-1 items-center shadow-lg rounded-lg border-white dark:border-gray-600 h-32 md:h-64"
         >
           <Progress
             strokeLinecap="butt"
             type="circle"
-            strokeColor={"#347865"}
+            strokeColor={"white"}
             percent={75}
           />
         </div>
-        <div class="col-span-2 overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="col-span-2 overflow-x-auto bg-white shadow-md sm:rounded-lg">
           <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-emerald-500 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-white bg-green-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" class="px-6 py-3 text-emerald-500">
+                <th scope="col" class="px-6 py-3">
                   Product name
                 </th>
-                <th scope="col" class="px-6 py-3 text-emerald-500">
+                <th scope="col" class="px-6 py-3">
                   Color
                 </th>
-                <th scope="col" class="px-6 py-3 text-emerald-500">
+                <th scope="col" class="px-6 py-3">
                   Category
                 </th>
-                <th scope="col" class="px-6 py-3 text-emerald-500">
+                <th scope="col" class="px-6 py-3">
                   Price
-                </th>
-                <th scope="col" class="px-6 py-3 text-emerald-500">
-                  Action
                 </th>
               </tr>
             </thead>
@@ -318,14 +417,6 @@ Reset Password
                 <td class="px-6 py-4">Silver</td>
                 <td class="px-6 py-4">Laptop</td>
                 <td class="px-6 py-4">$2999</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
               </tr>
               <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                 <th
@@ -337,14 +428,6 @@ Reset Password
                 <td class="px-6 py-4">White</td>
                 <td class="px-6 py-4">Laptop PC</td>
                 <td class="px-6 py-4">$1999</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
               </tr>
               <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                 <th
@@ -356,14 +439,6 @@ Reset Password
                 <td class="px-6 py-4">Black</td>
                 <td class="px-6 py-4">Accessories</td>
                 <td class="px-6 py-4">$99</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
               </tr>
               <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                 <th
@@ -375,23 +450,28 @@ Reset Password
                 <td class="px-6 py-4">Gray</td>
                 <td class="px-6 py-4">Phone</td>
                 <td class="px-6 py-4">$799</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
               </tr>
-             
             </tbody>
           </table>
         </div>
+        <div class="col-span-2 overflow-x-auto bg-white shadow-md sm:rounded-lg">
+          <Chart
+            type="line"
+            className="h-64"
+            data={chartData}
+            options={chartOptions}
+          />
+        </div>
+        <div class="col-span-2 overflow-x-auto bg-white shadow-md sm:rounded-lg">
+          <Chart
+            type="bar"
+            className="h-64"
+            data={chartData}
+            options={chartOptions}
+          />
+        </div>
       </div>
-      <div class="border-2 grid-cols-1 border-dashed rounded-lg border-white dark:border-gray-600 h-96 mb-4">
-        
-      </div>
+    
       <div class="grid grid-cols-2 gap-4 mb-4">
         <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
         <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
@@ -405,6 +485,11 @@ Reset Password
         <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
         <div class="border-2 border-dashed rounded-lg border-white dark:border-gray-600 h-48 md:h-72"></div>
       </div>
+      <DialogBox
+        visible={visible}
+        flag={flag}
+        onPress={() => setVisible(false)}
+      />
     </main>
   );
 }

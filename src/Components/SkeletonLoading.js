@@ -10,8 +10,8 @@ function SkeletonLoading({flag}) {
                         <div className="flex">
                             {/* <Skeleton shape="circle" size="4rem" className="mr-2"></Skeleton> */}
                             <div style={{ flex: '1' }}>
-                                <Skeleton width="100%" className="mb-2 bg-emerald-500 dark:bg-gray-500"></Skeleton>
-                                <Skeleton width="100%" className="mb-2 bg-emerald-500 dark:bg-gray-500"></Skeleton>
+                                <Skeleton width="100%" className="mb-2 bg-green-700 dark:bg-gray-500"></Skeleton>
+                                <Skeleton width="100%" className="mb-2 bg-green-700 dark:bg-gray-500"></Skeleton>
                             </div>
                         </div>
                     </li>
@@ -19,8 +19,8 @@ function SkeletonLoading({flag}) {
                         <div className="flex">
                             {/* <Skeleton shape="circle" size="4rem" className="mr-2"></Skeleton> */}
                             <div style={{ flex: '1' }}>
-                                <Skeleton width="100%" className="mb-2 bg-emerald-500 dark:bg-gray-500"></Skeleton>
-                                <Skeleton width="100%" className="mb-2 bg-emerald-500 dark:bg-gray-500"></Skeleton>
+                                <Skeleton width="100%" className="mb-2 bg-green-700 dark:bg-gray-500"></Skeleton>
+                                <Skeleton width="100%" className="mb-2 bg-green-700 dark:bg-gray-500"></Skeleton>
                             </div>
                         </div>
                     </li>
@@ -28,8 +28,8 @@ function SkeletonLoading({flag}) {
                         <div className="flex">
                             {/* <Skeleton shape="circle" size="4rem" className="mr-2"></Skeleton> */}
                             <div style={{ flex: '1' }}>
-                                <Skeleton width="100%" className="mb-2 bg-emerald-500 dark:bg-gray-500"></Skeleton>
-                                <Skeleton width="100%" className="mb-2 bg-emerald-500 dark:bg-gray-500"></Skeleton>
+                                <Skeleton width="100%" className="mb-2 bg-green-700 dark:bg-gray-500"></Skeleton>
+                                <Skeleton width="100%" className="mb-2 bg-green-700 dark:bg-gray-500"></Skeleton>
                             </div>
                         </div>
                     </li>
@@ -37,8 +37,8 @@ function SkeletonLoading({flag}) {
                         <div className="flex">
                             {/* <Skeleton shape="circle" size="4rem" className="mr-2"></Skeleton> */}
                             <div style={{ flex: '1' }}>
-                                <Skeleton width="100%" className="mb-2 bg-emerald-500 dark:bg-gray-500"></Skeleton>
-                                <Skeleton width="100%" className="mb-2 bg-emerald-500 dark:bg-gray-500"></Skeleton>
+                                <Skeleton width="100%" className="mb-2 bg-green-700 dark:bg-gray-500"></Skeleton>
+                                <Skeleton width="100%" className="mb-2 bg-green-700 dark:bg-gray-500"></Skeleton>
                             </div>
                         </div>
                     </li>

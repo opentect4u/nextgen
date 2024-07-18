@@ -29,13 +29,14 @@ function UnitForm() {
   useEffect(() => {
     if (+params.id > 0){
       setLoading(true)
-      axios.post(url + "/api/getunit", { id: params.id }).then((res) => {
+      axios.post(url + "/api/getunit", { id: params.id })
+      .then((res) => {
         console.log(res.data.msg.unit_name);
         setData(res.data?.msg)
 
         setLoading(false)
         setValues({ u_nm: res.data.msg.unit_name });
-      });
+      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
     }
   }, [count]);
   const onSubmit = (values) => {
@@ -57,7 +58,7 @@ function UnitForm() {
         } else {
           Message("error", res.data.msg);
         }
-      });
+      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
   };
   const validationSchema = Yup.object({
     u_nm: Yup.string().required("Unit name is required"),

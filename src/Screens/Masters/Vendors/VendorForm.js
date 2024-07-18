@@ -4,6 +4,7 @@ import BtnComp from "../../../Components/BtnComp";
 import HeadingTemplate from "../../../Components/HeadingTemplate";
 import VError from "../../../Components/VError";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
+import { useNavigate } from "react-router-dom";
 import { useFormik, Formik, FieldArray } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -17,6 +18,7 @@ import { Button, Form, Input } from 'antd';
 function VendorForm() {
   const params = useParams();
   const [loading, setLoading] = useState(false);
+  const navigate=useNavigate()
   const [formValues, setValues] = useState({
     v_name: "",
     v_email: "",
@@ -41,7 +43,7 @@ function VendorForm() {
     v_remarks: "",
     v_address: "",
     dynamicFields: [{
-      sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
+      sl_no: params.id > 0 ? 0 : formValues?.dynamicFields[0]?.sl_no,
       poc_name: "", poc_ph_1: "",poc_ph_2:""
     }]
   };
@@ -72,23 +74,24 @@ function VendorForm() {
     if (+params.id > 0) {
       setLoading(true);
 
-      axios.post(url + "/api/getvendor", { id: params.id }).then((res) => {
+      axios.post(url + "/api/getvendor", { id: params.id })
+      .then((res) => {
         console.log(res.data.msg.desig_name);
         setLoading(false);
         setValues({
-          v_name: res.data.msg.vendor_name,
-          v_email: res.data.msg.vendor_email,
-          poc_name: res.data.msg.vendor_contact,
-          poc_ph_1: res.data.msg.vendor_phone,
-          poc_ph_2: res.data.msg.vendor_phone,
-          v_remarks: res.data.msg.vendor_remarks,
-          v_gst: res.data.msg.vendor_gst,
-          v_pan: res.data.msg.vendor_pan,
-          v_reg: res.data.msg.vendor_reg,
-          v_address: res.data.msg.vendor_address,
+          v_name: res.data?.msg?.vendor_name,
+          v_email: res.data?.msg?.vendor_email,
+          poc_name: res.data?.msg?.vendor_contact,
+          poc_ph_1: res.data?.msg?.vendor_phone,
+          poc_ph_2: res.data?.msg?.vendor_phone,
+          v_remarks: res.data?.msg?.vendor_remarks,
+          v_gst: res.data?.msg?.vendor_gst,
+          v_pan: res.data?.msg?.vendor_pan,
+          v_reg: res.data?.msg?.vendor_reg,
+          v_address: res.data?.msg?.vendor_address,
 
         });
-      });
+      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
     }
   }, []);
   const onSubmit = (values) => {
@@ -119,7 +122,7 @@ function VendorForm() {
         } else {
           Message("error", res.data.msg);
         }
-      });
+      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
   };
   // const formik = useFormik({
   //   initialValues: +params.id > 0 ? formValues : initialValues,
@@ -256,7 +259,7 @@ function VendorForm() {
                   <FieldArray name="dynamicFields">
                     {({ push, remove }) => (
                       <>
-                        {values.dynamicFields.map((field, index) => (
+                        {values.dynamicFields?.map((field, index) => (
                           <React.Fragment key={index}>
                             <div className="w-full">
                               <TDInputTemplate

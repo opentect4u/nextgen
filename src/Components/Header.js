@@ -7,10 +7,10 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DialogBox from "./DialogBox";
 import { routePaths } from "../Assets/Data/Routes";
-import { Button, Dropdown, Space } from "antd";
-import {motion} from 'framer-motion'
+import { Dropdown} from "antd";
+import { Avatar, Button } from 'antd';
 import '../Styles/styles.css'
-import { Opacity } from "@mui/icons-material";
+import { Badge } from 'antd';
 function Header() {
   const [visible, setVisible] = useState(false);
   const [dark, setDark] = React.useState(false);
@@ -157,7 +157,7 @@ function Header() {
   var col = "#C2EFB3";
   return (
     <div className="sticky top-0 z-10">
-      <nav className={`bg-emerald-50  px-5 pb-2 dark:bg-gray-800`}>
+      <nav className={`bg-gray-200 px-5 pb-2 dark:bg-gray-800`}>
         <div  className="flex flex-wrap justify-between items-center mx-auto min-w-screen-xl p-4">
           <Link
             to={routePaths.HOME}
@@ -173,13 +173,17 @@ function Header() {
            {/* {paths.length!=2 && <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1, y:0}} transition={{type:'spring', delay:0.2, stiffness:500}} className="rounded-l-full rounded-r-full bg-gray-700  text-gray-300 shadow-xl h-10 w-auto p-3 justify-center item-center border-2 text-sm border-green-500">Hello, {localStorage.getItem('user_name')}</motion.div>} */}
             <Dropdown menu={{ items }} placement="bottomLeft" arrow>
               <span className="relative inline-flex items-center">
+              <Badge count={9} color="orange" >
                 <NotificationsActiveIcon className="text-emerald-800 dark:text-gray-400 cursor-pointer" />
+             </Badge>
               </span>
             </Dropdown>
-           
+            <Avatar className="cursor-pointer" onClick={handleClickProfile} style={{ backgroundColor: '#014737', verticalAlign: 'middle' }} size="large">
+        PM
+      </Avatar>
 
-            <div className="relative inline-flex border-2 border-emerald-800 items-center justify-center w-10 h-10 overflow-hidden bg-white rounded-full dark:bg-gray-600 hover:shadow-lg transition duration-0 hover:duration-500 hover:scale-110 ">
-              <span
+            {/* <div className="relative inline-flex border-2 border-emerald-800 items-center justify-center w-10 h-10 overflow-hidden bg-white rounded-full dark:bg-gray-600 hover:shadow-lg transition duration-0 hover:duration-500 hover:scale-110 "> */}
+              {/* <span
                 id="basic-button"
                 aria-controls={openProfile ? "basic-menu" : undefined}
                 aria-haspopup="true"
@@ -188,7 +192,7 @@ function Header() {
                 className="font-medium text-emerald-800  dark:text-gray-300 cursor-pointer"
               >
                 PM
-              </span>
+              </span> */}
               <Menu
                 id="basic-menu"
                 anchorEl={anchorElProfile}
@@ -213,7 +217,7 @@ function Header() {
                   Logout
                 </MenuItem>
               </Menu>
-            </div>
+            {/* </div> */}
            
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
 import BtnComp from "../../../Components/BtnComp";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -14,6 +15,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 const UserAddForm = () => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
+  const navigate=useNavigate()
   const [desig, setDesig] = useState([]);
   const [dept, setDept] = useState([]);
   var designations = [];
@@ -52,13 +54,14 @@ const UserAddForm = () => {
         } else {
           Message("error", res.data.msg);
         }
-      });
+      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
   };
   const [formValues, setValues] = useState(initialValues);
   useEffect(() => {
     setLoading(true);
 
-    axios.post(url + "/api/getdesig", { id: 0 }).then((res) => {
+    axios.post(url + "/api/getdesig", { id: 0 })
+    .then((res) => {
       setLoading(false);
 
       for (let i = 0; i < res?.data?.msg?.length; i++) {
@@ -68,9 +71,10 @@ const UserAddForm = () => {
         });
       }
       setDesig(designations)
-    });
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
     setLoading(true);
-    axios.post(url + "/api/getdept", { id: 0 }).then((res) => {
+    axios.post(url + "/api/getdept", { id: 0 })
+    .then((res) => {
       setLoading(false);
 
       for (let i = 0; i < res?.data?.msg?.length; i++) {
@@ -80,10 +84,11 @@ const UserAddForm = () => {
         });
       }
       setDept(departments)
-    });
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
     if(params.id>0){
     setLoading(true)
-    axios.post(url + "/api/getuser", { id: params.id }).then((res) => {
+    axios.post(url + "/api/getuser", { id: params.id })
+    .then((res) => {
       console.log(res.data.msg);
       setLoading(false);
       setValues({
@@ -96,7 +101,7 @@ const UserAddForm = () => {
         user_permission: res?.data?.msg?.user_permission,
         user_location: res?.data?.msg?.user_location,
       });
-    });
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;;
   }
   }, []);
   const validationSchema = Yup.object({

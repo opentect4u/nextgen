@@ -36,7 +36,7 @@ const ProfileInfo = () => {
       ];
   return (
     <>
-    <Descriptions title="Your profile" labelStyle={{color:'#347865'}} items={items} />
+    <Descriptions title="Your profile" labelStyle={{color:'#014737'}} items={items} />
     </>
   )
 }

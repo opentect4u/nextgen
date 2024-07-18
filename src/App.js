@@ -47,50 +47,52 @@ function App() {
         // horizontalItemSelectedColor:'#025129',
 
         // itemSelectedBg:'#e4eae1',
-        itemBg:'#052d27',
-        subMenuItemBg:'#052d27',
+        itemBg:'#014737',
+        subMenuItemBg:'#014737',
         subMenuItemBorderRadius:50,
-        popupBg:'#052d27',
+        popupBg:'#014737',
         // itemColor:'#D1D5DB',
         itemColor:'#D1D5DB',
         // itemSelectedBg:'#347865',
         itemSelectedBg:'white',
         itemBorderRadius:50,
-        itemMarginInline:20,
-        itemHoverBg:'#347865',
-        itemSelectedColor:'#347865',
-        itemHoverColor:'#D1D5DB',
-        horizontalItemHoverColor:'#22543d',
-        horizontalItemSelectedColor:'#22543d',
-        darkItemSelectedBg:'#22543d'
+        itemMarginInline:15,
+        itemHoverBg:'white',
+        itemSelectedColor:'#7FB685',
+        itemHoverColor:'#014737',
       },
-     
+      Segmented:{
+        itemActiveBg:'#046c4e',
+        itemColor:'#046c4e',
+        itemSelectedColor:'white',
+        itemSelectedBg:'#046c4e'
+      },
       Switch:{
         // colorPrimary:'#025129',
         // colorPrimaryHover:'#025129'
 
-         colorPrimary:'#347865',
-        colorPrimaryHover:'#347865'
+         colorPrimary:'#014737',
+        colorPrimaryHover:'#014737'
       },
       Descriptions:{
-        titleColor:'#347865',
-        colorTextLabel:'#347865',
-        colorText:'347865',
-        colorSplit:'347865',
-        labelBg:'#347865'
+        titleColor:'#014737',
+        colorTextLabel:'#014737',
+        colorText:'014737',
+        colorSplit:'014737',
+        labelBg:'#014737'
         
       },
       Tabs:{
-        inkBarColor:'#347865',
-        itemColor:'#347865',
-        itemSelectedColor:'#347865',
-        itemHoverColor:'#347865',
-        itemActiveColor:'#347865'
+        inkBarColor:'#014737',
+        itemColor:'#014737',
+        itemSelectedColor:'#014737',
+        itemHoverColor:'#014737',
+        itemActiveColor:'#014737'
       },
       Dropdown:{
-        colorBgElevated:'#347865',
-        colorText:'white',
-        controlItemBgHover:'#347865'
+        colorBgElevated:'white',
+        colorText:'#014737',
+        controlItemBgHover:'#D1D5DB'
 
       }
     },
