@@ -113,7 +113,7 @@ function DTableMaster({ headers,
    {title && 
    <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
     {/* <div className="flex flex-col bg-[#C05746] dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
-    <div className="flex flex-col bg-emerald-500 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1">
+    <div className="flex flex-col bg-emerald-700 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1">
     {/* <div className="flex flex-col bg-gray-800 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
       <div class="w-full">
         <div class="flex items-center justify-evenly">
@@ -158,7 +158,7 @@ function DTableMaster({ headers,
               <Link to={to+0}
                 type="submit"
                 // onClick={() => onclick()}
-               className="flex items-center justify-center text-emerald-500 bg-white hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
+               className="flex items-center justify-center text-emerald-700 bg-white hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
                   // className="flex items-center justify-center text-gray-300 bg-green-500 hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
               >
                 <AddIcon /> {btnText}
@@ -194,7 +194,7 @@ function DTableMaster({ headers,
             rows={10}
             
             rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
-            rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-emerald-500 hover:text-white  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
+            rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-gray-200 hover:text-gray-900  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
             tableStyle={{ minWidth: "100%",fontSize:'14px' }}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             paginatorClassName='bg-white text-emerald-500'
@@ -218,7 +218,7 @@ function DTableMaster({ headers,
                 key={index}
                 field={item.name}
                 header={item.value}
-                headerClassName={'text-emerald-500 bg-white border-b-green-500  dark:bg-gray-700 dark:text-white dark:font-bold'}
+                headerClassName={'text-emerald-700 bg-white border-b-green-500  dark:bg-gray-700 dark:text-white dark:font-bold'}
                 style={{ width: "10%" }}
                 body={(rowData) => renderTooltip(rowData, item.name)}
               ></Column>

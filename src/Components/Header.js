@@ -157,7 +157,7 @@ function Header() {
   var col = "#C2EFB3";
   return (
     <div className="sticky top-0 z-10">
-      <nav className={`bg-emerald-50  px-5 pb-2 dark:bg-gray-800`}>
+      <nav className={`bg-gray-200  px-5 pb-2 dark:bg-gray-800`}>
         <div  className="flex flex-wrap justify-between items-center mx-auto min-w-screen-xl p-4">
           <Link
             to={routePaths.HOME}
