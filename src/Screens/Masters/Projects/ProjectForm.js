@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router';
 import BtnComp from '../../../Components/BtnComp';
 import HeadingTemplate from '../../../Components/HeadingTemplate';
+import { Switch } from "antd";
+
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
 import { Formik, FieldArray } from "formik";
 import * as Yup from "yup";
+
 
 
 
@@ -103,6 +106,7 @@ function ProjectForm() {
                     {/* <form onSubmit={formik.handleSubmit}> */} 
                     <form>
                         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+
                             <div>
                                 <TDInputTemplate
                                     placeholder="Select client..."
@@ -192,6 +196,7 @@ function ProjectForm() {
                                     mode={3}
                                 />
                                 {/* {errors.proj_add && touched.proj_add ? <VError title={errors.proj_add} /> : null} */}
+
                             </div>
                             <div className="sm:col-span-2">
                                 <TDInputTemplate
@@ -357,7 +362,7 @@ function ProjectForm() {
                                 {/* {formik.errors.proj_warrant && formik.touched.proj_warrant ?(<VError title={formik.errors.proj_warrant} />) : null} */}
                             </div>
                             <div className="sm:col-span-2">
-                                <TDInputTemplate
+               <TDInputTemplate
                                     placeholder="Type erection responsibility"
                                     type="text"
                                     label="Erection Responsibility"
@@ -384,6 +389,7 @@ function ProjectForm() {
                                 />
                                 {/* {formik.errors.proj_sts && formik.touched.proj_sts ? (<VError title={formik.errors.proj_sts} />) : null} */}
                             </div>
+
 
 
                         </div>

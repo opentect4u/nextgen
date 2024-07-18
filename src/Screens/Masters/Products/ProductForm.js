@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
 import BtnComp from "../../../Components/BtnComp";
 import HeadingTemplate from "../../../Components/HeadingTemplate";
 import { useFormik } from "formik";
@@ -14,6 +15,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import PrintComp from "../../../Components/PrintComp";
 function ProductForm() {
   const [cat, setCat] = useState([]);
+  const navigate=useNavigate()
   var categories = [];
   const [count,setCount]=useState(0)
     const [data,setData]=useState()
@@ -58,7 +60,7 @@ function ProductForm() {
         } else {
           Message("error", res.data.msg);
         }
-      });
+      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;;
   };
   const validationSchema = Yup.object({
     // cat_id: Yup.string().required("Category is required"),

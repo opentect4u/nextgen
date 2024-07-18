@@ -30,13 +30,14 @@ function DeptForm() {
       useEffect(()=>{
         if(+params.id>0){
           setLoading(true)
-            axios.post(url+'/api/getdept',{id:params.id}).then(res=>{
+            axios.post(url+'/api/getdept',{id:params.id})
+            .then(res=>{
           console.log(res.data.msg.dept_name)
           setData(res.data?.msg)
           setLoading(false)
           setValues({dept_nm:res.data.msg.dept_name})
           
-        })
+        }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
       }
         },[count])
       const onDelete=()=>{
@@ -47,7 +48,8 @@ function DeptForm() {
         console.log(params.id)
         setVisible(false)
         setLoading(true)
-        axios.post(url+'/api/deletedept',{id:params.id,user:localStorage.getItem('email')}).then(res=>{
+        axios.post(url+'/api/deletedept',{id:params.id,user:localStorage.getItem('email')})
+        .then(res=>{
           console.log(res)
           setLoading(false)
           if(res.data.suc>0){
@@ -58,12 +60,13 @@ function DeptForm() {
             Message('error',res.data.msg)
 
           }
-        })
+        }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
       }
       const onSubmit = (values) => {
         setLoading(true)
         setCount(prev=>prev+1)
-        axios.post(url+'/api/adddept',{id:+params.id,name:values.dept_nm,user:localStorage.getItem('email')}).then(res=>{
+        axios.post(url+'/api/adddept',{id:+params.id,name:values.dept_nm,user:localStorage.getItem('email')})
+        .then(res=>{
             setLoading(false)
     
             if(res.data.suc>0){
@@ -77,7 +80,7 @@ function DeptForm() {
               Message('error',res.data.msg)
       
             }
-          })
+          }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
       };
       const validationSchema = Yup.object({
         dept_nm: Yup.string().required("Department name is required"),

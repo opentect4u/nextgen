@@ -10,34 +10,31 @@ import Error from "../../Components/Error";
 function Home() {
   const location = useLocation();
   const paths = location.pathname.split("/");
-  const [theme,setTheme] = useState(localStorage.getItem('col'))
+  const [theme, setTheme] = useState(localStorage.getItem("col"));
   console.log(paths);
-  useState(()=>{
-    setTheme(localStorage.getItem('col'))
+  useState(() => {
+    setTheme(localStorage.getItem("col"));
+  }, [localStorage.getItem("col")]);
 
-  },[localStorage.getItem('col')])
-  
   return (
     <div>
       <Header />
       <Sidebar />
-      <div 
-        // className={theme>0?`bg-color-theme-${theme} px-6 py-3 w-auto dark:bg-gray-800 min-h-screen`:`px-6 py-3 w-auto bg-gray-300 dark:bg-gray-800 min-h-screen `}>
-        className='px-6  w-auto sm:ml-60 bg-gray-200 dark:bg-gray-800 min-h-screen '>
-        
+      <div className="px-6 w-auto sm:ml-60 bg-gray-200 dark:bg-gray-800 min-h-screen ">
+
         <div
           className={
-             "p-4 h-auto rounded-3xl bg-transparent dark:border-gray-700 dark:bg-transparent dark:text-white min-w-screen-xl"
+            "p-4 h-auto rounded-3xl bg-transparent dark:border-gray-700 dark:bg-transparent dark:text-white min-w-screen-xl"
           }
         >
-          {!(paths.length == 2 && paths[1] == "home") && <BreadCrumbComp/>}
+          {!(paths.length == 2 && paths[1] == "home") && <BreadCrumbComp />}
           <ErrorBoundary
             FallbackComponent={Error}
             onError={(error) => {
               console.error(error);
             }}
           >
-            <ScrollTop style={{ backgroundColor: "#C05746" }} />
+            <ScrollTop style={{ backgroundColor: "#92140C" }} />
           </ErrorBoundary>
           <Outlet />
         </div>

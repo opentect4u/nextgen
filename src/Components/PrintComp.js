@@ -5,7 +5,7 @@ import { FloatButton } from 'antd';
 import DescriptionComp from './DescriptionComp';
 import { printMap } from '../Assets/Data/PrintColumns';
 import PrintHeader from './PrintHeader';
-import { Dropdown, Space } from 'antd';
+import {motion} from 'framer-motion'
 
 function PrintComp({toPrint,title}) {
     console.log(toPrint)
@@ -49,11 +49,11 @@ function PrintComp({toPrint,title}) {
       }
       
   return (
-    <>
+    <motion.div  initial={{opacity:0,y:-50}} animate={{opacity:1,y:0}} transition={{delay:0.5, type:'just'}}>
       <FloatButton icon={<PrinterOutlined />} onClick={()=>print()} className='sm:hidden' type="primary" style={{ right: 24, bottom: 80 }} />
       {/* <div className="hidden sm:flex sm:justify-end items-center"> */}
         <Tooltip title="Print">
-          <button onClick={()=>print()} className=" inline-flex items-center justify-center mr-4 sm:mr-1  text-sm font-medium text-center text-emerald-500 bg-primary-700 h-9 w-9  bg-white hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900  dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" ><PrinterOutlined /></button>
+          <button onClick={()=>print()} className=" inline-flex items-center justify-center mr-4 sm:-mr-1  text-sm font-medium text-center text-green-900 bg-primary-700 h-9 w-9 -mt-1 bg-white hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900  dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" ><PrinterOutlined /></button>
         </Tooltip>
          {/* <Dropdown menu={ menus } placement="bottomLeft" arrow>
           <MoreOutlined className='flex items-center justify-center  text-white   rounded-full  text-3xl font-bold px-2 h-10 w-10 dark:text-white focus:outline-none  transition duration-0 hover:duration-500 dark:focus:ring-primary-800' />
@@ -63,7 +63,7 @@ function PrintComp({toPrint,title}) {
             <DescriptionComp className="mt-5" title={title} printData={items}/>
         </div>
       {/* </div> */}
-    </>
+    </motion.div>
   )
 }
 

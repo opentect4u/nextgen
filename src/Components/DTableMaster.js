@@ -113,7 +113,8 @@ function DTableMaster({ headers,
    {title && 
    <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
     {/* <div className="flex flex-col bg-[#C05746] dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
-    <div className="flex flex-col bg-emerald-700 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1">
+    <div className="flex flex-col bg-green-900 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
+
     {/* <div className="flex flex-col bg-gray-800 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
       <div class="w-full">
         <div class="flex items-center justify-evenly">
@@ -146,10 +147,9 @@ function DTableMaster({ headers,
               id="simple-search"
               initial={{opacity:0,width:0}} animate={{opacity:1,width:'95%'}} transition={{delay:1.1, type:'just'}}
               className="bg-white border rounded-full border-emerald-500 text-gray-800 text-sm  block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4  duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              //  className="bg-gray-800 border rounded-full border-green-500 text-gray-300 text-sm focus:ring-gray-800 focus:border-gray-800 block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4 focus:border-1 duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            
               placeholder="Search"
               required=""
-              // value={search}
               onChange={(text) => setSearch(text.target.value)}
             />
           </div>
@@ -157,9 +157,9 @@ function DTableMaster({ headers,
             <Tooltip title={btnText}>
               <Link to={to+0}
                 type="submit"
-                // onClick={() => onclick()}
-               className="flex items-center justify-center text-emerald-700 bg-white hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
-                  // className="flex items-center justify-center text-gray-300 bg-green-500 hover:bg-primary-800  font-medium rounded-full hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
+               className="flex items-center justify-center text-green-900 bg-white hover:bg-primary-800  font-medium rounded-full transition ease-in-out hover:-translate-x-1 hover:scale-110 text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 "
+              
+
               >
                 <AddIcon /> {btnText}
               </Link>
@@ -169,9 +169,7 @@ function DTableMaster({ headers,
           <Dropdown menu={{ items }} placement="bottomLeft" arrow>
           <MoreOutlined className='flex items-center justify-center  text-white   rounded-full  text-3xl font-bold px-2 h-10 w-10 py-2 dark:text-white focus:outline-none  transition duration-0 hover:duration-500 dark:focus:ring-primary-800' />
           </Dropdown>
-         {/* <button className=' className="flex items-center justify-center text-gray-600 bg-white hover:bg-primary-800 focus:ring-green-900 font-medium rounded-full hover:scale-110 text-sm px-2 h-10 w-10 py-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  transition duration-0 hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800' >
-          <PrinterOutlined onClick={()=>print()}/>
-          </button> */}
+      
           </div>
         </div>
       </div>
@@ -180,12 +178,9 @@ function DTableMaster({ headers,
       }
       <div>
         <div className="card w-full mt-5">
-        {/* <ContextMenu className='dark:bg-gray-800 dark:text-white hover:text-green-900' model={menuModel} ref={cm} onHide={() => setSelectedItem(null)} /> */}
+       
           <DataTable
             value={data}
-            // onContextMenu={(e) => cm.current.show(e.originalEvent)} 
-            // contextMenuSelection={selectedItem} 
-            // onContextMenuSelectionChange={(e) => setSelectedItem(e.value)} 
             showGridlines={true}
             stripedRows
             stickyHeader="true"
@@ -194,7 +189,9 @@ function DTableMaster({ headers,
             rows={10}
             
             rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
-            rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-gray-200 hover:text-gray-900  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
+
+            rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-green-700 hover:text-white  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
+
             tableStyle={{ minWidth: "100%",fontSize:'14px' }}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             paginatorClassName='bg-white text-emerald-500'
@@ -212,13 +209,12 @@ function DTableMaster({ headers,
             metaKeySelection={false}
           >
             {headers.map((item, index) => (
-              // <>
-              
               <Column
                 key={index}
                 field={item.name}
                 header={item.value}
-                headerClassName={'text-emerald-700 bg-white border-b-green-500  dark:bg-gray-700 dark:text-white dark:font-bold'}
+                headerClassName={'text-green-900 bg-green-100 border-b-green-900  dark:bg-gray-700 dark:text-white dark:font-bold'}
+
                 style={{ width: "10%" }}
                 body={(rowData) => renderTooltip(rowData, item.name)}
               ></Column>
@@ -249,16 +245,12 @@ function DTableMaster({ headers,
         <div className='hidden w-full' id='tablePrint'>
         <DataTable
             value={data}
-            // onContextMenu={(e) => cm.current.show(e.originalEvent)} 
-            // contextMenuSelection={selectedItem} 
-            // onContextMenuSelectionChange={(e) => setSelectedItem(e.value)} 
             showGridlines={true}
             stripedRows
             stickyHeader="true"
             scrollable
             paginator
             rows={data?.length}
-            
             rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
             rowClassName=' border border-b-gray-300 dark:border-green-900 hover:bg-emerald-500 hover:font-semibold dark:hover:bg-[#1e4834]'
             tableStyle={{ minWidth: "100%",fontSize:'14px' }}

@@ -37,7 +37,7 @@ const CategoryForm = () => {
       setData(res.data?.msg)
       setLoading(false)
       setValues({catnm:res.data.msg.catg_name})
-    })
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
   }
     },[count])
   const onSubmit = (values) => {
@@ -55,7 +55,7 @@ const CategoryForm = () => {
         Message('error',res.data.msg)
 
       }
-    })
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
     
     console.log(result)
   };
@@ -78,7 +78,7 @@ const CategoryForm = () => {
         Message('error',res.data.msg)
 
       }
-    })
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
   }
   const validationSchema = Yup.object({
     catnm: Yup.string().required("Category name is required"),

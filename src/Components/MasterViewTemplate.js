@@ -5,14 +5,17 @@ import axios from 'axios'
 import { Search } from '../Functions/Search'
 import { Message } from './Message'
 import SkeletonLoading from './SkeletonLoading'
+import { useNavigate } from 'react-router-dom'
 function MasterViewTemplate({templateData,template,_url,to}) {
  const [dataSet,setDataSet] = useState()
  const [dataSet1,setDataSet1] = useState()
  const [searchParam,setParam] = useState()
  const [loading,setLoading] = useState(false)
+ const navigate=useNavigate()
  useEffect(()=>{
     setLoading(true)
-    axios.post(url+_url,{id:0}).then(res=>{
+    axios.post(url+_url,{id:0})
+    .then(res=>{
       console.log(res);
         setLoading(false)
 
@@ -23,7 +26,7 @@ function MasterViewTemplate({templateData,template,_url,to}) {
       setDataSet(res.data.msg);
       setDataSet1(res.data.msg)
       }
-    })
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
  
 },[])
 

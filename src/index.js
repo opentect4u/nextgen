@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { Skeleton } from "primereact/skeleton";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
@@ -10,9 +9,9 @@ import Notfound from "./Screens/Notfound/Notfound";
 import Details from "./Screens/Homescreen/Details";
 import { Democontext } from "./Context/Democontext";
 import Loader from "./Components/Loader";
-import LinearProgress from "@mui/material/LinearProgress";
-import { Space, Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+
+import CircularProgress from '@mui/material/CircularProgress';
+import CatchError from "./Screens/CatchError";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const Home = lazy(() => import("./Screens/Homescreen/Home"));
 const HomeScreen = lazy(() => import("./Screens/Homescreen/HomeScreen"));
@@ -351,6 +350,10 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "error/:data",
+    element: <CatchError />,
+  },
+  {
     path: "*",
     element: <Notfound />,
   },
@@ -359,12 +362,13 @@ root.render(
   <Democontext>
     <Suspense
       fallback={
-        <div className="bg-emerald-50 h-screen flex justify-center items-center">
-          <Spin
+        <div className="bg-gray-200 h-screen flex justify-center items-center">
+          {/* <Spin
             indicator={<LoadingOutlined spin />}
             size="large"
             style={{ color: "#052d27" }}
-          />
+          /> */}
+          <CircularProgress disableShrink color='success'  />
         </div>
       }
     >

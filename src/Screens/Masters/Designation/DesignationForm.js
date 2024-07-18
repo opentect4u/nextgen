@@ -30,14 +30,15 @@ function DesignationForm() {
         if(+params.id>0){
         setLoading(true)
 
-            axios.post(url+'/api/getdesig',{id:params.id}).then(res=>{
+            axios.post(url+'/api/getdesig',{id:params.id})
+            .then(res=>{
           console.log(res.data.msg.desig_name)
           setData(res.data?.msg)
 
           setLoading(false)
           setValues({desig_nm:res.data.msg.desig_name})
             
-        })
+        }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
       }
         },[count])
         const onDelete=()=>{
@@ -48,7 +49,8 @@ function DesignationForm() {
           console.log(params.id)
           setVisible(false)
           setLoading(true)
-          axios.post(url+'/api/deletedesig',{id:params.id,user:localStorage.getItem('email')}).then(res=>{
+          axios.post(url+'/api/deletedesig',{id:params.id,user:localStorage.getItem('email')})
+          .then(res=>{
             console.log(res)
             setLoading(false)
             if(res.data.suc>0){
@@ -59,12 +61,13 @@ function DesignationForm() {
               Message('error',res.data.msg)
   
             }
-          })
+          }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
         }
       const onSubmit = (values) => {
         console.log(values);
         setLoading(true)
-        axios.post(url+'/api/adddesig',{id:+params.id,name:values.desig_nm,user:localStorage.getItem('email')}).then(res=>{
+        axios.post(url+'/api/adddesig',{id:+params.id,name:values.desig_nm,user:localStorage.getItem('email')})
+        .then(res=>{
           setLoading(false)
             if(res.data.suc>0){
               Message('success',res.data.msg)
@@ -77,7 +80,7 @@ function DesignationForm() {
       
             }
 
-          })
+          }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
       };
       const validationSchema = Yup.object({
         desig_nm: Yup.string().required("Designation is required"),

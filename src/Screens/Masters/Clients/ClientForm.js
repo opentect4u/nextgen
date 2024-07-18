@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import BtnComp from '../../../Components/BtnComp';
 import HeadingTemplate from '../../../Components/HeadingTemplate';
 import TDInputTemplate from "../../../Components/TDInputTemplate";
@@ -18,7 +19,7 @@ import axios from "axios";
 
 function ClientForm() {
     const [loading, setLoading] = useState(false);
-
+    const navigate=useNavigate()
 
     const params = useParams()
     console.log(params, 'params')
@@ -86,7 +87,7 @@ function ClientForm() {
                 } else {
                     Message("error", res.data.msg);
                 }
-            });
+            }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
     };
     const validationSchema = Yup.object({
         clnt_name: Yup.string().required("Client's name is required"),
@@ -123,7 +124,8 @@ function ClientForm() {
     useEffect(() => {
         if (+params.id > 0) {
             setLoading(true)
-            axios.post(url + '/api/getclient', { id: params.id }).then(res => {
+            axios.post(url + '/api/getclient', { id: params.id })
+            .then(res => {
                 console.log(res.data.msg, 'getclient show')
                 setData(res.data?.msg)
                 setLoading(false)
@@ -137,8 +139,8 @@ function ClientForm() {
                     gst: res?.data?.msg.client_gst,
                     pan: res?.data?.msg.client_pan,
                     reg_no: res?.data?.msg.client_reg,
-                });
-            })
+                })
+            }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
             axios.post(url + "/api/getclientpoc", {
                 id: params.id 
             })
@@ -163,7 +165,7 @@ function ClientForm() {
 
                 }))
                
-            });
+            }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
         }
         console.log(formValues, 'formValues')
         console.log(params.id,'params.id')
