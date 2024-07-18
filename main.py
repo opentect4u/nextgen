@@ -13,9 +13,7 @@ app = FastAPI()
 # ssl_context.load_cert_chain('./ssl_apinextgen_100724/apinextgen.pem', keyfile='./ssl_apinextgen_100724/private-key.pem')
 
 origins = [
-    "http://localhost",
-    "http://localhost:3000",
-    "https://nextgen.opentech4u.co.in"
+    "*"
 ]
 
 if __name__ == "__main__":

@@ -79,7 +79,7 @@ async def db_Delete(table_name, fields, values, where, flag):
     res_dt = {}
     msg = ''
     errMsg = ''
-
+    
     sql = f"DELETE FROM {table_name} WHERE {where}"
     print(sql)
     msg = "Deleted Successfully !!"

@@ -421,7 +421,7 @@ async def getvendor(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number, vendor_name,vendor_email,vendor_contact,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks, vendor_address,created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number, vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks, vendor_address,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_vendor,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
@@ -598,7 +598,8 @@ async def addclient(data:addClient):
         values = f'"{lastID}","{c.poc_name}","{c.poc_email}","{c.poc_designation}","{c.poc_department}","{c.poc_direct_no}","{c.poc_ext_no}","{c.poc_ph_1}","{c.poc_ph_2}","{c.poc_address}","{c.poc_location}","{data.user}","{formatted_dt}"'
         table_name = "md_client_poc"
         whr =  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
-        result = await db_Insert(table_name, fields, values, whr, flag)
+        flag1 = 1 if c.sl_no>0 else 0
+        result = await db_Insert(table_name, fields, values, whr, flag1)
 
         if(result['suc']>0):
             res_dt = {"suc": 1, "msg": f"Client inserted successfully!" if c.sl_no==0 else f"Client updated successfully!"}
@@ -686,6 +687,20 @@ async def getclientpoc(id:getData):
     print(result, 'RESULT')
     return result
 
+@masterRouter.post('/getvendorpoc')
+async def getvendorpoc(id:getData):
+    print(id.id)
+    res_dt = {}
+
+    select = "*"
+    schema = "md_vendor_poc"
+    where = f"vendor_id='{id.id}'" if id.id>0 else ""
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
 
 @masterRouter.post('/addVendor')
 async def addvendor(data:addVendor):
@@ -706,19 +721,38 @@ async def addvendor(data:addVendor):
     # del_table_name = 'md_client_poc'
     # del_whr = f"sl_no not in()"
     # del_qry = await db_Delete(del_table_name, del_whr)
-
+    select_u = "*"
+    schema_u = "md_vendor_poc"
+    where_u = f"vendor_id='{data.v_id}'" if data.v_id>0 else ""
+    order_u = ""
+    rows =await db_select(select_u, schema_u, where_u, order_u, flag)
+    # k=list()
+    # for r in rows['msg']:
+    #     k.append(r['sl_no'])
+    # print(k,'rows')
     for v in data.v_poc:
-        fields= f'poc_name="{v.poc_name}",", poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_ph_1,poc_ph_2,poc_address,poc_location,created_by,created_at'
+        fields= f'poc_name="{v.poc_name}", poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_ph_1,poc_ph_2,created_by,created_at'
         values = f'"{lastID}","{v.poc_name}","{v.poc_ph_1}","{v.poc_ph_2}","{data.user}","{formatted_dt}"'
         table_name = "md_vendor_poc"
         whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
-        result = await db_Insert(table_name, fields, values, whr, flag)
-
+        flag1 = 1 if v.sl_no>0 else 0
+        result = await db_Insert(table_name, fields, values, whr, flag1)
+        
         if(result['suc']>0):
+            # print(v.sl_no > 0 and v.sl_no in k)
+            # if v.sl_no > 0 and v.sl_no not in k:
+            #     print('hihihihihihihihihi')
+            #     wr=f"sl_no='{v.sl_no}'"
+            #     result1 = await db_Delete(table_name,wr)
+                
             res_dt = {"suc": 1, "msg": f"Vendor inserted successfully!" if v.sl_no==0 else f"Vendor updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": f"Error while inserting!" if v.sl_no==0 else f"Error while updating"}
-
+        # if v.sl_no not in k:
+        #     print('here in delete')
+        #     table_name='md_vendor_poc'
+        #     wr=f"sl_no='{v.sl_no}'"
+        #     result = await db_Delete(table_name, wr)
     return res_dt
 
 
