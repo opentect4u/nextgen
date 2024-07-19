@@ -11,7 +11,7 @@ function CatchError() {
     status="500"
     title={params.code}
     subTitle={'Sorry, '+params.message}
-    extra={<Button className='bg-green-900 text-white' onClick={()=>navigate(-1)}>Back Home</Button>}
+    extra={<Button className='bg-green-900 text-white' onClick={()=>navigate(-1)}>Back </Button>}
   />
   )
 }

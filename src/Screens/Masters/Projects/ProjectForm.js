@@ -143,7 +143,7 @@ function ProjectForm() {
                                 <TDInputTemplate
                                     placeholder="Select order id..."
                                     type="text"
-                                    label="Order Id"
+                                    label="Order ID"
                                     name="order_id"
                                     //   formControlName={formik.values.order_id}
                                     //   handleChange={formik.handleChange}
@@ -200,7 +200,7 @@ function ProjectForm() {
                             </div>
                             <div className="sm:col-span-2">
                                 <TDInputTemplate
-                                    placeholder="Type the description of the project"
+                                    placeholder="Type description..."
                                     type="text"
                                     label="Project Description"
                                     name="proj_des"
@@ -211,24 +211,10 @@ function ProjectForm() {
                                 />
                                 {/* {errors.proj_des && touched.proj_des ? <VError title={errors.proj_des} /> : null} */}
                             </div>
+                           
                             <div>
                                 <TDInputTemplate
-                                    placeholder="Type the value of project order"
-                                    type="text"
-                                    label="Project Order Value"
-                                    name="Proj_ordr_val"
-                                    // formControlName={formik.values.Proj_ordr_val}
-                                    // handleChange={formik.handleChange}
-                                    // handleBlur={formik.handleBlur}
-                                    mode={1}
-                                />
-                                {/* {formik.errors.Proj_ordr_val && formik.touched.Proj_ordr_val ? (
-                                    <VError title={formik.errors.Proj_ordr_val} />
-                                ) : null} */}
-                            </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type the name of end user"
+                                    placeholder="Type end user..."
                                     type="text"
                                     label="End User"
                                     name="end_user"
@@ -242,8 +228,8 @@ function ProjectForm() {
                                 ) : null} */}
                             </div>
                             <div>
-                                <TDInputTemplate
-                                    placeholder="Type consultant"
+                            <TDInputTemplate
+                                    placeholder="Type consultant..."
                                     type="text"
                                     label="Consultant"
                                     name="proj_consultant"
@@ -251,14 +237,13 @@ function ProjectForm() {
                                     // handleChange={formik.handleChange}
                                     // handleBlur={formik.handleBlur}
                                     mode={1}
+                                    
                                 />
-                                {/* {formik.errors.proj_consultant && formik.touched.proj_consultant ? (
-                                    <VError title={formik.errors.proj_consultant} />
-                                ) : null} */}
                             </div>
+                           
                             <div>
                                 <TDInputTemplate
-                                    placeholder="Type consultant"
+                                    placeholder="Type EPC..."
                                     type="text"
                                     label="EPC Contractor"
                                     name="epc_con"
@@ -273,7 +258,7 @@ function ProjectForm() {
                             </div>
                             <div>
                                 <TDInputTemplate
-                                    placeholder="Type the name of manufacturer"
+                                    placeholder="Type manufacturer..."
                                     type="text"
                                     label="Manufacturer"
                                     name="manufac"
@@ -286,6 +271,25 @@ function ProjectForm() {
                                     <VError title={formik.errors.manufac} />
                                 ) : null} */}
                             </div>
+                            <div>
+                              
+                              <TDInputTemplate
+                                 placeholder="Type project order value..."
+                                 type="text"
+                                 label="Project Order Value"
+                                 name="Proj_ordr_val"
+                                 // formControlName={formik.values.Proj_ordr_val}
+                                 // handleChange={formik.handleChange}
+                                 // handleBlur={formik.handleBlur}
+                                 mode={1}
+                             />
+                             {/* {formik.errors.Proj_ordr_val && formik.touched.Proj_ordr_val ? (
+                                 <VError title={formik.errors.Proj_ordr_val} />
+                             ) : null} */}
+                             {/* {formik.errors.proj_consultant && formik.touched.proj_consultant ? (
+                                 <VError title={formik.errors.proj_consultant} />
+                             ) : null} */}
+                         </div>
                             <div>
                                 <TDInputTemplate
                                     placeholder="Type price basis"
@@ -347,20 +351,18 @@ function ProjectForm() {
                                 ) : null} */}
                             </div>
                             <div>
-                                <TDInputTemplate
-                                    placeholder="Select..."
-                                    type="text"
-                                    label="Warrant"
-                                    name="proj_warrant"
-                                    //   formControlName={formik.values.proj_warrant}
-                                    //   handleChange={formik.handleChange}
-                                    //   handleBlur={formik.handleBlur}
-                                    //   data={cat}
-                                    mode={2}
-                                    disabled={params.id > 0}
+                            <TDInputTemplate
+                                    placeholder=""
+                                    type="file"
+                                    label="Handover certificate"
+                                    name="ld_cls"
+                                    // formControlName={formik.values.ld_cls}
+                                    // handleChange={formik.handleChange}
+                                    // handleBlur={formik.handleBlur}
+                                    mode={1}
                                 />
-                                {/* {formik.errors.proj_warrant && formik.touched.proj_warrant ?(<VError title={formik.errors.proj_warrant} />) : null} */}
                             </div>
+                           
                             <div className="sm:col-span-2">
                <TDInputTemplate
                                     placeholder="Type erection responsibility"
@@ -374,7 +376,7 @@ function ProjectForm() {
                                 />
                                 {/* {errors.erctn_res && touched.erctn_res ? <VError title={errors.erctn_res} /> : null} */}
                             </div>
-                            <div>
+                            <div className='sm:col-span-2'>
                                 <TDInputTemplate
                                     placeholder="Select project status..."
                                     type="text"
@@ -389,7 +391,26 @@ function ProjectForm() {
                                 />
                                 {/* {formik.errors.proj_sts && formik.touched.proj_sts ? (<VError title={formik.errors.proj_sts} />) : null} */}
                             </div>
+                            <div className="sm:col-span-2">
+               <TDInputTemplate
+                                    placeholder="Type status remarks"
+                                    type="text"
+                                    label="Status remarks"
+                                    name="erctn_res"
+                                    //   formControlName={values.erctn_res}
+                                    //   handleChange={handleChange}
+                                    //   handleBlur={handleBlur}
+                                    mode={3}
+                                />
+                                {/* {errors.erctn_res && touched.erctn_res ? <VError title={errors.erctn_res} /> : null} */}
+                            </div>
+                            <div className='flex gap-4 items-center sm:mt-6'>
+                                <label className="block mb-2 text-sm font-bold text-green-900 dark:text-gray-100">Warranty</label>
+                    <Switch size="large" defaultChecked />
 
+                               
+                                {/* {formik.errors.proj_warrant && formik.touched.proj_warrant ?(<VError title={formik.errors.proj_warrant} />) : null} */}
+                            </div>
 
 
                         </div>
