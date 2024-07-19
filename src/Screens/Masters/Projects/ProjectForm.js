@@ -31,40 +31,40 @@ function ProjectForm() {
     //       poc_name: "", poc_ph_1: "",poc_ph_2:""
     //     }]
     //   });
-    
-      const initialValues = {
+
+    const initialValues = {
         client_id: "",
         projnm: "",
-        order_id:"",
+        order_id: "",
         order_dt: "",
         proj_loc: "",
         proj_add: "",
         proj_des: "",
         Proj_ordr_val: "",
-        end_user:"",
-        proj_consultant:"",
-        epc_con:"",
-        manufac:"",
-        prc_basis:"",
-        proj_extra:"",
-        created_dt:"",
-        ld_cls:"",
-        proj_warrant:"",
-        erctn_res:"",
-        proj_sts:"",
+        end_user: "",
+        proj_consultant: "",
+        epc_con: "",
+        manufac: "",
+        prc_basis: "",
+        proj_extra: "",
+        created_dt: "",
+        ld_cls: "",
+        proj_warrant: "",
+        erctn_res: "",
+        proj_sts: "",
         dynamicFields: [{
-        //   sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
-        sl_no:0,
-        sts_remarks:""
+            //   sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
+            sl_no: 0,
+            sts_remarks: ""
         }]
-      };
-    
-      const validationSchema = Yup.object({
+    };
+
+    const validationSchema = Yup.object({
         v_name: Yup.string().required("Name is required"),
         v_email: Yup.string()
-          .required("Email is required")
-          .email("Incorrect email format"),
-        v_phone:Yup.string().required("Phone is required").length(10),
+            .required("Email is required")
+            .email("Incorrect email format"),
+        v_phone: Yup.string().required("Phone is required").length(10),
         v_address: Yup.string().required("Address is required"),
         // v_pan:Yup.string().matches("[A-Z]{5}[0-9]{4}[A-Z]{1}"),
         v_pan: Yup.string(),
@@ -72,19 +72,19 @@ function ProjectForm() {
         v_gst: Yup.string(),
         v_remarks: Yup.string(),
         dynamicFields: Yup.array().of(
-          Yup.object().shape({
-            poc_name: Yup.string().required("Contact person is required"),
-            poc_ph_1: Yup.string().required("Phone is required").length(10),
-            poc_ph_2: Yup.string().required("Phone is required").length(10),
-    
-          })
-        )
-      });
+            Yup.object().shape({
+                poc_name: Yup.string().required("Contact person is required"),
+                poc_ph_1: Yup.string().required("Phone is required").length(10),
+                poc_ph_2: Yup.string().required("Phone is required").length(10),
 
-      const onSubmit = (values) => {
+            })
+        )
+    });
+
+    const onSubmit = (values) => {
         console.log("onsubmit called")
         console.log(values);
-      };
+    };
 
     console.log(params, 'params')
     return (
@@ -103,7 +103,7 @@ function ProjectForm() {
                     className="text-green-900 dark:text-gray-400"
                     spinning={loading}
                 >
-                    {/* <form onSubmit={formik.handleSubmit}> */} 
+                    {/* <form onSubmit={formik.handleSubmit}> */}
                     <form>
                         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
 
@@ -213,19 +213,20 @@ function ProjectForm() {
                             </div>
                             <div>
                                 <TDInputTemplate
-                                    placeholder="Type the value of project order"
+                                    placeholder="Type consultant"
                                     type="text"
-                                    label="Project Order Value"
-                                    name="Proj_ordr_val"
-                                    // formControlName={formik.values.Proj_ordr_val}
+                                    label="Consultant"
+                                    name="proj_consultant"
+                                    // formControlName={formik.values.proj_consultant}
                                     // handleChange={formik.handleChange}
                                     // handleBlur={formik.handleBlur}
                                     mode={1}
                                 />
-                                {/* {formik.errors.Proj_ordr_val && formik.touched.Proj_ordr_val ? (
-                                    <VError title={formik.errors.Proj_ordr_val} />
+                                {/* {formik.errors.proj_consultant && formik.touched.proj_consultant ? (
+                                    <VError title={formik.errors.proj_consultant} />
                                 ) : null} */}
                             </div>
+
                             <div>
                                 <TDInputTemplate
                                     placeholder="Type the name of end user"
@@ -241,21 +242,7 @@ function ProjectForm() {
                                     <VError title={formik.errors.end_user} />
                                 ) : null} */}
                             </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type consultant"
-                                    type="text"
-                                    label="Consultant"
-                                    name="proj_consultant"
-                                    // formControlName={formik.values.proj_consultant}
-                                    // handleChange={formik.handleChange}
-                                    // handleBlur={formik.handleBlur}
-                                    mode={1}
-                                />
-                                {/* {formik.errors.proj_consultant && formik.touched.proj_consultant ? (
-                                    <VError title={formik.errors.proj_consultant} />
-                                ) : null} */}
-                            </div>
+
                             <div>
                                 <TDInputTemplate
                                     placeholder="Type consultant"
@@ -316,21 +303,7 @@ function ProjectForm() {
                                     <VError title={formik.errors.proj_extra} />
                                 ) : null} */}
                             </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type date"
-                                    type="date"
-                                    label="Date"
-                                    name="created_dt"
-                                    // formControlName={formik.values.created_dt}
-                                    // handleChange={formik.handleChange}
-                                    // handleBlur={formik.handleBlur}
-                                    mode={1}
-                                />
-                                {/* {formik.errors.created_dt && formik.touched.created_dt ? (
-                                    <VError title={formik.errors.created_dt} />
-                                ) : null} */}
-                            </div>
+
                             <div>
                                 <TDInputTemplate
                                     placeholder="Type LD clause"
@@ -346,23 +319,33 @@ function ProjectForm() {
                                     <VError title={formik.errors.ld_cls} />
                                 ) : null} */}
                             </div>
+
                             <div>
                                 <TDInputTemplate
-                                    placeholder="Select..."
+                                    placeholder="Type the value of project order"
                                     type="text"
-                                    label="Warrant"
-                                    name="proj_warrant"
-                                    //   formControlName={formik.values.proj_warrant}
-                                    //   handleChange={formik.handleChange}
-                                    //   handleBlur={formik.handleBlur}
-                                    //   data={cat}
-                                    mode={2}
-                                    disabled={params.id > 0}
+                                    label="Project Order Value"
+                                    name="Proj_ordr_val"
+                                    // formControlName={formik.values.Proj_ordr_val}
+                                    // handleChange={formik.handleChange}
+                                    // handleBlur={formik.handleBlur}
+                                    mode={1}
                                 />
-                                {/* {formik.errors.proj_warrant && formik.touched.proj_warrant ?(<VError title={formik.errors.proj_warrant} />) : null} */}
+                                {/* {formik.errors.Proj_ordr_val && formik.touched.Proj_ordr_val ? (
+                                    <VError title={formik.errors.Proj_ordr_val} />
+                                ) : null} */}
+                            </div>
+                            <div >
+                                <label
+                                    for="brand"
+                                    className="block mb-2 text-sm font-bold text-green-900 dark:text-gray-100"
+                                >
+                                    Warranty
+                                </label>
+                                <Switch size="large" defaultChecked />
                             </div>
                             <div className="sm:col-span-2">
-               <TDInputTemplate
+                                <TDInputTemplate
                                     placeholder="Type erection responsibility"
                                     type="text"
                                     label="Erection Responsibility"
@@ -374,7 +357,7 @@ function ProjectForm() {
                                 />
                                 {/* {errors.erctn_res && touched.erctn_res ? <VError title={errors.erctn_res} /> : null} */}
                             </div>
-                            <div>
+                            <div className="sm:col-span-2">
                                 <TDInputTemplate
                                     placeholder="Select project status..."
                                     type="text"
@@ -389,6 +372,24 @@ function ProjectForm() {
                                 />
                                 {/* {formik.errors.proj_sts && formik.touched.proj_sts ? (<VError title={formik.errors.proj_sts} />) : null} */}
                             </div>
+                            <div className="sm:col-span-2">
+                                <TDInputTemplate
+                                    placeholder="Type status remarks"
+                                    type="text"
+                                    label="Status Remarks"
+                                    name="sts_remarks"
+                                    //   formControlName={values.sts_remarks}
+                                    //   handleChange={handleChange}
+                                    //   handleBlur={handleBlur}
+                                    mode={3}
+                                />
+                                {/* {errors.sts_remarks && touched.sts_remarks ? <VError title={errors.sts_remarks} /> : null} */}
+                            </div>
+
+                            <div className="sm:col-span-2">
+                                <label for="clnt" className="block mb-2 text-sm font-bold text-green-900 dark:text-gray-100">Handover Certificate</label>
+                                <input type="file" name="clnt" id="clnt" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                      </div>
 
 
 

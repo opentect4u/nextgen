@@ -415,12 +415,13 @@ function ClientForm() {
                                         ) : null} */}
                                     </div>
                                                     <div className="sm:col-span-2">
-                                                        <MinusCircleOutlined onClick={() => remove(index)} />
+                                                        <MinusCircleOutlined style={{fontSize: '30px',color:"#014737"}} onClick={() => remove(index)} />
                                                     </div>
                                                 </React.Fragment>
                                             ))}
                                             <div className="sm:col-span-2">
                                                 <Button
+                                                 className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
                                                     onClick={() => push({ sl_no: 0, poc_name: "", poc_designation: "", poc_department: "", poc_email: "", poc_direct_no: "", poc_ext_no: "", poc_ph_1: "", poc_ph_2: "", poc_location: "", poc_address: "" })}
                                                     icon={<PlusOutlined />}
                                                 >
