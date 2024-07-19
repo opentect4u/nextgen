@@ -14,6 +14,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import DialogBox from "../../../Components/DialogBox";
 import { useNavigate } from "react-router-dom";
 import PrintComp from "../../../Components/PrintComp";
+import AuditTrail from "../../../Components/AuditTrail";
 function DesignationForm() {
   const [loading, setLoading] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -80,82 +81,56 @@ function DesignationForm() {
 
         }
 
-      }).catch(err => { console.log(err); navigate('/error' + '/' + err.code + '/' + err.message) });;
-  };
-  const validationSchema = Yup.object({
-    desig_nm: Yup.string().required("Designation is required"),
-  });
-
-  const formik = useFormik({
-    initialValues: (+params.id > 0 ? formValues : initialValues),
-    onSubmit,
-    validationSchema,
-    validateOnMount: true,
-    enableReinitialize: true
-  });
-  return (
-    <section className="bg-transparent dark:bg-[#001529]">
-      {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Designation'}/>} */}
-      <HeadingTemplate
-        text={params.id > 0 ? "Update designation" : "Add designation"}
-        mode={params.id > 0 ? 1 : 0}
-        title={'Designation'}
-        data={params.id && data ? data : ''}
-      />
-      <div className="w-full bg-white p-6 rounded-2xl">
-        <Spin indicator={<LoadingOutlined spin />} size="large" className="text-green-900 dark:text-gray-400" spinning={loading}>
-          <form onSubmit={formik.handleSubmit}>
-            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-              <div className="sm:col-span-2">
-
-                <TDInputTemplate
-                  placeholder="Type designation..."
-                  type="text"
-                  label="Designation"
-                  name="desig_nm"
-                  formControlName={formik.values.desig_nm}
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  mode={1}
-                />
-
-                {formik.errors.desig_nm && formik.touched.desig_nm ? (
-                  <VError title={formik.errors.desig_nm} />
-                ) : null}
+          }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;
+      };
+      const validationSchema = Yup.object({
+        desig_nm: Yup.string().required("Designation is required"),
+      });
+    
+      const formik = useFormik({
+        initialValues:(+params.id>0?formValues:initialValues),
+        onSubmit,
+        validationSchema,
+        validateOnMount: true,
+        enableReinitialize:true
+      });
+      return (
+        <section className="bg-transparent dark:bg-[#001529]">
+           {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Designation'}/>} */}
+           <HeadingTemplate
+              text={params.id > 0 ? "Update designation" : "Add designation"}
+              mode={params.id>0?1:0}
+              title={'Designation'}
+              data={params.id && data?data:''}
+            />
+          <div className="w-full bg-white p-6 rounded-2xl">
+             <Spin indicator={<LoadingOutlined spin />} size="large" className="text-green-900 dark:text-gray-400" spinning={loading}>
+            <form onSubmit={formik.handleSubmit}>
+              <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                <div className="sm:col-span-2">
+                  
+                  <TDInputTemplate
+                    placeholder="Type designation..."
+                    type="text"
+                    label="Designation"
+                    name="desig_nm"
+                    formControlName={formik.values.desig_nm}
+                    handleChange={formik.handleChange}
+                    handleBlur={formik.handleBlur}
+                    mode={1}
+                  />
+    
+                  {formik.errors.desig_nm && formik.touched.desig_nm ? (
+                    <VError title={formik.errors.desig_nm} />
+                  ) : null}
+                </div>
+              {params.id>0 && <AuditTrail data={data}/>  }           
               </div>
-              {params.id > 0 && <>
-                <div className="w-full">
-                  <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
-                    Created By
-                  </label>
-                  <input className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-lg  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_by} />
-                </div>
-                <div className="w-full">
-                  <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
-                    Created At
-                  </label>
-                  <input className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-lg  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_at?.split('T').join(' ')} />
-                </div>
-                <div className="w-full">
-                  <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
-                    Modified By
-                  </label>
-                  <input className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-lg  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_by == null? "Not modified yet": data?.modified_by} />
-                </div>
-                <div className="w-full">
-                  <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
-                    Modified at
-                  </label>
-                  <input className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-lg  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_at == null? "Not modified yet":data?.modified_at?.split('T').join(' ')} />
-                </div>
-              </>}
-
-            </div>
-            <BtnComp mode={params.id > 0 ? 'E' : 'A'} onDelete={() => onDelete()} onReset={formik.handleReset} />
-          </form>
-        </Spin>
-      </div>
-      <DialogBox
+              <BtnComp mode={params.id>0?'E':'A'} onDelete={()=>onDelete()} onReset={formik.handleReset}/>
+            </form>
+            </Spin>
+          </div>
+          <DialogBox
         visible={visible}
         flag={flag}
         onPress={() => setVisible(false)}

@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkdemoecomm=self.webpackChunkdemoecomm||[]).push([[3456],{3456:(e,t,a)=>{a.r(t),a.d(t,{default:()=>c});a(5043);var s=a(9023),m=a(3216),n=a(6487),p=a(7311),l=a(579);const c=function(){const e=(0,m.zy)();var t=e.pathname.split("/")[e.pathname.split("/").length-1],a=p.j[t];return(0,l.jsx)(n.A,{to:s.C.ADDDESIGNATIONS,templateData:a,template:t,_url:"/api/getdesig"})}}}]);
-//# sourceMappingURL=3456.8a9169b9.chunk.js.map

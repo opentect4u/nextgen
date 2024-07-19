@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkdemoecomm=self.webpackChunkdemoecomm||[]).push([[6510],{6510:(e,t,a)=>{a.r(t),a.d(t,{default:()=>n});a(5043);var m=a(9023),p=a(3216),s=a(6487),l=a(7311),c=a(579);const n=()=>{const e=(0,p.zy)();var t=e.pathname.split("/")[e.pathname.split("/").length-1],a=l.j[t];return(0,c.jsx)(s.A,{to:m.C.ADDCATEGORIES,templateData:a,template:t,_url:"/api/getcategory"})}}}]);
-//# sourceMappingURL=6510.eb4cb7d4.chunk.js.map
