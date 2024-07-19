@@ -15,13 +15,15 @@ import { Message } from "../../../Components/Message";
 import { url } from "../../../Address/BaseUrl";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 
 function VendorForm() {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const navigate=useNavigate()
+  const [data,setData]=useState()
+
   const [formValues, setValues] = useState({
     v_name: "",
     v_email: "",
@@ -82,6 +84,8 @@ function VendorForm() {
       .then((res) => {
         console.log(res.data.msg.desig_name);
         setLoading(false);
+        setData(res.data?.msg)
+
         setValues({
           v_name: res.data?.msg?.vendor_name,
           v_email: res.data?.msg?.vendor_email,
@@ -169,11 +173,16 @@ function VendorForm() {
   // });
   console.log(params, "params");
   return (
-    <section className="bg-white dark:bg-[#001529]">
-      <div className="py-8 mx-auto w-5/6 lg:py-16">
-        <HeadingTemplate
-          text={params.id > 0 ? "Update vendor" : "Add vendor"}
-        />
+    <section  className="bg-transparent dark:bg-[#001529]">
+          {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
+          <HeadingTemplate
+              text={params.id > 0 ? "Update vendor" : "Add vendor"}
+              mode={params.id>0?1:0}
+              title={'Vendor'}
+              data={params.id && data?data:''}
+            />
+          <div className="w-full bg-white p-6 rounded-2xl">
+           
         <Spin
           indicator={<LoadingOutlined spin />}
           size="large"
@@ -293,11 +302,24 @@ function VendorForm() {
                     {errors.v_address && touched.v_address ? <VError title={errors.v_address} /> : null}
                   </div>
                   <FieldArray name="dynamicFields">
-                    {({ push, remove }) => (
+                    {({ push, remove,insert,unshift }) => (
                       <>
                         {values.dynamicFields?.map((field, index) => (
                           <React.Fragment key={index}>
-                            <div className="w-full">
+                            <div className="sm:col-span-2 flex gap-2 justify-end">
+                            <Button
+                              className="rounded-full text-white bg-red-800 border-red-800"
+                              onClick={() => remove(index)}
+                              icon={<MinusOutlined />}
+                            ></Button>
+
+                            <Button
+                              className="rounded-full bg-green-900 text-white"
+                              onClick={() => unshift({ sl_no: 0, poc_name: "", poc_ph_1: "" })} icon={<PlusOutlined />}
+                            ></Button>
+
+                            </div>
+                            <div className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type contact person name..."
                                 type="text"
@@ -314,9 +336,9 @@ function VendorForm() {
                             </div>
                             <div>
                               <TDInputTemplate
-                                placeholder="Type contact person phone..."
+                                placeholder="Type contact person primary phone..."
                                 type="text"
-                                label="Contact person phone no."
+                                label="Contact person primary phone no."
                                 name={`dynamicFields[${index}].poc_ph_1`}
                                 formControlName={field.poc_ph_1}
                                 handleChange={handleChange}
@@ -329,9 +351,9 @@ function VendorForm() {
                             </div>
                             <div>
                               <TDInputTemplate
-                                placeholder="Type contact person phone..."
+                                placeholder="Type contact secondary person phone..."
                                 type="text"
-                                label="Contact person phone no."
+                                label="Contact person secondary phone no."
                                 name={`dynamicFields[${index}].poc_ph_2`}
                                 formControlName={field.poc_ph_2}
                                 handleChange={handleChange}
@@ -342,16 +364,14 @@ function VendorForm() {
                                 <VError title={errors.dynamicFields[index].poc_ph_2} />
                               ) : null}
                             </div>
-                            <div className="sm:col-span-2">
-                              <MinusCircleOutlined onClick={() => remove(index)} />
-                            </div>
+                           
                           </React.Fragment>
                         ))}
-                        <div className="sm:col-span-2">
+                        {/* <div className="sm:col-span-2">
                           <Button type="dashed" onClick={() => push({ sl_no: 0, poc_name: "", poc_ph_1: "" })} icon={<PlusOutlined />}>
                             Add field
                           </Button>
-                        </div>
+                        </div> */}
                       </>
                     )}
                   </FieldArray>

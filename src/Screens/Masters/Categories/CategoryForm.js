@@ -14,6 +14,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import DialogBox from "../../../Components/DialogBox";
 import PrintComp from "../../../Components/PrintComp";
+import AuditTrail from "../../../Components/AuditTrail";
 
 const CategoryForm = () => {
   const params = useParams();
@@ -120,32 +121,8 @@ const CategoryForm = () => {
                 <VError title={formik.errors.catnm} />
               ) : null}
             </div>
-            { params.id>0 &&   <>
-                <div className="w-full">
-            <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
-         Created By
-      </label>
-              <input  className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-lg  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_by}/>
-            </div>
-            <div className="w-full">
-            <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
-         Created At
-      </label>
-              <input  className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-lg  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.created_at?.split('T').join( ' ')}/>
-            </div>
-            <div className="w-full">
-            <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
-         Modified By
-      </label>
-              <input  className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-lg  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_by}/>
-            </div>
-            <div className="w-full">
-            <label className="block mb-2 text-sm font-semibold text-emerald-500 dark:text-gray-100">
-       Modified at
-      </label>
-              <input  className="bg-bg-white border border-green-500 text-gray-800 text-sm rounded-lg  focus:border-green-500 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled={true} value={data?.modified_at?.split('T').join( ' ')}/>
-            </div>
-              </>}
+            { params.id>0 &&  <AuditTrail data={data}/>}
+            
           </div>
           <BtnComp mode={params.id>0?'E':'A'} onDelete={()=>onDelete()} onReset={formik.handleReset}/>
         </form>

@@ -185,20 +185,20 @@ const router = createBrowserRouter([
                   },
                 ],
               },
-              {
-                path: "projects",
-                element: <ProjectComp />,
-                children: [
-                  {
-                    path: "",
-                    element: <ProjectView />,
-                  },
-                  {
-                    path: "projectaddform/:id",
-                    element: <ProjectForm />,
-                  },
-                ],
-              },
+              // {
+              //   path: "projects",
+              //   element: <ProjectComp />,
+              //   children: [
+              //     {
+              //       path: "",
+              //       element: <ProjectView />,
+              //     },
+              //     {
+              //       path: "projectaddform/:id",
+              //       element: <ProjectForm />,
+              //     },
+              //   ],
+              // },
               {
                 path: "products",
                 element: <ProductComp />,
@@ -285,6 +285,20 @@ const router = createBrowserRouter([
                 element: <OrderForm />,
               },
               {
+                path: "projects",
+                element: <ProjectComp />,
+                children: [
+                  {
+                    path: "",
+                    element: <ProjectView />,
+                  },
+                  {
+                    path: "projectaddform/:id",
+                    element: <ProjectForm />,
+                  },
+                ],
+              },
+              {
                 path: "purchaseorder",
                 element: <PurchaseOrderView />,
               },
@@ -350,7 +364,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "error/:data",
+    path: "error/:id/:message",
     element: <CatchError />,
   },
   {
