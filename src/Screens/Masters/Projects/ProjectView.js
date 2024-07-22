@@ -15,7 +15,7 @@ const ProjectView = () => {
     to={routePaths.ADDPROJECTS}
     templateData={templateData}
     template={template}
-    _url={"/api/getvendor"}
+    _url={"/api/getproject"}
   />
     // <section className="bg-white dark:bg-[#001529] p-3 sm:p-5 w-full">
     // <div className="mx-auto w-full px-1">

@@ -10,14 +10,19 @@ import Details from "./Screens/Homescreen/Details";
 import { Democontext } from "./Context/Democontext";
 import Loader from "./Components/Loader";
 
+
 import CircularProgress from '@mui/material/CircularProgress';
 import CatchError from "./Screens/CatchError";
+import { WifiTetheringErrorRoundedOutlined } from "@mui/icons-material";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const Home = lazy(() => import("./Screens/Homescreen/Home"));
 const HomeScreen = lazy(() => import("./Screens/Homescreen/HomeScreen"));
 const ForgotPass = lazy(() => import("./Screens/Auth/ForgotPass"));
 const Signup = lazy(() => import("./Screens/Auth/Signup"));
 const Signin = lazy(() => import("./Screens/Auth/Signin"));
+const NotificationComp = lazy(() => import("./Screens/Notifications/NotificationComp"))
+const NotificationView = lazy(()=> import("./Screens/Notifications/NotificationView"))
 
 const MastersComp = lazy(() => import("./Screens/Masters/MastersComp"));
 const UserComp = lazy(() => import("./Screens/Masters/Users/UserComp"));
@@ -138,6 +143,16 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <HomeScreen />,
+          },
+          {
+            path:"notificationComp",
+            element:<NotificationComp/>,
+            children: [
+              {
+                path: "notifications",
+                element:<NotificationView/>
+              },
+            ]
           },
           {
             path: "mastersComp",

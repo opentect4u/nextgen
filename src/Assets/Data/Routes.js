@@ -3,6 +3,7 @@ export const routePaths={
     FORGOTPASS:'/forgotpassword',
     HOME:'/home',
     USERS:'mastersComp/users',
+    NOTIFICATIONS:'/home/notificationComp/notifications',
     ADDUSERS:'/home/mastersComp/users/useraddform/',
     CLIENTS:'mastersComp/clients',
     ADDCLIENTS:'/home/mastersComp/clients/clientaddform/',
