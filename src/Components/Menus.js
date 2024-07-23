@@ -56,15 +56,15 @@ function Menus({ theme}) {
               icon: <BankOutlined />,
               label: <Link to={routePaths.DEPARTMENTS}>Department</Link>,
             },
-            {
-              key: "masters:desig",
-              icon: <IdcardOutlined />,
-              label: <Link to={routePaths.DESIGNATIONS}>Designation</Link>,
-            },
+            // {
+            //   key: "masters:desig",
+            //   icon: <IdcardOutlined />,
+            //   label: <Link to={routePaths.DESIGNATIONS}>Designation</Link>,
+            // },
             {
               key: "masters:cat",
               icon: <BlockOutlined />,
-              label: <Link to={routePaths.CATEGORIES}>Category</Link>,
+              label: <Link to={routePaths.CATEGORIES}>Product Category</Link>,
             },
             // {
             //   key: "masters:3",

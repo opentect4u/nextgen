@@ -16,11 +16,14 @@ import DialogBox from "../../../Components/DialogBox";
 import PrintComp from "../../../Components/PrintComp";
 import AuditTrail from "../../../Components/AuditTrail";
 
+import { Fieldset } from 'primereact/fieldset';
+        
 const CategoryForm = () => {
   const params = useParams();
   const [loading,setLoading]=useState(false)
   const [visible,setVisible]=useState(false)
   const [data,setData]=useState()
+  const [products,setProducts]=useState([])
   const [count,setCount]=useState(0)
 
   const navigate=useNavigate()
@@ -36,8 +39,16 @@ const CategoryForm = () => {
         axios.post(url+'/api/getcategory',{id:params.id}).then(res=>{
       console.log(res.data.msg.catg_name)
       setData(res.data?.msg)
-      setLoading(false)
+      // setLoading(false)
       setValues({catnm:res.data.msg.catg_name})
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
+    axios.post(url+'/api/getCatWithProd',{id:params.id}).then(res=>{
+      console.log(res)
+      // console.log(res.data.msg.catg_name)
+      setProducts(res.data?.msg)
+      setLoading(false)
+      console.log(products)
+      // setValues({catnm:res.data.msg.catg_name})
     }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
   }
     },[count])
@@ -95,7 +106,7 @@ const CategoryForm = () => {
     <section  className="bg-transparent dark:bg-[#001529]">
           {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
           <HeadingTemplate
-              text={params.id > 0 ? "Update category" : "Add category"}
+              text={params.id > 0 ? "Update product category" : "Add product category"}
               mode={params.id>0?1:0}
               title={'Category'}
               data={params.id && data?data:''}
@@ -124,6 +135,13 @@ const CategoryForm = () => {
             { params.id>0 &&  <AuditTrail data={data}/>}
             
           </div>
+
+    {products.length>0 &&  <Fieldset legend="Products under this category"> 
+   <ul>
+    {products?.map(product=><li>{product.prod_name}</li>
+    )}
+   </ul>
+</Fieldset>}
           <BtnComp mode={params.id>0?'E':'A'} onDelete={()=>onDelete()} onReset={formik.handleReset}/>
         </form>
         </Spin>

@@ -1,10 +1,10 @@
 export const masterheaders={
 'categories': {
-    title: "Categories",
-    btnText:'Add categories',
+    title: "Product categories",
+    btnText:'Add product categories',
     headers: [
       { name: "serial_number", value: "#" },
-      { name: "catg_name", value: "Category" },
+      { name: "catg_name", value: "Product category" },
     ]
 
   },

@@ -110,10 +110,11 @@ function DTableMaster({ headers,
   };
   return (
     <>
-    <div className='flex justify-end'>
+    {/* <div className='block sm:hidden'>mobile ui</div> */}
+    <div className='hidden justify-end sm:flex'>
     <motion.section initial={{ opacity: 0, y: 1000 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, type: 'tween', stiffness: 100 }} className="bg-transparent dark:bg-[#001529] py-3 sm:py-3 -mt-5">
       <div className="flex items-center h-14 w-auto bg-green-900 dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 md:space-x-4 rounded-lg">
-        {btnText && <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, type: 'just' }} class="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+        {btnText && <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, type: 'just' }} className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
           <Tooltip title={btnText}>
             <Link to={to + 0}
               type="submit"
@@ -124,7 +125,9 @@ function DTableMaster({ headers,
           </Tooltip>
         </motion.div>}
         <button onClick={() => print()} className='text-white text-2xl p-4'>
+        <Tooltip title="Print this table" arrow>
         <PrinterOutlined />
+        </Tooltip>
         </button>
       </div>
     </motion.section>
@@ -136,21 +139,21 @@ function DTableMaster({ headers,
             <div className="flex flex-col bg-green-900 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
 
               {/* <div className="flex flex-col bg-gray-800 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
-              <div class="w-full">
-                <div class="flex items-center justify-evenly">
+              <div className="w-full">
+                <div className="flex items-center justify-evenly">
                   <motion.h2 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, type: 'just' }} className="text-xl font-bold text-white dark:text-white sm:block hidden mx-5">
                     {/* <h2 className="text-xl font-bold text-green-500 dark:text-white sm:block hidden mx-5"> */}
                     {title}
                   </motion.h2>
 
-                  <label for="simple-search" class="sr-only">
+                  <label for="simple-search" className="sr-only">
                     Search
                   </label>
-                  <div class="relative w-full">
-                    <div class="absolute inset-y-0 left-0 flex items-center md:ml-4 pl-3 pointer-events-none">
+                  <div className="relative w-full">
+                    <div className="absolute inset-y-0 left-0 flex items-center md:ml-4 pl-3 pointer-events-none">
                       <svg
                         aria-hidden="true"
-                        class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                        className="w-5 h-5 text-gray-500 dark:text-gray-400"
                         fill="currentColor"
                         viewbox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -171,7 +174,7 @@ function DTableMaster({ headers,
                       required=""
                       onChange={(text) => setSearch(text.target.value)} />
                   </div>
-                  {/* {btnText &&  <motion.div  initial={{opacity:0,y:50}} animate={{opacity:1,y:0}} transition={{delay:1.3, type:'just'}} class="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                  {/* {btnText &&  <motion.div  initial={{opacity:0,y:50}} animate={{opacity:1,y:0}} transition={{delay:1.3, type:'just'}} className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                 <Tooltip title={btnText}>
                   <Link to={to+0}
                     type="submit"
@@ -215,7 +218,7 @@ function DTableMaster({ headers,
               currentPageReportTemplate="{first} to {last} of {totalRecords}"
               paginatorLeft={paginatorLeft}
               paginatorRight={paginatorRight}
-              styleClass="p-datatable-gridlines dark:bg-gray-800 dark:text-gray-300 shadow-lg"
+              styleclassName="p-datatable-gridlines dark:bg-gray-800 dark:text-gray-300 shadow-lg"
               className='shadow-lg rounded-lg'
               selectionMode="single"
               selection={selectedItem}
@@ -276,7 +279,7 @@ function DTableMaster({ headers,
               currentPageReportTemplate="{first} to {last} of {totalRecords}"
               paginatorLeft={paginatorLeft}
               paginatorRight={paginatorRight}
-              styleClass="p-datatable-gridlines dark:bg-gray-800 dark:text-gray-300"
+              styleclassName="p-datatable-gridlines dark:bg-gray-800 dark:text-gray-300"
               selectionMode="single"
               selection={selectedItem}
               onSelectionChange={(e) => setSelectedItem(e.value)}
