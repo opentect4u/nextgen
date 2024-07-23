@@ -36,6 +36,25 @@
     transform: rotate(360deg);
   }
 }
+/* .p-stepper-title{
+  color: #1F2937
+}
+.p-stepper-content{
+  color: #1F2937;
+} */
+.p-steps li{
+  background-color: #1F2937
+}
+.p-stepper-number{
+  color: #1F2937
+}
+.p-stepper-separator{
+  background-color: #1F2937
+}
+/* .p-stepper-action{ */
+  /* background-color: #1F2937 */
+/* } */
+
 /* .p-dropdown{
   background: #1F2937 !important;
   color:white

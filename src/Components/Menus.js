@@ -104,6 +104,28 @@ function Menus({ theme}) {
       ],
     },
     {
+      label: <Link to={routePaths.PROJECTS}>Open Projects</Link>,
+      key: "sub4",
+      icon: <AuditOutlined />,
+      // children: [
+      //   {
+      //     type: "group",
+      //     children: [
+      //       {
+      //         key: "master:projects",
+      //         icon: <ProjectOutlined />,
+      //         label: <Link to={routePaths.PROJECTS}>Projects</Link>,
+      //       },
+      //       {
+      //         label: <Link to={routePaths.PURCHASEORDER}>Purchase Orders</Link>,
+      //         key: "purchase-order",
+      //         icon: <SolutionOutlined />,
+      //       }
+      //     ],
+      //   },
+      // ],
+    },
+    {
       label: "Orders",
       key: "sub4",
       icon: <AuditOutlined />,
