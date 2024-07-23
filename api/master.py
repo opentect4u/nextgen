@@ -149,6 +149,23 @@ async def getcategory(id:getData):
     print(result, 'RESULT')
     return result
 
+@masterRouter.post('/getCatWithProd')
+async def getCatWithProd(id:getData):
+    print(id.id)
+    res_dt = {}
+
+    # select = "@a:=@a+1 serial_number, prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,prod_desc,created_by,created_at,modified_by,modified_at,sl_no"
+    select = "*"
+
+    # schema = "md_product,(SELECT @a:= 0) AS a"
+    schema = "md_product"
+    where = f"prod_cat='{id.id}'" 
+    order = "ORDER BY created_at DESC"
+    flag = 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
 @masterRouter.post('/deletecategory')
 async def deletecategory(id:deleteData):
    current_datetime = datetime.now()

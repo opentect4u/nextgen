@@ -24,11 +24,18 @@ class getUser(BaseModel):
 class getFlag(BaseModel):
     id:str
 
+class getPass(BaseModel):
+    oldPass:str
+    newPass:str
+    user:str
+
 userRouter = APIRouter()
 
 @userRouter.get('/userApi')
 def firstRoute():
     return 'hiiiiiii'
+
+
 
 @userRouter.post('/login')
 async def firstRoute(user:getUser):
@@ -57,19 +64,38 @@ async def firstRoute(user:getUser):
         return {'suc':0,'msg':'Invalid credentials'}
 
 
-@userRouter.post('/get_login_flag')
-async def firstRoute(user:getFlag):
-    print(user)
-    res_dt = {}
-    select = "first_login_flag"
+@userRouter.post('/reset_pass')
+async def reset_pass(dt:getPass):
+    print(dt)
+    select = "user_password"
     schema = "md_user"
-    where = f"user_email='{user.id}'" 
+    where = f"user_email='{dt.user}'" 
     order = ""
-    flag = 1
+    flag = 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
-    return result
-    
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    print(result['msg'])
+    if result['suc']==1 :
+        check=verify_password(dt.oldPass,result['msg']['user_password'])
+        if check==True:
+            fields=f'user_password="{get_hashed_password(dt.newPass)}",first_login_flag="N",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+            table_name="md_user"
+            whr=f'user_email="{dt.user}"'
+            flag1=1
+            values=''
+            result1 = await db_Insert(table_name, fields, values, whr, flag1)
+            if result1['suc']>0:
+                res_dt = {"suc": 1, "msg": "Password updated successfully!"}
+            else:
+                res_dt = {"suc": 0, "msg": "Error while updating!"}
+        else:
+            res_dt={"suc": 0, "msg": "Old password does not exist!"}
+
+    else:
+        res_dt={"suc": 0, "msg": "Old password does not exist!"}
+    return res_dt
+
 # @userRouter.get('/userData/{id}')
 # def firstRoute(id:int):
 #     return f'hiiiiiii {id}'
