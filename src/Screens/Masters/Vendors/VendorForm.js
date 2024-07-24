@@ -16,54 +16,153 @@ import { url } from "../../../Address/BaseUrl";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Radio } from 'antd';
 
 function VendorForm() {
   const params = useParams();
   const [loading, setLoading] = useState(false);
-  const navigate=useNavigate()
-  const [data,setData]=useState()
+  const navigate = useNavigate()
+  const [data, setData] = useState()
+  const [msmeList, setMsmeList] = useState([]);
+  const [msmeVal, setmsmeVal] = useState(false)
+  const [tdsPercTrue, setTdsPercTrue] = useState(false)
+  const [tcsPercTrue, setTcsPercTrue] = useState(false)
+  const [compositeTrue, setCompositeTrue] = useState(false)
+
+
+  // const [msmeValue,setmsmeValue] = useState('')
+
+
+  let msmeOptions = [
+    { code: 'Y', name: 'Yes' },
+    { code: 'N', name: 'No' }
+  ];
+  const handleChangeMsme = (event, handleChange) => {
+    // console.log("Custom handleChange logic for", event.target.name, event.target.value);
+    handleChange(event);
+    const value = event.target.value;
+    if (value === 'Y') {
+      setmsmeVal(true);
+    } else {
+      setmsmeVal(false);
+    }
+  };
+  const handleChangetds = (event, handleChange) => {
+    handleChange(event);
+    const value = event.target.value;
+    if (value === 'Y') {
+      setTdsPercTrue(true);
+    } else {
+      setTdsPercTrue(false);
+    }
+  };
+  const handleChangetcs = (event, handleChange) => {
+    handleChange(event);
+    const value = event.target.value;
+    if (value === 'Y') {
+      setTcsPercTrue(true);
+    } else {
+      setTcsPercTrue(false);
+    }
+  };
+  const handleChangeSupply = (event, handleChange) => {
+    handleChange(event);
+    const value = event.target.value;
+    if (value === 'R') {
+    setCompositeTrue(true);
+    } else {
+    setCompositeTrue(false);
+    }
+  };
+  // const handleChangemsme = (e) => {
+  //   const value = e.target.value;
+  //   setmsmeValue(value);
+  //   if (value === 'Y') {
+  //     setmsmeVal(true);
+  //   } else {
+  //     setmsmeVal(false);
+  //   }
+  // };
 
   const [formValues, setValues] = useState({
     v_name: "",
     v_email: "",
     v_gst: "",
     v_pan: "",
-    v_reg: "",
+    // v_reg: "",
+    v_msme: "",
+    v_msmeno: "",
+    v_bankdtls: "",
     v_remarks: "",
     v_address: "",
     dynamicFields: [{
       sl_no: 0,
-      poc_name: "", poc_ph_1: "",poc_ph_2:""
+      poc_name: "", poc_ph_1: "", poc_ph_2: ""
     }]
   });
 
   const initialValues = {
     v_name: "",
     v_email: "",
-    v_phone:"",
+    v_phone: "",
     v_gst: "",
     v_pan: "",
-    v_reg: "",
+    // v_reg: "",
+    v_msme: "",
+    v_msmeno: "",
+    v_bankdtls: "",
+    v_tan: "",
+    v_tds: "",
+    tds_perc: "",
+    v_tcs: "",
+    tcs_perc: "",
+    supply_flag: "",
+    v_composite:"",
     v_remarks: "",
     v_address: "",
     dynamicFields: [{
       sl_no: params.id > 0 ? 0 : formValues?.dynamicFields[0]?.sl_no,
-      poc_name: "", poc_ph_1: "",poc_ph_2:""
+      poc_name: "", poc_ph_1: "", poc_ph_2: ""
     }]
   };
 
   const validationSchema = Yup.object({
     v_name: Yup.string().required("Name is required"),
+    v_phone: Yup.string().required("Phone is required").length(10),
     v_email: Yup.string()
       .required("Email is required")
       .email("Incorrect email format"),
-    v_phone:Yup.string().required("Phone is required").length(10),
-    v_address: Yup.string().required("Address is required"),
-    // v_pan:Yup.string().matches("[A-Z]{5}[0-9]{4}[A-Z]{1}"),
-    v_pan: Yup.string(),
-    // v_gst:Yup.string().matches("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9A-Z]{1}$")
     v_gst: Yup.string(),
+    v_pan: Yup.string(),
+    v_msme: Yup.string().required("MSME is required"),
+    v_msmeno: Yup.string().when('v_msme', {
+      is: 'Y',
+      then: () => Yup.string().required('MSME No. is required'),
+      otherwise: () => Yup.string()
+    }),
+    v_bankdtls: Yup.string().required("Bank details required"),
+    v_tan: Yup.string().required("TAN is required"),
+    v_tds: Yup.string().required("TDS is required"),
+    tds_perc: Yup.string().when('v_tds', {
+      is: 'Y',
+      then: () => Yup.string().required('TDS percentage is required'),
+      otherwise: () => Yup.string()
+    }),
+    v_tcs: Yup.string().required("TCS is required"),
+    tcs_perc: Yup.string().when('v_tcs', {
+      is: 'Y',
+      then: () => Yup.string().required('TCS percentage is required'),
+      otherwise: () => Yup.string()
+    }),
+    supply_flag: Yup.string().required("Required"),
+    v_composite:Yup.string().when('supply_flag',{
+      if:'R',
+      then: ()=> Yup.string().required('Composite is required'),
+      otherwise:() => Yup.string()
+    }),
+    v_address: Yup.string().required("Address is required"),
+
+
     v_remarks: Yup.string(),
     dynamicFields: Yup.array().of(
       Yup.object().shape({
@@ -75,32 +174,33 @@ function VendorForm() {
     )
   });
 
+
   useEffect(() => {
+    setMsmeList(msmeOptions)
     if (+params.id > 0) {
       setLoading(true);
-
-
       axios.post(url + "/api/getvendor", { id: params.id })
-      .then((res) => {
-        console.log(res.data.msg.desig_name);
-        setLoading(false);
-        setData(res.data?.msg)
+        .then((res) => {
+          console.log(res.data.msg.desig_name);
+          setLoading(false);
+          setData(res.data?.msg)
 
-        setValues({
-          v_name: res.data?.msg?.vendor_name,
-          v_email: res.data?.msg?.vendor_email,
-          poc_name: res.data?.msg?.vendor_contact,
-          poc_ph_1: res.data?.msg?.vendor_phone,
-          poc_ph_2: res.data?.msg?.vendor_phone,
-          v_remarks: res.data?.msg?.vendor_remarks,
-          v_gst: res.data?.msg?.vendor_gst,
-          v_pan: res.data?.msg?.vendor_pan,
-          v_reg: res.data?.msg?.vendor_reg,
-          v_address: res.data?.msg?.vendor_address,
+          setValues({
+            v_name: res.data?.msg?.vendor_name,
+            v_email: res.data?.msg?.vendor_email,
+            poc_name: res.data?.msg?.vendor_contact,
+            poc_ph_1: res.data?.msg?.vendor_phone,
+            poc_ph_2: res.data?.msg?.vendor_phone,
+            v_remarks: res.data?.msg?.vendor_remarks,
+            v_gst: res.data?.msg?.vendor_gst,
+            v_pan: res.data?.msg?.vendor_pan,
+            // v_reg: res.data?.msg?.vendor_reg,
+            v_msme: res.data?.msg?.vendor_msme,
+            v_msmeno: res.data?.msg?.vendor_msmeno,
+            v_address: res.data?.msg?.vendor_address,
 
-        });
-      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
-
+          });
+        }).catch(err => { console.log(err); navigate('/error' + '/' + err.code + '/' + err.message) });
       axios.post(url + "/api/getvendor", { id: params.id }).then((res) => {
         console.log(res.data.msg.desig_name);
         setLoading(false);
@@ -111,8 +211,10 @@ function VendorForm() {
           v_phone: res.data.msg.vendor_phone,
           v_gst: res.data.msg.vendor_gst,
           v_pan: res.data.msg.vendor_pan,
-          v_reg: res.data.msg.vendor_reg,
-          v_remarks: res.data.msg.vendor_remarks,        
+          // v_reg: res.data.msg.vendor_reg,
+          v_msme: res.data.msg.vendor_msme,
+          v_msmeno: res.data.msg.v_msmeno,
+          v_remarks: res.data.msg.vendor_remarks,
           v_address: res.data.msg.vendor_address,
           // poc_name: res.data.msg.vendor_contact,
           // poc_ph_1: res.data.msg.vendor_phone,
@@ -120,7 +222,7 @@ function VendorForm() {
         });
       });
       axios.post(url + "/api/getvendorpoc", { id: params.id }).then((res) => {
-        console.log(res.data.msg[0],'res getvendorpoc');
+        console.log(res.data.msg[0], 'res getvendorpoc');
         setValues(prevValues => ({
           ...prevValues,
           dynamicFields: res.data.msg.map((item) => ({
@@ -136,7 +238,7 @@ function VendorForm() {
   }, []);
   const onSubmit = (values) => {
     console.log("onsubmit called")
-    console.log(values);
+    console.log(values, 'onsubmit vendor');
     setLoading(true);
     axios
       .post(url + "/api/addVendor", {
@@ -144,13 +246,15 @@ function VendorForm() {
         user: localStorage.getItem("email"),
         v_name: values.v_name,
         v_email: values.v_email,
-        v_phone:values.v_phone.toString(),
+        v_phone: values.v_phone.toString(),
         v_gst: values.v_gst,
         v_pan: values.v_pan,
-        v_reg: values.v_reg,
+        // v_reg: values.v_reg,
+        v_msme: values.v_msme,
+        v_msmeno: values.v_msmeno,
         v_remarks: values.v_remarks,
         v_address: values.v_address,
-        v_poc:values.dynamicFields,
+        v_poc: values.dynamicFields,
         // poc_name: values.poc_name,
         // poc_ph_1: values.poc_ph_1.toString(),
       })
@@ -162,7 +266,7 @@ function VendorForm() {
         } else {
           Message("error", res.data.msg);
         }
-      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
+      }).catch(err => { console.log(err); navigate('/error' + '/' + err.code + '/' + err.message) });
   };
   // const formik = useFormik({
   //   initialValues: +params.id > 0 ? formValues : initialValues,
@@ -172,17 +276,23 @@ function VendorForm() {
   //   enableReinitialize: true,
   // });
   console.log(params, "params");
+
+  const onChange = (e) => {
+    console.log('radio checked', e.target.value);
+    console.log('radio checked', e.target.name);
+
+  };
   return (
-    <section  className="bg-transparent dark:bg-[#001529]">
-          {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
-          <HeadingTemplate
-              text={params.id > 0 ? "Update vendor" : "Add vendor"}
-              mode={params.id>0?1:0}
-              title={'Vendor'}
-              data={params.id && data?data:''}
-            />
-          <div className="w-full bg-white p-6 rounded-2xl">
-           
+    <section className="bg-transparent dark:bg-[#001529]">
+      {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
+      <HeadingTemplate
+        text={params.id > 0 ? "Update vendor" : "Add vendor"}
+        mode={params.id > 0 ? 1 : 0}
+        title={'Vendor'}
+        data={params.id && data ? data : ''}
+      />
+      <div className="w-full bg-white p-6 rounded-2xl">
+
         <Spin
           indicator={<LoadingOutlined spin />}
           size="large"
@@ -220,7 +330,7 @@ function VendorForm() {
                     {errors.v_phone && touched.v_phone ? <VError title={errors.v_phone} /> : null}
                   </div>
                   <div>
-                  <TDInputTemplate
+                    <TDInputTemplate
                       placeholder="Type email..."
                       type="text"
                       label="Vendor email"
@@ -232,35 +342,176 @@ function VendorForm() {
                     />
                     {errors.v_email && touched.v_email ? <VError title={errors.v_email} /> : null}
                   </div>
-                  <div className="sm:col-span-2 -mt-4">
-                    <div className="grid gap-4 sm:grid-cols-3 sm:gap-6">
-                      <div className="sm:col-span-1">
-                        <TDInputTemplate
-                          placeholder="Type GST..."
-                          type="text"
-                          label="GST"
-                          name="v_gst"
-                          formControlName={values.v_gst}
-                          handleChange={handleChange}
-                          handleBlur={handleBlur}
-                          mode={1}
-                        />
-                        {errors.v_gst && touched.v_gst ? <VError title={errors.v_gst} /> : null}
-                      </div>
-                      <div className="sm:col-span-1">
-                        <TDInputTemplate
-                          placeholder="Type PAN..."
-                          type="text"
-                          label="PAN"
-                          name="v_pan"
-                          formControlName={values.v_pan}
-                          handleChange={handleChange}
-                          handleBlur={handleBlur}
-                          mode={1}
-                        />
-                        {errors.v_pan && touched.v_pan ? <VError title={errors.v_pan} /> : null}
-                      </div>
-                      <div className="sm:col-span-1">
+                  {/* <div className="sm:col-span-2 -mt-4">
+                    <div className="grid gap-4 sm:grid-cols-3 sm:gap-6"> */}
+                  <div>
+                    <TDInputTemplate
+                      placeholder="Type GST..."
+                      type="text"
+                      label="GST"
+                      name="v_gst"
+                      formControlName={values.v_gst}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      mode={1}
+                    />
+                    {errors.v_gst && touched.v_gst ? <VError title={errors.v_gst} /> : null}
+                  </div>
+                  <div className="sm:col-span-1">
+                    <TDInputTemplate
+                      placeholder="Type PAN..."
+                      type="text"
+                      label="PAN"
+                      name="v_pan"
+                      formControlName={values.v_pan}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      mode={1}
+                    />
+                    {errors.v_pan && touched.v_pan ? <VError title={errors.v_pan} /> : null}
+                  </div>
+                  <div className='sm:col-span-2'>
+                    <TDInputTemplate
+                      placeholder="Select MSME"
+                      type="text"
+                      label="MSME"
+                      name="v_msme"
+                      formControlName={values.v_msme}
+                      handleChange={event => handleChangeMsme(event, handleChange)}
+                      handleBlur={handleBlur}
+                      data={msmeList}
+                      mode={2}
+                    // handleChange={(e) => {
+                    //   if (e.target.value === "Y")
+                    //     setmsmeVal(true);
+                    //   else
+                    //     setmsmeVal(false);
+                    // }}
+                    />
+                    {errors.v_msme && touched.v_msme ? <VError title={errors.v_msme} /> : null}
+                  </div>
+
+                  {msmeVal &&
+                    <div className='sm:col-span-2' >
+                      <TDInputTemplate
+                        placeholder="Type MSME No."
+                        type="text"
+                        label="MSME No."
+                        name="v_msmeno"
+                        formControlName={values.v_msmeno}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        mode={1}
+                      />
+                      {errors.v_msmeno && touched.v_msmeno ? <VError title={errors.v_msmeno} /> : null}
+                    </div>}
+
+                  <div className="sm:col-span-1">
+                    <TDInputTemplate
+                      placeholder="Type Bank Details..."
+                      type="text"
+                      label="Bank Details"
+                      name="v_bankdtls"
+                      formControlName={values.v_bankdtls}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      mode={1}
+                    />
+                    {errors.v_bankdtls && touched.v_bankdtls ? <VError title={errors.v_bankdtls} /> : null}
+                  </div>
+                  <div className="sm:col-span-1">
+                    <TDInputTemplate
+                      placeholder="Type TAN..."
+                      type="text"
+                      label="TAN"
+                      name="v_tan"
+                      formControlName={values.v_tan}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      mode={1}
+                    />
+                    {errors.v_tan && touched.v_tan ? <VError title={errors.v_tan} /> : null}
+                  </div>
+                  <div className='sm:col-span-2'>
+                    <TDInputTemplate
+                      placeholder="Select TDS"
+                      type="text"
+                      label="TDS"
+                      name="v_tds"
+                      formControlName={values.v_tds}
+                      handleChange={event => handleChangetds(event, handleChange)}
+                      handleBlur={handleBlur}
+                      data={msmeList}
+                      mode={2}
+                    />
+                    {errors.v_tds && touched.v_tds ? <VError title={errors.v_tds} /> : null}
+                  </div>
+                  {tdsPercTrue &&
+                    <div className='sm:col-span-2' >
+                      <TDInputTemplate
+                        placeholder="Type TDS Percentage"
+                        type="text"
+                        label="TDS Percentage"
+                        name="tds_perc"
+                        formControlName={values.tds_perc}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        mode={1}
+                      />
+                      {errors.tds_perc && touched.tds_perc ? <VError title={errors.tds_perc} /> : null}
+                    </div>}
+
+                  <div className='sm:col-span-2'>
+                    <TDInputTemplate
+                      placeholder="Select TCS"
+                      type="text"
+                      label="TCS"
+                      name="v_tcs"
+                      formControlName={values.v_tcs}
+                      handleChange={event => handleChangetcs(event, handleChange)}
+                      handleBlur={handleBlur}
+                      data={msmeList}
+                      mode={2}
+                    />
+                    {errors.v_tcs && touched.v_tcs ? <VError title={errors.v_tcs} /> : null}
+                  </div>
+                  {tcsPercTrue &&
+                    <div className='sm:col-span-2' >
+                      <TDInputTemplate
+                        placeholder="Type TCS Percentage"
+                        type="text"
+                        label="TCS Percentage"
+                        name="tcs_perc"
+                        formControlName={values.tcs_perc}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        mode={1}
+                      />
+                      {errors.tcs_perc && touched.tcs_perc ? <VError title={errors.tcs_perc} /> : null}
+                    </div>}
+                  <Radio.Group name="supply_flag" value={values.supply_flag}
+                    onChange={event => handleChangeSupply(event, handleChange)}
+                    onBlur={handleBlur}>
+                    <Radio value={'R'}>Registered</Radio>
+                    <Radio value={'U'}>Unregistered</Radio>
+                    <Radio value={'O'}>Overseas Supplier</Radio>
+                  </Radio.Group>
+                  {errors.supply_flag && touched.supply_flag ? <VError title={errors.supply_flag} /> : null}
+                  {compositeTrue &&
+                    <div className='sm:col-span-2' >
+                      <TDInputTemplate
+                        placeholder="Type composite"
+                        type="text"
+                        label="Composite"
+                        name="v_composite"
+                        formControlName={values.v_composite}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        mode={1}
+                      />
+                      {errors.v_composite && touched.v_composite ? <VError title={errors.v_composite} /> : null}
+                    </div>}
+                  {/* <div className="sm:col-span-1">
                         <TDInputTemplate
                           placeholder="Type registration. no. ..."
                           type="text"
@@ -272,9 +523,9 @@ function VendorForm() {
                           mode={1}
                         />
                         {errors.v_reg && touched.v_reg ? <VError title={errors.v_reg} /> : null}
-                      </div>
-                    </div>
-                  </div>
+                      </div> */}
+                  {/* </div>
+                  </div> */}
                   <div className="sm:col-span-2">
                     <TDInputTemplate
                       placeholder="Lorem Ipsum Dolor Sit..."
@@ -302,21 +553,21 @@ function VendorForm() {
                     {errors.v_address && touched.v_address ? <VError title={errors.v_address} /> : null}
                   </div>
                   <FieldArray name="dynamicFields">
-                    {({ push, remove,insert,unshift }) => (
+                    {({ push, remove, insert, unshift }) => (
                       <>
                         {values.dynamicFields?.map((field, index) => (
                           <React.Fragment key={index}>
                             <div className="sm:col-span-2 flex gap-2 justify-end">
-                            <Button
-                              className="rounded-full text-white bg-red-800 border-red-800"
-                              onClick={() => remove(index)}
-                              icon={<MinusOutlined />}
-                            ></Button>
+                              <Button
+                                className="rounded-full text-white bg-red-800 border-red-800"
+                                onClick={() => remove(index)}
+                                icon={<MinusOutlined />}
+                              ></Button>
 
-                            <Button
-                              className="rounded-full bg-green-900 text-white"
-                              onClick={() => unshift({ sl_no: 0, poc_name: "", poc_ph_1: "" })} icon={<PlusOutlined />}
-                            ></Button>
+                              <Button
+                                className="rounded-full bg-green-900 text-white"
+                                onClick={() => unshift({ sl_no: 0, poc_name: "", poc_ph_1: "" })} icon={<PlusOutlined />}
+                              ></Button>
 
                             </div>
                             <div className="sm:col-span-2">
@@ -364,7 +615,7 @@ function VendorForm() {
                                 <VError title={errors.dynamicFields[index].poc_ph_2} />
                               ) : null}
                             </div>
-                           
+
                           </React.Fragment>
                         ))}
                         {/* <div className="sm:col-span-2">
@@ -376,9 +627,9 @@ function VendorForm() {
                     )}
                   </FieldArray>
                 </div>
-                
-                  <BtnComp mode={params.id > 0 ? "E" : "A"} />
-                
+
+                <BtnComp mode={params.id > 0 ? "E" : "A"} />
+
               </form>
             )}
           </Formik>

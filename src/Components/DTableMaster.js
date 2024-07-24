@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState,useEffect } from 'react'
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -46,9 +46,10 @@ function DTableMaster({ headers,
   var id;
   const iconTemplate = () => {
     return flag == 1 ? (
-      <EditIcon className="text-blue-900" />
-    ) : (
       <VisibilityIcon className="text-blue-900" />
+      
+    ) : (
+      <EditIcon className="text-green-900" />
     );
   };
 
@@ -108,6 +109,9 @@ function DTableMaster({ headers,
       </Tooltip>
     );
   };
+   useEffect(()=>{
+       console.log(flag,'flag')
+    },[])
   return (
     <>
     {/* <div className='block sm:hidden'>mobile ui</div> */}
@@ -239,7 +243,16 @@ function DTableMaster({ headers,
                   body={(rowData) => renderTooltip(rowData, item.name)}
                 ></Column>
               ))}
-              {flag == 1 && (
+              {/* {flag == 1 && ( */}
+                <Column
+                  body={iconTemplate}
+                  header={"Action"}
+                  headerClassName={'text-green-900 bg-green-100 border-b-green-900  dark:bg-gray-700 dark:text-white dark:font-bold'}
+                  style={{ width: "10%" }}
+                  frozen
+                ></Column>
+              {/* )} */}
+              {/* {flag == 2 && (
                 <Column
                   body={iconTemplate}
                   header={"Action"}
@@ -247,16 +260,7 @@ function DTableMaster({ headers,
                   style={{ width: "10%" }}
                   frozen
                 ></Column>
-              )}
-              {flag == 2 && (
-                <Column
-                  body={iconTemplate}
-                  header={"Action"}
-                  headerClassName="text-blue-900 bg-blue-300"
-                  style={{ width: "10%" }}
-                  frozen
-                ></Column>
-              )}
+              )} */}
             </DataTable>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ type: 'spring', stiffness: 400 }}>
 
