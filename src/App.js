@@ -94,6 +94,9 @@ function App() {
         colorText:'#014737',
         controlItemBgHover:'#D1D5DB'
 
+      },
+      Radio:{
+        colorPrimary:"#22543d"
       }
     },
   }}>

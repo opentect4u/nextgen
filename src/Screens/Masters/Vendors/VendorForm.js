@@ -28,6 +28,10 @@ function VendorForm() {
   const [tdsPercTrue, setTdsPercTrue] = useState(false)
   const [tcsPercTrue, setTcsPercTrue] = useState(false)
   const [compositeTrue, setCompositeTrue] = useState(false)
+  const [stateTrue, setStateTrue] = useState(false)
+  const [gstNoTrue, setGstNoTrue] = useState(false)
+
+
 
 
   // const [msmeValue,setmsmeValue] = useState('')
@@ -69,9 +73,16 @@ function VendorForm() {
     handleChange(event);
     const value = event.target.value;
     if (value === 'R') {
-    setCompositeTrue(true);
+      setGstNoTrue(true)
+      setCompositeTrue(true);
+      setStateTrue(true);
+    } else if (value === 'U') {
+      setCompositeTrue(false);
+      setStateTrue(true);
     } else {
-    setCompositeTrue(false);
+      setCompositeTrue(false);
+      setStateTrue(false);
+      setGstNoTrue(false)
     }
   };
   // const handleChangemsme = (e) => {
@@ -117,7 +128,10 @@ function VendorForm() {
     v_tcs: "",
     tcs_perc: "",
     supply_flag: "",
+    v_gst_no:"",
     v_composite:"",
+    v_e_r_supply:"",
+    v_state:"",
     v_remarks: "",
     v_address: "",
     dynamicFields: [{
@@ -155,10 +169,21 @@ function VendorForm() {
       otherwise: () => Yup.string()
     }),
     supply_flag: Yup.string().required("Required"),
+    v_gst_no:Yup.string().when('supply_flag',{
+      is: 'R',
+      then: ()=> Yup.string().required('GST No. is required'),
+      otherwise:() => Yup.string()
+    }),
     v_composite:Yup.string().when('supply_flag',{
-      if:'R',
+      is: 'R',
       then: ()=> Yup.string().required('Composite is required'),
       otherwise:() => Yup.string()
+    }),
+    v_e_r_supply:Yup.string().required("Exempted rated supply required"),
+    v_state:Yup.string().when('supply_flag', {
+      is: 'R'|| 'U',
+      then: () => Yup.string().required('State is required'),
+      otherwise: () => Yup.string()
     }),
     v_address: Yup.string().required("Address is required"),
 
@@ -252,6 +277,17 @@ function VendorForm() {
         // v_reg: values.v_reg,
         v_msme: values.v_msme,
         v_msmeno: values.v_msmeno,
+        v_bankdtls: values.bank_details,
+        v_tan: values.tan_no,
+        v_tds: values.tds_flag,
+        tds_perc: values.tds_prtg,
+        v_tcs: values.tcs_flag,
+        tcs_perc: values.tcs_prtg,
+        supply_flag: values.supply_flag,
+        v_gst_no:values.gst_no,
+        v_composite:values.composite,
+        v_e_r_supply:values.e_r_supply,
+        v_state:values.state,
         v_remarks: values.v_remarks,
         v_address: values.v_address,
         v_poc: values.dynamicFields,
@@ -497,6 +533,20 @@ function VendorForm() {
                     <Radio value={'O'}>Overseas Supplier</Radio>
                   </Radio.Group>
                   {errors.supply_flag && touched.supply_flag ? <VError title={errors.supply_flag} /> : null}
+                  {gstNoTrue &&
+                    <div className='sm:col-span-2' >
+                      <TDInputTemplate
+                        placeholder="Type GST No."
+                        type="text"
+                        label="GST No."
+                        name="v_gst_no"
+                        formControlName={values.v_gst_no}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        mode={1}
+                      />
+                      {errors.v_gst_no && touched.v_gst_no ? <VError title={errors.v_gst_no} /> : null}
+                    </div>}
                   {compositeTrue &&
                     <div className='sm:col-span-2' >
                       <TDInputTemplate
@@ -511,6 +561,28 @@ function VendorForm() {
                       />
                       {errors.v_composite && touched.v_composite ? <VError title={errors.v_composite} /> : null}
                     </div>}
+                    <div className='sm:col-span-2' >
+                      <TDInputTemplate
+                        placeholder="Type Exempted rated supply"
+                        type="text"
+                        label="Exempted rated supply"
+                        name="v_e_r_supply"
+                        formControlName={values.v_e_r_supply}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        mode={1}
+                      />
+                      {errors.v_e_r_supply && touched.v_e_r_supply ? <VError title={errors.v_e_r_supply} /> : null}
+                    </div>
+                    {stateTrue && 
+                    <div><Radio.Group name="v_state" value={values.v_state}
+                    onChange={handleChange}
+                    onBlur={handleBlur}>
+                    <Radio value={'E'}>Interstate</Radio>
+                    <Radio value={'A'}>Intrastate</Radio>
+                  </Radio.Group>
+                  {errors.v_state && touched.v_state ? <VError title={errors.v_state} /> : null}
+                  </div>}
                   {/* <div className="sm:col-span-1">
                         <TDInputTemplate
                           placeholder="Type registration. no. ..."
