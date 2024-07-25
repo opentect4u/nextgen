@@ -58,7 +58,7 @@ class addPoc(BaseModel):
       poc_ext_no:str
       poc_ph_1:str
       poc_ph_2:str
-      poc_address:str
+    #   poc_address:str
       poc_location:str
 
 class addClient(BaseModel):
@@ -68,7 +68,8 @@ class addClient(BaseModel):
       c_email:str
       c_gst:str
       c_pan:str
-      c_reg:str
+      c_vendor_code:str
+    #   c_reg:str
       c_poc:list[addPoc] 
       user:str
 
@@ -451,7 +452,7 @@ async def getvendor(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number, sl_no,vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_remarks,vendor_address,msme_flag,msme_no,composite,tan_no,tcs_flag,tds_flag,tds_prtg,tcs_prtg,state,supply_flag,e_r_supply,gst_no,bank_details,created_by,created_at,modified_by,modified_at"
+    select = "@a:=@a+1 serial_number,sl_no,vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_remarks,vendor_address,msme_flag,msme_no,composite,tan_no,tcs_flag,tds_flag,tds_prtg,tcs_prtg,state,supply_flag,e_r_supply,gst_no,bank_details,created_by,created_at,modified_by,modified_at"
     schema = "md_vendor,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
@@ -609,8 +610,8 @@ async def addclient(data:addClient):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'client_name="{data.c_name}",client_email="{data.c_email}",client_phone="{data.c_phone}",client_gst="{data.c_gst}",client_pan="{data.c_pan}",client_reg="{data.c_reg}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.c_id > 0 else f'client_name,client_email,client_phone,client_gst,client_pan,client_reg,created_by,created_at'
-    values = f'"{data.c_name}","{data.c_email}","{data.c_phone}","{data.c_gst}","{data.c_pan}","{data.c_reg}","{data.user}","{formatted_dt}"'
+    fields= f'client_name="{data.c_name}",client_email="{data.c_email}",client_phone="{data.c_phone}",client_gst="{data.c_gst}",client_pan="{data.c_pan}",vendor_code="{data.c_vendor_code}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.c_id > 0 else f'client_name,client_email,client_phone,client_gst,client_pan,vendor_code,created_by,created_at'
+    values = f'"{data.c_name}","{data.c_email}","{data.c_phone}","{data.c_gst}","{data.c_pan}","{data.c_vendor_code}","{data.user}","{formatted_dt}"'
     table_name = "md_client"
     whr = f'sl_no="{data.c_id}"' if data.c_id > 0 else None
     flag = 1 if data.c_id>0 else 0
@@ -624,8 +625,8 @@ async def addclient(data:addClient):
     # del_qry = await db_Delete(del_table_name, del_whr)
 
     for c in data.c_poc:
-        fields= f'poc_name="{c.poc_name}",poc_email="{c.poc_email}",poc_designation="{c.poc_designation}",poc_department="{c.poc_department}",poc_direct_no="{c.poc_direct_no}",poc_ext_no="{c.poc_ext_no}", poc_ph_1="{c.poc_ph_1}",poc_ph_2="{c.poc_ph_2}",poc_address="{c.poc_address}",poc_location="{c.poc_location}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_address,poc_location,created_by,created_at'
-        values = f'"{lastID}","{c.poc_name}","{c.poc_email}","{c.poc_designation}","{c.poc_department}","{c.poc_direct_no}","{c.poc_ext_no}","{c.poc_ph_1}","{c.poc_ph_2}","{c.poc_address}","{c.poc_location}","{data.user}","{formatted_dt}"'
+        fields= f'poc_name="{c.poc_name}",poc_email="{c.poc_email}",poc_designation="{c.poc_designation}",poc_department="{c.poc_department}",poc_direct_no="{c.poc_direct_no}",poc_ext_no="{c.poc_ext_no}", poc_ph_1="{c.poc_ph_1}",poc_ph_2="{c.poc_ph_2}",poc_location="{c.poc_location}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_location,created_by,created_at'
+        values = f'"{lastID}","{c.poc_name}","{c.poc_email}","{c.poc_designation}","{c.poc_department}","{c.poc_direct_no}","{c.poc_ext_no}","{c.poc_ph_1}","{c.poc_ph_2}","{c.poc_location}","{data.user}","{formatted_dt}"'
         table_name = "md_client_poc"
         whr =  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
         flag1 = 1 if c.sl_no>0 else 0
@@ -678,7 +679,7 @@ async def getclient(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number, client_name,client_email,client_phone,client_gst,client_pan,client_reg,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number, client_name,client_email,client_phone,client_gst,client_pan,vendor_code,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_client,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
