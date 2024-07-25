@@ -91,7 +91,20 @@ class addVendor(BaseModel):
       v_email:str
       v_gst:str
       v_pan:str
-      v_reg:str
+    #   v_reg:str
+      msme_flag:str 
+      msme_no:str
+      bank_details:str 
+      tan_no:str 
+      tds_flag:str 
+      tcs_flag:str 
+      tds_prtg:str 
+      tcs_prtg:str 
+      supply_flag:str 
+      composite:str
+      gst_no:str
+      e_r_supply:str 
+      state:str
       v_poc:list[addVPoc] 
       v_remarks:str
       v_address:str
@@ -119,9 +132,9 @@ async def addcategory(dt:getMaster):
     if(dt.id==0):
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "Category inserted successfully!"}
+            res_dt = {"suc": 1, "msg": "Category saved successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": "Error while inserting!"}
+            res_dt = {"suc": 0, "msg": "Error while saving!"}
     else:
         print(flag)
         fields=f'catg_name="{dt.name}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
@@ -210,9 +223,9 @@ async def addunit(dt:getMaster):
     if(dt.id==0):
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "Unit inserted successfully!"}
+            res_dt = {"suc": 1, "msg": "Unit saved successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": "Error while inserting!"}
+            res_dt = {"suc": 0, "msg": "Error while saving!"}
     else:
         print(flag)
         fields=f'unit_name="{dt.name}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
@@ -272,7 +285,7 @@ async def adddepartment(dt:getMaster):
         result = await db_Insert(table_name, fields, values, whr, flag)
         print(result)
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "Department inserted successfully!"}
+            res_dt = {"suc": 1, "msg": "Department saved successfully!"}
         else:
             res_dt = {"suc": 0, "msg": result['msg']}
     else:
@@ -346,9 +359,9 @@ async def adddesignation(dt:getMaster):
     if(dt.id==0):
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "Designation inserted successfully!"}
+            res_dt = {"suc": 1, "msg": "Designation saved successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": "Error while inserting!"}
+            res_dt = {"suc": 0, "msg": "Error while saving!"}
     else:
         print(flag)
         fields=f'desig_name="{dt.name}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
@@ -419,9 +432,9 @@ async def deletedesig(id:deleteData):
 #     if(data.v_id==0):
 #         result = await db_Insert(table_name, fields, values, whr, flag)
 #         if(result['suc']>0):
-#             res_dt = {"suc": 1, "msg": "Vendor inserted successfully!"}
+#             res_dt = {"suc": 1, "msg": "Vendor saved successfully!"}
 #         else:
-#             res_dt = {"suc": 0, "msg": "Error while inserting!"}
+#             res_dt = {"suc": 0, "msg": "Error while saving!"}
 #     else:
 #         print(flag)
 #         fields=f'vendor_name="{data.v_name}",vendor_email="{data.v_email}",vendor_contact="{data.v_contact}",vendor_phone="{data.v_phone}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_reg="{data.v_reg}",vendor_remarks="{data.v_remarks}",vendor_address="{data.v_address}",modified_by="{data.user}",modified_at="{formatted_dt}"'
@@ -480,9 +493,9 @@ async def addproduct(data:addProduct):
     if(data.p_id==0):
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "Product inserted successfully!"}
+            res_dt = {"suc": 1, "msg": "Product saved successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": "Error while inserting!"}
+            res_dt = {"suc": 0, "msg": "Error while saving!"}
     else:
         print(flag)
         fields=f'prod_name="{data.p_name}",prod_cat="{data.p_cat}",prod_make="{data.p_make}",part_no="{data.p_part}",model_no="{data.p_model}",article_no="{data.p_article}",hsn_code="{data.p_hsn}",prod_desc="{data.p_detailed}",modified_by="{data.user}",modified_at="{formatted_dt}"'
@@ -543,9 +556,9 @@ async def adduser(data:addUser):
     if(data.u_id==0):
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "User inserted successfully!"}
+            res_dt = {"suc": 1, "msg": "User saved successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": "Error while inserting!"}
+            res_dt = {"suc": 0, "msg": "Error while saving!"}
     else:
         print(flag)
         fields=f'user_name="{data.u_name}",user_location="{data.u_loc}",user_dept="{data.u_dept}",user_desig="{data.u_desig}",user_phone="{data.u_phone}",user_permission="{data.u_permission}",user_email="{data.u_email}",user_type="{data.u_type}",modified_by="{data.user}",modified_at="{formatted_dt}"'
@@ -619,9 +632,9 @@ async def addclient(data:addClient):
         result = await db_Insert(table_name, fields, values, whr, flag1)
 
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": f"Client inserted successfully!" if c.sl_no==0 else f"Client updated successfully!"}
+            res_dt = {"suc": 1, "msg": f"Client saved successfully!" if c.sl_no==0 else f"Client updated successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": f"Error while inserting!" if c.sl_no==0 else f"Error while updating"}
+            res_dt = {"suc": 0, "msg": f"Error while saving!" if c.sl_no==0 else f"Error while updating"}
 
     return res_dt
 
@@ -635,11 +648,11 @@ async def addclient(data:addClient):
     #             whr =  None
     #             result = await db_Insert(table_name, fields, values, whr, flag)
     #             if(result['suc']>0):
-    #                 res_dt = {"suc": 1, "msg": "Client inserted successfully!"}
+    #                 res_dt = {"suc": 1, "msg": "Client saved successfully!"}
     #             else:
-    #                 res_dt = {"suc": 0, "msg": "Error while inserting!"}
+    #                 res_dt = {"suc": 0, "msg": "Error while saving!"}
     #     else:
-    #         res_dt = {"suc": 0, "msg": "Error while inserting!"}
+    #         res_dt = {"suc": 0, "msg": "Error while saving!"}
     # else:
     #     print(flag)
     #     fields=f'client_name="{data.c_name}",client_email="{data.c_email}",client_phone="{data.c_phone}",client_gst="{data.c_gst}",client_pan="{data.c_pan}",client_reg="{data.c_reg}",client_location="{data.c_location}",client_address="{data.c_address}",modified_by="{data.user}",modified_at="{formatted_dt}"'
@@ -725,8 +738,8 @@ async def addvendor(data:addVendor):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'vendor_name="{data.v_name}",vendor_email="{data.v_email}",vendor_phone="{data.v_phone}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_reg="{data.v_reg}",vendor_remarks="{data.v_remarks}",vendor_address="{data.v_address}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks,vendor_address,created_by,created_at'
-    values = f'"{data.v_name}","{data.v_email}","{data.v_phone}","{data.v_gst}","{data.v_pan}","{data.v_reg}","{data.v_remarks}","{data.v_address}","{data.user}","{formatted_dt}"'
+    fields= f'vendor_name="{data.v_name}",vendor_email="{data.v_email}",vendor_phone="{data.v_phone}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_remarks="{data.v_remarks}",vendor_address="{data.v_address}",msme_flag="{data.msme_flag}",msme_no="{data.msme_no}",gst_no="{data.gst_no}",composite="{data.composite}",tds_flag="{data.tds_flag}",tcs_flag="{data.tds_flag}",tds_prtg="{data.tds_prtg}",tcs_prtg="{data.tcs_prtg}",e_r_supply="{data.e_r_supply}",tan_no="{data.tan_no}",bank_details="{data.bank_details}",supply_flag="{data.supply_flag}",state="{data.state}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_remarks,vendor_address,msme_flag,msme_no,composite,tan_no,tcs_flag,tds_flag,tds_prtg,tcs_prtg,state,supply_flag,e_r_supply,gst_no,bank_details,created_by,created_at'
+    values = f'"{data.v_name}","{data.v_email}","{data.v_phone}","{data.v_gst}","{data.v_pan}","{data.v_remarks}","{data.v_address}","{data.msme_flag}","{data.msme_no}","{data.composite}","{data.tan_no}","{data.tcs_flag}","{data.tds_flag},"{data.tds_prtg}","{data.tcs_prtg}","{data.user}","{data.state}","{data.supply_flag}","{data.e_r_supply}","{data.gst_no}","{data.bank_details}","{formatted_dt}"'
     table_name = "md_vendor"
     whr = f'sl_no="{data.v_id}"' if data.v_id > 0 else None
     flag = 1 if data.v_id>0 else 0
@@ -762,9 +775,9 @@ async def addvendor(data:addVendor):
             #     wr=f"sl_no='{v.sl_no}'"
             #     result1 = await db_Delete(table_name,wr)
                 
-            res_dt = {"suc": 1, "msg": f"Vendor inserted successfully!" if v.sl_no==0 else f"Vendor updated successfully!"}
+            res_dt = {"suc": 1, "msg": f"Vendor saved successfully!" if v.sl_no==0 else f"Vendor updated successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": f"Error while inserting!" if v.sl_no==0 else f"Error while updating"}
+            res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
         # if v.sl_no not in k:
         #     print('here in delete')
         #     table_name='md_vendor_poc'
