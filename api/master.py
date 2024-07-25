@@ -451,7 +451,7 @@ async def getvendor(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number, vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_reg,vendor_remarks, vendor_address,created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number, vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_remarks, vendor_address,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_vendor,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
