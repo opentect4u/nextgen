@@ -1,11 +1,7 @@
-import React, { useState } from "react";
-import { Select } from "antd";
-import { Dropdown } from 'primereact/dropdown';
+import React from "react";
 function TDInputTemplate(props) {
-  const [selectedCountry, setSelectedCountry] = useState(null);
   return (
     <>
-      {/* <label className="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-100"> */}
       <label className="block mb-2 text-sm font-bold text-green-900 dark:text-gray-100">
 
         {" "}
@@ -16,7 +12,7 @@ function TDInputTemplate(props) {
           type={props.type}
           name={props.name}
           value={props.formControlName}
-          // className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+         
 
           className="bg-white border-1 border-gray-400 text-gray-800 text-sm rounded-full  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 
@@ -77,6 +73,8 @@ function TDInputTemplate(props) {
           placeholder={props.placeholder}
           onChange={props.handleChange}
           onBlur={props.handleBlur}
+    disabled={props.disabled}
+
         />
       )}
     </>
