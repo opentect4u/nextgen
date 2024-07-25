@@ -19,7 +19,8 @@ import AuditTrail from "../../../Components/AuditTrail";
 function ClientForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const [vendor, setVendor] = useState([]);
+  var vendorList = [];
   const params = useParams();
   console.log(params, "params");
   const [data, setData] = useState();
@@ -29,7 +30,7 @@ function ClientForm() {
     clnt_phn: "",
     gst: "",
     pan: "",
-    reg_no: "",
+    // reg_no: "",
     dynamicFields: [
       {
         sl_no: 0,
@@ -42,7 +43,7 @@ function ClientForm() {
         poc_ph_1: "",
         poc_ph_2: "",
         poc_location: "",
-        poc_address: "",
+        // poc_address: "",
       },
     ],
   });
@@ -53,7 +54,7 @@ function ClientForm() {
     clnt_phn: "",
     gst: "",
     pan: "",
-    reg_no: "",
+    // reg_no: "",
     dynamicFields: [
       {
         sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
@@ -66,7 +67,7 @@ function ClientForm() {
         poc_ph_1: "",
         poc_ph_2: "",
         poc_location: "",
-        poc_address: "",
+        // poc_address: "",
       },
     ],
   };
@@ -82,11 +83,13 @@ function ClientForm() {
         c_name: values.clnt_name,
         c_phone: values.clnt_phn.toString(),
         c_email: values.clnt_email,
+        c_location:values.c_location,
+        c_vendor_code:values.c_vendor_code,
         // c_location: values.poc_location,
         // c_address: values.poc_address,
         c_gst: values.gst,
         c_pan: values.pan,
-        c_reg: values.reg_no,
+        // c_reg: values.reg_no,
         c_poc: values.dynamicFields,
       })
       .then((res) => {
@@ -112,7 +115,10 @@ function ClientForm() {
     // poc_address: Yup.string().required("Delivery address is required"),
     gst: Yup.string().required("GST is required"),
     pan: Yup.string().required("PAN is required"),
-    reg_no: Yup.string().required("Registration no. is required"),
+    c_location: Yup.string().required("Client location is required"),
+    c_vendor_code: Yup.string().required("Vendor code is required"),
+
+    // reg_no: Yup.string().required("Registration no. is required"),
     dynamicFields: Yup.array().of(
       Yup.object().shape({
         poc_name: Yup.string().optional(),
@@ -123,7 +129,7 @@ function ClientForm() {
         poc_ext_no: Yup.string().optional(),
         poc_ph_1: Yup.string().optional(),
         poc_ph_2: Yup.string().optional(),
-        poc_address: Yup.string().optional(),
+        // poc_address: Yup.string().optional(),
         poc_location: Yup.string().optional(),
       })
     ),
@@ -137,6 +143,19 @@ function ClientForm() {
   //     enableReinitialize: true
   // });
   useEffect(() => {
+    axios.post(url + "/api/getvendor", { id: 0 }).then((res) => {
+      console.log(res, 'getvendor');
+      for (let i = 0; i < res?.data?.msg?.length; i++) {
+        vendorList.push(
+          {
+            name: res?.data?.msg[i].vendor_name,
+            code: res?.data?.msg[i].sl_no
+          }
+        );
+      }
+      console.log(vendorList, 'vendorList')
+      setVendor(vendorList);
+    });
     if (+params.id > 0) {
       setLoading(true);
       axios
@@ -154,7 +173,10 @@ function ClientForm() {
             // poc_address: res?.data?.msg.client_address,
             gst: res?.data?.msg.client_gst,
             pan: res?.data?.msg.client_pan,
-            reg_no: res?.data?.msg.client_reg,
+            c_location:res?.data?.msg.c_location,
+            c_vendor_code:res?.data?.msg.c_vendor_code,
+
+            // reg_no: res?.data?.msg.client_reg,
           });
         })
         .catch((err) => {
@@ -181,7 +203,7 @@ function ClientForm() {
               poc_ph_1: item.poc_ph_1,
               poc_ph_2: item.poc_ph_2,
               poc_location: item.poc_location,
-              poc_address: item.poc_address,
+              // poc_address: item.poc_address,
             })),
           }));
         })
@@ -241,6 +263,21 @@ function ClientForm() {
                       <VError title={errors.clnt_name} />
                     )}
                   </div>
+                  <div className="sm:col-span-2">
+                              <TDInputTemplate
+                                placeholder="Type Client Location..."
+                                type="text"
+                                label="Client Location"
+                                name={`c_location`}
+                                formControlName={values.c_location}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                mode={3}
+                              />
+                             {errors.c_location && touched.c_location && (
+                      <VError title={errors.c_location} />
+                    )}
+                            </div>
                   <div className="w-full">
                     <TDInputTemplate
                       placeholder="Type client's email..."
@@ -297,7 +334,22 @@ function ClientForm() {
                     />
                     {errors.pan && touched.pan && <VError title={errors.pan} />}
                   </div>
-                  <div className="w-full sm:col-span-2">
+                  <div className="sm:col-span-2">
+                    <TDInputTemplate
+                      placeholder="Select Vendor..."
+                      type="text"
+                      label="Vendor Code"
+                      name="c_vendor_code"
+                      formControlName={values.c_vendor_code}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      data={vendor}
+                      mode={2}
+                      // disabled={params.id > 0}
+                    />
+                    {errors.c_vendor_code && touched.c_vendor_code && <VError title={errors.c_vendor_code} />}
+                  </div> 
+                  {/* <div className="w-full sm:col-span-2">
                     <TDInputTemplate
                       placeholder="Type Reg No."
                       type="text"
@@ -311,7 +363,7 @@ function ClientForm() {
                     {errors.reg_no && touched.reg_no && (
                       <VError title={errors.reg_no} />
                     )}
-                  </div>
+                  </div> */}
                   <FieldArray name="dynamicFields">
                     
                     {({ push, remove, insert }) => (
@@ -340,7 +392,7 @@ function ClientForm() {
                                   poc_ph_1: "",
                                   poc_ph_2: "",
                                   poc_location: "",
-                                  poc_address: "",
+                                  // poc_address: "",
                                 })
                               }
                               icon={<PlusOutlined />}
@@ -470,9 +522,9 @@ function ClientForm() {
                             </div>
                             <div>
                               <TDInputTemplate
-                                placeholder="Type Client Location..."
+                                placeholder="Type POC Location..."
                                 type="text"
-                                label="Client Location"
+                                label="POC Location"
                                 name={`dynamicFields[${index}].poc_location`}
                                 formControlName={
                                   values.dynamicFields[index]?.poc_location ||
@@ -486,7 +538,7 @@ function ClientForm() {
                                             <VError title={formik.errors.clnt_loc} />
                                         ) : null} */}
                             </div>
-                            <div>
+                            {/* <div>
                               <TDInputTemplate
                                 placeholder="Type Delivery Address..."
                                 type="text"
@@ -499,10 +551,7 @@ function ClientForm() {
                                 handleBlur={handleBlur}
                                 mode={3}
                               />
-                              {/* {formik.errors.delvry_add && formik.touched.delvry_add ? (
-                                            <VError title={formik.errors.delvry_add} />
-                                        ) : null} */}
-                            </div>
+                            </div> */}
                             
                            
                           </React.Fragment>
