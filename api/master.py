@@ -611,8 +611,8 @@ async def addclient(data:addClient):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'client_name="{data.c_name}",client_email="{data.c_email}",client_phone="{data.c_phone}",client_gst="{data.c_gst}",client_location="{data.c_location}",client_pan="{data.c_pan}",vendor_code="{data.c_vendor_code}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.c_id > 0 else f'client_name,client_email,client_phone,client_gst,client_pan,vendor_code,created_by,created_at'
-    values = f'"{data.c_name}","{data.c_email}","{data.c_phone}","{data.c_gst}","{data.c_pan}","{data.c_vendor_code}","{data.user}","{formatted_dt}"'
+    fields= f'client_name="{data.c_name}",client_email="{data.c_email}",client_phone="{data.c_phone}",client_gst="{data.c_gst}",client_location="{data.c_location}",client_pan="{data.c_pan}",vendor_code="{data.c_vendor_code}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.c_id > 0 else f'client_name,client_email,client_phone,client_location,client_gst,client_pan,vendor_code,created_by,created_at'
+    values = f'"{data.c_name}","{data.c_email}","{data.c_phone}","{data.c_location}","{data.c_gst}","{data.c_pan}","{data.c_vendor_code}","{data.user}","{formatted_dt}"'
     table_name = "md_client"
     whr = f'sl_no="{data.c_id}"' if data.c_id > 0 else None
     flag = 1 if data.c_id>0 else 0
