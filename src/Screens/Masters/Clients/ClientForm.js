@@ -26,10 +26,12 @@ function ClientForm() {
   const [data, setData] = useState();
   const [formValues, setValues] = useState({
     clnt_name: "",
+    c_location:"",
     clnt_email: "",
     clnt_phn: "",
     gst: "",
     pan: "",
+    c_vendor_code:"",
     // reg_no: "",
     dynamicFields: [
       {
@@ -84,8 +86,7 @@ function ClientForm() {
         c_phone: values.clnt_phn.toString(),
         c_email: values.clnt_email,
         c_location:values.c_location,
-        c_vendor_code:values.c_vendor_code,
-        // c_location: values.poc_location,
+        c_vendor_code:values.c_vendor_code.toString(),
         // c_address: values.poc_address,
         c_gst: values.gst,
         c_pan: values.pan,
@@ -169,12 +170,13 @@ function ClientForm() {
             clnt_name: res.data.msg.client_name,
             clnt_email: res.data.msg.client_email,
             clnt_phn: res.data.msg.client_phone,
+            c_vendor_code:res.data.msg.vendor_code,
             // poc_location: res?.data?.msg.client_location,
             // poc_address: res?.data?.msg.client_address,
             gst: res?.data?.msg.client_gst,
             pan: res?.data?.msg.client_pan,
-            c_location:res?.data?.msg.c_location,
-            c_vendor_code:res?.data?.msg.c_vendor_code,
+            c_location:res?.data?.msg.client_location,
+            c_vendor_code:res?.data?.msg.vendor_code,
 
             // reg_no: res?.data?.msg.client_reg,
           });
