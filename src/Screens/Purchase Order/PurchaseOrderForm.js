@@ -16,6 +16,7 @@ import OrderType from "../../Components/Steps/OrderType";
 import BasicDetails from "../../Components/Steps/BasicDetails";
 import Delivery from "../../Components/Steps/Delivery";
 import More from "../../Components/Steps/More";
+import TermsConditions from "../../Components/Steps/TermsConditions";
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const customDot = (dot, { status, index }) => (
@@ -1066,7 +1067,7 @@ function PurchaseOrderForm() {
         <StepperPanel header="Terms & Conditions">
           <div className="flex flex-column h-12rem">
             <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
-              Content III
+             <TermsConditions/>
             </div>
           </div>
           <div className="flex pt-4 justify-content-start">

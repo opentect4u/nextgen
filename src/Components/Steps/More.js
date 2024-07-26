@@ -8,12 +8,31 @@ function More({ pressNext, pressBack, type }) {
   const [drawing, setDrawing] = useState("");
   const [mdcc_flag, setMdccFlag] = useState("N");
   const [mdcc, setMdcc] = useState("");
-  const [deliveryDate,SetDeliveryDate]=useState([])
+  const [drawingDate,setDrawingDate]=useState([{id:0,dt:""}])
+  const handleDtChange=(index,event)=>{
+    let data = [...drawingDate];
+    data[index][event.target.name] = event.target.value;
+    setDrawingDate(data)
+    console.log(drawingDate)
+  }
+  const addDt=()=>{
+    setDrawingDate([...drawingDate,{id:0,dt:""}])
+
+    console.log(drawingDate)
+  }
+  const removeDt = (index) => {
+    let data = [...drawingDate];
+    data.splice(index, 1)
+    setDrawingDate(data)
+}
   const onSubmit=()=>{
+    console.log(drawingDate)
+
     if(mdcc_flag=='MDCC' || !insp_flag=='Inspection required?' || drawing_flag=='Drawing/Datasheet?'|| (mdcc_flag=='Y' && !mdcc) || (insp_flag=='Y' && !insp) || (drawing_flag=='Y' && !drawing) ){
 
     }
     else{
+        console.log(drawingDate)
         pressNext({mdcc_flag:mdcc_flag,mdcc_scope:mdcc,drawing_flag:drawing_flag,drawing_scope:drawing,inspection_flag:insp_flag,inspection_scope:insp})
     }
   }
@@ -122,21 +141,36 @@ function More({ pressNext, pressBack, type }) {
               name="drawing"
               mode={1}
             />
-            <TDInputTemplate
-            placeholder="Drawing/Datasheet Scope"
-            type="text"
-            formControlName={drawing}
-            handleChange={e=>setDrawing(e.target.value)}
-            label="Drawing/Datasheet Scope"
-            name="drawing"
-            mode={1}
-          />
-          
-          </>  
-          )}
-          {drawing_flag=='Y' && !drawing && (
+           {drawing_flag=='Y' && !drawing && (
                       <VError title={"Drawing scope is required"} />
                     )}
+
+{drawingDate.map((input,index)=>
+         <>   <div key={index} className="flex-col justify-between">
+           <div className="flex gap-2 justify-end">
+         {drawingDate.length>1 && <button  className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-9 w-9  bg-red-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>removeDt(index)}>-</button>}
+          <button  className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-9 w-9  bg-green-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>addDt()}>+</button>
+          </div>
+<TDInputTemplate
+            placeholder=""
+            type="date"
+            formControlName={input.dt}
+            handleChange={event => handleDtChange(index, event)}
+            // handleChange={e=>setDrawing(e.target.value)}
+            label="Drawing date"
+            name="dt"
+            mode={1}
+          />
+         
+         
+            </div>
+</>
+            )}
+         
+         
+          </>  
+          )}
+         
         </div>
 {/* 
         {drawing && (
