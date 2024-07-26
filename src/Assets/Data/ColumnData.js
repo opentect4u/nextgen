@@ -81,6 +81,17 @@ export const masterheaders={
       { name: "created_by", value: "Created by" },
     ],
   },
+  'Gst': {
+    title: "Gst",
+    btnText:'Add Gst',
+    headers: [
+      { name: "serial_number", value: "#" },
+      { name: "catg_name", value: "Product Category" },
+      { name: "cgst_rate", value: "CGST Rate" },
+      { name: "sgst_rate", value: "SGST Rate" },
+      { name: "created_by", value: "Created by" },
+    ],
+  },
   'projects': {
     title: "Projects",
     btnText:'Add projects',

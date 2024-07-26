@@ -4,6 +4,8 @@ export const pathMap={
     'users':'Users',
     'clients':'Clients',
     'vendors':'Vendors',
+    'Gst':'Gst',
+    'gstaddform':'Add/Update GST',
     'categories':'Product categories',
     'projects':'Projects',
     'products':'Products',

@@ -7,6 +7,8 @@ export const routePaths={
     ADDUSERS:'/home/mastersComp/users/useraddform/',
     CLIENTS:'mastersComp/clients',
     ADDCLIENTS:'/home/mastersComp/clients/clientaddform/',
+    GST:'mastersComp/Gst',
+    ADDGST:'/home/mastersComp/Gst/gstaddform/',
     UNITS:'mastersComp/units',
     ADDUNITS:'/home/mastersComp/units/unitaddform/',
     PROJECTS:'poComp/projects',
