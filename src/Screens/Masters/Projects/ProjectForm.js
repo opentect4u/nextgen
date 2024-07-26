@@ -84,7 +84,6 @@ function ProjectForm() {
                 } else {
                     setPocs([]);
                 }
-
                 formik.setFieldValue('poc_name', res.data.msg.poc_name);
                 formik.setFieldValue('poc_email', res.data.msg.poc_email);
                 formik.setFieldValue('poc_ph_1', res.data.msg.poc_ph_1)
