@@ -23,7 +23,8 @@ import {
   PayCircleOutlined,
   IdcardOutlined,
   BankOutlined,
-  MailOutlined
+  MailOutlined,
+  PercentageOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -93,6 +94,11 @@ function Menus({ theme}) {
               key: "masters:client",
               icon: <UserSwitchOutlined />,
               label: <Link to={routePaths.CLIENTS}>Client </Link>,
+            },
+            {
+              key: "masters:gst",
+              icon: <PercentageOutlined />,
+              label: <Link to={routePaths.GST}>Gst </Link>,
             },
             // {
             //   key: "masters:user",

@@ -57,15 +57,9 @@ const VendorComp = lazy(() => import("./Screens/Masters/Vendors/VendorComp"));
 const VendorView = lazy(() => import("./Screens/Masters/Vendors/VendorView"));
 const VendorForm = lazy(() => import("./Screens/Masters/Vendors/VendorForm"));
 
-const CategoryComp = lazy(() =>
-  import("./Screens/Masters/Categories/CategoryComp")
-);
-const CategoryView = lazy(() =>
-  import("./Screens/Masters/Categories/CategoryView")
-);
-const CategoryForm = lazy(() =>
-  import("./Screens/Masters/Categories/CategoryForm")
-);
+const CategoryComp = lazy(() =>import("./Screens/Masters/Categories/CategoryComp"));
+const CategoryView = lazy(() =>import("./Screens/Masters/Categories/CategoryView"));
+const CategoryForm = lazy(() =>import("./Screens/Masters/Categories/CategoryForm"));
 
 const UnitComp = lazy(() => import("./Screens/Masters/Units/UnitComp"));
 const UnitView = lazy(() => import("./Screens/Masters/Units/UnitView"));
@@ -74,6 +68,11 @@ const UnitForm = lazy(() => import("./Screens/Masters/Units/UnitForm"));
 const DeptComp = lazy(() => import("./Screens/Masters/Department/DeptComp"));
 const DeptView = lazy(() => import("./Screens/Masters/Department/DeptView"));
 const DeptForm = lazy(() => import("./Screens/Masters/Department/DeptForm"));
+
+const GstComp = lazy(()=> import("./Screens/Masters/Gst/GstComp"))
+const GstView = lazy(()=>import("./Screens/Masters/Gst/GstView"))
+const GstForm = lazy(()=>import("./Screens/Masters/Gst/GstForm"))
+
 
 const DesignationComp = lazy(() =>
   import("./Screens/Masters/Designation/DesignationComp")
@@ -183,6 +182,20 @@ const router = createBrowserRouter([
                   {
                     path: "clientaddform/:id",
                     element: <ClientForm />,
+                  },
+                ],
+              },
+              {
+                path: "Gst",
+                element: <GstComp />,
+                children: [
+                  {
+                    path: "",
+                    element:<GstView/>,
+                  },
+                  {
+                    path: "gstaddform/:id",
+                    element: <GstForm/>,
                   },
                 ],
               },

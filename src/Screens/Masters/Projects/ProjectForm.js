@@ -1,11 +1,11 @@
-import React, { useEffect, useState,useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router';
 import BtnComp from '../../../Components/BtnComp';
 import HeadingTemplate from '../../../Components/HeadingTemplate';
 import { Switch } from "antd";
 import { Message } from "../../../Components/Message";
 import { useNavigate } from "react-router-dom";
-import { LoadingOutlined,ArrowRightOutlined,ArrowLeftOutlined } from "@ant-design/icons";
+import { LoadingOutlined, ArrowRightOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
 import { Formik, FieldArray } from "formik";
@@ -128,8 +128,8 @@ function ProjectForm() {
                 setData(res.data?.msg)
                 setLoading(false);
                 setValues({
-                    proj_id:res?.data?.msg.proj_id,
-                    assgn_pm:res?.data?.msg.proj_manager,
+                    proj_id: res?.data?.msg.proj_id,
+                    assgn_pm: res?.data?.msg.proj_manager,
                     projnm: res?.data?.msg.proj_name,
                     client_id: res?.data?.msg.client_id,
                     order_id: res?.data?.msg.order_id,
@@ -153,7 +153,7 @@ function ProjectForm() {
                 });
             });
         }
-        
+
     }, []);
 
     const onSubmit = (values) => {
@@ -519,329 +519,329 @@ function ProjectForm() {
                     </form> */}
                     {/* Form without stepper */}
                     <form onSubmit={formik.handleSubmit}>
-                    <div className="card flex justify-content-center">
-                        
-        <Stepper ref={stepperRef} style={{ flexBasis: '80rem' }}>
-        
-            <StepperPanel header="Step I">
-                {/* <div className="flex flex-column h-12rem"> */}
-                <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type product ID..."
-                                    type="text"
-                                    label="Project ID"
-                                    name="proj_id"
-                                    formControlName={formik.values.proj_id}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={1}
-                                    disabled={params.id > 0}
-                                />
-                            </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Select Project Manager..."
-                                    type="text"
-                                    label="Assign Project Manager"
-                                    name="assgn_pm"
-                                    formControlName={formik.values.assgn_pm}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    data={pmList}
-                                    mode={2}
-                                    disabled={params.id > 0}
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <TDInputTemplate
-                                    placeholder="Type product name..."
-                                    type="text"
-                                    label="Project Name"
-                                    name="projnm"
-                                    formControlName={formik.values.projnm}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={1}
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <TDInputTemplate
-                                    placeholder="Select client..."
-                                    type="text"
-                                    label="Client"
-                                    name="client_id"
-                                    formControlName={formik.values.client_id}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    data={client}
-                                    mode={2}
-                                    disabled={params.id > 0}
-                                />
-                            </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Select order id..."
-                                    type="text"
-                                    label="Order ID"
-                                    name="order_id"
-                                    formControlName={formik.values.order_id}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    //   data={cat}
-                                    mode={1}
-                                    disabled={params.id > 0}
-                                />
-                            </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type order date..."
-                                    type="date"
-                                    label="Order Date"
-                                    name="order_dt"
-                                    formControlName={formik.values.order_dt}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={1}
-                                />
-                            </div>
-                            
-                            </div>
-                {/* </div> */}
-                <div className="flex pt-4 justify-content-end">
-                    <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() => stepperRef.current.nextCallback()}> Next
-                    <ArrowRightOutlined className='ml-2'/>
-                    </Button>
-                </div>
-            </StepperPanel>
-            <StepperPanel header="Step II">
-            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-                <div>
-                                <TDInputTemplate
-                                    placeholder="Type Location"
-                                    type="text"
-                                    label="Location"
-                                    name="proj_loc"
-                                    formControlName={formik.values.proj_loc}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                            <div >
-                                <TDInputTemplate
-                                    placeholder="Type delivery Address"
-                                    type="text"
-                                    label="Delivery Address"
-                                    name="delvry_add"
-                                    formControlName={formik.values.delvry_add}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <TDInputTemplate
-                                    placeholder="Type description..."
-                                    type="text"
-                                    label="Project Description"
-                                    name="proj_des"
-                                    formControlName={formik.values.proj_des}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <TDInputTemplate
-                                    placeholder="Type end user..."
-                                    type="text"
-                                    label="End User"
-                                    name="end_user"
-                                    formControlName={formik.values.end_user}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={1}
-                                />
-                            </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type consultant..."
-                                    type="text"
-                                    label="Consultant"
-                                    name="proj_consultant"
-                                    formControlName={formik.values.proj_consultant}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type EPC..."
-                                    type="text"
-                                    label="EPC Contractor"
-                                    name="epc_con"
-                                    formControlName={formik.values.epc_con}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type manufacturer..."
-                                    type="text"
-                                    label="Manufacturer"
-                                    name="manufac"
-                                    formControlName={formik.values.manufac}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type Extra..."
-                                    type="text"
-                                    label="Extra"
-                                    name="proj_extra"
-                                    formControlName={formik.values.proj_extra}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                           
-            </div>
-                <div className="flex pt-4 justify-content-between">
-                    <Button className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900" onClick={() => stepperRef.current.prevCallback()} ><ArrowLeftOutlined className='mr-2'/>   
-                        Back
-                    </Button>
-                    <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() => stepperRef.current.nextCallback()} > Next
-                    <ArrowRightOutlined className='ml-2'/>
-                    </Button>
-                </div>
-            </StepperPanel>
-            <StepperPanel header="Step III">
-            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-           
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type project order value..."
-                                    type="text"
-                                    label="Project Order Value"
-                                    name="Proj_ordr_val"
-                                    formControlName={formik.values.Proj_ordr_val}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={1}
-                                />
-                            </div>
-                            <div>
-                                <TDInputTemplate
-                                    placeholder="Type price basis"
-                                    type="text"
-                                    label="Price Basis"
-                                    name="prc_basis"
-                                    formControlName={formik.values.prc_basis}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={1}
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <TDInputTemplate
-                                    placeholder="Type LD clause"
-                                    type="text"
-                                    label="LD Clause"
-                                    name="ld_cls"
-                                    formControlName={formik.values.ld_cls}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <TDInputTemplate
-                                    placeholder="Type erection responsibility"
-                                    type="text"
-                                    label="Erection Responsibility"
-                                    name="erctn_res"
-                                    formControlName={formik.values.erctn_res}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                            <div className='flex gap-4 items-center sm:mt-6'>
-                                <label className="block mb-2 text-sm font-bold text-green-900 dark:text-gray-100">Warranty</label>
-                                <Switch name="warranty_check" size="large"
-                                    // formControlName={formik.values.warranty_check}
-                                    // onChange={value => formik.setFieldValue('warranty_check', value)}
-                                    checked={formik.values.warranty_check === 'Y'}
-                                    onChange={value => formik.setFieldValue('warranty_check', value ? 'Y' : 'N')}
-                                    onBlur={formik.handleBlur}
-                                    handleBlur={formik.handleBlur}
-                                />
-                            </div>
-                            <div className='sm:col-span-2'>
-                                <TDInputTemplate
-                                    placeholder="Select project status..."
-                                    type="text"
-                                    label="Project Status"
-                                    name="proj_sts"
-                                    formControlName={formik.values.proj_sts}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    data={statusList}
-                                    mode={2}
-                                   
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <TDInputTemplate
-                                    placeholder="Type status remarks"
-                                    type="text"
-                                    label="Status remarks"
-                                    name="sts_remarks"
-                                    formControlName={formik.values.sts_remarks}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={3}
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <TDInputTemplate
-                                    placeholder=""
-                                    type="file"
-                                    label="Handover certificate"
-                                    name="handovr_cer"
-                                    formControlName={formik.values.handovr_cer}
-                                    handleChange={formik.handleChange}
-                                    handleBlur={formik.handleBlur}
-                                    mode={1}
-                                />
-                            </div>
-                            </div>
-                <div className="flex pt-4 justify-content-start">
-                    <Button className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900" onClick={() => stepperRef.current.prevCallback()}> 
-                    <ArrowLeftOutlined className='mr-2'/>   
-                        Back
-                    </Button>
-                    <BtnComp
-                            mode={params.id > 0 ? "E" : "A"}
-                        //   onReset={formik.handleReset}
-                        />
-                </div>
-                {/* <div className="flex justify-end">
+                        <div className="card flex justify-content-center">
+
+                            <Stepper ref={stepperRef} style={{ flexBasis: '80rem' }}>
+
+                                <StepperPanel header="Step I">
+                                    {/* <div className="flex flex-column h-12rem"> */}
+                                    <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Type product ID..."
+                                                type="text"
+                                                label="Project ID"
+                                                name="proj_id"
+                                                formControlName={formik.values.proj_id}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={1}
+                                                disabled={params.id > 0}
+                                            />
+                                        </div>
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Select Project Manager..."
+                                                type="text"
+                                                label="Assign Project Manager"
+                                                name="assgn_pm"
+                                                formControlName={formik.values.assgn_pm}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                data={pmList}
+                                                mode={2}
+                                                disabled={params.id > 0}
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2">
+                                            <TDInputTemplate
+                                                placeholder="Type product name..."
+                                                type="text"
+                                                label="Project Name"
+                                                name="projnm"
+                                                formControlName={formik.values.projnm}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={1}
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2">
+                                            <TDInputTemplate
+                                                placeholder="Select client..."
+                                                type="text"
+                                                label="Client"
+                                                name="client_id"
+                                                formControlName={formik.values.client_id}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                data={client}
+                                                mode={2}
+                                                disabled={params.id > 0}
+                                            />
+                                        </div>
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Select order id..."
+                                                type="text"
+                                                label="Order ID"
+                                                name="order_id"
+                                                formControlName={formik.values.order_id}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                //   data={cat}
+                                                mode={1}
+                                                disabled={params.id > 0}
+                                            />
+                                        </div>
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Type order date..."
+                                                type="date"
+                                                label="Order Date"
+                                                name="order_dt"
+                                                formControlName={formik.values.order_dt}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={1}
+                                            />
+                                        </div>
+
+                                    </div>
+                                    {/* </div> */}
+                                    <div className="flex pt-4 justify-content-end">
+                                        <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() => stepperRef.current.nextCallback()}> Next
+                                            <ArrowRightOutlined className='ml-2' />
+                                        </Button>
+                                    </div>
+                                </StepperPanel>
+                                <StepperPanel header="Step II">
+                                    <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Type Location"
+                                                type="text"
+                                                label="Location"
+                                                name="proj_loc"
+                                                formControlName={formik.values.proj_loc}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+                                        <div >
+                                            <TDInputTemplate
+                                                placeholder="Type delivery Address"
+                                                type="text"
+                                                label="Delivery Address"
+                                                name="delvry_add"
+                                                formControlName={formik.values.delvry_add}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2">
+                                            <TDInputTemplate
+                                                placeholder="Type description..."
+                                                type="text"
+                                                label="Project Description"
+                                                name="proj_des"
+                                                formControlName={formik.values.proj_des}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2">
+                                            <TDInputTemplate
+                                                placeholder="Type end user..."
+                                                type="text"
+                                                label="End User"
+                                                name="end_user"
+                                                formControlName={formik.values.end_user}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={1}
+                                            />
+                                        </div>
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Type consultant..."
+                                                type="text"
+                                                label="Consultant"
+                                                name="proj_consultant"
+                                                formControlName={formik.values.proj_consultant}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Type EPC..."
+                                                type="text"
+                                                label="EPC Contractor"
+                                                name="epc_con"
+                                                formControlName={formik.values.epc_con}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Type manufacturer..."
+                                                type="text"
+                                                label="Manufacturer"
+                                                name="manufac"
+                                                formControlName={formik.values.manufac}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Type Extra..."
+                                                type="text"
+                                                label="Extra"
+                                                name="proj_extra"
+                                                formControlName={formik.values.proj_extra}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+
+                                    </div>
+                                    <div className="flex pt-4 justify-content-between">
+                                        <Button className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900" onClick={() => stepperRef.current.prevCallback()} ><ArrowLeftOutlined className='mr-2' />
+                                            Back
+                                        </Button>
+                                        <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() => stepperRef.current.nextCallback()} > Next
+                                            <ArrowRightOutlined className='ml-2' />
+                                        </Button>
+                                    </div>
+                                </StepperPanel>
+                                <StepperPanel header="Step III">
+                                    <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Type project order value..."
+                                                type="text"
+                                                label="Project Order Value"
+                                                name="Proj_ordr_val"
+                                                formControlName={formik.values.Proj_ordr_val}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={1}
+                                            />
+                                        </div>
+                                        <div>
+                                            <TDInputTemplate
+                                                placeholder="Type price basis"
+                                                type="text"
+                                                label="Price Basis"
+                                                name="prc_basis"
+                                                formControlName={formik.values.prc_basis}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={1}
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2">
+                                            <TDInputTemplate
+                                                placeholder="Type LD clause"
+                                                type="text"
+                                                label="LD Clause"
+                                                name="ld_cls"
+                                                formControlName={formik.values.ld_cls}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2">
+                                            <TDInputTemplate
+                                                placeholder="Type erection responsibility"
+                                                type="text"
+                                                label="Erection Responsibility"
+                                                name="erctn_res"
+                                                formControlName={formik.values.erctn_res}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+                                        <div className='flex gap-4 items-center sm:mt-6'>
+                                            <label className="block mb-2 text-sm font-bold text-green-900 dark:text-gray-100">Warranty</label>
+                                            <Switch name="warranty_check" size="large"
+                                                // formControlName={formik.values.warranty_check}
+                                                // onChange={value => formik.setFieldValue('warranty_check', value)}
+                                                checked={formik.values.warranty_check === 'Y'}
+                                                onChange={value => formik.setFieldValue('warranty_check', value ? 'Y' : 'N')}
+                                                onBlur={formik.handleBlur}
+                                                handleBlur={formik.handleBlur}
+                                            />
+                                        </div>
+                                        <div className='sm:col-span-2'>
+                                            <TDInputTemplate
+                                                placeholder="Select project status..."
+                                                type="text"
+                                                label="Project Status"
+                                                name="proj_sts"
+                                                formControlName={formik.values.proj_sts}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                data={statusList}
+                                                mode={2}
+
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2">
+                                            <TDInputTemplate
+                                                placeholder="Type status remarks"
+                                                type="text"
+                                                label="Status remarks"
+                                                name="sts_remarks"
+                                                formControlName={formik.values.sts_remarks}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2">
+                                            <TDInputTemplate
+                                                placeholder=""
+                                                type="file"
+                                                label="Handover certificate"
+                                                name="handovr_cer"
+                                                formControlName={formik.values.handovr_cer}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={1}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex pt-4 justify-content-start">
+                                        <Button className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900" onClick={() => stepperRef.current.prevCallback()}>
+                                            <ArrowLeftOutlined className='mr-2' />
+                                            Back
+                                        </Button>
+                                        <BtnComp
+                                            mode={params.id > 0 ? "E" : "A"}
+                                        //   onReset={formik.handleReset}
+                                        />
+                                    </div>
+                                    {/* <div className="flex justify-end">
                 </div> */}
-            </StepperPanel>
-      
-        </Stepper>
-             
-    </div>
-    </form>
+                                </StepperPanel>
+
+                            </Stepper>
+
+                        </div>
+                    </form>
                 </Spin>
             </div>
         </section>
