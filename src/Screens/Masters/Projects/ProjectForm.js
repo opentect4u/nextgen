@@ -28,10 +28,13 @@ function ProjectForm() {
     const [pmList, setPMList] = useState([]);
     const [statusList, setStatusList] = useState([]);
     const [yesNo, setYesNoList] = useState([])
+    const [pocList, setPocList] = useState([]);
+    const[nameList,setPocNameList] = useState([])
     const [priceBais, setPriceBasisList] = useState([])
+    const[selectedPoc,setselectedPoc] = useState(false)
     const [ldClsVal, setLdClsVal] = useState(false)
     const [gstPan, setGstPan] = useState(false)
-    const [pocs, setPocs] = useState([]);
+
 
     const stepperRef = useRef(null);
 
@@ -49,6 +52,7 @@ function ProjectForm() {
     ];
 
     var clientList = [];
+    var pocNameList = [];
 
     const handleChangeLdCls = (event, handleChange) => {
         formik.handleChange(event);
@@ -74,21 +78,44 @@ function ProjectForm() {
                 console.log(res.data.msg.client_gst, "getclient project");
                 formik.setFieldValue('p_gst', res.data.msg.client_gst);
                 formik.setFieldValue('p_pan', res.data.msg.client_pan);
-                formik.setFieldValue('proj_loc', res.data.msg.client_location)
+                 formik.setFieldValue('proj_loc', res.data.msg.client_location)
             })
-        axios
+            axios
             .post(url + "/api/getclientpoc", { id: value })
             .then((res) => {
-                if (res.data.msg.length > 0) {
-                    setPocs(res.data.msg);
-                } else {
-                    setPocs([]);
+                console.log(res,'getclientpoc')
+                setPocList(res.data.msg);
+                for (let i = 0; i < res?.data?.msg?.length; i++) {
+                    pocNameList.push(
+                        {
+                            name: res?.data?.msg[i].poc_name,
+                            code: res?.data?.msg[i].sl_no
+                        }
+                    );
+                    setPocNameList(pocNameList)
                 }
-                formik.setFieldValue('poc_name', res.data.msg.poc_name);
-                formik.setFieldValue('poc_email', res.data.msg.poc_email);
-                formik.setFieldValue('poc_ph_1', res.data.msg.poc_ph_1)
-                formik.setFieldValue('poc_ph_2', res.data.msg.poc_ph_2)
             })
+    };
+    const handlePocChange = (event) => {
+        formik.handleChange(event);
+        const value = event.target.value;
+        if (value) {
+            setselectedPoc(true);
+        } else {
+            setselectedPoc(false);
+        }
+        console.log(value,'value')
+        if (pocList.length > 0) {
+            console.log(pocList)
+            const selected = pocList.find(poc =>
+                poc.sl_no == value
+            );
+            
+            formik.setFieldValue('poc_email', selected.poc_email);
+            formik.setFieldValue('poc_ph_1', selected.poc_ph_1);
+            formik.setFieldValue('poc_ph_2', selected.poc_ph_2);
+            
+        }
     };
     const initialValues = {
         proj_id: "",
@@ -117,10 +144,10 @@ function ProjectForm() {
         warranty_check: " ",
         p_gst: "",
         p_pan: "",
-        poc_name: "",
-        poc_email: "",
-        poc_ph_1: "",
-        poc_ph_2: ""
+        poc_name:"",
+        poc_email:"",
+        poc_ph_1:"",
+        poc_ph_2:""
     };
     const [formValues, setValues] = useState(initialValues);
 
@@ -610,65 +637,103 @@ function ProjectForm() {
                                             />
                                         </div>
 
-                                        {gstPan &&
-                                            <>
-                                                {pocs.map((poc, index) => (
-                                                    <div key={index}>
-                                                        <div>
-                                                            <TDInputTemplate
-                                                                type="text"
-                                                                label="POC Name"
-                                                                name={`pocs[${index}].poc_name`}
-                                                                formControlName={poc.poc_name}
-                                                                handleChange={formik.handleChange}
-                                                                handleBlur={formik.handleBlur}
-                                                                mode={1}
-                                                                disabled
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <TDInputTemplate
-                                                                type="text"
-                                                                label="POC Email"
-                                                                name={`pocs[${index}].poc_email`}
-                                                                formControlName={poc.poc_email}
-                                                                handleChange={formik.handleChange}
-                                                                handleBlur={formik.handleBlur}
-                                                                mode={1}
-                                                                disabled
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <TDInputTemplate
-                                                                type="text"
-                                                                label="POC Primary Phone No."
-                                                                name={`pocs[${index}].poc_ph_1`}
-                                                                formControlName={poc.poc_ph_1}
-                                                                handleChange={formik.handleChange}
-                                                                handleBlur={formik.handleBlur}
-                                                                mode={1}
-                                                                disabled
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <TDInputTemplate
-                                                                type="text"
-                                                                label="POC Secondary Phone No."
-                                                                name={`pocs[${index}].poc_ph_2`}
-                                                                formControlName={poc.poc_ph_2}
-                                                                handleChange={formik.handleChange}
-                                                                handleBlur={formik.handleBlur}
-                                                                mode={1}
-                                                                disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                        {/* {gstPan &&
+                                            <><div>
+                                                <TDInputTemplate
+                                                    type="text"
+                                                    label="POC Name"
+                                                    name="poc_name"
+                                                    formControlName={formik.values.poc_name}
+                                                    handleChange={formik.handleChange}
+                                                    handleBlur={formik.handleBlur}
+                                                    mode={1}
+                                                    disabled />
+                                            </div><div>
+                                                    <TDInputTemplate
+                                                        type="text"
+                                                        label="POC Email"
+                                                        name="poc_email"
+                                                        formControlName={formik.values.poc_email}
+                                                        handleChange={formik.handleChange}
+                                                        handleBlur={formik.handleBlur}
+                                                        mode={1}
+                                                        disabled />
+                                                </div>
+                                                <div>
+                                                    <TDInputTemplate
+                                                        type="text"
+                                                        label="POC Primary Phone No."
+                                                        name="poc_ph_1"
+                                                        formControlName={formik.values.poc_ph_1}
+                                                        handleChange={formik.handleChange}
+                                                        handleBlur={formik.handleBlur}
+                                                        mode={1}
+                                                        disabled />
+                                                </div>
+                                                <div>
+                                                    <TDInputTemplate
+                                                        type="text"
+                                                        label="POC Secondary Phone No."
+                                                        name="poc_ph_2"
+                                                        formControlName={formik.values.poc_ph_2}
+                                                        handleChange={formik.handleChange}
+                                                        handleBlur={formik.handleBlur}
+                                                        mode={1}
+                                                        disabled />
+                                                </div>
+
 
 
                                             </>
-
-
+                                        } */}
+                                        {gstPan &&
+                                            <><div>
+                                                <TDInputTemplate
+                                                    placeholder="Select contact person's name..."
+                                                    type="text"
+                                                    label="Contact person name"
+                                                    name="poc_name"
+                                                    formControlName={formik.values.poc_name}
+                                                    // handleChange={formik.handleChange}
+                                                    handleChange={handlePocChange}
+                                                    handleBlur={formik.handleBlur}
+                                                    data={nameList}
+                                                    mode={2}
+                                                    disabled={params.id > 0} />
+                                            </div>
+                                        {selectedPoc  &&(<><div>
+                                                <TDInputTemplate
+                                                    type="text"
+                                                    label="POC Email"
+                                                    name="poc_email"
+                                                    formControlName={formik.values.poc_email}
+                                                    handleChange={formik.handleChange}
+                                                    handleBlur={formik.handleBlur}
+                                                    mode={1}
+                                                    disabled />
+                                            </div><div>
+                                                    <TDInputTemplate
+                                                        type="text"
+                                                        label="POC Primary Phone No."
+                                                        name="poc_ph_1"
+                                                        formControlName={formik.values.poc_ph_1}
+                                                        handleChange={formik.handleChange}
+                                                        handleBlur={formik.handleBlur}
+                                                        mode={1}
+                                                        disabled />
+                                                </div><div>
+                                                    <TDInputTemplate
+                                                        type="text"
+                                                        label="POC Secondary Phone No."
+                                                        name="poc_ph_2"
+                                                        formControlName={formik.values.poc_ph_2}
+                                                        handleChange={formik.handleChange}
+                                                        handleBlur={formik.handleBlur}
+                                                        mode={1}
+                                                        disabled />
+                                                </div></>)
+                                        }
+                                                </>
                                         }
                                         {/* <div>
                                             <TDInputTemplate
