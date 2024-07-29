@@ -760,7 +760,7 @@ async def getclient(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number,client_location, client_name,client_email,client_phone,client_gst,client_pan,vendor_code,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number,client_name,vendor_code,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "md_client,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
