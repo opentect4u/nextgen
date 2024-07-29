@@ -220,8 +220,8 @@ async def addcategory(dt:getGst):
     print(dt)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'category_id,cgst_rate,sgst_rate,created_by,created_at'
-    values = f'"{dt.cat_id}","{dt.cgst_rate}","{dt.sgst_rate}","{dt.user}","{formatted_dt}"'
+    fields= f'category_id,gst_title,gst_rate,created_by,created_at'
+    values = f'"{dt.cat_id}","{dt.gst_title}","{dt.gst_rate}","{dt.user}","{formatted_dt}"'
     table_name = "md_gst"
     whr =  None
     flag = 1 if dt.gst_id>0 else 0
@@ -233,7 +233,7 @@ async def addcategory(dt:getGst):
             res_dt = {"suc": 0, "msg": "Error while saving!"}
     else:
         print(flag)
-        fields=f'category_id="{dt.cat_id}",cgst_rate="{dt.cgst_rate}",sgst_rate="{dt.sgst_rate}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+        fields=f'category_id="{dt.cat_id}",gst_title="{dt.gst_title}",gst_rate="{dt.gst_rate}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
         whr=f'sl_no="{dt.gst_id}"'
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
@@ -248,7 +248,7 @@ async def getcategory(id:getData):
     print(id.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number,g.category_id,g.cgst_rate,g.sgst_rate, g.created_by,g.created_at,g.modified_by,g.modified_at,g.sl_no,c.catg_name"
+    select = "@a:=@a+1 serial_number,g.category_id,g.gst_title,g.gst_rate, g.created_by,g.created_at,g.modified_by,g.modified_at,g.sl_no,c.catg_name"
     # select = "@a:=@a+1 serial_number, *"
     schema = "md_gst g, md_category c,(SELECT @a:= 0) AS a"
     where = f"g.sl_no='{id.id}' and g.category_id=c.sl_no" if id.id>0 else f"g.delete_flag='N' and g.category_id=c.sl_no"
@@ -580,8 +580,6 @@ async def addproduct(data:addProduct):
 @masterRouter.post('/getproduct')
 async def getproduct(id:getData):
     print(id.id)
-    res_dt = {}
-
     select = "@a:=@a+1 serial_number, prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,prod_desc,created_by,created_at,modified_by,modified_at,sl_no"
 
     schema = "md_product,(SELECT @a:= 0) AS a"
