@@ -42,8 +42,8 @@ export const masterheaders={
       { name: "serial_number", value: "#" },
       { name: "vendor_name", value: "Name" },
       { name: "vendor_email", value: "Email" },
-      { name: "vendor_contact", value: "Contact Person" },
-      { name: "vendor_phone", value: "Phone No." },
+      { name: "vendor_phone", value: "Phone" },
+     
       { name: "created_by", value: "Created by" },
     ],
   },
@@ -86,15 +86,13 @@ export const masterheaders={
     btnText:'Add GST',
     headers: [
       { name: "serial_number", value: "#" },
-      { name: "catg_name", value: "Product Category" },
-      { name: "cgst_rate", value: "CGST Rate" },
-      { name: "sgst_rate", value: "SGST Rate" },
-      { name: "created_by", value: "Created by" },
+      { name: "gst_title", value: "GST Type" },
+      { name: "gst_rate", value: "GST Rate" },
     ],
   },
   'projects': {
-    title: "Projects",
-    btnText:'Add projects',
+    title: "Client Orders",
+    btnText:'Add client orders',
     headers: [
       { name: "serial_number", value: "#" },
       { name: "proj_name", value: "Name" },

@@ -24,9 +24,8 @@ function GstForm() {
   var categories = [];
   const [cat, setCat] = useState([]);
   const initialValues = {
-    cat_id: "",
-    cgst_rate:"",
-    sgst_rate:""
+    gst_type: "",
+    gst_rate:"",
   };
   const [formValues, setValues] = useState(initialValues);
   const onSubmit = (values) => {
@@ -36,9 +35,8 @@ function GstForm() {
       .post(url + "/api/addgst", {
         gst_id: +params.id,
         user: localStorage.getItem("email"),
-        cat_id: values.cat_id,
-        cgst_rate: values.cgst_rate,
-        sgst_rate: values.sgst_rate,
+        gst_type: values.gst_type,
+        gst_rate: values.gst_rate,
       })
       .then((res) => {
         setLoading(false);
@@ -52,9 +50,8 @@ function GstForm() {
       }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;;
   };
   const validationSchema = Yup.object({
-    cat_id: Yup.string().required("Category is required"),
-    cgst_rate:Yup.string().required("CGST Rate is required"),
-    sgst_rate:Yup.string().required("SGST Rate is required"),
+    gst_type: Yup.string().required("Type is required"),
+    gst_rate:Yup.string().required("Rate is required"),
   });
   const formik = useFormik({
     initialValues: +params.id > 0 ? formValues : initialValues,
@@ -65,19 +62,17 @@ function GstForm() {
   });
 
   useEffect(() => {
-    setLoading(true);
-    axios.post(url + "/api/getcategory", { id: 0}).then((res) => {
-      setLoading(false);
-      for (let i = 0; i < res?.data?.msg?.length; i++) {
-        categories.push(
-          {
-          name: res?.data?.msg[i].catg_name,
-          code: res?.data?.msg[i].sl_no
-        }
-      );
-      }
-      setCat(categories);
-    });
+    // axios.post(url + "/api/getcategory", { id: 0}).then((res) => {
+    //   for (let i = 0; i < res?.data?.msg?.length; i++) {
+    //     categories.push(
+    //       {
+    //       name: res?.data?.msg[i].catg_name,
+    //       code: res?.data?.msg[i].sl_no
+    //     }
+    //   );
+    //   }
+    //   setCat(categories);
+    // });
 
     if (+params.id > 0) {
       setLoading(true);
@@ -87,9 +82,8 @@ function GstForm() {
         setData(res.data?.msg)
         setLoading(false);
         setValues({
-          cat_id: res?.data?.msg.category_id,
-          cgst_rate: res?.data?.msg.cgst_rate,
-          sgst_rate: res?.data?.msg.sgst_rate,
+          gst_rate: res?.data?.msg.gst_rate,
+          gst_type: res?.data?.msg.gst_type,
         });
       });
     }
@@ -114,52 +108,37 @@ function GstForm() {
               <div className="sm:col-span-2">
   
                 <TDInputTemplate
-                  placeholder="Select category..."
+                  placeholder="Select gst category"
                   type="text"
-                  label="Category"
-                  name="cat_id"
-                  formControlName={formik.values.cat_id}
+                  label="GST Type"
+                  name="gst_type"
+                  formControlName={formik.values.gst_type}
                   handleChange={formik.handleChange}
                   handleBlur={formik.handleBlur}
-                  data={cat}
+                  data={[{name:'CGST',code:'C'},{name:'SGST',code:'S'},{name:'IGST',code:'I'}]}
                   mode={2}
                   // disabled={params.id > 0}
                 />
-                {formik.errors.cat_id && formik.touched.cat_id ? (
-                  <VError title={formik.errors.cat_id} />
+                {formik.errors.gst_type && formik.touched.gst_type ? (
+                  <VError title={formik.errors.gst_type} />
                 ) : null}
               </div>
               <div className="sm:col-span-2 mb-2">
                 <TDInputTemplate
-                  placeholder="Type CGST Rate"
+                  placeholder="Type GST Rate"
                   type="text"
-                  label="CGST Rate"
-                  name="cgst_rate"
-                  formControlName={formik.values.cgst_rate}
+                  label="GST Rate"
+                  name="gst_rate"
+                  formControlName={formik.values.gst_rate}
                   handleChange={formik.handleChange}
                   handleBlur={formik.handleBlur}
                   mode={1}
                 />
-                {formik.errors.cgst_rate && formik.touched.cgst_rate ? (
-                  <VError title={formik.errors.cgst_rate} />
+                {formik.errors.gst_rate && formik.touched.gst_rate ? (
+                  <VError title={formik.errors.gst_rate} />
                 ) : null}
               </div>
-              <div className="sm:col-span-2 mb-2">
-                <TDInputTemplate
-                  placeholder="Type SGST Rate"
-                  type="text"
-                  label="CGST Rate"
-                  name="sgst_rate"
-                  formControlName={formik.values.sgst_rate}
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  mode={1}
-                />
-
-                {formik.errors.sgst_rate && formik.touched.sgst_rate ? (
-                  <VError title={formik.errors.sgst_rate} />
-                ) : null}
-              </div>
+            
           
               { params.id>0 && <AuditTrail data={data}/>}
             </div>

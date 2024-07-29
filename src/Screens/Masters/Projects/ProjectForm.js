@@ -327,7 +327,7 @@ function ProjectForm() {
         <section className="bg-transparent dark:bg-[#001529]">
             {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
             <HeadingTemplate
-                text={params.id > 0 ? "Update project" : "Add project"}
+                text={params.id > 0 ? "Update client order" : "Add client order"}
                 mode={params.id > 0 ? 1 : 0}
                 title={'Project'}
                 data={params.id && data ? data : ''}

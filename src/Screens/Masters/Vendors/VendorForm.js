@@ -34,9 +34,10 @@ function VendorForm() {
   const [compositeTrue, setCompositeTrue] = useState(false)
   const [stateTrue, setStateTrue] = useState(false)
   const [gstNoTrue, setGstNoTrue] = useState(false)
-
+  const [exFlag, setExempted] = useState(false)
+  const [cat,setCat]=useState([])
   console.log(params, "params");
-
+  var categories=[]
 
 
   // const [msmeValue,setmsmeValue] = useState('')
@@ -81,13 +82,19 @@ function VendorForm() {
       setGstNoTrue(true)
       setCompositeTrue(true);
       setStateTrue(true);
+      setExempted(true)
+
     } else if (value === 'U') {
       setCompositeTrue(false);
       setStateTrue(true);
+      setExempted(false)
+      setGstNoTrue(false)
     } else {
       setCompositeTrue(false);
       setStateTrue(false);
       setGstNoTrue(false)
+      setExempted(false)
+
     }
   };
   // const handleChangemsme = (e) => {
@@ -103,17 +110,24 @@ function VendorForm() {
   const [formValues, setValues] = useState({
     v_name: "",
     v_email: "",
+    v_phone:"",
     v_gst: "",
     v_pan: "",
-    // v_reg: "",
     v_msme: "",
     v_msmeno: "",
     v_bankdtls: "",
     v_remarks: "",
     v_address: "",
+    v_tan:"",
+    dynamicFields_category: [
+      {
+        sl_no:  0 ,
+        category_id:""
+      },
+    ],
     dynamicFields: [{
       sl_no: 0,
-      poc_name: "", poc_ph_1: "", poc_ph_2: ""
+      poc_name: "", poc_ph_1: "", poc_ph_2: "",poc_email:""
     }]
   });
 
@@ -126,7 +140,11 @@ function VendorForm() {
     // v_reg: "",
     v_msme: "",
     v_msmeno: "",
-    v_bankdtls: "",
+    v_banknm: "",
+    v_brnnm:"",
+    v_ifsc:"",
+    v_micr:"",
+    v_ac:"",
     v_tan: "",
     v_tds: "",
     tds_perc: "",
@@ -137,12 +155,18 @@ function VendorForm() {
     v_composite: "",
     v_e_r_supply: "",
     v_state: "",
-    v_remarks: "",
     v_address: "",
     dynamicFields: [{
       sl_no: params.id > 0 ? 0 : formValues?.dynamicFields[0]?.sl_no,
-      poc_name: "", poc_ph_1: "", poc_ph_2: ""
-    }]
+      poc_name: "", poc_ph_1: "", poc_ph_2: "",poc_email:""
+    }],
+    dynamicFields_category: [
+      {
+        sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
+        category_id:""
+        // poc_address: "",
+      },
+    ],
   };
 
   const validationSchema = Yup.object({
@@ -159,7 +183,11 @@ function VendorForm() {
       then: () => Yup.string().required('MSME No. is required'),
       otherwise: () => Yup.string()
     }),
-    v_bankdtls: Yup.string().required("Bank details required"),
+    v_brnnm: Yup.string().required("Branch name required"),
+    v_banknm: Yup.string().required("Bank name required"),
+    v_ac: Yup.string().required("Account no. required"),
+    v_micr: Yup.string().required("MICR code required"),
+    v_ifsc: Yup.string().required("IFSC required"),
     v_tan: Yup.string().required("TAN is required"),
     v_tds: Yup.string().required("TDS is required"),
     tds_perc: Yup.string().when('v_tds', {
@@ -173,40 +201,53 @@ function VendorForm() {
       then: () => Yup.string().required('TCS percentage is required'),
       otherwise: () => Yup.string()
     }),
-    supply_flag: Yup.string().required("Required"),
-    v_gst_no: Yup.string().when('supply_flag', {
-      is: 'R',
-      then: () => Yup.string().required('GST No. is required'),
-      otherwise: () => Yup.string()
-    }),
-    v_composite: Yup.string().when('supply_flag', {
-      is: 'R',
-      then: () => Yup.string().required('Composite is required'),
-      otherwise: () => Yup.string()
-    }),
-    v_e_r_supply: Yup.string().required("Exempted rated supply required"),
-    v_state: Yup.string().when('supply_flag', {
-      is: 'R' || 'U',
-      then: () => Yup.string().required('State is required'),
-      otherwise: () => Yup.string()
-    }),
+    // supply_flag: Yup.string().required("Required"),
+    // v_gst_no: Yup.string().when('supply_flag', {
+    //   is: 'R',
+    //   then: () => Yup.string().required('GST No. is required'),
+    //   otherwise: () => Yup.string()
+    // }),
+    // v_composite: Yup.string().when('supply_flag', {
+    //   is: 'R',
+    //   then: () => Yup.string().required('Composite is required'),
+    //   otherwise: () => Yup.string()
+    // }),
+    // v_e_r_supply: Yup.string().required("Exempted rated supply required"),
+    // v_state: Yup.string().when('supply_flag', {
+    //   is: 'R' || 'U',
+    //   then: () => Yup.string().required('State is required'),
+    //   otherwise: () => Yup.string()
+    // }),
     v_address: Yup.string().required("Address is required"),
-
-
-    v_remarks: Yup.string(),
     dynamicFields: Yup.array().of(
       Yup.object().shape({
         poc_name: Yup.string().required("Contact person is required"),
         poc_ph_1: Yup.string().required("Phone is required").length(10),
         poc_ph_2: Yup.string().required("Phone is required").length(10),
-
+        poc_email: Yup.string().required("Email is required").email(),
+      })
+    ),
+    dynamicFields_category: Yup.array().of(
+      Yup.object().shape({
+        category_id: Yup.string().required("Deals in required"),
       })
     )
   });
 
-
   useEffect(() => {
     setMsmeList(msmeOptions)
+     axios.post(url + "/api/getcategory", { id: 0}).then((res) => {
+      for (let i = 0; i < res?.data?.msg?.length; i++) {
+        categories.push(
+          {
+          name: res?.data?.msg[i].catg_name,
+          code: res?.data?.msg[i].sl_no
+        }
+      );
+      }
+      setCat(categories);
+    });
+
     if (+params.id > 0) {
       setLoading(true);
       // axios.post(url + "/api/getvendor", { id: params.id })
@@ -233,15 +274,13 @@ function VendorForm() {
       //   }).catch(err => { console.log(err); navigate('/error' + '/' + err.code + '/' + err.message) });
       axios.post(url + "/api/getvendor", { id: params.id }).then((res) => {
         console.log(res,'getvendor');
-        setLoading(false);
         setValues({
-          ...initialValues,
+          // ...initialValues,
           v_name: res.data.msg.vendor_name,
           v_email: res.data.msg.vendor_email,
           v_phone: res.data.msg.vendor_phone,
           v_gst: res.data.msg.vendor_gst,
           v_pan: res.data.msg.vendor_pan,
-          // v_reg: res.data.msg.vendor_reg,
           v_msme: res.data.msg.vendor_msme,
           v_msmeno: res.data.msg.v_msmeno,
           v_remarks: res.data.msg.vendor_remarks,
@@ -256,32 +295,50 @@ function VendorForm() {
           tcs_perc:res.data.msg.tcs_prtg,
           supply_flag:res.data.msg.supply_flag,
           v_gst_no:res.data.msg.gst_no,
-          v_composite:res.data.msg.composite,
+          v_composite:res.data.msg.org_type,
           v_e_r_supply:res.data.msg.e_r_supply,
           v_state:res.data.msg.state,
-
-          // poc_name: res.data.msg.vendor_contact,
-          // poc_ph_1: res.data.msg.vendor_phone,
-          // poc_ph_2: res.data.msg.vendor_phone,
-          // "state": "E",
-          // "e_r_supply": "kjh",
-          // "created_by": "user4@gmail.com",
-          // "created_at": "2024-07-25T13:08:40",
-          // "modified_by": null,
-          // "modified_at": null
         });
+      });
+      axios.post(url + "/api/getvendorbank", { id: params.id }).then((res) => {
+        console.log(res,'getvendor');
+        setValues({
+          // ...initialValues,
+          v_micr:res.data.msg.micr_code,
+          v_ifsc:res.data.msg.ifsc,
+          v_ac:res.data.msg.ac_no,
+          v_banknm:res.data.msg.bank_name,
+          v_brnnm:res.data.msg.branch_name,
+        })})
+      axios
+      .post(url + "/api/getvendordeals", {
+        id: params.id,
+      })
+      .then((res) => {
+        console.log(res.data.msg[0], "res");
+        setValues(({
+          dynamicFields_category: res.data.msg.map((item, index) => ({
+            sl_no: item.sl_no,
+            category_id: item.category_id,
+          })),
+        }));
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/error" + "/" + err.code + "/" + err.message);
       });
       axios.post(url + "/api/getvendorpoc", { id: params.id }).then((res) => {
         console.log(res.data.msg[0], 'res getvendorpoc');
-        setValues(prevValues => ({
-          ...prevValues,
+        setValues({
+          // ...prevValues,
           dynamicFields: res.data.msg.map((item) => ({
             sl_no: item.sl_no,
             poc_name: item.poc_name,
             poc_ph_1: item.poc_ph_1,
             poc_ph_2: item.poc_ph_2,
+            poc_email:item.poc_email
           }))
-        }));
+        });
         setLoading(false);
       });
     }
@@ -295,14 +352,17 @@ function VendorForm() {
         v_id: +params.id,
         user: localStorage.getItem("email"),
         v_name: values.v_name,
-        v_email: values.v_email,
-        v_phone: values.v_phone.toString(),
         v_gst: values.v_gst,
         v_pan: values.v_pan,
-        // v_reg: values.v_reg,
+        v_phone:values.v_phone,
+        v_email:values.v_email,
         msme_flag: values.v_msme,
         msme_no: values.v_msmeno,
-        bank_details: values.v_bankdtls,
+        v_banknm:values.v_banknm,
+        v_brnnm:values.v_brnnm,
+        v_ifsc:values.v_ifsc,
+        v_micr:values.v_micr,
+        v_ac:values.v_ac,
         tan_no: values.v_tan,
         tds_flag: values.v_tds,
         tds_prtg: values.tds_perc,
@@ -313,11 +373,9 @@ function VendorForm() {
         composite: values.v_composite,
         e_r_supply: values.v_e_r_supply,
         state: values.v_state,
-        v_remarks: values.v_remarks,
         v_address: values.v_address,
         v_poc: values.dynamicFields,
-        // poc_name: values.poc_name,
-        // poc_ph_1: values.poc_ph_1.toString(),
+        v_deals:values.dynamicFields_category
       })
       .then((res) => {
         setLoading(false);
@@ -747,8 +805,9 @@ function VendorForm() {
                           />
                           {errors.v_pan && touched.v_pan ? <VError title={errors.v_pan} /> : null}
                         </div>
+                       
                         <div className="sm:col-span-2">
-                          <TDInputTemplate
+                          {/* <TDInputTemplate
                             placeholder="Lorem Ipsum Dolor Sit..."
                             type="text"
                             label="Deals in"
@@ -758,11 +817,55 @@ function VendorForm() {
                             handleBlur={handleBlur}
                             mode={3}
                           />
-                          {errors.v_remarks && touched.v_remarks ? <VError title={errors.v_remarks} /> : null}
+                          {errors.v_remarks && touched.v_remarks ? <VError title={errors.v_remarks} /> : null} */}
+                          <FieldArray name="dynamicFields_category">
+                          {({ push, remove, insert, unshift }) => (
+                            <>
+                              {values.dynamicFields_category?.map((field, index) => (
+                                <React.Fragment key={index}>
+                                  <div className="sm:col-span-2 flex gap-2 justify-end my-3">
+                                    <Button
+                                      className="rounded-full text-white bg-red-800 border-red-800"
+                                      onClick={() => remove(index)}
+                                      icon={<MinusOutlined />}
+                                    ></Button>
+
+                                    <Button
+                                      className="rounded-full bg-green-900 text-white"
+                                      onClick={() => unshift({ sl_no: 0, category_id:"" })} icon={<PlusOutlined />}
+                                    ></Button>
+
+                                  </div>
+                                  <div className="sm:col-span-2">
+                                    <TDInputTemplate
+                                      placeholder="Deals in"
+                                      type="text"
+                                      label="Deals in"
+                                      name={`dynamicFields_category[${index}].category_id`}
+                                      formControlName={field.category_id}
+                                      handleChange={handleChange}
+                                      handleBlur={handleBlur}
+                                      data={cat}
+                                      mode={2}
+                                    />
+                                    {errors.dynamicFields_category?.[index]?.category_id && touched.dynamicFields_category?.[index]?.category_id ? (
+                                      <VError title={errors.dynamicFields_category[index].category_id} />
+                                    ) : null}
+                                  </div>
+                                </React.Fragment>
+                              ))}
+                              {/* <div className="sm:col-span-2">
+                          <Button type="dashed" onClick={() => push({ sl_no: 0, poc_name: "", poc_ph_1: "" })} icon={<PlusOutlined />}>
+                            Add field
+                          </Button>
+                        </div> */}
+                            </>
+                          )}
+                        </FieldArray>
                         </div>
                       </div>
                       <div className="flex pt-4 justify-content-end">
-                        <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() => stepperRef.current.nextCallback()}> Next
+                        <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() =>{ stepperRef.current.nextCallback();}}> Next
                           <ArrowRightOutlined className='ml-2' />
                         </Button>
                       </div>
@@ -798,18 +901,70 @@ function VendorForm() {
                             {errors.v_msmeno && touched.v_msmeno ? <VError title={errors.v_msmeno} /> : null}
                           </div>}
 
-                        <div className='sm:col-span-2' >
+                        <div className="sm:col-span-2">
                           <TDInputTemplate
-                            placeholder="Type Bank Details..."
+                            placeholder="Type Bank Name..."
                             type="text"
-                            label="Bank Details"
-                            name="v_bankdtls"
-                            formControlName={values.v_bankdtls}
+                            label="Bank Name"
+                            name="v_banknm"
+                            formControlName={values.v_banknm}
                             handleChange={handleChange}
                             handleBlur={handleBlur}
                             mode={1}
                           />
-                          {errors.v_bankdtls && touched.v_bankdtls ? <VError title={errors.v_bankdtls} /> : null}
+                          {errors.v_banknm && touched.v_banknm ? <VError title={errors.v_banknm} /> : null}
+                        </div>
+                        <div >
+                          <TDInputTemplate
+                            placeholder="Type Branch Name..."
+                            type="text"
+                            label="Branch Name"
+                            name="v_brnnm"
+                            formControlName={values.v_brnnm}
+                            handleChange={handleChange}
+                            handleBlur={handleBlur}
+                            mode={1}
+                          />
+                          {errors.v_brnnm && touched.v_brnnm ? <VError title={errors.v_brnnm} /> : null}
+                        </div>
+                        <div >
+                          <TDInputTemplate
+                            placeholder="Type A/C No."
+                            type="text"
+                            label="A/C No."
+                            name="v_ac"
+                            formControlName={values.v_ac}
+                            handleChange={handleChange}
+                            handleBlur={handleBlur}
+                            mode={1}
+                          />
+                          {errors.v_ac && touched.v_ac ? <VError title={errors.v_ac} /> : null}
+                        </div>
+                        <div >
+                          <TDInputTemplate
+                            placeholder="Type IFSC"
+                            type="text"
+                            label="IFSC"
+                            name="v_ifsc"
+                            formControlName={values.v_ifsc}
+                            handleChange={handleChange}
+                            handleBlur={handleBlur}
+                            mode={1}
+                          />
+                          {errors.v_ifsc && touched.v_ifsc ? <VError title={errors.v_ifsc} /> : null}
+                        </div>
+                        <div >
+                          <TDInputTemplate
+                            placeholder="Type MICR Code"
+                            type="text"
+                            label="MICR Code"
+                            name="v_micr"
+                            formControlName={values.v_micr}
+                            handleChange={handleChange}
+                            handleBlur={handleBlur}
+                            mode={1}
+                          />
+                          {errors.v_micr && touched.v_micr ? <VError title={errors.v_micr} /> : null}
                         </div>
                         <div className="sm:col-span-1">
                           <TDInputTemplate
@@ -913,12 +1068,13 @@ function VendorForm() {
                               formControlName={values.v_composite}
                               handleChange={handleChange}
                               handleBlur={handleBlur}
-                              mode={1}
+                              data={[{name:'Composite 1',code:'c1'},{name:'Composite 2',code:'c2'},{name:'Composite 3',code:'c3'}]}
+                              mode={2}
                             />
                             {errors.v_composite && touched.v_composite ? <VError title={errors.v_composite} /> : null}
                           </div>}
 
-                        <div className='sm:col-span-2' >
+                       {exFlag && <div className='sm:col-span-2' >
                           <TDInputTemplate
                             placeholder="Type Exempted rated supply"
                             type="text"
@@ -927,10 +1083,11 @@ function VendorForm() {
                             formControlName={values.v_e_r_supply}
                             handleChange={handleChange}
                             handleBlur={handleBlur}
-                            mode={1}
+                            data={[{name:'Yes',code:'Y'},{name:'No',code:'N'}]}
+                            mode={2}
                           />
                           {errors.v_e_r_supply && touched.v_e_r_supply ? <VError title={errors.v_e_r_supply} /> : null}
-                        </div>
+                        </div>}
                         {stateTrue &&
                           <div><Radio.Group name="v_state" value={values.v_state}
                             onChange={handleChange}
@@ -945,7 +1102,7 @@ function VendorForm() {
                         <Button className="inline-flex items-center px-5 py-5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900" onClick={() => stepperRef.current.prevCallback()} ><ArrowLeftOutlined className='mr-2' />
                           Back
                         </Button>
-                        <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() => stepperRef.current.nextCallback()} > Next
+                        <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() => {stepperRef.current.nextCallback();}} > Next
                           <ArrowRightOutlined className='ml-2' />
                         </Button>
                       </div>
@@ -1054,7 +1211,21 @@ function VendorForm() {
                                       <VError title={errors.dynamicFields[index].poc_ph_2} />
                                     ) : null}
                                   </div>
-
+                                  <div className="sm:col-span-2">
+                                    <TDInputTemplate
+                                      placeholder="Type contact person email..."
+                                      type="text"
+                                      label="Contact person email"
+                                      name={`dynamicFields[${index}].poc_email`}
+                                      formControlName={field.poc_email}
+                                      handleChange={handleChange}
+                                      handleBlur={handleBlur}
+                                      mode={1}
+                                    />
+                                    {errors.dynamicFields?.[index]?.poc_email && touched.dynamicFields?.[index]?.poc_email ? (
+                                      <VError title={errors.dynamicFields[index].poc_email} />
+                                    ) : null}
+                                  </div>
                                 </React.Fragment>
                               ))}
                               {/* <div className="sm:col-span-2">
