@@ -83,26 +83,25 @@ class addClient(BaseModel):
 class addVPoc(BaseModel):
       sl_no:int
       poc_name:str
-    #   poc_designation:str
-    #   poc_department:str
-    #   poc_email:str
-    #   poc_direct_no:str
-    #   poc_ext_no:str
       poc_ph_1:str
       poc_ph_2:str
-    #   poc_address:str
-    #   poc_location:str
+      poc_email:str
+class addDeals(BaseModel):
+      sl_no:int
+      category_id:int
 class addVendor(BaseModel):
       v_id:int
       v_name: str
-      v_phone:str
-      v_email:str
       v_gst:str
       v_pan:str
-    #   v_reg:str
+      v_deals:list[addDeals]
       msme_flag:str 
       msme_no:str
-      bank_details:str 
+      v_banknm:str
+      v_brnnm:str
+      v_ifsc:str
+      v_micr:str
+      v_ac:str
       tan_no:str 
       tds_flag:str 
       tcs_flag:str 
@@ -114,7 +113,6 @@ class addVendor(BaseModel):
       e_r_supply:str 
       state:str
       v_poc:list[addVPoc] 
-      v_remarks:str
       v_address:str
       user:str
 pass_alphabets=[
@@ -555,8 +553,8 @@ async def addproduct(data:addProduct):
 
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,stk_cnt, prod_desc,created_by,created_at'
-    values = f'"{data.p_name}","{data.p_cat}","{data.p_make}","{data.p_part}","{data.p_model}","{data.p_article}","{data.p_hsn}","{data.p_stock}","{data.p_detailed}","{data.user}","{formatted_dt}"'
+    fields= f'prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code, prod_desc,created_by,created_at'
+    values = f'"{data.p_name}","{data.p_cat}","{data.p_make}","{data.p_part}","{data.p_model}","{data.p_article}","{data.p_hsn}","{data.p_detailed}","{data.user}","{formatted_dt}"'
     table_name = "md_product"
     whr =  None
     flag = 1 if data.p_id>0 else 0
@@ -834,8 +832,8 @@ async def addvendor(data:addVendor):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'vendor_name="{data.v_name}",vendor_email="{data.v_email}",vendor_phone="{data.v_phone}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_remarks="{data.v_remarks}",vendor_address="{data.v_address}",msme_flag="{data.msme_flag}",msme_no="{data.msme_no}",gst_no="{data.gst_no}",composite="{data.composite}",tds_flag="{data.tds_flag}",tcs_flag="{data.tds_flag}",tds_prtg="{data.tds_prtg}",tcs_prtg="{data.tcs_prtg}",e_r_supply="{data.e_r_supply}",tan_no="{data.tan_no}",bank_details="{data.bank_details}",supply_flag="{data.supply_flag}",state="{data.state}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_remarks,vendor_address,msme_flag,msme_no,composite,tan_no,tcs_flag,tds_flag,tds_prtg,tcs_prtg,state,supply_flag,e_r_supply,gst_no,bank_details,created_by,created_at'
-    values = f'"{data.v_name}","{data.v_email}","{data.v_phone}","{data.v_gst}","{data.v_pan}","{data.v_remarks}","{data.v_address}","{data.msme_flag}","{data.msme_no}","{data.composite}","{data.tan_no}","{data.tcs_flag}","{data.tds_flag}","{data.tds_prtg}","{data.tcs_prtg}","{data.state}","{data.supply_flag}","{data.e_r_supply}","{data.gst_no}","{data.bank_details}","{data.user}","{formatted_dt}"'
+    fields= f'vendor_name="{data.v_name}",vendor_gst="{data.v_gst}",vendor_pan="{data.v_pan}",vendor_address="{data.v_address}",msme_flag="{data.msme_flag}",msme_no="{data.msme_no}",gst_no="{data.gst_no}",org_type="{data.composite}",tds_flag="{data.tds_flag}",tcs_flag="{data.tds_flag}",tds_prtg="{data.tds_prtg}",tcs_prtg="{data.tcs_prtg}",e_r_supply="{data.e_r_supply}",tan_no="{data.tan_no}",,supply_flag="{data.supply_flag}",state="{data.state}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_name,vendor_gst,vendor_pan,vendor_address,msme_flag,msme_no,org_type,tan_no,tcs_flag,tds_flag,tds_prtg,tcs_prtg,state,supply_flag,e_r_supply,gst_no,created_by,created_at'
+    values = f'"{data.v_name}","{data.v_gst}","{data.v_pan}","{data.v_address}","{data.msme_flag}","{data.msme_no}","{data.composite}","{data.tan_no}","{data.tcs_flag}","{data.tds_flag}","{data.tds_prtg}","{data.tcs_prtg}","{data.state}","{data.supply_flag}","{data.e_r_supply}","{data.gst_no}","{data.user}","{formatted_dt}"'
     table_name = "md_vendor"
     whr = f'sl_no="{data.v_id}"' if data.v_id > 0 else None
     flag = 1 if data.v_id>0 else 0
@@ -847,6 +845,20 @@ async def addvendor(data:addVendor):
     # del_table_name = 'md_client_poc'
     # del_whr = f"sl_no not in()"
     # del_qry = await db_Delete(del_table_name, del_whr)
+
+    # 
+
+
+
+    fields= f'bank_name="{data.v_banknm}",branch_name="{data.v_brnnm}",ac_no="{data.v_ac}",ifsc="{data.v_ifsc}",micr_code="{data.v_micr}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_id,bank_name,branch_name,ac_no,ifsc,micr_code,created_by,created_at'
+    values = f'"{lastID}","{data.v_banknm}","{data.v_brnnm}","{data.v_ac}","{data.v_ifsc}","{data.v_micr}","{data.user}","{formatted_dt}"'
+    table_name = "md_vendor_bank"
+    whr = f'sl_no="{data.v_id}"' if data.v_id > 0 else None
+    flag = 1 if data.v_id>0 else 0
+
+    result = await db_Insert(table_name, fields, values, whr, flag)
+
+    # 
     select_u = "*"
     schema_u = "md_vendor_poc"
     where_u = f"vendor_id='{data.v_id}'" if data.v_id>0 else ""
@@ -856,8 +868,21 @@ async def addvendor(data:addVendor):
     # for r in rows['msg']:
     #     k.append(r['sl_no'])
     # print(k,'rows')
+    for v in data.v_deals:
+        fields= f'category_id="{v.category_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,category_id,created_by,created_at'
+        values = f'"{lastID}","{v.category_id}","{data.user}","{formatted_dt}"'
+        table_name = "md_vendor_deals"
+        whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
+        flag1 = 1 if v.sl_no>0 else 0
+        result = await db_Insert(table_name, fields, values, whr, flag1)
+        
+        if(result['suc']>0):
+            res_dt = {"suc": 1, "msg": f"Vendor deals saved successfully!" if v.sl_no==0 else f"Vendor deals updated successfully!"}
+        else:
+            res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
+
     for v in data.v_poc:
-        fields= f'poc_name="{v.poc_name}", poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_ph_1,poc_ph_2,created_by,created_at'
+        fields= f'poc_name="{v.poc_name}", poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",poc_email="{v.poc_email}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_ph_1,poc_ph_2,created_by,created_at'
         values = f'"{lastID}","{v.poc_name}","{v.poc_ph_1}","{v.poc_ph_2}","{data.user}","{formatted_dt}"'
         table_name = "md_vendor_poc"
         whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
