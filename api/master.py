@@ -25,7 +25,6 @@ class getPocId(BaseModel):
     client_id:int
 class getGst(BaseModel):
     gst_id:int
-    cat_id:int
     gst_type:str
     gst_rate:str
     user:str
