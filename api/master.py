@@ -65,18 +65,20 @@ class addPoc(BaseModel):
     #   poc_address:str
       poc_location:str
 
+class addClientLoc(BaseModel):
+      sl_no:int
+      c_gst:str
+      c_pan:str
+      c_location:str
+
 class addClient(BaseModel):
       c_id:int
       c_name: str
-      c_phone:str
-      c_email:str
-      c_gst:str
-      c_pan:str
       c_vendor_code:str
-      c_location:str
-    #   c_reg:str
+      c_loc:list[addClientLoc]
       c_poc:list[addPoc] 
       user:str
+
 
 class addVPoc(BaseModel):
       sl_no:int
@@ -676,8 +678,8 @@ async def addclient(data:addClient):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'client_name="{data.c_name}",client_email="{data.c_email}",client_phone="{data.c_phone}",client_gst="{data.c_gst}",client_location="{data.c_location}",client_pan="{data.c_pan}",vendor_code="{data.c_vendor_code}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.c_id > 0 else f'client_name,client_email,client_phone,client_location,client_gst,client_pan,vendor_code,created_by,created_at'
-    values = f'"{data.c_name}","{data.c_email}","{data.c_phone}","{data.c_location}","{data.c_gst}","{data.c_pan}","{data.c_vendor_code}","{data.user}","{formatted_dt}"'
+    fields= f'client_name="{data.c_name}",vendor_code="{data.c_vendor_code}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.c_id > 0 else f'client_name,vendor_code,created_by,created_at'
+    values = f'"{data.c_name}","{data.c_vendor_code}","{data.user}","{formatted_dt}"'
     table_name = "md_client"
     whr = f'sl_no="{data.c_id}"' if data.c_id > 0 else None
     flag = 1 if data.c_id>0 else 0
@@ -689,6 +691,19 @@ async def addclient(data:addClient):
     # del_table_name = 'md_client_poc'
     # del_whr = f"sl_no not in()"
     # del_qry = await db_Delete(del_table_name, del_whr)
+    for c in data.c_loc:
+        fields= f'c_loc="{c.c_location}",c_gst="{c.c_gst}",c_pan="{c.c_pan}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'c_loc,c_gst,c_pan,created_by,created_at'
+        values = f'"{lastID}","{c.c_location}","{c.c_gst}","{c.c_pan}","{data.user}","{formatted_dt}"'
+        table_name = "md_client_loc"
+        whr =  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
+        flag1 = 1 if c.sl_no>0 else 0
+        result = await db_Insert(table_name, fields, values, whr, flag1)
+
+        # if(result['suc']>0):
+        #     res_dt = {"suc": 1, "msg": f"Client saved successfully!" if c.sl_no==0 else f"Client updated successfully!"}
+        # else:
+        #     res_dt = {"suc": 0, "msg": f"Error while saving!" if c.sl_no==0 else f"Error while updating"}
+
 
     for c in data.c_poc:
         fields= f'poc_name="{c.poc_name}",poc_email="{c.poc_email}",poc_designation="{c.poc_designation}",poc_department="{c.poc_department}",poc_direct_no="{c.poc_direct_no}",poc_ext_no="{c.poc_ext_no}", poc_ph_1="{c.poc_ph_1}",poc_ph_2="{c.poc_ph_2}",poc_location="{c.poc_location}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_location,created_by,created_at'
