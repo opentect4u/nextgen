@@ -799,6 +799,20 @@ async def getclientpoc(id:getData):
     print(result, 'RESULT')
     return result
 
+@masterRouter.post('/getclientloc')
+async def getclientpoc(id:getData):
+    print(id.id)
+    res_dt = {}
+
+    select = "*"
+    schema = "md_client_loc"
+    where = f"client_id='{id.id}'" if id.id>0 else ""
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
 @masterRouter.post('/getvendorpoc')
 async def getvendorpoc(id:getData):
     print(id.id)
