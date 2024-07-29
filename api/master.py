@@ -692,7 +692,7 @@ async def addclient(data:addClient):
     # del_whr = f"sl_no not in()"
     # del_qry = await db_Delete(del_table_name, del_whr)
     for c in data.c_loc:
-        fields= f'c_loc="{c.c_location}",c_gst="{c.c_gst}",c_pan="{c.c_pan}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'c_loc,c_gst,c_pan,created_by,created_at'
+        fields= f'c_loc="{c.c_location}",c_gst="{c.c_gst}",c_pan="{c.c_pan}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,c_loc,c_gst,c_pan,created_by,created_at'
         values = f'"{lastID}","{c.c_location}","{c.c_gst}","{c.c_pan}","{data.user}","{formatted_dt}"'
         table_name = "md_client_loc"
         whr =  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
