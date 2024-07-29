@@ -98,7 +98,7 @@ function Menus({ theme}) {
             {
               key: "masters:gst",
               icon: <PercentageOutlined />,
-              label: <Link to={routePaths.GST}>Gst </Link>,
+              label: <Link to={routePaths.GST}>GST </Link>,
             },
             // {
             //   key: "masters:user",

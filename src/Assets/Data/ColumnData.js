@@ -82,8 +82,8 @@ export const masterheaders={
     ],
   },
   'Gst': {
-    title: "Gst",
-    btnText:'Add Gst',
+    title: "GST",
+    btnText:'Add GST',
     headers: [
       { name: "serial_number", value: "#" },
       { name: "catg_name", value: "Product Category" },
