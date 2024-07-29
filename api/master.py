@@ -548,7 +548,7 @@ async def getvendorbank(id:getData):
     return result
 
 @masterRouter.post('/getvendordeals')
-async def getvendorbank(id:getData):
+async def getvendordeals(id:getData):
     print(id.id)
     res_dt = {}
 
