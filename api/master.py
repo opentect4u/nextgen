@@ -533,6 +533,34 @@ async def getvendor(id:getData):
     print(result, 'RESULT')
     return result
 
+@masterRouter.post('/getvendorbank')
+async def getvendorbank(id:getData):
+    print(id.id)
+    res_dt = {}
+
+    select = "*"
+    schema = "md_vendor_bank"
+    where = f"vendor_id='{id.id}'" if id.id>0 else ""
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+@masterRouter.post('/getvendordeals')
+async def getvendorbank(id:getData):
+    print(id.id)
+    res_dt = {}
+
+    select = "*"
+    schema = "md_vendor_deals"
+    where = f"vendor_id='{id.id}'" if id.id>0 else ""
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
 @masterRouter.post('/deletevendor')
 async def deletevendor(id:deleteData):
    current_datetime = datetime.now()
