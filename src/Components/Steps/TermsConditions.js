@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import TDInputTemplate from '../TDInputTemplate'
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import VError from "../../Components/VError";
 import { useParams } from "react-router-dom";
 function TermsConditions({pressNext,pressBack}) {
     const params = useParams();
@@ -28,7 +29,9 @@ function TermsConditions({pressNext,pressBack}) {
       om_manual_flag:"",
       om_manual_desc:"",
       oi_flag:"",
-      oi_desc:""
+      oi_desc:"",
+      packing_type:"",
+      manufacture_clearance:""
     };
     const [formValues, setValues] = useState(initialValues);
     const validationSchema = Yup.object({
@@ -44,17 +47,19 @@ function TermsConditions({pressNext,pressBack}) {
       ld_applicable_date:Yup.string().required("LD applicable date is required"),
       ld_applied_on:Yup.string().required("LD applied on is required"),
       ld_value:Yup.string().required("LD values is required"),
-      mrn_date:Yup.string().required("Order date is required"),
-      po_total_value:Yup.string().required("Order date is required"),
-      vendor_dispatch_date:Yup.string().required("Order date is required"),
-      pending_material_value:Yup.string().required("Order date is required"),
-      others:Yup.string().required("Order date is required"),
-      warranty_guarantee_flag:Yup.string().required("Order date is required"),
-      duration:Yup.string().required("Order date is required"),
-      om_manual_flag:Yup.string().required("Order date is required"),
-      om_manual_desc:Yup.string().required("Order date is required"),
-      oi_flag:Yup.string().required("Order date is required"),
-      oi_desc:Yup.string().required("Order date is required")
+      mrn_date:Yup.string().required("MRN date is required"),
+      po_total_value:Yup.string().required("PO total value is required"),
+      vendor_dispatch_date:Yup.string().required("Vendor dispatch date is required"),
+      pending_material_value:Yup.string().required("Pending material value is required"),
+      others:Yup.string().required("Others is required"),
+      warranty_guarantee_flag:Yup.string().required("Warranty/Guarantee is required"),
+      duration:Yup.string().required("Duration is required"),
+      om_manual_flag:Yup.string().required("O&M Manual is required"),
+      om_manual_desc:Yup.string().required("O&M Manual description is required"),
+      oi_flag:Yup.string().required("Operation/Installation is required"),
+      oi_desc:Yup.string().required("Operation/Installation description is required"),
+      packing_type:Yup.string().required("Packing type is required"),
+      manufacture_clearance:Yup.string().required("Manufacture clearance is required")
     });
    
     const onSubmit = (values) => {
@@ -74,42 +79,42 @@ function TermsConditions({pressNext,pressBack}) {
      <h2 className="text-2xl text-green-900 font-bold my-3">
         Terms & Conditions
         </h2>
-    <form action="#">
+    <form onSubmit={formik.handleSubmit}>
       <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Price Basis"
                         type="text"
                         label="Price Basis"
-                        name="project_name"
+                        name="price_basis_flag"
                         data={[
                           { name: "For", code: "F" },
                           { name: "Ex-works", code: "E" },
                         ]}
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.price_basis_flag}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={2}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.price_basis_flag && formik.touched.price_basis_flag && (
+                      <VError title={formik.errors.price_basis_flag} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Price Basis Description"
                         type="text"
                         label="Price Basis Description"
-                        name="project_name"
+                        name="price_basis_desc"
                         
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.price_basis_desc}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.price_basis_desc && formik.touched.price_basis_desc && (
+                      <VError title={formik.errors.price_basis_desc} />
+                    )}
         </div>
       
         <div className="sm:col-span-2">
@@ -117,16 +122,16 @@ function TermsConditions({pressNext,pressBack}) {
                         placeholder="Packing & Forwaring"
                         type="text"
                         label="Packing & Forwaring"
-                        name="project_name"
+                        name="packing_forwarding"
                         
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.packing_forwarding}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.packing_forwarding && formik.touched.packing_forwarding && (
+                      <VError title={formik.errors.packing_forwarding} />
+                    )}
         </div>
 
         <div className="sm:col-span-2">
@@ -134,352 +139,382 @@ function TermsConditions({pressNext,pressBack}) {
                         placeholder="Freight & Insurance"
                         type="text"
                         label="Freight & Insurance"
-                        name="project_name"
+                        name="freight_insurance"
                         
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.freight_insurance}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.freight_insurance && formik.touched.freight_insurance && (
+                      <VError title={formik.errors.freight_insurance} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Payment Terms"
                         type="text"
                         label="Payment Terms"
-                        name="project_name"
+                        name="payment_terms"
                         data={[
                           { name: "PI", code: "pi" },
                           { name: "PDC", code: "pdc" },
                           { name: "Others", code: "O" }
                         ]}
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.payment_terms}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={2}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.payment_terms && formik.touched.payment_terms && (
+                      <VError title={formik.errors.payment_terms} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Payment Terms Value"
                         type="text"
                         label="Payment Terms Value"
-                        name="project_name"
+                        name="payment_terms_value"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.payment_terms_value}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.payment_terms_value && formik.touched.payment_terms_value && (
+                      <VError title={formik.errors.payment_terms_value} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Against"
                         type="text"
                         label="Against"
-                        name="project_name"
+                        name="against"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.against}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.against && formik.touched.against && (
+                      <VError title={formik.errors.against} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Test Certificate"
                         type="text"
                         label="Test Certificate"
-                        name="project_name"
+                        name="test_certificate"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.test_certificate}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.test_certificate && formik.touched.test_certificate && (
+                      <VError title={formik.errors.test_certificate} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="LD Charges"
                         type="text"
                         label="LD Charges"
-                        name="project_name"
+                        name="ld_charges"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.ld_charges}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.ld_charges && formik.touched.ld_charges && (
+                      <VError title={formik.errors.ld_charges} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="LD applicable date"
                         type="date"
                         label="LD applicable date"
-                        name="project_name"
+                        name="ld_applicable_date"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.ld_applicable_date}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.ld_applicable_date && formik.touched.ld_applicable_date && (
+                      <VError title={formik.errors.ld_applicable_date} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="LD value applied on"
                         type="text"
                         label="LD value applied on"
-                        name="project_name"
+                        name="ld_applied_on"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.ld_applied_on}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.ld_applied_on && formik.touched.ld_applied_on && (
+                      <VError title={formik.errors.ld_applied_on} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="LD value (%)"
                         type="text"
                         label="LD value (%)"
-                        name="project_name"
+                        name="ld_value"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.ld_value}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.ld_value && formik.touched.ld_value && (
+                      <VError title={formik.errors.ld_value} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="MRN Date"
                         type="date"
                         label="MRN Date"
-                        name="project_name"
+                        name="mrn_date"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.mrn_date}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.mrn_date && formik.touched.mrn_date && (
+                      <VError title={formik.errors.mrn_date} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="PO total value"
                         type="text"
                         label="PO total value"
-                        name="project_name"
+                        name="po_total_value"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.po_total_value}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.po_total_value && formik.touched.po_total_value && (
+                      <VError title={formik.errors.po_total_value} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Vendor dispatch date"
                         type="date"
                         label="Vendor dispatch date"
-                        name="project_name"
+                        name="vendor_dispatch_date"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.vendor_dispatch_date}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.vendor_dispatch_date && formik.touched.vendor_dispatch_date && (
+                      <VError title={formik.errors.vendor_dispatch_date} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Pending material value"
                         type="text"
                         label="Pending material value"
-                        name="project_name"
+                        name="pending_material_value"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.pending_material_value}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.pending_material_value && formik.touched.pending_material_value && (
+                      <VError title={formik.errors.pending_material_value} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Others"
                         type="text"
                         label="Others"
-                        name="project_name"
+                        name="others"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.others}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.others && formik.touched.others && (
+                      <VError title={formik.errors.others} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Warranty/Guarantee"
                         type="text"
                         label="Warranty/Guarantee"
-                        name="project_name"
+                        name="warranty_guarantee_flag"
                         data={[
                           { name: "Warranty", code: "W" },
                           { name: "Guarantee", code: "G" },
                         ]}
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.warranty_guarantee_flag}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={2}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.warranty_guarantee_flag && formik.touched.warranty_guarantee_flag && (
+                      <VError title={formik.errors.warranty_guarantee_flag} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Duration"
                         type="date"
                         label="Duration"
-                        name="project_name"
+                        name="duration"
                        
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.duration}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.duration && formik.touched.duration && (
+                      <VError title={formik.errors.duration} />
+                    )}
         </div>
-        <div className="sm:col-span-2">
-        <TDInputTemplate
-                        placeholder="Price Basis"
-                        type="text"
-                        label="Price Basis"
-                        name="project_name"
-                        data={[
-                          { name: "For", code: "F" },
-                          { name: "Ex-works", code: "E" },
-                        ]}
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
-                        mode={2}
-                      />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
-        </div>
+      
         
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="O&M Manual"
                         type="text"
                         label="O&M Manual"
-                        name="project_name"
+                        name="om_manual_flag"
                         data={[
                           { name: "Applicable", code: "A" },
                           { name: "Not Applicable", code: "NA" },
                         ]}
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.om_manual_flag}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={2}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.om_manual_flag && formik.touched.om_manual_flag && (
+                      <VError title={formik.errors.om_manual_flag} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="O&M Manual Description"
                         type="text"
                         label="O&M Manual Description"
-                       
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        name="om_manual_desc"
+                        formControlName={formik.values.om_manual_desc}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.om_manual_desc && formik.touched.om_manual_desc && (
+                      <VError title={formik.errors.om_manual_desc} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Operation/Installation"
                         type="text"
                         label="Operation/Installation"
-                        name="project_name"
+                        name="oi_flag"
                         data={[
                           { name: "Applicable", code: "A" },
                           { name: "Not Applicable", code: "NA" },
                         ]}
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        formControlName={formik.values.oi_flag}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={2}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.oi_flag && formik.touched.oi_flag && (
+                      <VError title={formik.errors.oi_flag} />
+                    )}
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="Operation/Installation Description"
                         type="text"
                         label="Operation/Installation Description"
-                       
-                        // formControlName={formik.values.project_name}
-                        // handleChange={formik.handleChange}
-                        // handleBlur={formik.handleBlur}
+                        name="oi_desc"
+                        formControlName={formik.values.oi_desc}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {/* {formik.errors.project_name && formik.touched.project_name && (
-                      <VError title={formik.errors.project_name} />
-                    )} */}
+                      {formik.errors.oi_desc && formik.touched.oi_desc && (
+                      <VError title={formik.errors.oi_desc} />
+                    )}
         </div>
+        <div className="sm:col-span-2">
+        <TDInputTemplate
+                        placeholder="Packing type"
+                        type="text"
+                        label="Packing type"
+                        name="packing_type"
+                        formControlName={formik.values.packing_type}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        mode={1}
+                      />
+                      {formik.errors.packing_type && formik.touched.packing_type && (
+                      <VError title={formik.errors.packing_type} />
+                    )}
+        </div>
+        <div className="sm:col-span-2">
+        <TDInputTemplate
+                        placeholder="Manufacture Clearance"
+                        type="text"
+                        label="Manufacture Clearance"
+                        name="manufacture_clearance"
+                        data={[
+                          { name: "Applicable", code: "A" },
+                          { name: "Not Applicable", code: "NA" },
+                        ]}
+                        formControlName={formik.values.manufacture_clearance}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        mode={2}
+                      />
+                      {formik.errors.manufacture_clearance && formik.touched.manufacture_clearance && (
+                      <VError title={formik.errors.manufacture_clearance} />
+                    )}
+        </div>
+      </div>
+      <div className="flex pt-4 justify-between w-full">
+        <button
+          className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900"
+          onClick={pressBack}
+        >
+          Back
+        </button>
+        <button
+          type="submit"
+          className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+        >
+          Next
+        </button>
       </div>
     </form>
   </div>
