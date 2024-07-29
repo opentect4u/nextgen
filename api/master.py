@@ -250,7 +250,7 @@ async def getcategory(id:getData):
     select = "@a:=@a+1 serial_number,gst_type,gst_rate, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "md_gst,(SELECT @a:= 0) AS a"
-    where = f"sl_no='{id.id}'" if id.id>0 else f"g.delete_flag='N'"
+    where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
