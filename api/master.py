@@ -220,7 +220,7 @@ async def addcategory(dt:getGst):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'gst_type,gst_rate,created_by,created_at'
-    values = f'"{dt.gst_type}","{dt.gst_rate}","{dt.user}","{formatted_dt}"'
+    values = f'"{'IGST' if dt.gst_type=='I' else('CGST' if dt.gst_type=='C' else 'SGST')}","{dt.gst_rate}","{dt.user}","{formatted_dt}"'
     table_name = "md_gst"
     whr =  None
     flag = 1 if dt.gst_id>0 else 0
