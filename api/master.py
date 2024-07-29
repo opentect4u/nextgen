@@ -520,7 +520,7 @@ async def getvendor(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number,sl_no,vendor_name,vendor_email,vendor_phone,vendor_gst,vendor_pan,vendor_remarks,vendor_address,msme_flag,msme_no,composite,tan_no,tcs_flag,tds_flag,tds_prtg,tcs_prtg,state,supply_flag,e_r_supply,gst_no,bank_details,created_by,created_at,modified_by,modified_at"
+    select = "@a:=@a+1 serial_number,sl_no,vendor_name,vendor_gst,vendor_pan,vendor_address,msme_flag,msme_no,org_type,tan_no,tcs_flag,tds_flag,tds_prtg,tcs_prtg,state,supply_flag,e_r_supply,gst_no,bank_details,created_by,created_at,modified_by,modified_at"
     schema = "md_vendor,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
@@ -850,13 +850,13 @@ async def addvendor(data:addVendor):
 
 
 
-    fields= f'bank_name="{data.v_banknm}",branch_name="{data.v_brnnm}",ac_no="{data.v_ac}",ifsc="{data.v_ifsc}",micr_code="{data.v_micr}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_id,bank_name,branch_name,ac_no,ifsc,micr_code,created_by,created_at'
-    values = f'"{lastID}","{data.v_banknm}","{data.v_brnnm}","{data.v_ac}","{data.v_ifsc}","{data.v_micr}","{data.user}","{formatted_dt}"'
-    table_name = "md_vendor_bank"
-    whr = f'sl_no="{data.v_id}"' if data.v_id > 0 else None
-    flag = 1 if data.v_id>0 else 0
+    fields1= f'bank_name="{data.v_banknm}",branch_name="{data.v_brnnm}",ac_no="{data.v_ac}",ifsc="{data.v_ifsc}",micr_code="{data.v_micr}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_id,bank_name,branch_name,ac_no,ifsc,micr_code,created_by,created_at'
+    values1 = f'"{lastID}","{data.v_banknm}","{data.v_brnnm}","{data.v_ac}","{data.v_ifsc}","{data.v_micr}","{data.user}","{formatted_dt}"'
+    table_name1 = "md_vendor_bank"
+    whr1 = f'sl_no="{data.v_id}"' if data.v_id > 0 else None
+    flag2 = 1 if data.v_id>0 else 0
 
-    result = await db_Insert(table_name, fields, values, whr, flag)
+    result = await db_Insert(table_name1, fields1, values1, whr1, flag2)
 
     # 
     select_u = "*"
