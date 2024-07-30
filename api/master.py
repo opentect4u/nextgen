@@ -886,7 +886,7 @@ async def addvendor(data:addVendor):
     fields1= f'bank_name="{data.v_banknm}",branch_name="{data.v_brnnm}",ac_no="{data.v_ac}",ifsc="{data.v_ifsc}",micr_code="{data.v_micr}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_id,bank_name,branch_name,ac_no,ifsc,micr_code,created_by,created_at'
     values1 = f'"{lastID}","{data.v_banknm}","{data.v_brnnm}","{data.v_ac}","{data.v_ifsc}","{data.v_micr}","{data.user}","{formatted_dt}"'
     table_name1 = "md_vendor_bank"
-    whr1 = f'sl_no="{data.v_id}"' if data.v_id > 0 else f'vendor_id="{data.v_id}"'
+    whr1 = f'vendor_id="{data.v_id}"' if data.v_id > 0 else None
     flag2 = 1 if data.v_id>0 else 0
 
     result = await db_Insert(table_name1, fields1, values1, whr1, flag2)
@@ -894,7 +894,7 @@ async def addvendor(data:addVendor):
     # 
     select_u = "*"
     schema_u = "md_vendor_poc"
-    where_u = f"vendor_id='{data.v_id}'" if data.v_id>0 else f'vendor_id="{data.v_id}"'
+    where_u = f"vendor_id='{data.v_id}'" if data.v_id>0 else None
     order_u = ""
     rows =await db_select(select_u, schema_u, where_u, order_u, flag)
     # k=list()
@@ -905,7 +905,7 @@ async def addvendor(data:addVendor):
         fields= f'category_id="{v.category_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,category_id,created_by,created_at'
         values = f'"{lastID}","{v.category_id}","{data.user}","{formatted_dt}"'
         table_name = "md_vendor_deals"
-        whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else f'vendor_id="{data.v_id}"'
+        whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
         flag1 = 1 if v.sl_no>0 else 0
         result = await db_Insert(table_name, fields, values, whr, flag1)
         
