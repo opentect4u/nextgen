@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from typing import Optional
 from enum import Enum
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -109,13 +110,13 @@ class addVendor(BaseModel):
       tan_no:str 
       tds_flag:str 
       tcs_flag:str 
-      tds_prtg:str 
-      tcs_prtg:str 
+      tds_prtg:Optional[str] 
+      tcs_prtg:Optional[str] 
       supply_flag:str 
-      composite:str
-      gst_no:str
-      e_r_supply:str 
-      state:str
+      composite:Optional[str]
+      gst_no:Optional[str]
+      e_r_supply:Optional[str] 
+      state:Optional[str]
       v_poc:list[addVPoc] 
       v_address:str
       user:str
