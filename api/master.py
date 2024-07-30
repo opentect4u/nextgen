@@ -915,8 +915,8 @@ async def addvendor(data:addVendor):
             res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
 
     for v in data.v_poc:
-        fields= f'poc_name="{v.poc_name}", poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",poc_email="{v.poc_email}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_ph_1,poc_ph_2,created_by,created_at'
-        values = f'"{lastID}","{v.poc_name}","{v.poc_ph_1}","{v.poc_ph_2}","{data.user}","{formatted_dt}"'
+        fields= f'poc_name="{v.poc_name}", poc_email="{v.poc_email}",poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",poc_email="{v.poc_email}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_email, poc_ph_1,poc_ph_2,created_by,created_at'
+        values = f'"{lastID}","{v.poc_name}","{v.poc_email}","{v.poc_ph_1}","{v.poc_ph_2}","{data.user}","{formatted_dt}"'
         table_name = "md_vendor_poc"
         whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
         flag1 = 1 if v.sl_no>0 else 0
