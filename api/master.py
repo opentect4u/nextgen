@@ -101,7 +101,7 @@ class addVendor(BaseModel):
       v_email:str
       v_deals:list[addDeals]
       msme_flag:str 
-      msme_no:str
+      msme_no:Optional[str] = None
       v_banknm:str
       v_brnnm:str
       v_ifsc:str
@@ -110,13 +110,13 @@ class addVendor(BaseModel):
       tan_no:str 
       tds_flag:str 
       tcs_flag:str 
-      tds_prtg:Optional[str] 
-      tcs_prtg:Optional[str] 
+      tds_prtg:Optional[str] = None
+      tcs_prtg:Optional[str] = None 
       supply_flag:str 
-      composite:Optional[str]
-      gst_no:Optional[str]
-      e_r_supply:Optional[str] 
-      state:Optional[str]
+      composite:Optional[str] = None
+      gst_no:Optional[str] = None
+      e_r_supply:str 
+      state:Optional[str] = None
       v_poc:list[addVPoc] 
       v_address:str
       user:str
