@@ -109,27 +109,27 @@ function VendorForm() {
   // };
 
   const [formValues, setValues] = useState({
-    // v_name: "",
-    // v_email: "",
-    // v_phone:"",
-    // v_gst: "",
-    // v_pan: "",
-    // v_msme: "",
-    // v_msmeno: "",
-    // v_bankdtls: "",
-    // v_remarks: "",
-    // v_address: "",
-    // v_tan:"",
-    // dynamicFields_category: [
-    //   {
-    //     sl_no:  0 ,
-    //     category_id:""
-    //   },
-    // ],
-    // dynamicFields: [{
-    //   sl_no: 0,
-    //   poc_name: "", poc_ph_1: "", poc_ph_2: "",poc_email:""
-    // }]
+    v_name: "",
+    v_email: "",
+    v_phone:"",
+    v_gst: "",
+    v_pan: "",
+    v_msme: "",
+    v_msmeno: "",
+    v_bankdtls: "",
+    v_remarks: "",
+    v_address: "",
+    v_tan:"",
+    dynamicFields_category: [
+      {
+        sl_no:  0 ,
+        category_id:""
+      },
+    ],
+    dynamicFields: [{
+      sl_no: 0,
+      poc_name: "", poc_ph_1: "", poc_ph_2: "",poc_email:""
+    }]
   });
 
   const initialValues = {
@@ -158,15 +158,13 @@ function VendorForm() {
     v_state: "",
     v_address: "",
     dynamicFields: [{
-      sl_no:0,
-      // sl_no: 0,
+      sl_no: 0,
       poc_name: "", poc_ph_1: "", poc_ph_2: "",poc_email:""
     }],
     dynamicFields_category: [
       {
         sl_no:0,
         category_id:""
-        // poc_address: "",
       },
     ],
   };
@@ -260,78 +258,168 @@ function VendorForm() {
 
       //     });
       //   }).catch(err => { console.log(err); navigate('/error' + '/' + err.code + '/' + err.message) });
-      axios.post(url + "/api/getvendor", { id: params.id }).then((res) => {
-        console.log(res,'getvendor');
-        setValues({
-          // ...formValues,
-          v_name: res.data.msg.vendor_name,
-          v_email: res.data.msg.vendor_email,
-          v_phone: res.data.msg.vendor_phone,
-          v_gst: res.data.msg.vendor_gst,
-          v_pan: res.data.msg.vendor_pan,
-          v_msme: res.data.msg.vendor_msme,
-          v_msmeno: res.data.msg.v_msmeno,
-          v_remarks: res.data.msg.vendor_remarks,
-          v_address: res.data.msg.vendor_address,
-          v_msme: res.data.msg.msme_flag,
-          v_msmeno:res.data.msg.msme_no,
-          v_bankdtls:res.data.msg.bank_details,
-          v_tan:res.data.msg.tan_no,
-          v_tds:res.data.msg.tds_flag,
-          tds_perc:res.data.msg.tds_prtg,
-          v_tcs:res.data.msg.tcs_flag,
-          tcs_perc:res.data.msg.tcs_prtg,
-          supply_flag:res.data.msg.supply_flag,
-          v_gst_no:res.data.msg.gst_no,
-          v_composite:res.data.msg.org_type,
-          v_e_r_supply:res.data.msg.e_r_supply,
-          v_state:res.data.msg.state,
-        });
+      axios.post(url + "/api/getvendor", { id: params.id }).then((resVendor) => {
+        // setValues({
+        //   // ...formValues,
+        //   v_name: res.data.msg.vendor_name,
+        //   v_email: res.data.msg.vendor_email,
+        //   v_phone: res.data.msg.vendor_phone,
+        //   v_gst: res.data.msg.vendor_gst,
+        //   v_pan: res.data.msg.vendor_pan,
+        //   v_msme: res.data.msg.vendor_msme,
+        //   v_msmeno: res.data.msg.v_msmeno,
+        //   v_remarks: res.data.msg.vendor_remarks,
+        //   v_address: res.data.msg.vendor_address,
+        //   v_msme: res.data.msg.msme_flag,
+        //   v_msmeno:res.data.msg.msme_no,
+        //   v_bankdtls:res.data.msg.bank_details,
+        //   v_tan:res.data.msg.tan_no,
+        //   v_tds:res.data.msg.tds_flag,
+        //   tds_perc:res.data.msg.tds_prtg,
+        //   v_tcs:res.data.msg.tcs_flag,
+        //   tcs_perc:res.data.msg.tcs_prtg,
+        //   supply_flag:res.data.msg.supply_flag,
+        //   v_gst_no:res.data.msg.gst_no,
+        //   v_composite:res.data.msg.org_type,
+        //   v_e_r_supply:res.data.msg.e_r_supply,
+        //   v_state:res.data.msg.state,
+        // });
+        axios.post(url + "/api/getvendorbank", { id: params.id }).then((resBank) => {
+          // console.log(res.data.msg[0].micr_code,'getvendorbank');
+          // setValues({
+          //   v_micr:res.data.msg[0].micr_code,
+          //   v_ifsc:res.data.msg[0].ifsc,
+          //   v_ac:res.data.msg[0].ac_no,
+          //   v_banknm:res.data.msg[0].bank_name,
+          //   v_brnnm:res.data.msg[0].branch_name,
+          // })
+          axios
+          .post(url + "/api/getvendordeals", {
+            id: params.id,
+          })
+          .then((resDeals) => {
+            // res.data.msg.map((item, index) =>({console.log(item)}))
+            // setValues(prev => ({
+            //   ...prev,
+            //   dynamicFields_category: res.data.msg.map((item, index) => ({
+            //     sl_no: item.sl_no,
+            //     category_id: item.category_id,
+            //   })
+            // ),
+            // }));
+            // axios.post(url + "/api/getvendorpoc", { id: params.id }).then((res) => {
+            //   console.log(res.data.msg[0], 'res getvendorpoc');
+            //   setValues(prevValues => ({
+            //     ...prevValues,
+            //     dynamicFields: res.data.msg.map((item) => ({
+            //       sl_no: item.sl_no,
+            //       poc_name: item.poc_name,
+            //       poc_ph_1: item.poc_ph_1,
+            //       poc_ph_2: item.poc_ph_2,
+            //       poc_email:item.poc_email
+            //     }))
+            //   }));
+            //   setLoading(false);
+            // });
+            axios.post(url + "/api/getvendorpoc", { id: params.id }).then((resPoc) => {
+              setValues(prevValues => ({
+                ...prevValues,
+                v_name: resVendor.data.msg.vendor_name,
+                v_email: resVendor.data.msg.vendor_email,
+                v_phone: resVendor.data.msg.vendor_phone,
+                v_gst: resVendor.data.msg.vendor_gst,
+                v_pan: resVendor.data.msg.vendor_pan,
+                v_msme: resVendor.data.msg.vendor_msme,
+                v_msmeno: resVendor.data.msg.v_msmeno,
+                v_remarks: resVendor.data.msg.vendor_remarks,
+                v_address: resVendor.data.msg.vendor_address,
+                v_msme: resVendor.data.msg.msme_flag,
+                v_msmeno:resVendor.data.msg.msme_no,
+                v_bankdtls:resVendor.data.msg.bank_details,
+                v_tan:resVendor.data.msg.tan_no,
+                v_tds:resVendor.data.msg.tds_flag,
+                tds_perc:resVendor.data.msg.tds_prtg,
+                v_tcs:resVendor.data.msg.tcs_flag,
+                tcs_perc:resVendor.data.msg.tcs_prtg,
+                supply_flag:resVendor.data.msg.supply_flag,
+                v_gst_no:resVendor.data.msg.gst_no,
+                v_composite:resVendor.data.msg.org_type,
+                v_e_r_supply:resVendor.data.msg.e_r_supply,
+                v_state:resVendor.data.msg.state,
+
+                v_micr:resBank.data.msg[0].micr_code,
+            v_ifsc:resBank.data.msg[0].ifsc,
+            v_ac:resBank.data.msg[0].ac_no,
+            v_banknm:resBank.data.msg[0].bank_name,
+            v_brnnm:resBank.data.msg[0].branch_name,
+                dynamicFields: resPoc.data.msg.map((item) => ({
+                  sl_no: item.sl_no,
+                  poc_name: item.poc_name,
+                  poc_ph_1: item.poc_ph_1,
+                  poc_ph_2: item.poc_ph_2,
+                  poc_email:item.poc_email
+                })),
+                dynamicFields_category: resDeals.data.msg.map((item, index) => ({
+                      sl_no: item.sl_no,
+                      category_id: item.category_id,
+                    }))
+              }));
+              setLoading(false);
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            navigate("/error" + "/" + err.code + "/" + err.message);
+          });
+        })
+        
+       
       });
-      axios.post(url + "/api/getvendorbank", { id: params.id }).then((res) => {
-        console.log(res.data.msg[0].micr_code,'getvendorbank');
-        setValues({
-          v_micr:res.data.msg[0].micr_code,
-          v_ifsc:res.data.msg[0].ifsc,
-          v_ac:res.data.msg[0].ac_no,
-          v_banknm:res.data.msg[0].bank_name,
-          v_brnnm:res.data.msg[0].branch_name,
-        })})
-      axios
-      .post(url + "/api/getvendordeals", {
-        id: params.id,
-      })
-      .then((res) => {
-        console.log(res.data.msg[0], "res");
-        // res.data.msg.map((item, index) =>({console.log(item)}))
-        setValues(prev => ({
-          ...prev,
-          dynamicFields_category: res.data.msg.map((item, index) => ({
-            sl_no: item.sl_no,
-            category_id: item.category_id,
-          })),
-        }));
-      })
-      .catch((err) => {
-        console.log(err);
-        navigate("/error" + "/" + err.code + "/" + err.message);
-      });
-      axios.post(url + "/api/getvendorpoc", { id: params.id }).then((res) => {
-        console.log(res.data.msg[0], 'res getvendorpoc');
-        setValues(prevValues => ({
-          ...prevValues,
-          dynamicFields: res.data.msg.map((item) => ({
-            sl_no: item.sl_no,
-            poc_name: item.poc_name,
-            poc_ph_1: item.poc_ph_1,
-            poc_ph_2: item.poc_ph_2,
-            poc_email:item.poc_email
-          }))
-        }));
-        setLoading(false);
-      });
+      // axios.post(url + "/api/getvendorbank", { id: params.id }).then((res) => {
+      //   console.log(res.data.msg[0].micr_code,'getvendorbank');
+      //   setValues({
+      //     v_micr:res.data.msg[0].micr_code,
+      //     v_ifsc:res.data.msg[0].ifsc,
+      //     v_ac:res.data.msg[0].ac_no,
+      //     v_banknm:res.data.msg[0].bank_name,
+      //     v_brnnm:res.data.msg[0].branch_name,
+      //   })})
+      // axios
+      // .post(url + "/api/getvendordeals", {
+      //   id: params.id,
+      // })
+      // .then((res) => {
+      //   console.log(res.data.msg[0], "res");
+      //   // res.data.msg.map((item, index) =>({console.log(item)}))
+      //   setValues(prev => ({
+      //     ...prev,
+      //     dynamicFields_category: res.data.msg.map((item, index) => ({
+      //       sl_no: item.sl_no,
+      //       category_id: item.category_id,
+      //     })),
+      //   }));
+      // })
+      // .catch((err) => {
+      //   console.log(err);
+      //   navigate("/error" + "/" + err.code + "/" + err.message);
+      // });
+      // axios.post(url + "/api/getvendorpoc", { id: params.id }).then((res) => {
+      //   console.log(res.data.msg[0], 'res getvendorpoc');
+      //   setValues(prevValues => ({
+      //     ...prevValues,
+      //     dynamicFields: res.data.msg.map((item) => ({
+      //       sl_no: item.sl_no,
+      //       poc_name: item.poc_name,
+      //       poc_ph_1: item.poc_ph_1,
+      //       poc_ph_2: item.poc_ph_2,
+      //       poc_email:item.poc_email
+      //     }))
+      //   }));
+      //   setLoading(false);
+      // });
     }
   }, []);
+  
   const onSubmit = (values) => {
     console.log("onsubmit called")
     console.log(values, 'onsubmit vendor');
@@ -749,12 +837,12 @@ function VendorForm() {
           </Formik> */}
           {/* Form without Stepper */}
           <Formik initialValues={+params.id > 0 ? formValues : initialValues} validationSchema={validationSchema} onSubmit={onSubmit} validateOnMount={true} enableReinitialize={true}>
-            {({ values, handleChange, handleBlur, handleSubmit, errors, touched }) => (
+            {({ values,handleReset, handleChange, handleBlur, handleSubmit, errors, touched }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card flex flex-col justify-center">
                 {/*  <Stepper ref={stepperRef} style={{ flexBasis: '80rem' }}>
                     <StepperPanel header="Header I">*/}
-                      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                      <div className="grid gap-4 sm:grid-cols-6 sm:gap-6">
                         <div className="sm:col-span-2">
                           <TDInputTemplate
                             placeholder="Type name..."
@@ -768,7 +856,7 @@ function VendorForm() {
                           />
                           {errors.v_name && touched.v_name ? <VError title={errors.v_name} /> : null}
                         </div>
-                        <div>
+                        <div className="sm:col-span-2">
                           <TDInputTemplate
                             placeholder="Type GST..."
                             type="text"
@@ -781,7 +869,7 @@ function VendorForm() {
                           />
                           {errors.v_gst && touched.v_gst ? <VError title={errors.v_gst} /> : null}
                         </div>
-                        <div className="sm:col-span-1">
+                        <div className="sm:col-span-2">
                           <TDInputTemplate
                             placeholder="Type PAN..."
                             type="text"
@@ -795,37 +883,16 @@ function VendorForm() {
                           {errors.v_pan && touched.v_pan ? <VError title={errors.v_pan} /> : null}
                         </div>
                        
-                        <div className="sm:col-span-2">
-                          {/* <TDInputTemplate
-                            placeholder="Lorem Ipsum Dolor Sit..."
-                            type="text"
-                            label="Deals in"
-                            name="v_remarks"
-                            formControlName={values.v_remarks}
-                            handleChange={handleChange}
-                            handleBlur={handleBlur}
-                            mode={3}
-                          />
-                          {errors.v_remarks && touched.v_remarks ? <VError title={errors.v_remarks} /> : null} */}
+                      {/* <div className="sm:col-span-6"> */}
+                        
                           <FieldArray name="dynamicFields_category">
                           {({ push, remove, insert, unshift }) => (
                             <>
                               {values.dynamicFields_category?.map((field, index) => (
                                 <React.Fragment key={index}>
-                                  <div className="sm:col-span-2 flex gap-2 justify-end my-3">
-                                    <Button
-                                      className="rounded-full text-white bg-red-800 border-red-800"
-                                      onClick={() => remove(index)}
-                                      icon={<MinusOutlined />}
-                                    ></Button>
+                                  
 
-                                    <Button
-                                      className="rounded-full bg-green-900 text-white"
-                                      onClick={() => unshift({ sl_no: 0, category_id:"" })} icon={<PlusOutlined />}
-                                    ></Button>
-
-                                  </div>
-                                  <div className="sm:col-span-2">
+                                  <div className="sm:col-span-4 mb-5">
                                     <TDInputTemplate
                                       placeholder="Deals in"
                                       type="text"
@@ -841,6 +908,20 @@ function VendorForm() {
                                       <VError title={errors.dynamicFields_category[index].category_id} />
                                     ) : null}
                                   </div>
+                                  <div className="sm:col-span-1"></div>
+                                  <div className="sm:col-span-1 flex gap-2 justify-end item-center mt-5">
+                                    <Button
+                                      className="rounded-full text-white bg-red-800 border-red-800"
+                                      onClick={() => remove(index)}
+                                      icon={<MinusOutlined />}
+                                    ></Button>
+
+                                    <Button
+                                      className="rounded-full bg-green-900 text-white"
+                                      onClick={() => push({ sl_no: 0, category_id:"" })} icon={<PlusOutlined />}
+                                    ></Button>
+
+                                  </div>
                                 </React.Fragment>
                               ))}
                               {/* <div className="sm:col-span-2">
@@ -852,7 +933,7 @@ function VendorForm() {
                           )}
                         </FieldArray>
                         </div>
-                      </div>
+                      {/* </div> */}
                       {/* <div className="flex pt-4 justify-content-end">
                         <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() =>{ stepperRef.current.nextCallback();}}> Next
                           <ArrowRightOutlined className='ml-2' />
@@ -875,9 +956,9 @@ function VendorForm() {
                           />
                           {errors.v_msme && touched.v_msme ? <VError title={errors.v_msme} /> : null}
                         </div>
-                        {msmeVal &&
-                          <div>
-                            <TDInputTemplate
+                        
+                          <div className="col-span-1">
+                          {msmeVal &&  <TDInputTemplate
                               placeholder="Type MSME No."
                               type="text"
                               label="MSME No."
@@ -886,11 +967,11 @@ function VendorForm() {
                               handleChange={handleChange}
                               handleBlur={handleBlur}
                               mode={1}
-                            />
+                            />}
                             {errors.v_msmeno && touched.v_msmeno ? <VError title={errors.v_msmeno} /> : null}
-                          </div>}
-
-                        <div className="sm:col-span-2">
+                          </div>
+                        
+                        <div className="sm:col-span-1">
                           <TDInputTemplate
                             placeholder="Type Bank Name..."
                             type="text"
@@ -903,7 +984,7 @@ function VendorForm() {
                           />
                           {errors.v_banknm && touched.v_banknm ? <VError title={errors.v_banknm} /> : null}
                         </div>
-                        <div >
+                        <div className="sm:col-span-1">
                           <TDInputTemplate
                             placeholder="Type Branch Name..."
                             type="text"
@@ -955,6 +1036,8 @@ function VendorForm() {
                           />
                           {errors.v_micr && touched.v_micr ? <VError title={errors.v_micr} /> : null}
                         </div>
+                        {/* <div className="sm:col-span-1"></div> */}
+
                         <div className="sm:col-span-1">
                           <TDInputTemplate
                             placeholder="Type TAN..."
@@ -968,6 +1051,10 @@ function VendorForm() {
                           />
                           {errors.v_tan && touched.v_tan ? <VError title={errors.v_tan} /> : null}
                         </div>
+                        {/* <div className="sm:col-span-1"></div> */}
+
+                        {/* <div className="sm:col-span-1"></div> */}
+
                         <div>
                           <TDInputTemplate
                             placeholder="Select TDS"
@@ -1025,7 +1112,7 @@ function VendorForm() {
                             />
                             {errors.tcs_perc && touched.tcs_perc ? <VError title={errors.tcs_perc} /> : null}
                           </div>}
-                        <Radio.Group name="supply_flag" value={values.supply_flag}
+                        <Radio.Group name="supply_flag" className="my-2" value={values.supply_flag}
                           onChange={event => handleChangeSupply(event, handleChange)}
                           onBlur={handleBlur}>
                           <Radio value={'R'}>Registered</Radio>
@@ -1078,7 +1165,7 @@ function VendorForm() {
                           {errors.v_e_r_supply && touched.v_e_r_supply ? <VError title={errors.v_e_r_supply} /> : null}
                         </div>}
                         {stateTrue &&
-                          <div><Radio.Group name="v_state" value={values.v_state}
+                          <div className="my-2"><Radio.Group name="v_state" value={values.v_state}
                             onChange={handleChange}
                             onBlur={handleBlur}>
                             <Radio value={'E'}>Interstate</Radio>
@@ -1097,8 +1184,8 @@ function VendorForm() {
                       </div> */}
                     {/* </StepperPanel> */}
                     {/* <StepperPanel header="Header III"> */}
-                      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-                        <div>
+                      <div className="grid gap-4 sm:grid-cols-6 sm:gap-6 mt-5">
+                        <div className="col-span-3">
                           <TDInputTemplate
                             placeholder="Type Phone No...."
                             type="text"
@@ -1111,7 +1198,7 @@ function VendorForm() {
                           />
                           {errors.v_phone && touched.v_phone ? <VError title={errors.v_phone} /> : null}
                         </div>
-                        <div>
+                        <div  className="col-span-3">
                           <TDInputTemplate
                             placeholder="Type email..."
                             type="text"
@@ -1124,7 +1211,7 @@ function VendorForm() {
                           />
                           {errors.v_email && touched.v_email ? <VError title={errors.v_email} /> : null}
                         </div>
-                        <div className="sm:col-span-2">
+                        <div className="sm:col-span-3">
                           <TDInputTemplate
                             placeholder="Type vendor address here..."
                             type="text"
@@ -1142,7 +1229,7 @@ function VendorForm() {
                             <>
                               {values.dynamicFields?.map((field, index) => (
                                 <React.Fragment key={index}>
-                                  <div className="sm:col-span-2 flex gap-2 justify-end">
+                                  <div className="sm:col-span-6 flex gap-2 justify-end mt-2 -mb-12">
                                     <Button
                                       className="rounded-full text-white bg-red-800 border-red-800"
                                       onClick={() => remove(index)}
@@ -1151,11 +1238,11 @@ function VendorForm() {
 
                                     <Button
                                       className="rounded-full bg-green-900 text-white"
-                                      onClick={() => unshift({ sl_no: 0, poc_name: "", poc_ph_1: "",poc_ph_2:"",poc_email:" " })} icon={<PlusOutlined />}
+                                      onClick={() => push({ sl_no: 0, poc_name: "", poc_ph_1: "",poc_ph_2:"",poc_email:" " })} icon={<PlusOutlined />}
                                     ></Button>
 
                                   </div>
-                                  <div className="sm:col-span-2">
+                                  <div className="sm:col-span-3">
                                     <TDInputTemplate
                                       placeholder="Type contact person name..."
                                       type="text"
@@ -1170,7 +1257,9 @@ function VendorForm() {
                                       <VError title={errors.dynamicFields[index].poc_name} />
                                     ) : null}
                                   </div>
-                                  <div>
+                        <div className="sm:col-span-3"></div>
+                              {/* <div className="grid grid-cols-6"> */}
+                              <div className="sm:col-span-2">
                                     <TDInputTemplate
                                       placeholder="Type contact person primary phone..."
                                       type="text"
@@ -1185,7 +1274,7 @@ function VendorForm() {
                                       <VError title={errors.dynamicFields[index].poc_ph_1} />
                                     ) : null}
                                   </div>
-                                  <div>
+                                  <div className="sm:col-span-2">
                                     <TDInputTemplate
                                       placeholder="Type contact secondary person phone..."
                                       type="text"
@@ -1215,6 +1304,9 @@ function VendorForm() {
                                       <VError title={errors.dynamicFields[index].poc_email} />
                                     ) : null}
                                   </div>
+
+                              {/* </div> */}
+                                 
                                 </React.Fragment>
                               ))}
                               {/* <div className="sm:col-span-2">
@@ -1227,16 +1319,15 @@ function VendorForm() {
                         </FieldArray>
 
                       </div>
-                      <div className="flex pt-4 justify-start">
+                     
                                         {/* <Button className="inline-flex items-center px-5 py-5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900" onClick={() => stepperRef.current.prevCallback()}>
                                             <ArrowLeftOutlined className='mr-2' />
                                             Back
                                         </Button> */}
                                         <BtnComp
                                             mode={params.id > 0 ? "E" : "A"}
-                                        //   onReset={formik.handleReset}
+                                          onReset={handleReset}
                                         />
-                                    </div>
                     {/* </StepperPanel> */}
                   {/* </Stepper> */}
                 </div>

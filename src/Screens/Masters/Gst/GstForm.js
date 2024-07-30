@@ -108,15 +108,14 @@ function GstForm() {
               <div className="sm:col-span-2">
   
                 <TDInputTemplate
-                  placeholder="Select gst category"
+                  placeholder="GST Type"
                   type="text"
                   label="GST Type"
                   name="gst_type"
                   formControlName={formik.values.gst_type}
                   handleChange={formik.handleChange}
                   handleBlur={formik.handleBlur}
-                  data={[{name:'CGST',code:'C'},{name:'SGST',code:'S'},{name:'IGST',code:'I'}]}
-                  mode={2}
+                  mode={1}
                   // disabled={params.id > 0}
                 />
                 {formik.errors.gst_type && formik.touched.gst_type ? (

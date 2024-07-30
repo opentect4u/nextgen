@@ -60,7 +60,7 @@ function ClientForm() {
     ],
     dynamicFields: [
       {
-        sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
+        sl_no: params.id <= 0 ? 0 : formValues.dynamicFields[0].sl_no,
         poc_name: "",
         poc_designation: "",
         poc_department: "",
@@ -107,8 +107,7 @@ function ClientForm() {
     locationFields: Yup.array().of(
       Yup.object().shape({
         c_location: Yup.string().required("Client location is required"),
-        c_gst: Yup.string().required("GST is required"),
-        c_pan: Yup.string().required("PAN is required"),
+       
     })),   
     c_vendor_code: Yup.string().required("Vendor code is required"),
     dynamicFields: Yup.array().of(
@@ -234,12 +233,13 @@ function ClientForm() {
               handleChange,
               handleBlur,
               handleSubmit,
+              handleReset,
               errors,
               touched,
             }) => (
               <form onSubmit={handleSubmit}>
-                <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-                  <div className="sm:col-span-2">
+                <div className="grid gap-4 sm:grid-cols-6 sm:gap-6">
+                  <div className="sm:col-span-3">
                     <TDInputTemplate
                       placeholder="Type user name..."
                       type="text"
@@ -254,12 +254,28 @@ function ClientForm() {
                       <VError title={errors.clnt_name} />
                     )}
                   </div>
+                  <div className="sm:col-span-3">
+                    <TDInputTemplate
+                      placeholder="Select Vendor..."
+                      type="text"
+                      label="Vendor Code"
+                      name="c_vendor_code"
+                      formControlName={values.c_vendor_code}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      // data={vendor}
+                      mode={1}
+                      // disabled={params.id > 0}
+                    />
+                    {errors.c_vendor_code && touched.c_vendor_code && <VError title={errors.c_vendor_code} />}
+                  </div> 
                   <FieldArray name="locationFields">
           {({ push, remove }) => (
             <>
               {values.locationFields.map((field, index) => (
                 <React.Fragment key={index}>
-                  <div className="sm:col-span-2 flex gap-2 justify-end">
+                  {/* <div className="sm:col-span-2 flex gap-2 justify-end my-2"> */}
+                  <div className="sm:col-span-6 flex gap-2 justify-end  mt-6 -mb-6">
                     <Button
                       className="rounded-full text-white bg-red-800 border-red-800"
                       onClick={() => remove(index)}
@@ -271,6 +287,7 @@ function ClientForm() {
                       icon={<PlusOutlined />}
                     ></Button>
                   </div>
+                  {/* <div className="grid grid-cols-3"> */}
                   <div className="sm:col-span-2">
                     <TDInputTemplate
                       placeholder="Type Client Location..."
@@ -286,7 +303,7 @@ function ClientForm() {
                       <VError title={errors.locationFields[index].c_location} />
                     )}
                   </div>
-                  <div>
+                  <div className="sm:col-span-2">
                     <TDInputTemplate
                       placeholder="Type GST"
                       type="text"
@@ -301,7 +318,7 @@ function ClientForm() {
                       <VError title={errors.locationFields[index].c_gst} />
                     )}
                   </div>
-                  <div>
+                  <div className="sm:col-span-2">
                     <TDInputTemplate
                       placeholder="Type PAN"
                       type="text"
@@ -316,26 +333,15 @@ function ClientForm() {
                       <VError title={errors.locationFields[index].c_pan} />
                     )}
                   </div>
+
+                  {/* </div> */}
+                 
                 </React.Fragment>
               ))}
             </>
           )}
         </FieldArray>
-                  <div className="sm:col-span-2">
-                    <TDInputTemplate
-                      placeholder="Select Vendor..."
-                      type="text"
-                      label="Vendor Code"
-                      name="c_vendor_code"
-                      formControlName={values.c_vendor_code}
-                      handleChange={handleChange}
-                      handleBlur={handleBlur}
-                      // data={vendor}
-                      mode={1}
-                      // disabled={params.id > 0}
-                    />
-                    {errors.c_vendor_code && touched.c_vendor_code && <VError title={errors.c_vendor_code} />}
-                  </div> 
+                
                   <FieldArray name="dynamicFields">
                     
                     {({ push, remove, insert }) => (
@@ -343,7 +349,7 @@ function ClientForm() {
                       
                         {values.dynamicFields.map((field, index) => (
                           <React.Fragment key={index}>
-                            <div className="sm:col-span-2 flex gap-2 justify-end">
+                            <div className="sm:col-span-6 flex gap-2 justify-end mt-6 -mb-6">
                             <Button
                               className="rounded-full text-white bg-red-800 border-red-800"
                               onClick={() => remove(index)}
@@ -353,7 +359,7 @@ function ClientForm() {
                             <Button
                               className="rounded-full bg-green-900 text-white"
                               onClick={() =>
-                                insert({
+                                push({
                                   sl_no: 0,
                                   poc_name: "",
                                   poc_designation: "",
@@ -370,7 +376,7 @@ function ClientForm() {
                             ></Button>
 
                             </div>
-                            <div>
+                            <div className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type the name of Contact Person..."
                                 type="text"
@@ -384,7 +390,7 @@ function ClientForm() {
                                 mode={1}
                               />
                             </div>
-                            <div>
+                            <div  className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type POC Designation..."
                                 type="text"
@@ -402,7 +408,7 @@ function ClientForm() {
                                                         <VError title={formik.errors.dynamicFields[index].designation} />
                                                     ) : null} */}
                             </div>
-                            <div>
+                            <div  className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type POC department..."
                                 type="text"
@@ -417,7 +423,7 @@ function ClientForm() {
                                 mode={1}
                               />
                             </div>
-                            <div>
+                            <div  className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type POC Email..."
                                 type="text"
@@ -431,7 +437,7 @@ function ClientForm() {
                                 mode={1}
                               />
                             </div>
-                            <div>
+                            <div  className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type POC Direct No."
                                 type="text"
@@ -446,7 +452,7 @@ function ClientForm() {
                                 mode={1}
                               />
                             </div>
-                            <div>
+                            <div  className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type POC Extension No."
                                 type="text"
@@ -460,7 +466,7 @@ function ClientForm() {
                                 mode={1}
                               />
                             </div>
-                            <div>
+                            <div  className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type POC Primary Phone No."
                                 type="text"
@@ -474,7 +480,7 @@ function ClientForm() {
                                 mode={1}
                               />
                             </div>
-                            <div>
+                            <div  className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type POC Secondary Phone No."
                                 type="text"
@@ -488,7 +494,7 @@ function ClientForm() {
                                 mode={1}
                               />
                             </div>
-                            <div>
+                            <div  className="sm:col-span-2">
                               <TDInputTemplate
                                 placeholder="Type POC Location..."
                                 type="text"
@@ -538,7 +544,7 @@ function ClientForm() {
                   </FieldArray>
                   {params.id > 0 && <AuditTrail data={data}/>}
                 </div>
-                <BtnComp mode={params.id > 0 ? "E" : "A"} />
+                <BtnComp mode={params.id > 0 ? "E" : "A"} onReset={handleReset} />
               </form>
             )}
           </Formik>

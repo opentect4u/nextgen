@@ -14,7 +14,7 @@ function TDInputTemplate(props) {
           value={props.formControlName}
          
 
-          className="bg-white border-1 border-gray-400 text-gray-800 text-sm rounded-full  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          className="bg-white border-1 border-gray-400 text-gray-800 text-sm rounded-lg  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 
           placeholder={props.placeholder}
           onChange={props.handleChange}
@@ -36,7 +36,7 @@ function TDInputTemplate(props) {
         //   options={props.data}
         // />
         // <Dropdown 
-        // className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+        // className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:border-green-900 active:border-green-900 focus:ring-green-900 focus:border-1 duration-300 block w-full p-1.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
         // filter
         // value={props.formControlName} 
         // onChange={props.handleChange}
@@ -47,7 +47,7 @@ function TDInputTemplate(props) {
         // onBlur={props.handleBlur}
         // />
 
-    <select id="countries" className="bg-white border-1 border-gray-400 text-gray-800 text-sm rounded-full  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+    <select id="countries" className="bg-white border-1 border-gray-400 text-gray-800 text-sm rounded-lg  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 
     value={props.formControlName} 
     onChange={props.handleChange}
@@ -66,8 +66,8 @@ function TDInputTemplate(props) {
       )}
       {props.mode == 3 && (
         <textarea
-          rows="8"
-          className="bg-white border-1 border-gray-400 text-sm rounded-lg  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-2.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          rows="4"
+          className="bg-white border-1 border-gray-400 text-sm rounded-lg  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
           name={props.name}
           value={props.formControlName}
           placeholder={props.placeholder}
