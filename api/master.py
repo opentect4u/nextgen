@@ -115,7 +115,7 @@ class addVendor(BaseModel):
       supply_flag:str 
       composite:Optional[str] = None
       gst_no:Optional[str] = None
-      e_r_supply:str 
+      e_r_supply:Optional[str] = None
       state:Optional[str] = None
       v_poc:list[addVPoc] 
       v_address:str
