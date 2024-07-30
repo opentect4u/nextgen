@@ -27,7 +27,7 @@ class getPocId(BaseModel):
 class getGst(BaseModel):
     gst_id:int
     gst_type:str
-    gst_rate:str
+    gst_rate:float
     user:str
 
 class addProduct(BaseModel):
