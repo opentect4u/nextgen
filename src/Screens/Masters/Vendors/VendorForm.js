@@ -322,6 +322,27 @@ function VendorForm() {
             //   setLoading(false);
             // });
             axios.post(url + "/api/getvendorpoc", { id: params.id }).then((resPoc) => {
+              setmsmeVal(resVendor.data.msg.msme_flag=='Y'?true:false)
+              setTdsPercTrue(resVendor.data.msg.tds_flag=='Y'?true:false)
+              setTcsPercTrue(resVendor.data.msg.tcs_flag=='Y'?true:false)
+              if (resVendor.data.msg.supply_flag === 'R') {
+                setGstNoTrue(true)
+                setCompositeTrue(true);
+                setStateTrue(true);
+                setExempted(true)
+          
+              } else if (resVendor.data.msg.supply_flag === 'U') {
+                setCompositeTrue(false);
+                setStateTrue(true);
+                setExempted(false)
+                setGstNoTrue(false)
+              } else {
+                setCompositeTrue(false);
+                setStateTrue(false);
+                setGstNoTrue(false)
+                setExempted(false)
+          
+              }
               setValues(prevValues => ({
                 ...prevValues,
                 v_name: resVendor.data.msg.vendor_name,
