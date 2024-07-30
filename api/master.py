@@ -252,7 +252,7 @@ async def getcategory(id:getData):
     print(id.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number,IF(gst_type='C','CGST',IF(gst_type='I','IGST',IF(gst_type='S','SGST',''))) gst_title,gst_type,gst_rate, created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number,gst_type,gst_rate, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "md_gst,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
