@@ -19,7 +19,7 @@ import AuditTrail from "../../../Components/AuditTrail";
 function ClientForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [vendor, setVendor] = useState([]);
+  // const [vendor, setVendor] = useState([]);
   var vendorList = [];
   const params = useParams();
   console.log(params, "params");
@@ -27,12 +27,14 @@ function ClientForm() {
   const [formValues, setValues] = useState({
     clnt_name: "",
     c_location:"",
-    clnt_email: "",
-    clnt_phn: "",
-    gst: "",
-    pan: "",
     c_vendor_code:"",
-    // reg_no: "",
+    locationFields: [
+      {
+        sl_no: 0,
+        c_location:"",
+        c_gst:"",
+        c_pan:""
+      }],
     dynamicFields: [
       {
         sl_no: 0,
@@ -45,18 +47,17 @@ function ClientForm() {
         poc_ph_1: "",
         poc_ph_2: "",
         poc_location: "",
-        // poc_address: "",
       },
     ],
   });
 
   const initialValues = {
     clnt_name: "",
-    clnt_email: "",
-    clnt_phn: "",
-    gst: "",
-    pan: "",
-    // reg_no: "",
+    c_vendor_code:"",
+    locationFields: [
+      { sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
+        c_location: "", c_gst: "", c_pan: "" }
+    ],
     dynamicFields: [
       {
         sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
@@ -69,7 +70,6 @@ function ClientForm() {
         poc_ph_1: "",
         poc_ph_2: "",
         poc_location: "",
-        // poc_address: "",
       },
     ],
   };
@@ -83,14 +83,8 @@ function ClientForm() {
         c_id: +params.id,
         user: localStorage.getItem("email"),
         c_name: values.clnt_name,
-        c_phone: values.clnt_phn.toString(),
-        c_email: values.clnt_email,
-        c_location:values.c_location,
         c_vendor_code:values.c_vendor_code.toString(),
-        // c_address: values.poc_address,
-        c_gst: values.gst,
-        c_pan: values.pan,
-        // c_reg: values.reg_no,
+        c_loc:values.locationFields,
         c_poc: values.dynamicFields,
       })
       .then((res) => {
@@ -105,21 +99,18 @@ function ClientForm() {
       })
       .catch((err) => {
         console.log(err);
-        navigate("/error" + "/" + err.code + "/" + err.message);
+        // navigate("/error" + "/" + err.code + "/" + err.message);
       });
   };
   const validationSchema = Yup.object({
     clnt_name: Yup.string().required("Client's name is required"),
-    clnt_email: Yup.string().required("Client's email is required"),
-    clnt_phn: Yup.string().required("Client's phone no. is required"),
-    // poc_location: Yup.string().required("Client location is required"),
-    // poc_address: Yup.string().required("Delivery address is required"),
-    gst: Yup.string().required("GST is required"),
-    pan: Yup.string().required("PAN is required"),
-    c_location: Yup.string().required("Client location is required"),
+    locationFields: Yup.array().of(
+      Yup.object().shape({
+        c_location: Yup.string().required("Client location is required"),
+        c_gst: Yup.string().required("GST is required"),
+        c_pan: Yup.string().required("PAN is required"),
+    })),   
     c_vendor_code: Yup.string().required("Vendor code is required"),
-
-    // reg_no: Yup.string().required("Registration no. is required"),
     dynamicFields: Yup.array().of(
       Yup.object().shape({
         poc_name: Yup.string().optional(),
@@ -130,7 +121,6 @@ function ClientForm() {
         poc_ext_no: Yup.string().optional(),
         poc_ph_1: Yup.string().optional(),
         poc_ph_2: Yup.string().optional(),
-        // poc_address: Yup.string().optional(),
         poc_location: Yup.string().optional(),
       })
     ),
@@ -144,19 +134,6 @@ function ClientForm() {
   //     enableReinitialize: true
   // });
   useEffect(() => {
-    axios.post(url + "/api/getvendor", { id: 0 }).then((res) => {
-      console.log(res, 'getvendor');
-      for (let i = 0; i < res?.data?.msg?.length; i++) {
-        vendorList.push(
-          {
-            name: res?.data?.msg[i].vendor_name,
-            code: res?.data?.msg[i].sl_no
-          }
-        );
-      }
-      console.log(vendorList, 'vendorList')
-      setVendor(vendorList);
-    });
     if (+params.id > 0) {
       setLoading(true);
       axios
@@ -168,17 +145,10 @@ function ClientForm() {
           setValues({
             ...initialValues,
             clnt_name: res.data.msg.client_name,
-            clnt_email: res.data.msg.client_email,
-            clnt_phn: res.data.msg.client_phone,
             c_vendor_code:res.data.msg.vendor_code,
-            // poc_location: res?.data?.msg.client_location,
-            // poc_address: res?.data?.msg.client_address,
-            gst: res?.data?.msg.client_gst,
-            pan: res?.data?.msg.client_pan,
+            c_gst: res?.data?.msg.client_gst,
+            c_pan: res?.data?.msg.client_pan,
             c_location:res?.data?.msg.client_location,
-            c_vendor_code:res?.data?.msg.vendor_code,
-
-            // reg_no: res?.data?.msg.client_reg,
           });
         })
         .catch((err) => {
@@ -205,7 +175,27 @@ function ClientForm() {
               poc_ph_1: item.poc_ph_1,
               poc_ph_2: item.poc_ph_2,
               poc_location: item.poc_location,
-              // poc_address: item.poc_address,
+            })),
+          }));
+        })
+        .catch((err) => {
+          console.log(err);
+          navigate("/error" + "/" + err.code + "/" + err.message);
+        });
+        axios
+        .post(url + "/api/getclientloc", {
+          id: params.id,
+        })
+        .then((res) => {
+          setLoading(false);
+          console.log(res.data.msg[0], "res");
+          setValues((prevValues) => ({
+            ...prevValues,
+            locationFields: res.data.msg.map((item, index) => ({
+              sl_no: item.sl_no,
+              c_location:item.c_loc,
+              c_gst:item.c_gst,
+              c_pan:item.c_pan
             })),
           }));
         })
@@ -219,7 +209,6 @@ function ClientForm() {
   }, [params.id]);
   return (
     <section className="bg-transparent dark:bg-[#001529]">
-      {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
       <HeadingTemplate
         text={params.id > 0 ? "Update client" : "Add client"}
         mode={params.id > 0 ? 1 : 0}
@@ -265,49 +254,36 @@ function ClientForm() {
                       <VError title={errors.clnt_name} />
                     )}
                   </div>
-                  <div className="sm:col-span-2">
-                              <TDInputTemplate
-                                placeholder="Type Client Location..."
-                                type="text"
-                                label="Client Location"
-                                name={`c_location`}
-                                formControlName={values.c_location}
-                                handleChange={handleChange}
-                                handleBlur={handleBlur}
-                                mode={3}
-                              />
-                             {errors.c_location && touched.c_location && (
-                      <VError title={errors.c_location} />
-                    )}
-                            </div>
-                  <div className="w-full">
-                    <TDInputTemplate
-                      placeholder="Type client's email..."
-                      type="text"
-                      label="Email"
-                      name="clnt_email"
-                      formControlName={values.clnt_email}
-                      handleChange={handleChange}
-                      handleBlur={handleBlur}
-                      mode={1}
-                    />
-                    {errors.clnt_email && touched.clnt_email && (
-                      <VError title={errors.clnt_email} />
-                    )}
+                  <FieldArray name="locationFields">
+          {({ push, remove }) => (
+            <>
+              {values.locationFields.map((field, index) => (
+                <React.Fragment key={index}>
+                  <div className="sm:col-span-2 flex gap-2 justify-end">
+                    <Button
+                      className="rounded-full text-white bg-red-800 border-red-800"
+                      onClick={() => remove(index)}
+                      icon={<MinusOutlined />}
+                    ></Button>
+                    <Button
+                      className="rounded-full bg-green-900 text-white"
+                      onClick={() => push({ sl_no:0, c_location: "", c_gst: "", pan: "" })}
+                      icon={<PlusOutlined />}
+                    ></Button>
                   </div>
-                  <div>
+                  <div className="sm:col-span-2">
                     <TDInputTemplate
-                      placeholder="+91 123-456-7890"
-                      type="number"
-                      label="Phone No."
-                      name="clnt_phn"
-                      formControlName={values.clnt_phn}
+                      placeholder="Type Client Location..."
+                      type="text"
+                      label="Client Location"
+                      name={`locationFields[${index}].c_location`}
+                      formControlName={values.locationFields[index]?.c_location}
                       handleChange={handleChange}
                       handleBlur={handleBlur}
                       mode={1}
                     />
-                    {errors.clnt_phn && touched.clnt_phn && (
-                      <VError title={errors.clnt_phn} />
+                    {errors.locationFields?.[index]?.c_location && touched.locationFields?.[index]?.c_location && (
+                      <VError title={errors.locationFields[index].c_location} />
                     )}
                   </div>
                   <div>
@@ -315,27 +291,36 @@ function ClientForm() {
                       placeholder="Type GST"
                       type="text"
                       label="GST"
-                      name="gst"
-                      formControlName={values.gst}
+                      name={`locationFields[${index}].c_gst`}
+                      formControlName={values.locationFields[index]?.c_gst}
                       handleChange={handleChange}
                       handleBlur={handleBlur}
                       mode={1}
                     />
-                    {errors.gst && touched.gst && <VError title={errors.gst} />}
+                    {errors.locationFields?.[index]?.c_gst && touched.locationFields?.[index]?.c_gst && (
+                      <VError title={errors.locationFields[index].c_gst} />
+                    )}
                   </div>
                   <div>
                     <TDInputTemplate
                       placeholder="Type PAN"
                       type="text"
                       label="PAN"
-                      name="pan"
-                      formControlName={values.pan}
+                      name={`locationFields[${index}].c_pan`}
+                      formControlName={values.locationFields[index]?.c_pan}
                       handleChange={handleChange}
                       handleBlur={handleBlur}
                       mode={1}
                     />
-                    {errors.pan && touched.pan && <VError title={errors.pan} />}
+                    {errors.locationFields?.[index]?.c_pan && touched.locationFields?.[index]?.c_pan && (
+                      <VError title={errors.locationFields[index].c_pan} />
+                    )}
                   </div>
+                </React.Fragment>
+              ))}
+            </>
+          )}
+        </FieldArray>
                   <div className="sm:col-span-2">
                     <TDInputTemplate
                       placeholder="Select Vendor..."
@@ -345,27 +330,12 @@ function ClientForm() {
                       formControlName={values.c_vendor_code}
                       handleChange={handleChange}
                       handleBlur={handleBlur}
-                      data={vendor}
-                      mode={2}
+                      // data={vendor}
+                      mode={1}
                       // disabled={params.id > 0}
                     />
                     {errors.c_vendor_code && touched.c_vendor_code && <VError title={errors.c_vendor_code} />}
                   </div> 
-                  {/* <div className="w-full sm:col-span-2">
-                    <TDInputTemplate
-                      placeholder="Type Reg No."
-                      type="text"
-                      label="Reg No."
-                      name="reg_no"
-                      formControlName={values.reg_no}
-                      handleChange={handleChange}
-                      handleBlur={handleBlur}
-                      mode={1}
-                    />
-                    {errors.reg_no && touched.reg_no && (
-                      <VError title={errors.reg_no} />
-                    )}
-                  </div> */}
                   <FieldArray name="dynamicFields">
                     
                     {({ push, remove, insert }) => (
@@ -394,7 +364,6 @@ function ClientForm() {
                                   poc_ph_1: "",
                                   poc_ph_2: "",
                                   poc_location: "",
-                                  // poc_address: "",
                                 })
                               }
                               icon={<PlusOutlined />}
@@ -447,9 +416,6 @@ function ClientForm() {
                                 handleBlur={handleBlur}
                                 mode={1}
                               />
-                              {/* {formik.errors.dynamicFields && formik.errors.dynamicFields[index] && formik.errors.dynamicFields[index].designation && formik.touched.dynamicFields && formik.touched.dynamicFields[index] && formik.touched.dynamicFields[index].designation ? (
-                                                        <VError title={formik.errors.dynamicFields[index].designation} />
-                                                    ) : null} */}
                             </div>
                             <div>
                               <TDInputTemplate
@@ -534,7 +500,7 @@ function ClientForm() {
                                 }
                                 handleChange={handleChange}
                                 handleBlur={handleBlur}
-                                mode={3}
+                                mode={1}
                               />
                               {/* {formik.errors.clnt_loc && formik.touched.clnt_loc ? (
                                             <VError title={formik.errors.clnt_loc} />

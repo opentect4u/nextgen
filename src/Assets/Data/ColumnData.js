@@ -76,8 +76,7 @@ export const masterheaders={
     headers: [
       { name: "serial_number", value: "#" },
       { name: "client_name", value: "Name" },
-      { name: "client_email", value: "Email" },
-      { name: "client_phone", value: "Phone" },
+      { name: "vendor_code", value: "Vendor Code" },
       { name: "created_by", value: "Created by" },
     ],
   },

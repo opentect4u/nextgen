@@ -47,6 +47,7 @@ function VendorForm() {
     { code: 'Y', name: 'Yes' },
     { code: 'N', name: 'No' }
   ];
+ 
   const handleChangeMsme = (event, handleChange) => {
     // console.log("Custom handleChange logic for", event.target.name, event.target.value);
     handleChange(event);
@@ -108,27 +109,27 @@ function VendorForm() {
   // };
 
   const [formValues, setValues] = useState({
-    v_name: "",
-    v_email: "",
-    v_phone:"",
-    v_gst: "",
-    v_pan: "",
-    v_msme: "",
-    v_msmeno: "",
-    v_bankdtls: "",
-    v_remarks: "",
-    v_address: "",
-    v_tan:"",
-    dynamicFields_category: [
-      {
-        sl_no:  0 ,
-        category_id:""
-      },
-    ],
-    dynamicFields: [{
-      sl_no: 0,
-      poc_name: "", poc_ph_1: "", poc_ph_2: "",poc_email:""
-    }]
+    // v_name: "",
+    // v_email: "",
+    // v_phone:"",
+    // v_gst: "",
+    // v_pan: "",
+    // v_msme: "",
+    // v_msmeno: "",
+    // v_bankdtls: "",
+    // v_remarks: "",
+    // v_address: "",
+    // v_tan:"",
+    // dynamicFields_category: [
+    //   {
+    //     sl_no:  0 ,
+    //     category_id:""
+    //   },
+    // ],
+    // dynamicFields: [{
+    //   sl_no: 0,
+    //   poc_name: "", poc_ph_1: "", poc_ph_2: "",poc_email:""
+    // }]
   });
 
   const initialValues = {
@@ -157,12 +158,13 @@ function VendorForm() {
     v_state: "",
     v_address: "",
     dynamicFields: [{
-      sl_no: params.id > 0 ? 0 : formValues?.dynamicFields[0]?.sl_no,
+      sl_no:0,
+      // sl_no: 0,
       poc_name: "", poc_ph_1: "", poc_ph_2: "",poc_email:""
     }],
     dynamicFields_category: [
       {
-        sl_no: params.id > 0 ? 0 : formValues.dynamicFields[0].sl_no,
+        sl_no:0,
         category_id:""
         // poc_address: "",
       },
@@ -170,68 +172,54 @@ function VendorForm() {
   };
 
   const validationSchema = Yup.object({
-    v_name: Yup.string().required("Name is required"),
-    v_phone: Yup.string().required("Phone is required").length(10),
-    v_email: Yup.string()
-      .required("Email is required")
-      .email("Incorrect email format"),
-    v_gst: Yup.string(),
-    v_pan: Yup.string(),
-    v_msme: Yup.string().required("MSME is required"),
-    v_msmeno: Yup.string().when('v_msme', {
-      is: 'Y',
-      then: () => Yup.string().required('MSME No. is required'),
-      otherwise: () => Yup.string()
-    }),
-    v_brnnm: Yup.string().required("Branch name required"),
-    v_banknm: Yup.string().required("Bank name required"),
-    v_ac: Yup.string().required("Account no. required"),
-    v_micr: Yup.string().required("MICR code required"),
-    v_ifsc: Yup.string().required("IFSC required"),
-    v_tan: Yup.string().required("TAN is required"),
-    v_tds: Yup.string().required("TDS is required"),
-    tds_perc: Yup.string().when('v_tds', {
-      is: 'Y',
-      then: () => Yup.string().required('TDS percentage is required'),
-      otherwise: () => Yup.string()
-    }),
-    v_tcs: Yup.string().required("TCS is required"),
-    tcs_perc: Yup.string().when('v_tcs', {
-      is: 'Y',
-      then: () => Yup.string().required('TCS percentage is required'),
-      otherwise: () => Yup.string()
-    }),
-    // supply_flag: Yup.string().required("Required"),
-    // v_gst_no: Yup.string().when('supply_flag', {
-    //   is: 'R',
-    //   then: () => Yup.string().required('GST No. is required'),
+    // v_name: Yup.string().required("Name is required"),
+    // v_phone: Yup.string().required("Phone is required").length(10),
+    // v_email: Yup.string()
+    //   .required("Email is required")
+    //   .email("Incorrect email format"),
+    // v_gst: Yup.string(),
+    // v_pan: Yup.string(),
+    // v_msme: Yup.string().required("MSME is required"),
+    // v_msmeno: Yup.string().when('v_msme', {
+    //   is: 'Y',
+    //   then: () => Yup.string().required('MSME No. is required'),
     //   otherwise: () => Yup.string()
     // }),
-    // v_composite: Yup.string().when('supply_flag', {
-    //   is: 'R',
-    //   then: () => Yup.string().required('Composite is required'),
+    // v_brnnm: Yup.string().required("Branch name required"),
+    // v_banknm: Yup.string().required("Bank name required"),
+    // v_ac: Yup.string().required("Account no. required"),
+    // v_micr: Yup.string().required("MICR code required"),
+    // v_ifsc: Yup.string().required("IFSC required"),
+    // v_tan: Yup.string().required("TAN is required"),
+    // v_tds: Yup.string().required("TDS is required"),
+    // tds_perc: Yup.string().when('v_tds', {
+    //   is: 'Y',
+    //   then: () => Yup.string().required('TDS percentage is required'),
     //   otherwise: () => Yup.string()
     // }),
-    // v_e_r_supply: Yup.string().required("Exempted rated supply required"),
-    // v_state: Yup.string().when('supply_flag', {
-    //   is: 'R' || 'U',
-    //   then: () => Yup.string().required('State is required'),
+    // v_tcs: Yup.string().required("TCS is required"),
+    // tcs_perc: Yup.string().when('v_tcs', {
+    //   is: 'Y',
+    //   then: () => Yup.string().required('TCS percentage is required'),
     //   otherwise: () => Yup.string()
     // }),
-    v_address: Yup.string().required("Address is required"),
-    dynamicFields: Yup.array().of(
-      Yup.object().shape({
-        poc_name: Yup.string().required("Contact person is required"),
-        poc_ph_1: Yup.string().required("Phone is required").length(10),
-        poc_ph_2: Yup.string().required("Phone is required").length(10),
-        poc_email: Yup.string().required("Email is required").email(),
-      })
-    ),
-    dynamicFields_category: Yup.array().of(
-      Yup.object().shape({
-        category_id: Yup.string().required("Deals in required"),
-      })
-    )
+
+
+
+    // v_address: Yup.string().required("Address is required"),
+    // dynamicFields: Yup.array().of(
+    //   Yup.object().shape({
+    //     poc_name: Yup.string().required("Contact person is required"),
+    //     poc_ph_1: Yup.string().required("Phone is required").length(10),
+    //     poc_ph_2: Yup.string().required("Phone is required").length(10),
+    //     poc_email: Yup.string().required("Email is required").email(),
+    //   })
+    // ),
+    // dynamicFields_category: Yup.array().of(
+    //   Yup.object().shape({
+    //     category_id: Yup.string().required("Deals in required"),
+    //   })
+    // )
   });
 
   useEffect(() => {
@@ -275,7 +263,7 @@ function VendorForm() {
       axios.post(url + "/api/getvendor", { id: params.id }).then((res) => {
         console.log(res,'getvendor');
         setValues({
-          // ...initialValues,
+          // ...formValues,
           v_name: res.data.msg.vendor_name,
           v_email: res.data.msg.vendor_email,
           v_phone: res.data.msg.vendor_phone,
@@ -301,14 +289,13 @@ function VendorForm() {
         });
       });
       axios.post(url + "/api/getvendorbank", { id: params.id }).then((res) => {
-        console.log(res,'getvendor');
+        console.log(res.data.msg[0].micr_code,'getvendorbank');
         setValues({
-          // ...initialValues,
-          v_micr:res.data.msg.micr_code,
-          v_ifsc:res.data.msg.ifsc,
-          v_ac:res.data.msg.ac_no,
-          v_banknm:res.data.msg.bank_name,
-          v_brnnm:res.data.msg.branch_name,
+          v_micr:res.data.msg[0].micr_code,
+          v_ifsc:res.data.msg[0].ifsc,
+          v_ac:res.data.msg[0].ac_no,
+          v_banknm:res.data.msg[0].bank_name,
+          v_brnnm:res.data.msg[0].branch_name,
         })})
       axios
       .post(url + "/api/getvendordeals", {
@@ -316,7 +303,9 @@ function VendorForm() {
       })
       .then((res) => {
         console.log(res.data.msg[0], "res");
-        setValues(({
+        // res.data.msg.map((item, index) =>({console.log(item)}))
+        setValues(prev => ({
+          ...prev,
           dynamicFields_category: res.data.msg.map((item, index) => ({
             sl_no: item.sl_no,
             category_id: item.category_id,
@@ -329,8 +318,8 @@ function VendorForm() {
       });
       axios.post(url + "/api/getvendorpoc", { id: params.id }).then((res) => {
         console.log(res.data.msg[0], 'res getvendorpoc');
-        setValues({
-          // ...prevValues,
+        setValues(prevValues => ({
+          ...prevValues,
           dynamicFields: res.data.msg.map((item) => ({
             sl_no: item.sl_no,
             poc_name: item.poc_name,
@@ -338,7 +327,7 @@ function VendorForm() {
             poc_ph_2: item.poc_ph_2,
             poc_email:item.poc_email
           }))
-        });
+        }));
         setLoading(false);
       });
     }
@@ -762,9 +751,9 @@ function VendorForm() {
           <Formik initialValues={+params.id > 0 ? formValues : initialValues} validationSchema={validationSchema} onSubmit={onSubmit} validateOnMount={true} enableReinitialize={true}>
             {({ values, handleChange, handleBlur, handleSubmit, errors, touched }) => (
               <form onSubmit={handleSubmit}>
-                <div className="card flex justify-content-center">
-                  <Stepper ref={stepperRef} style={{ flexBasis: '80rem' }}>
-                    <StepperPanel header="Header I">
+                <div className="card flex flex-col justify-center">
+                {/*  <Stepper ref={stepperRef} style={{ flexBasis: '80rem' }}>
+                    <StepperPanel header="Header I">*/}
                       <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                         <div className="sm:col-span-2">
                           <TDInputTemplate
@@ -864,13 +853,13 @@ function VendorForm() {
                         </FieldArray>
                         </div>
                       </div>
-                      <div className="flex pt-4 justify-content-end">
+                      {/* <div className="flex pt-4 justify-content-end">
                         <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() =>{ stepperRef.current.nextCallback();}}> Next
                           <ArrowRightOutlined className='ml-2' />
                         </Button>
-                      </div>
-                    </StepperPanel>
-                    <StepperPanel header="Header II">
+                      </div> */}
+                    {/* </StepperPanel> */}
+                    {/* <StepperPanel header="Header II"> */}
                       <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                         <div>
                           <TDInputTemplate
@@ -1098,16 +1087,16 @@ function VendorForm() {
                             {errors.v_state && touched.v_state ? <VError title={errors.v_state} /> : null}
                           </div>}
                       </div>
-                      <div className="flex pt-4 justify-content-between">
+                      {/* <div className="flex pt-4 justify-content-between">
                         <Button className="inline-flex items-center px-5 py-5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900" onClick={() => stepperRef.current.prevCallback()} ><ArrowLeftOutlined className='mr-2' />
                           Back
                         </Button>
                         <Button className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" iconPos="right" onClick={() => {stepperRef.current.nextCallback();}} > Next
                           <ArrowRightOutlined className='ml-2' />
                         </Button>
-                      </div>
-                    </StepperPanel>
-                    <StepperPanel header="Header III">
+                      </div> */}
+                    {/* </StepperPanel> */}
+                    {/* <StepperPanel header="Header III"> */}
                       <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                         <div>
                           <TDInputTemplate
@@ -1162,7 +1151,7 @@ function VendorForm() {
 
                                     <Button
                                       className="rounded-full bg-green-900 text-white"
-                                      onClick={() => unshift({ sl_no: 0, poc_name: "", poc_ph_1: "" })} icon={<PlusOutlined />}
+                                      onClick={() => unshift({ sl_no: 0, poc_name: "", poc_ph_1: "",poc_ph_2:"",poc_email:" " })} icon={<PlusOutlined />}
                                     ></Button>
 
                                   </div>
@@ -1238,18 +1227,18 @@ function VendorForm() {
                         </FieldArray>
 
                       </div>
-                      <div className="flex pt-4 justify-content-start">
-                                        <Button className="inline-flex items-center px-5 py-5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900" onClick={() => stepperRef.current.prevCallback()}>
+                      <div className="flex pt-4 justify-start">
+                                        {/* <Button className="inline-flex items-center px-5 py-5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900" onClick={() => stepperRef.current.prevCallback()}>
                                             <ArrowLeftOutlined className='mr-2' />
                                             Back
-                                        </Button>
+                                        </Button> */}
                                         <BtnComp
                                             mode={params.id > 0 ? "E" : "A"}
                                         //   onReset={formik.handleReset}
                                         />
                                     </div>
-                    </StepperPanel>
-                  </Stepper>
+                    {/* </StepperPanel> */}
+                  {/* </Stepper> */}
                 </div>
               </form>
             )}
