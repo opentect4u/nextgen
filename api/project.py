@@ -189,7 +189,7 @@ async def getprojectpoc(id:GetPoc):
     schema = "td_project_poc"
     where = f"proj_id='{id.id}'"
     order = ""
-    flag = 1 if id.id>0 else 0
+    flag = 1 if id.id else 0
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
