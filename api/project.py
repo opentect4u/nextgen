@@ -178,7 +178,7 @@ async def getproject(id:GetProject):
     return result
 
 
-@projectRouter.post('/getvendorpoc')
+@projectRouter.post('/getprojectpoc')
 async def getprojectpoc(id:GetProject):
     print(id.id)
     res_dt = {}
