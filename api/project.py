@@ -166,10 +166,10 @@ async def getproject(id:GetProject):
     print(id.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number, p.proj_id,p.proj_name,p.client_id,p.order_id,p.order_date,p.proj_location,p.proj_addr,p.proj_desc,p.proj_order_val,p.proj_end_user,p.proj_consultant,p.epc_contractor,p.proj_manufacturer,p.price_basis,p.extra,p.ld_clause,p.erection_responsibility,p.warranty,p.project_status,pa.proj_manager,u.user_name as proj_manager_name,r.proj_remarks,p.created_by,p.created_at, p.modified_by,p.modified_at,p.sl_no"
+    select = "@a:=@a+1 serial_number, p.proj_id,p.proj_name,p.client_id,p.order_id,p.order_date,p.proj_addr,p.proj_desc,p.proj_order_val,p.proj_end_user,p.proj_consultant,p.epc_contractor,p.price_basis,p.ld_clause,p.erection_responsibility,p.warranty,p.project_status,pa.proj_manager,u.user_name as proj_manager_name,p.created_by,p.created_at, p.modified_by,p.modified_at,p.sl_no"
     # select = "@a:=@a+1 serial_number, *"
-    schema = "td_project p,td_project_assign pa,td_project_remarks r,md_user u,(SELECT @a:= 0) AS a"
-    where = f"pa.proj_id=p.proj_id and r.proj_id = p.proj_id and pa.proj_manager=u.sl_no and p.sl_no='{id.id}'" if id.id>0 else f"pa.proj_id=p.proj_id and r.proj_id = p.proj_id and pa.proj_manager=u.sl_no"
+    schema = "td_project p,td_project_assign pa,md_user u,(SELECT @a:= 0) AS a"
+    where = f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no and p.sl_no='{id.id}'" if id.id>0 else f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
