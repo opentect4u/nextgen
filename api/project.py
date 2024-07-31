@@ -140,7 +140,7 @@ async def addproject(dt:Project):
             # result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
 
             for v in dt.proj_poc:
-                fields= f'poc_name="{v.poc_name}", poc_email="{v.poc_email}",poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",poc_email="{v.poc_email}",modified_by="{dt.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_email, poc_ph_1,poc_ph_2,created_by,created_at'
+                fields= f'poc_name="{v.poc_name}", poc_email="{v.poc_email}",poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",poc_email="{v.poc_email}",modified_by="{dt.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'proj_id,poc_name,poc_email, poc_ph_1,poc_ph_2,created_by,created_at'
                 values = f'"{lastID}","{v.poc_name}","{v.poc_email}","{v.poc_ph_1}","{v.poc_ph_2}","{dt.user}","{formatted_dt}"'
                 table_name = "td_project_poc"
                 whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
