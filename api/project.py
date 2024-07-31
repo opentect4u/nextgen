@@ -141,7 +141,7 @@ async def addproject(dt:Project):
 
             for v in dt.proj_poc:
                 fields= f'poc_name="{v.poc_name}", poc_email="{v.poc_email}",poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",poc_email="{v.poc_email}",modified_by="{dt.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'proj_id,poc_name,poc_email,poc_phone_1,poc_phone_2,created_by,created_at'
-                values = f'"{lastID}","{v.poc_name}","{v.poc_email}","{v.poc_ph_1}","{v.poc_ph_2}","{dt.user}","{formatted_dt}"'
+                values = f'"{dt.proj_id}","{v.poc_name}","{v.poc_email}","{v.poc_ph_1}","{v.poc_ph_2}","{dt.user}","{formatted_dt}"'
                 table_name = "td_project_poc"
                 whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
                 flag2 = 1 if v.sl_no>0 else 0
@@ -166,11 +166,11 @@ async def getproject(id:GetProject):
     print(id.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number, p.proj_id,p.proj_name,p.client_id,p.order_id,p.order_date,p.proj_desc,p.proj_order_val,p.proj_end_user,p.proj_consultant,p.epc_contractor,p.price_basis,p.ld_clause,p.erection_responsibility,p.warranty,pa.proj_manager,u.user_name as proj_manager_name,p.created_by,p.created_at,p.modified_by,p.modified_at,p.sl_no"
+    select = "@a:=@a+1 serial_number,p.proj_id,p.proj_name,p.client_id,p.order_id,p.order_date,p.proj_desc,p.proj_order_val,p.proj_end_user,p.proj_consultant,p.epc_contractor,p.price_basis,p.ld_clause,p.erection_responsibility,p.warranty,pa.proj_manager,u.user_name as proj_manager_name,p.created_by,p.created_at,p.modified_by,p.modified_at,p.sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_project p,td_project_assign pa,md_user u,(SELECT @a:= 0) AS a"
-    # where = f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no and p.sl_no='{id.id}'" if id.id>0 else f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no"
-    where = f"p.sl_no='{id.id}'" if id.id>0 else f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no"
+    where = f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no and p.sl_no='{id.id}'" if id.id>0 else f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no"
+    # where = f"p.sl_no='{id.id}'" if id.id>0 else f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no"
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
