@@ -48,6 +48,8 @@ class Project(BaseModel):
 class GetProject(BaseModel):
      id:int
 
+class GetPoc(BaseModel):
+     id:str
 
 # @projectRouter.post('/addproject')
 # async def addproject(dt:Project):
@@ -179,7 +181,7 @@ async def getproject(id:GetProject):
 
 
 @projectRouter.post('/getprojectpoc')
-async def getprojectpoc(id:GetProject):
+async def getprojectpoc(id:GetPoc):
     print(id.id)
     res_dt = {}
 
