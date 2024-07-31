@@ -12,35 +12,102 @@ import datetime as dt
 import random
 
 projectRouter = APIRouter()
-
+class ProjectPoc(BaseModel):
+    sl_no:int
+    poc_name:str
+    poc_ph_1:str
+    poc_ph_2:str
+    poc_email:str
 class Project(BaseModel):
      id:int
      proj_id:str
      proj_name:str
      client_id:int
+     client_location:str
+     client_gst:str
+     client_pan:str
      order_id:str
      order_date:str
-     proj_location:str
-     proj_addr:str
+     proj_delivery_date:str
      proj_desc:str
      proj_order_val:str
      proj_end_user:str
      proj_consultant:str
      epc_contractor:str
-     proj_manufacturer:str
      price_basis:str
-     extra:str
+     ld_clause_flag:str
      ld_clause:str
      erection_responsibility:str
      warranty:str
-     project_status:str
      proj_manager:int
-     proj_remarks:str
+     proj_poc:list[ProjectPoc]
+    #  proj_remarks:str
      user:str
      
+
 class GetProject(BaseModel):
      id:int
 
+
+# @projectRouter.post('/addproject')
+# async def addproject(dt:Project):
+#     print(dt)
+#     res_dt={}
+#     current_datetime = datetime.now()
+#     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+#     fields= f'proj_id,proj_name,client_id,client_location,client_gst,client_pan,order_id,order_date,proj_delivery_date,proj_desc,proj_order_val,proj_end_user,proj_consultant,epc_contractor,price_basis,ld_clause,ld_clause_flag,erection_responsibility,warranty,created_by,created_at'
+#     values = f'"{dt.proj_id}","{dt.proj_name}","{dt.client_id}","{dt.client_location}","{dt.client_gst}","{dt.client_pan}","{dt.order_id}","{dt.order_date}","{dt.proj_delivery_date}","{dt.proj_desc}","{dt.proj_order_val}","{dt.proj_end_user}","{dt.proj_consultant}","{dt.epc_contractor}","{dt.price_basis}","{dt.ld_clause}","{dt.ld_clause_flag}","{dt.erection_responsibility}","{dt.warranty}","{dt.user}","{formatted_dt}"' 
+#     table_name = "td_project"
+#     whr =  None
+#     flag = 1 if dt.id>0 else 0
+#     if(dt.id==0):
+#         result = await db_Insert(table_name, fields, values, whr, flag)
+#         if(result['suc']>0):
+#             fields1= f'proj_id,proj_manager,created_by,created_at'
+#             values1 = f'"{dt.proj_id}","{dt.proj_manager}","{dt.user}","{formatted_dt}"'
+#             table_name1 = "td_project_assign"
+#             whr1 =  None
+#             flag1 = 1 if dt.id>0 else 0
+#             result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+
+#             # fields2= f'proj_id,proj_remarks,created_by,created_at'
+#             # values2 = f'"{dt.proj_id}","{dt.proj_remarks}","{dt.user}","{formatted_dt}"'
+#             # table_name2 = "td_project_remarks"
+#             # whr2 =  None
+#             # flag2 = 1 if dt.id>0 else 0
+#             # result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
+
+#             if result1['suc']>0 :
+#                 res_dt = {"suc": 1, "msg": "Project inserted successfully!"}
+#             else:
+#                 res_dt = {"suc": 0, "msg": "Error while inserting!"}
+#         else:
+#             res_dt = {"suc": 0, "msg": "Error while inserting!"}
+    
+#     else:
+#         print(flag)
+#         fields=f'proj_name="{dt.proj_name}",client_id="{dt.client_id}",client_location="{dt.client_location}",client_gst="{dt.client_gst}",client_pan="{dt.client_pan}",order_id="{dt.order_id}" order_date="{dt.order_date}",proj_delivery_date="{dt.proj_delivery_date}",proj_desc="{dt.proj_desc}",proj_order_val="{dt.proj_order_val}",proj_end_user="{dt.proj_end_user}",proj_consultant="{dt.proj_consultant}",epc_contractor="{dt.epc_contractor}",,price_basis="{dt.price_basis}",ld_clause="{dt.ld_clause}",ld_clause_flag="{dt.ld_clause_flag}",erection_responsibility="{dt.erection_responsibility}",warranty="{dt.warranty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+#         whr=f'sl_no="{dt.id}"'
+#         result = await db_Insert(table_name, fields, values, whr, flag)
+#         if(result['suc']>0):
+#             fields1= f'proj_manager="{dt.proj_manager}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+#             values1=''
+#             table_name1 = "td_project_assign"
+#             whr1=f'proj_id="{dt.proj_id}"'
+#             flag1 = 1 if dt.id>0 else 0
+#             result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+
+            
+
+#             if result1['suc']>0 :
+#                 res_dt = {"suc": 1, "msg": "Project updated successfully!"}
+#             else:
+#                 res_dt = {"suc": 0, "msg": "Error while updating!"}
+#         else:
+#             res_dt = {"suc": 0, "msg": "Error while updating!"}
+
+
+#     return res_dt
 
 @projectRouter.post('/addproject')
 async def addproject(dt:Project):
@@ -48,64 +115,49 @@ async def addproject(dt:Project):
     res_dt={}
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'proj_id,proj_name,client_id,order_id,order_date,proj_location,proj_addr,proj_desc,proj_order_val,proj_end_user,proj_consultant,epc_contractor,proj_manufacturer,price_basis,extra,ld_clause,erection_responsibility,warranty,project_status,created_by,created_at'
-    values = f'"{dt.proj_id}","{dt.proj_name}","{dt.client_id}","{dt.order_id}","{dt.order_date}","{dt.proj_location}","{dt.proj_addr}","{dt.proj_desc}","{dt.proj_order_val}","{dt.proj_end_user}","{dt.proj_consultant}","{dt.epc_contractor}","{dt.proj_manufacturer}","{dt.price_basis}","{dt.extra}","{dt.ld_clause}","{dt.erection_responsibility}","{dt.warranty}","{dt.project_status}","{dt.user}","{formatted_dt}"'
+    fields= f'proj_id,proj_name,client_id,client_location,client_gst,client_pan,order_id,order_date,proj_delivery_date,proj_desc,proj_order_val,proj_end_user,proj_consultant,epc_contractor,price_basis,ld_clause,ld_clause_flag,erection_responsibility,warranty,created_by,created_at'
+    values = f'"{dt.proj_id}","{dt.proj_name}","{dt.client_id}","{dt.client_location}","{dt.client_gst}","{dt.client_pan}","{dt.order_id}","{dt.order_date}","{dt.proj_delivery_date}","{dt.proj_desc}","{dt.proj_order_val}","{dt.proj_end_user}","{dt.proj_consultant}","{dt.epc_contractor}","{dt.price_basis}","{dt.ld_clause}","{dt.ld_clause_flag}","{dt.erection_responsibility}","{dt.warranty}","{dt.user}","{formatted_dt}"' if dt.id==0 else f'proj_name="{dt.proj_name}",client_id="{dt.client_id}",client_location="{dt.client_location}",client_gst="{dt.client_gst}",client_pan="{dt.client_pan}",order_id="{dt.order_id}" order_date="{dt.order_date}",proj_delivery_date="{dt.proj_delivery_date}",proj_desc="{dt.proj_desc}",proj_order_val="{dt.proj_order_val}",proj_end_user="{dt.proj_end_user}",proj_consultant="{dt.proj_consultant}",epc_contractor="{dt.epc_contractor}",,price_basis="{dt.price_basis}",ld_clause="{dt.ld_clause}",ld_clause_flag="{dt.ld_clause_flag}",erection_responsibility="{dt.erection_responsibility}",warranty="{dt.warranty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
     table_name = "td_project"
-    whr =  None
+    whr =  f'sl_no="{dt.id}"' if dt.id>0 else ""
     flag = 1 if dt.id>0 else 0
-    if(dt.id==0):
-        result = await db_Insert(table_name, fields, values, whr, flag)
-        if(result['suc']>0):
-            fields1= f'proj_id,proj_manager,created_by,created_at'
+    # if(dt.id==0):
+    result = await db_Insert(table_name, fields, values, whr, flag)
+    lastID=dt.id if dt.id>0 else result["lastId"]
+
+    if(result['suc']>0):
+            fields1= f'proj_id,proj_manager,created_by,created_at' if dt.id==0 else f'proj_manager="{dt.proj_manager}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
             values1 = f'"{dt.proj_id}","{dt.proj_manager}","{dt.user}","{formatted_dt}"'
             table_name1 = "td_project_assign"
-            whr1 =  None
+            whr1 =f'proj_id="{dt.proj_id}"' if dt.id>0 else None
             flag1 = 1 if dt.id>0 else 0
             result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
 
-            fields2= f'proj_id,proj_remarks,created_by,created_at'
-            values2 = f'"{dt.proj_id}","{dt.proj_remarks}","{dt.user}","{formatted_dt}"'
-            table_name2 = "td_project_remarks"
-            whr2 =  None
-            flag2 = 1 if dt.id>0 else 0
-            result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
+            # fields2= f'proj_id,proj_remarks,created_by,created_at'
+            # values2 = f'"{dt.proj_id}","{dt.proj_remarks}","{dt.user}","{formatted_dt}"'
+            # table_name2 = "td_project_remarks"
+            # whr2 =  None
+            # flag2 = 1 if dt.id>0 else 0
+            # result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
 
-            if result1['suc']>0 and result2['suc']>0:
-                res_dt = {"suc": 1, "msg": "Project inserted successfully!"}
+            for v in dt.proj_poc:
+                fields= f'poc_name="{v.poc_name}", poc_email="{v.poc_email}",poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",poc_email="{v.poc_email}",modified_by="{dt.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_email, poc_ph_1,poc_ph_2,created_by,created_at'
+                values = f'"{lastID}","{v.poc_name}","{v.poc_email}","{v.poc_ph_1}","{v.poc_ph_2}","{dt.user}","{formatted_dt}"'
+                table_name = "td_project_poc"
+                whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
+                flag2 = 1 if v.sl_no>0 else 0
+                result2 = await db_Insert(table_name, fields, values, whr, flag2)
+
+            if result1['suc'] and result2['suc']>0 :
+                res_dt = {"suc": 1, "msg": f"Project saved successfully!" if dt.id==0 else  f"Project updated successfully!" }
             else:
-                res_dt = {"suc": 0, "msg": "Error while inserting!"}
-        else:
-            res_dt = {"suc": 0, "msg": "Error while inserting!"}
-    
+                res_dt = {"suc": 0, "msg": "Error!"}
     else:
-        print(flag)
-        fields=f'proj_id="{dt.proj_id}",proj_name="{dt.proj_name}",client_id="{dt.client_id}",order_date="{dt.order_date}",proj_location="{dt.proj_location}",proj_addr="{dt.proj_addr}",proj_desc="{dt.proj_desc}",proj_order_val="{dt.proj_order_val}",proj_end_user="{dt.proj_end_user}",proj_consultant="{dt.proj_consultant}",epc_contractor="{dt.epc_contractor}",proj_manufacturer="{dt.proj_manufacturer}",price_basis="{dt.price_basis}",extra="{dt.extra}",ld_clause="{dt.ld_clause}",erection_responsibility="{dt.erection_responsibility}",warranty="{dt.warranty}",project_status="{dt.project_status}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
-        whr=f'sl_no="{dt.id}"'
-        result = await db_Insert(table_name, fields, values, whr, flag)
-        if(result['suc']>0):
-            fields1= f'proj_manager="{dt.proj_manager}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
-            values1=''
-            table_name1 = "td_project_assign"
-            whr1=f'proj_id="{dt.proj_id}"'
-            flag1 = 1 if dt.id>0 else 0
-            result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
-
-            fields2= f'proj_remarks="{dt.proj_remarks}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
-            values2 = ""
-            table_name2 = "td_project_remarks"
-            whr2 =f'proj_id="{dt.proj_id}"'
-            flag2 = 1 if dt.id>0 else 0
-            result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
-
-            if result1['suc']>0 and result2['suc']>0:
-                res_dt = {"suc": 1, "msg": "Project updated successfully!"}
-            else:
-                res_dt = {"suc": 0, "msg": "Error while updating!"}
-        else:
-            res_dt = {"suc": 0, "msg": "Error while updating!"}
-
+            res_dt = {"suc": 0, "msg": "Error!"}
+    
 
     return res_dt
+
+
 
 
 @projectRouter.post('/getproject')
