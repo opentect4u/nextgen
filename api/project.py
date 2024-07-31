@@ -10,14 +10,15 @@ from models.masterApiModel import db_select, db_Insert
 from datetime import datetime
 import datetime as dt
 import random
+from typing import Optional
 
 projectRouter = APIRouter()
 class ProjectPoc(BaseModel):
     sl_no:int
     poc_name:str
-    poc_ph_1:str
-    poc_ph_2:str
-    poc_email:str
+    poc_ph_1:Optional[str]=None
+    poc_ph_2:Optional[str]=None
+    poc_email:Optional[str]=None
 class Project(BaseModel):
      id:int
      proj_id:str
@@ -118,7 +119,7 @@ async def addproject(dt:Project):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'proj_id,proj_name,client_id,client_location,client_gst,client_pan,order_id,order_date,proj_delivery_date,proj_desc,proj_order_val,proj_end_user,proj_consultant,epc_contractor,price_basis,ld_clause,ld_clause_flag,erection_responsibility,warranty,created_by,created_at'
-    values = f'"{dt.proj_id}","{dt.proj_name}","{dt.client_id}","{dt.client_location}","{dt.client_gst}","{dt.client_pan}","{dt.order_id}","{dt.order_date}","{dt.proj_delivery_date}","{dt.proj_desc}","{dt.proj_order_val}","{dt.proj_end_user}","{dt.proj_consultant}","{dt.epc_contractor}","{dt.price_basis}","{dt.ld_clause}","{dt.ld_clause_flag}","{dt.erection_responsibility}","{dt.warranty}","{dt.user}","{formatted_dt}"' if dt.id==0 else f'proj_name="{dt.proj_name}",client_id="{dt.client_id}",client_location="{dt.client_location}",client_gst="{dt.client_gst}",client_pan="{dt.client_pan}",order_id="{dt.order_id}" order_date="{dt.order_date}",proj_delivery_date="{dt.proj_delivery_date}",proj_desc="{dt.proj_desc}",proj_order_val="{dt.proj_order_val}",proj_end_user="{dt.proj_end_user}",proj_consultant="{dt.proj_consultant}",epc_contractor="{dt.epc_contractor}",,price_basis="{dt.price_basis}",ld_clause="{dt.ld_clause}",ld_clause_flag="{dt.ld_clause_flag}",erection_responsibility="{dt.erection_responsibility}",warranty="{dt.warranty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+    values = f'"{dt.proj_id}","{dt.proj_name}","{dt.client_id}","{dt.client_location}","{dt.client_gst}","{dt.client_pan}","{dt.order_id}","{dt.order_date}","{dt.proj_delivery_date}","{dt.proj_desc}","{dt.proj_order_val}","{dt.proj_end_user}","{dt.proj_consultant}","{dt.epc_contractor}","{dt.price_basis}","{dt.ld_clause}","{dt.ld_clause_flag}","{dt.erection_responsibility}","{dt.warranty}","{dt.user}","{formatted_dt}"' if dt.id==0 else f'proj_name="{dt.proj_name}",client_id="{dt.client_id}",client_location="{dt.client_location}",client_gst="{dt.client_gst}",client_pan="{dt.client_pan}",order_id="{dt.order_id}", order_date="{dt.order_date}",proj_delivery_date="{dt.proj_delivery_date}",proj_desc="{dt.proj_desc}",proj_order_val="{dt.proj_order_val}",proj_end_user="{dt.proj_end_user}",proj_consultant="{dt.proj_consultant}",epc_contractor="{dt.epc_contractor}",price_basis="{dt.price_basis}",ld_clause="{dt.ld_clause}",ld_clause_flag="{dt.ld_clause_flag}",erection_responsibility="{dt.erection_responsibility}",warranty="{dt.warranty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
     table_name = "td_project"
     whr =  f'sl_no="{dt.id}"' if dt.id>0 else ""
     flag = 1 if dt.id>0 else 0
