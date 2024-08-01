@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,File,UploadFile,Form
 from enum import Enum
 from pydantic import BaseModel
 from fastapi import APIRouter
@@ -14,34 +14,35 @@ from typing import Optional
 
 projectRouter = APIRouter()
 class ProjectPoc(BaseModel):
-    sl_no:int
-    poc_name:str
-    poc_ph_1:Optional[str]=None
-    poc_designation:Optional[str]=None
-    poc_email:Optional[str]=None
+    sl_no:int = Form(...)
+    poc_name:str = Form(...)
+    poc_ph_1:Optional[str]=Form(None)
+    poc_designation:Optional[str]=Form(None)
+    poc_email:Optional[str]=Form(None)
 class Project(BaseModel):
-     id:int
-     proj_id:str
-     proj_name:str
-     client_id:int
-     client_location:str
-     client_gst:str
-     client_pan:str
-     order_id:str
-     order_date:str
-     proj_delivery_date:str
-     proj_desc:str
-     proj_order_val:str
-     proj_end_user:str
-     proj_consultant:str
-     epc_contractor:str
-     price_basis:str
-     ld_clause_flag:str
-     ld_clause:str
-     erection_responsibility:str
-     warranty:str
-     proj_manager:int
+     id:int = Form(...)
+     proj_id:str = Form(...)
+     proj_name:str = Form(...)
+     client_id:int = Form(...)
+     client_location:str = Form(...)
+     client_gst:str = Form(...)
+     client_pan:str = Form(...)
+     order_id:str = Form(...)
+     order_date:str = Form(...)
+     proj_delivery_date:str = Form(...)
+     proj_desc:str = Form(...)
+     proj_order_val:str = Form(...)
+     proj_end_user:str = Form(...)
+     proj_consultant:str = Form(...)
+     epc_contractor:str = Form(...)
+     price_basis:str = Form(...)
+     ld_clause_flag:str = Form(...)
+     ld_clause:str = Form(...)
+     erection_responsibility:str = Form(...)
+     warranty:str = Form(...)
+     proj_manager:int = Form(...)
      proj_poc:list[ProjectPoc]
+     docs: Optional[UploadFile] = File(None)
     #  proj_remarks:str
      user:str
      
