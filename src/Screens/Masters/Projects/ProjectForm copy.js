@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
+import BtnComp from "../../../Components/BtnComp";
 import HeadingTemplate from "../../../Components/HeadingTemplate";
+import { Switch } from "antd";
 import { Message } from "../../../Components/Message";
 import { useNavigate } from "react-router-dom";
 import {
@@ -10,6 +12,7 @@ import {
 } from "@ant-design/icons";
 import { Spin } from "antd";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
+import { Formik, FieldArray } from "formik";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -57,27 +60,34 @@ function ProjectForm() {
   const [p_pan, setPAN] = useState("");
   const [proj_des, setDes] = useState("");
   const [clientLocList, setClientLocList] = useState([]);
+  const [poc_phone1,setPocPhone1]=useState("")
+  const [poc_phone2,setPocPhone2]=useState("")
+  const [poc_email,setPocEmail]=useState("")
+  const [drawingDate, setDrawingDate] = useState([{ id: 0, dt: "" }]);
   const [pocSet, setPocSet] = useState([
-    { sl_no: 0, poc_name: "", poc_ph_1: "", poc_designation: "", poc_email: "" },
+    { sl_no: 0, poc_name: "", poc_ph_1: "", poc_ph_2: "", poc_email: "" },
   ]);
   const handleDtChange = (index,event) => {
-    console.log(event)
     const selected = pocList.find((poc) => poc.sl_no == event.target.value);
     console.log(selected)
+    //   let data = [...drawingDate];
     let data = [...pocSet];
-    // data[index][event.target.name] = event.target.value;
     data[index][event.target.name] = event.target.value;
     data[index]['poc_email'] = selected.poc_email;
     data[index]['poc_ph_1'] = selected.poc_ph_1;
-    data[index]['poc_designation']= selected.poc_designation
+    data[index]['poc_ph_2']= selected.poc_ph_1
     setPocSet(data);
+    console.log(pocSet);
   };
   const addDt = () => {
-    setPocSet([...pocSet,{ sl_no: 0, poc_name: "", poc_ph_1: "", poc_designation: "", poc_email: "" },
-      ,
+    //   setDrawingDate([...drawingDate,{id:0,dt:""}])
+    setPocSet([...pocSet,{ sl_no: 0, poc_name: "", poc_ph_1: "", poc_ph_2: "", poc_email: "" },
     ]);
+
+    console.log(pocSet);
   };
   const removeDt = (index) => {
+    //   let data = [...drawingDate];
     let data = [...pocSet];
     data.splice(index, 1);
     setPocSet(data);
@@ -100,7 +110,15 @@ function ProjectForm() {
   var clientList = [];
   var pocNameList = [];
 
- 
+  const handleChangeLdCls = (event, handleChange) => {
+    formikProject.handleChange(event);
+    const value = event.target.value;
+    if (value === "Y") {
+      setLdClsVal(true);
+    } else {
+      setLdClsVal(false);
+    }
+  };
   const handleChangeClient = (event) => {
     console.log(client_id);
     const value = event.target.value;
@@ -114,6 +132,9 @@ function ProjectForm() {
     }
     axios.post(url + "/api/getclient", { id: value }).then((res) => {
       console.log(res.data.msg.client_gst, "getclient project");
+      // formikClient.setFieldValue('p_gst', res.data.msg.client_gst);
+      // formikClient.setFieldValue('p_pan', res.data.msg.client_pan);
+      //  formikClient.setFieldValue('proj_loc', res.data.msg.client_location)
     });
     axios.post(url + "/api/getclientpoc", { id: value }).then((res) => {
       console.log(res, "getclientpoc");
@@ -141,13 +162,80 @@ function ProjectForm() {
       }
     });
   };
- 
- 
+  const handlePocChange = (event) => {
+    const value = event.target.value;
+    if (value) {
+      setselectedPoc(true);
+    } else {
+      setselectedPoc(false);
+    }
+    console.log(value, "value");
+    if (pocList.length > 0) {
+      console.log(pocList);
+      const selected = pocList.find((poc) => poc.sl_no == value);
 
+      formikClient.setFieldValue("poc_email", selected.poc_email);
+      formikClient.setFieldValue("poc_ph_1", selected.poc_ph_1);
+      formikClient.setFieldValue("poc_ph_2", selected.poc_ph_2);
+    }
+  };
+  const initialValuesProject = {
+    proj_id: "",
+    assgn_pm: "",
+    projnm: "",
+    order_id: "",
+    order_dt: "",
+    proj_ordr_val: "",
+    prc_basis: "",
+    proj_end_delvry_dt: "",
+    ld_cls: "",
+    ld_cls_dtl: "",
+    warranty_check: "",
+    erctn_res: "",
+    docs: "",
+  };
+  const initialValuesClient = {};
+  const initialValuesStatus = {
+    proj_sts: "",
+    sts_remarks: "",
+    handovr_cer: "",
+  };
+  const [formValuesProject, setValuesProject] = useState(initialValuesProject);
+  const [formValuesClient, setValuesClient] = useState(initialValuesClient);
+  const [formValuesStatus, setValuesStatus] = useState(initialValuesStatus);
+  const validationSchemaProject = Yup.object({
+    proj_id: Yup.string().required("Project ID is required"),
+    assgn_pm: Yup.string().required("Assign project manager is required"),
+    projnm: Yup.string().required("Project name is required"),
+    order_id: Yup.string().required("Order ID is required"),
+    order_dt: Yup.date().required("Order date is required"),
+    proj_end_delvry_dt: Yup.date().required(
+      "Project end delivery date is required"
+    ),
+    ld_cls: Yup.string().required("LD clause is required"),
+    ld_cls_dtl: Yup.string().when("ld_cls", {
+      is: "Y",
+      then: () => Yup.string().required("LD clause details is required"),
+      otherwise: () => Yup.string(),
+    }),
+    proj_ordr_val: Yup.string().required("Project order value is required"),
+    prc_basis: Yup.string().required("Price basis is required"),
+  });
+  const validationSchemaClient = Yup.object({
+    client_id: Yup.string().required("Client ID is required"),
+    end_user: Yup.string().required("End user is required"),
+    proj_consultant: Yup.string().required("Consultant is required"),
+    epc_con: Yup.string().required("EPC Contractor is required"),
+  });
+  const validationSchemaStatus = Yup.object({
+    proj_sts: Yup.string().required("Project Status is required"),
+    sts_remarks: Yup.string().required("Status remarks is required"),
+  });
   useEffect(() => {
-    setLoading(true)
+    // setLoading(true);
     axios.post(url + "/api/getclient", { id: 0 })
     .then((res) => {
+      //   setLoading(false);
       console.log(res, "res client");
       for (let i = 0; i < res?.data?.msg?.length; i++) {
         clientList.push({
@@ -161,12 +249,12 @@ function ProjectForm() {
 
     });
     axios.post(url + "/api/getuser", { id: 0 }).then((res) => {
+      //   setLoading(false);
       console.log(res.data.msg, "res user");
       const pmlist = res.data.msg
         .filter((user) => user.user_type === "PM")
         .map((user) => ({ name: user.user_name, code: user.sl_no }));
       console.log(pmlist, "PMList");
-      setLoading(false)
       setPMList(pmlist);
     });
     setStatusList(projectStatusOptions);
@@ -176,79 +264,72 @@ function ProjectForm() {
     if (+params.id > 0) {
       setLoading(true);
     
-      axios.post(url + "/api/getproject", { id: params.id }).then((resProj) => {
-        console.log(resProj.data.msg, "getproject");
-        setData(resProj.data?.msg);
-           
-            axios.post(url + "/api/getclientpoc", { id: resProj?.data?.msg.client_id }).then((resPoc) => {
-                console.log(resPoc, "getclientpoc");
-                setPocList(resPoc.data.msg);
-                for (let i = 0; i < resPoc?.data?.msg?.length; i++) {
+      axios.post(url + "/api/getproject", { id: params.id }).then((res) => {
+        console.log(res.data.msg, "getproject");
+        setData(res.data?.msg);
+        setLoading(false);
+            setProjID(res?.data?.msg.proj_id)
+            setAssign(res?.data?.msg.proj_manager)
+            setProjnm(res?.data?.msg.proj_name)
+            setClientID(res?.data?.msg.client_id)
+            axios.post(url + "/api/getclientpoc", { id: res?.data?.msg.client_id }).then((res) => {
+                console.log(res, "getclientpoc");
+                setPocList(res.data.msg);
+                for (let i = 0; i < res?.data?.msg?.length; i++) {
                   pocNameList.push({
-                    name: resPoc?.data?.msg[i].poc_name,
-                    code: resPoc?.data?.msg[i].sl_no,
+                    name: res?.data?.msg[i].poc_name,
+                    code: res?.data?.msg[i].sl_no,
                   });
                   setPocNameList(pocNameList);
                 }
-                axios.post(url + "/api/getclientloc", { id: resProj?.data?.msg.client_id }).then((resLoc) => {
-                    console.log(resLoc, "getclientloc");
-                    setLocList(resLoc.data.msg);
-                    setClientLocList(resLoc.data.msg);
-                    locList.length = 0;
-              
-                    for (let i = 0; i < resLoc?.data?.msg?.length; i++) {
-                      locList.push({
-                        name: resLoc?.data?.msg[i].c_loc,
-                        code: resLoc?.data?.msg[i].c_loc,
-                      });
-                      setLocList(locList);
-                    }
-                    pocSet.length=0
-                    axios.post(url + "/api/getprojectpoc", { id: resProj?.data?.msg.proj_id }).then((res) => {
-                        for (let i = 0; i < res?.data?.msg?.length; i++) {
-                            pocSet.push({
-                              sl_no: res?.data?.msg[i].sl_no,
-                              poc_name: res?.data?.msg[i].poc_name,
-                              poc_ph_1: res?.data?.msg[i].poc_phone_1,
-                              poc_designation: res?.data?.msg[i].poc_designation,
-                              poc_email:res?.data?.msg[i].poc_email
-                            });
-                            // setLocList(locList);
-                           
-
-                          }
-                          setPocSet(pocSet)
-                          setProjID(resProj?.data?.msg.proj_id)
-                          setAssign(resProj?.data?.msg.proj_manager)
-                          setProjnm(resProj?.data?.msg.proj_name)
-                          setClientID(resProj?.data?.msg.client_id)
-                          setGST(resProj?.data?.msg.client_gst)
-                          setPAN(resProj?.data?.msg.client_pan)
-                          setClientLoc(resProj?.data?.msg.client_location)
-                          setOrderID(resProj?.data?.msg.order_id)
-                          setOrderDt(resProj?.data?.msg.order_date)
-                          setDes(resProj?.data?.msg.proj_desc)
-                          setEndUser(resProj?.data?.msg.proj_end_user)
-                          setConsultant(resProj?.data?.msg.proj_consultant)
-                          setEPC(resProj?.data?.msg.epc_contractor)
-                          setOrderVal(resProj?.data?.msg.proj_order_val)
-                          setProjBasis(resProj?.data?.msg.price_basis)
-                          setLdClause(resProj?.data?.msg.ld_clause_flag)
-                          setLdClsVal(resProj?.data?.msg.ld_clause_flag=='Y'?true:false)
-                          setDtl(resProj?.data?.msg.ld_clause)
-                          setErection(resProj?.data?.msg.erection_responsibility)
-                          setWarranty(resProj?.data?.msg.warranty)
-                          setLoading(false)
-                      })
-
-                  });
               });
+            pocSet.length=0
            
-           
+            axios.post(url + "/api/getclientloc", { id: res?.data?.msg.client_id }).then((res) => {
+                console.log(res, "getclientloc");
+                setLocList(res.data.msg);
+                setClientLocList(res.data.msg);
+                locList.length = 0;
+          
+                for (let i = 0; i < res?.data?.msg?.length; i++) {
+                  locList.push({
+                    name: res?.data?.msg[i].c_loc,
+                    code: res?.data?.msg[i].c_loc,
+                  });
+                  setLocList(locList);
+                }
+              });
+            setGST(res?.data?.msg.client_gst)
+            setPAN(res?.data?.msg.client_pan)
+            setClientLoc(res?.data?.msg.client_location)
+            setOrderID(res?.data?.msg.order_id)
+            setOrderDt(res?.data?.msg.order_date)
+            setDes(res?.data?.msg.proj_desc)
+            setEndUser(res?.data?.msg.proj_end_user)
+            setConsultant(res?.data?.msg.proj_consultant)
+            setEPC(res?.data?.msg.epc_contractor)
+            setOrderVal(res?.data?.msg.proj_order_val)
+            setProjBasis(res?.data?.msg.price_basis)
+            setLdClause(res?.data?.msg.ld_clause_flag)
+            setDtl(res?.data?.msg.ld_clause)
+            setErection(res?.data?.msg.erection_responsibility)
+            setWarranty(res?.data?.msg.warranty)
+
            
     })
 
-    
+    axios.post(url + "/api/getprojectpoc", { id: proj_id }).then((res) => {
+        for (let i = 0; i < res?.data?.msg?.length; i++) {
+            pocSet.push({
+              sl_no: res?.data?.msg[i].sl_no,
+              poc_name: res?.data?.msg[i].poc_name,
+              poc_ph_1: res?.data?.msg[i].poc_phone_1,
+              poc_ph_2: res?.data?.msg[i].poc_phone_2,
+            });
+            // setLocList(locList);
+            setPocSet(pocSet)
+          }
+      })
 }
   }, []);
   const onSubmitStatus = (values) => {
@@ -258,7 +339,7 @@ function ProjectForm() {
   const onSubmitClient = (values) => {
     console.log("client called");
       console.log(client_id,assgn_pm,client_loc,p_gst,p_pan,proj_des,end_user,proj_consultant,epc_con,pocSet);
-      setLoading(true)
+
 
        axios.post(url + "/api/addproject", {
             id: +params.id,
@@ -296,7 +377,6 @@ function ProjectForm() {
             } else {
                 Message("error", res.data.msg);
             }
-            setLoading(false)
         })
         .catch((err) => {
             console.log(err);
@@ -304,10 +384,44 @@ function ProjectForm() {
         });
   };
   const onSubmitProject = () => {
-   
+    console.log("project called");
+    console.log(
+      proj_id,
+      projnm,
+      order_id,
+      order_dt,
+      proj_ordr_val,
+      prc_basis,
+      proj_end_delvry_dt,
+      ld_cls,
+      ld_cls_dtl,
+      warranty_check,
+      erctn_res,
+      docs
+    );
    
   };
- 
+  const formikProject = useFormik({
+    initialValues: +params.id > 0 ? formValuesProject : initialValuesProject,
+    onSubmit: onSubmitProject,
+    validationSchema: validationSchemaProject,
+    validateOnMount: true,
+    enableReinitialize: true,
+  });
+  const formikClient = useFormik({
+    initialValues: +params.id > 0 ? formValuesClient : initialValuesClient,
+    onSubmitClient,
+    validationSchema: validationSchemaClient,
+    validateOnMount: true,
+    enableReinitialize: true,
+  });
+  const formikStatus = useFormik({
+    initialValues: +params.id > 0 ? formValuesStatus : initialValuesStatus,
+    onSubmitStatus,
+    validationSchema: validationSchemaStatus,
+    validateOnMount: true,
+    enableReinitialize: true,
+  });
   return (
     <section className="bg-transparent dark:bg-[#001529]">
       {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
@@ -575,7 +689,21 @@ function ProjectForm() {
                       />
                     </div>
                   </>
-                 
+                  {/* } */}
+                  {/* } */}
+
+                  {/* <div >
+                                            <TDInputTemplate
+                                                placeholder="Type delivery Address"
+                                                type="text"
+                                                label="Delivery Address"
+                                                name="delvry_add"
+                                                formControlName={formikClient.values.delvry_add}
+                                                handleChange={formikClient.handleChange}
+                                                handleBlur={formikClient.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div> */}
                   <div className="sm:col-span-6">
                     <TDInputTemplate
                       placeholder="Type description..."
@@ -617,11 +745,107 @@ function ProjectForm() {
                       name="epc_con"
                       formControlName={epc_con}
                       handleChange={(txt) => setEPC(txt.target.value)}
+                      handleBlur={formikClient.handleBlur}
                       mode={1}
                     />
                   </div>
 
-                
+                  {/* {gstPan &&
+                                            <><div>
+                                                <TDInputTemplate
+                                                    type="text"
+                                                    label="POC Name"
+                                                    name="poc_name"
+                                                    formControlName={formikClient.values.poc_name}
+                                                    handleChange={formikClient.handleChange}
+                                                    handleBlur={formikClient.handleBlur}
+                                                    mode={1}
+                                                    disabled />
+                                            </div><div>
+                                                    <TDInputTemplate
+                                                        type="text"
+                                                        label="POC Email"
+                                                        name="poc_email"
+                                                        formControlName={formikClient.values.poc_email}
+                                                        handleChange={formikClient.handleChange}
+                                                        handleBlur={formikClient.handleBlur}
+                                                        mode={1}
+                                                        disabled />
+                                                </div>
+                                                <div>
+                                                    <TDInputTemplate
+                                                        type="text"
+                                                        label="POC Primary Phone No."
+                                                        name="poc_ph_1"
+                                                        formControlName={formikClient.values.poc_ph_1}
+                                                        handleChange={formikClient.handleChange}
+                                                        handleBlur={formikClient.handleBlur}
+                                                        mode={1}
+                                                        disabled />
+                                                </div>
+                                                <div>
+                                                    <TDInputTemplate
+                                                        type="text"
+                                                        label="POC Secondary Phone No."
+                                                        name="poc_ph_2"
+                                                        formControlName={formikClient.values.poc_ph_2}
+                                                        handleChange={formikClient.handleChange}
+                                                        handleBlur={formikClient.handleBlur}
+                                                        mode={1}
+                                                        disabled />
+                                                </div>
+
+
+
+                                            </>
+                                        } */}
+                  {/* {drawingDate.map((input,index)=>
+         <>   <div key={index} className="flex-col justify-between">
+           <div className="flex gap-2 justify-end">
+         {drawingDate.length>1 && <button  className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-9 w-9  bg-red-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>removeDt(index)}>-</button>}
+          <button  className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-9 w-9  bg-green-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>addDt()}>+</button>
+          </div>
+<TDInputTemplate
+            placeholder=""
+            type="date"
+            formControlName={input.dt}
+            handleChange={event => handleDtChange(index, event)}
+            // handleChange={e=>setDrawing(e.target.value)}
+            label="Drawing date"
+            name="dt"
+            mode={1}
+          />
+         
+         
+            </div>
+</>
+            )} */}
+                 
+
+                  {/* <div>
+                                            <TDInputTemplate
+                                                placeholder="Type manufacturer..."
+                                                type="text"
+                                                label="Manufacturer"
+                                                name="manufac"
+                                                formControlName={formik.values.manufac}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div> */}
+                  {/* <div>
+                                            <TDInputTemplate
+                                                placeholder="Type Extra..."
+                                                type="text"
+                                                label="Extra"
+                                                name="proj_extra"
+                                                formControlName={formik.values.proj_extra}
+                                                handleChange={formik.handleChange}
+                                                handleBlur={formik.handleBlur}
+                                                mode={3}
+                                            />
+                                        </div> */}
                 </div>
                 {pocSet.map((input, index) => (
                     <>
@@ -647,7 +871,7 @@ function ProjectForm() {
                         <TDInputTemplate
                           placeholder="Choose name"
                           type="date"
-                          formControlName={input?.poc_name}
+                          formControlName={input.poc_name}
                           handleChange={event => handleDtChange(index, event)}
                           label="Contact Person"
                           name="poc_name"
@@ -664,7 +888,9 @@ function ProjectForm() {
                                     type="text"
                                     label="Email"
                                     name="poc_email"
-                                    formControlName={input?.poc_email}
+                                    formControlName={input.poc_email}
+                                    // handleChange={formikClient.handleChange}
+                                    // handleBlur={formikClient.handleBlur}
                                     mode={1}
                                     disabled
                                   />
@@ -674,7 +900,9 @@ function ProjectForm() {
                                     type="text"
                                     label="POC Primary Phone No."
                                     name="poc_ph_1"
-                                    formControlName={input?.poc_ph_1}
+                                    formControlName={input.poc_ph_1}
+                                    // handleChange={formikClient.handleChange}
+                                    // handleBlur={formikClient.handleBlur}
                                     mode={1}
                                     disabled
                                   />
@@ -682,9 +910,11 @@ function ProjectForm() {
                                 <div  className="sm:col-span-1">
                                   <TDInputTemplate
                                     type="text"
-                                    label="POC Designation"
-                                    name="poc_designation"
-                                    formControlName={input?.poc_designation}
+                                    label="POC Secondary Phone No."
+                                    name="p2"
+                                    formControlName={input.poc_ph_2}
+                                    // handleChange={formikClient.handleChange}
+                                    // handleBlur={formikClient.handleBlur}
                                     mode={1}
                                     disabled
                                   />
@@ -719,7 +949,10 @@ function ProjectForm() {
                   </Button>
                   <button className=" disabled:bg-gray-400 
                   disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" onClick={()=>onSubmitClient()}>Submit</button>
-                 
+                  {/* <BtnComp
+                    mode={params.id > 0 ? "E" : "A"}
+                    //   onReset={formikStatus.handleReset}
+                  /> */}
                 </div>
                 </Spin>
               </StepperPanel>

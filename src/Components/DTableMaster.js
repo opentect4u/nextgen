@@ -190,12 +190,12 @@ function DTableMaster({ headers,
                   </Link>
                 </Tooltip>
               </motion.div>} */}
-                  <div className='p-1'>
+                  {/* <div className='p-1'>
                     <Dropdown menu={{ items }} placement="bottomLeft" arrow>
                       <MoreOutlined className='flex items-center justify-center  text-white   rounded-full  text-3xl font-bold px-2 h-10 w-10 py-2 dark:text-white focus:outline-none  transition duration-0 hover:duration-500 dark:focus:ring-primary-800' />
                     </Dropdown>
 
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
