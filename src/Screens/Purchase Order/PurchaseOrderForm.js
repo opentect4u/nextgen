@@ -21,6 +21,9 @@ function PurchaseOrderForm() {
   const [drawing, setDrawing] = useState(false);
   const [delivery, setDeliveryAdd] = useState("");
   const [order_type, setOrderType] = useState("");
+  const [b_order_dt,setBOrderDt]=useState("")
+  const [project_name,setProjectName]=useState("")
+  const [vendor_name,setVendorName]=useState("")
   return (
     <>
       <HeadingTemplate
@@ -33,6 +36,7 @@ function PurchaseOrderForm() {
         <Stepper ref={stepperRef} style={{ flexBasis: "100%" }}>
           <StepperPanel header="Order Type">
             <OrderType
+            type={order_type}
               pressNext={(values) => {
                 console.log(values);
                 setOrderType(values.order_type);
@@ -43,8 +47,12 @@ function PurchaseOrderForm() {
           <StepperPanel header="Basic Details">
             <BasicDetails
               type={order_type}
+              data={{order_date:b_order_dt,project_name:project_name,vendor_name:vendor_name}}
               pressNext={(values) => {
                 console.log(values);
+                setBOrderDt(values.order_date)
+                setVendorName(values.vendor_name)
+                setProjectName(values.project_name)
                 stepperRef.current.nextCallback();
               }}
               pressBack={(values) => {

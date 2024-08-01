@@ -4,12 +4,13 @@ import VError from "../../Components/VError";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
-function BasicDetails({pressNext,type,pressBack}) {
+function BasicDetails({pressNext,type,pressBack,data}) {
     const params = useParams();
+    console.log(params.id)
     const initialValues = {
-      order_date: "",
-      project_name:"",
-      vendor_name:""
+      order_date: data.order_date,
+      project_name:data.project_name,
+      vendor_name:data.vendor_name
     };
     const [formValues, setValues] = useState(initialValues);
     const validationSchemaGeneral = Yup.object({

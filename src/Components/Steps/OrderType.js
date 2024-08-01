@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TDInputTemplate from "../TDInputTemplate";
 import VError from "../../Components/VError";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
-function OrderType({pressNext}) {
+function OrderType({pressNext,type}) {
   const params = useParams();
   const initialValues = {
-    order_type: "",
+    order_type: type,
   };
   const [formValues, setValues] = useState(initialValues);
   const validationSchema = Yup.object({
@@ -24,7 +24,9 @@ function OrderType({pressNext}) {
     validateOnMount: true,
     enableReinitialize: true,
   });
-
+  useEffect(()=>{
+    console.log('rendered')
+  },[])
   return (
     <div className="flex justify-center">
       <form className="mx-auto w-full" onSubmit={formik.handleSubmit}>

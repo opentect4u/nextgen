@@ -7,10 +7,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
-
-import { ContextMenu } from 'primereact/contextmenu';
-import { SearchOutlined, PrinterOutlined, MoreOutlined } from '@ant-design/icons'
-import { Dropdown, Space } from 'antd';
+import { SearchOutlined, PrinterOutlined } from '@ant-design/icons'
 import { motion } from "framer-motion"
 
 function DTableMaster({ headers,
@@ -27,22 +24,7 @@ function DTableMaster({ headers,
   const paginatorRight = <Button type="button" icon="pi pi-download" text />;
   const [selectedItem, setSelectedItem] = useState(null);
   const [theme, setTheme] = useState(localStorage.getItem('col'))
-  useState(() => {
-    setTheme(localStorage.getItem('col'))
-
-  }, [localStorage.getItem('col')])
-  const cm = useRef(null);
   const navigate = useNavigate()
-  const items = [
-    {
-      key: '1',
-      label: (
-        <div onClick={() => print()} >
-          <PrinterOutlined /> Print this table
-        </div>
-      ),
-    }
-  ];
   var id;
   const iconTemplate = () => {
     return flag == 1 ? (
@@ -65,11 +47,7 @@ function DTableMaster({ headers,
     navigate(to + id.sl_no)
   };
 
-  const menuModel = [
-    { label: '  View', icon: <SearchOutlined className='mr-3' />, command: () => onViewSelect(selectedItem) },
-    // { label: 'Delete', icon: 'pi pi-fw pi-times', command: () => console.log(selectedProduct) },
-    { label: '  Print', icon: <PrinterOutlined className='mr-3' />, command: () => console.log('hello') },
-  ];
+  
   const onRowUnselect = (event) => { };
   function print() {
 
@@ -114,7 +92,6 @@ function DTableMaster({ headers,
     },[])
   return (
     <>
-    {/* <div className='block sm:hidden'>mobile ui</div> */}
     <div className='hidden justify-end sm:flex'>
     <motion.section initial={{ opacity: 0, y: 1000 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, type: 'tween', stiffness: 100 }} className="bg-transparent dark:bg-[#001529] py-3 sm:py-3 -mt-5">
       <div className="flex items-center h-14 w-auto bg-green-900 dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 md:space-x-4 rounded-lg">
@@ -139,21 +116,17 @@ function DTableMaster({ headers,
       <motion.section initial={{ opacity: 0, y: 1000 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, type: 'tween', stiffness: 100 }} className="bg-transparent dark:bg-[#001529] py-3 sm:py-5 w-full -mt-5">
         {title &&
           <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
-            {/* <div className="flex flex-col bg-[#C05746] dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
-            <div className="flex flex-col bg-green-900 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
-
-              {/* <div className="flex flex-col bg-gray-800 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 py-1"> */}
+            <div className="flex flex-col p-1 bg-green-900 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
               <div className="w-full">
-                <div className="flex items-center justify-evenly">
-                  <motion.h2 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, type: 'just' }} className="text-xl font-bold text-white dark:text-white sm:block hidden mx-5">
-                    {/* <h2 className="text-xl font-bold text-green-500 dark:text-white sm:block hidden mx-5"> */}
+                <div className="flex items-center justify-between">
+                  <motion.h2 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, type: 'just' }} className="text-xl w-48 text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5">
                     {title}
                   </motion.h2>
 
                   <label for="simple-search" className="sr-only">
                     Search
                   </label>
-                  <div className="relative w-full">
+                  <div className="relative w-full -right-6">
                     <div className="absolute inset-y-0 left-0 flex items-center md:ml-4 pl-3 pointer-events-none">
                       <svg
                         aria-hidden="true"
@@ -172,8 +145,7 @@ function DTableMaster({ headers,
                       type="text"
                       id="simple-search"
                       initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: '95%' }} transition={{ delay: 1.1, type: 'just' }}
-                      className="bg-white border rounded-full border-emerald-500 text-gray-800 text-sm  block w-full md:w-11/12 pl-10 p-2 dark:bg-gray-800 md:ml-4  duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-
+                      className="bg-gray-200 border rounded-full border-emerald-500 text-gray-800 text-sm  block w-full  pl-10 dark:bg-gray-800 md:ml-4  duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Search"
                       required=""
                       onChange={(text) => setSearch(text.target.value)} />

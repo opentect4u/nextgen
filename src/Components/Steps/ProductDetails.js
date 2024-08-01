@@ -49,35 +49,6 @@ function ProductDetails({pressBack,presNext}) {
       const onSubmit = (values) => {
         console.log("onSubmit");
         console.log(values);
-        // axios
-        //   .post(url + "/api/addclient", {
-        //     c_id: +params.id,
-        //     user: localStorage.getItem("email"),
-        //     c_name: values.clnt_name,
-        //     c_phone: values.clnt_phn.toString(),
-        //     c_email: values.clnt_email,
-        //     c_location:values.c_location,
-        //     c_vendor_code:values.c_vendor_code.toString(),
-        //     // c_address: values.poc_address,
-        //     c_gst: values.gst,
-        //     c_pan: values.pan,
-        //     // c_reg: values.reg_no,
-        //     c_poc: values.dynamicFields,
-        //   })
-        //   .then((res) => {
-        //     setLoading(false);
-        //     setData(res.data?.msg);
-        //     if (res.data.suc > 0) {
-        //       Message("success", res.data.msg);
-        //       // if (params.id == 0) formik.handleReset();
-        //     } else {
-        //       Message("error", res.data.msg);
-        //     }
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //     navigate("/error" + "/" + err.code + "/" + err.message);
-        //   });
       };
       const validationSchema = Yup.object({
        

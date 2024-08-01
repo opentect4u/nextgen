@@ -6,8 +6,11 @@ import ProfileInfo from './ProfileInfo';
 import PasswordComp from './PasswordComp';
 import { routePaths } from '../Assets/Data/Routes';
 import '../Styles/styles.css'
-const DialogBox = ({ visible, flag, onPress,onDelete }) => {
+import ClientInfo from './ClientInfo';
+import PocInfo from './PocInfo';
+const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
   const navigate = useNavigate();
+  console.log(data)
   const onChange = (key) => {
     console.log(key,'onChange');
   };
@@ -24,7 +27,7 @@ const DialogBox = ({ visible, flag, onPress,onDelete }) => {
     }
   ];
   return (
-      <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2?'Warning!':'Information!'}</div>} visible={visible} maximizable style={{
+      <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2 && flag!=5?'Warning!':'Information'}</div>} visible={visible} maximizable style={{
          width: '50vw',
          background:'black'
          }} onHide={() => {if (!visible) return; onPress() }}>
@@ -57,6 +60,20 @@ const DialogBox = ({ visible, flag, onPress,onDelete }) => {
           </button>
           </div>
           </p>
+        }
+        {flag==5 && 
+        
+        <p className="m-0">
+          <ClientInfo data={data}/>
+        </p>
+        
+        }
+          {flag==6 && 
+        
+        <p className="m-0">
+          <PocInfo data={data}/>
+        </p>
+        
         }
       </Dialog>
   );

@@ -15,8 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import DialogBox from "../../../Components/DialogBox";
 import PrintComp from "../../../Components/PrintComp";
 import AuditTrail from "../../../Components/AuditTrail";
-
-import { Fieldset } from 'primereact/fieldset';
+import { ListBox } from 'primereact/listbox';
         
 const CategoryForm = () => {
   const params = useParams();
@@ -47,6 +46,12 @@ const CategoryForm = () => {
       // console.log(res.data.msg.catg_name)
       setProducts(res.data?.msg)
       setLoading(false)
+      products.length=0
+      for(let i=0;i<res?.data?.msg.length;i++){
+        products.push({name:res?.data?.msg[i]?.prod_name,code:res?.data?.msg[i]?.sl_no})
+      }
+      setProducts(products)
+
       console.log(products)
       // setValues({catnm:res.data.msg.catg_name})
     }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
@@ -103,6 +108,7 @@ const CategoryForm = () => {
     enableReinitialize:true
   });
   return (
+   
     <section  className="bg-transparent dark:bg-[#001529]">
           {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
           <HeadingTemplate
@@ -111,7 +117,8 @@ const CategoryForm = () => {
               title={'Category'}
               data={params.id && data?data:''}
             />
-          <div className="w-full bg-white p-6 rounded-2xl">
+            <div className="grid grid-cols-6 gap-2">
+            <div className={products.length>0?'w-full col-span-4 bg-white p-6 rounded-2xl':'w-full col-span-6 bg-white p-6 rounded-2xl'}>
           <Spin indicator={<LoadingOutlined spin />} size="large" className="text-green-900 dark:text-gray-400" spinning={loading}>
         <form onSubmit={formik.handleSubmit}>
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -136,16 +143,23 @@ const CategoryForm = () => {
             
           </div>
 
-    {products.length>0 &&  <Fieldset legend="Products under this category"> 
-   <ul>
-    {products?.map(product=><li>{product.prod_name}</li>
-    )}
-   </ul>
-</Fieldset>}
+    
           <BtnComp mode={params.id>0?'E':'A'} onDelete={()=>onDelete()} onReset={formik.handleReset}/>
+         
         </form>
         </Spin>
       </div>
+      {products.length>0 &&  
+  
+  <div class='mx-auto w-full col-span-2'>
+  <h2 className="text-white rounded-t-xl p-2 text-lg font-light bg-green-900">Product(s) under this category</h2>
+   <ListBox multiple options={products} optionLabel="name" className="w-full md:w-14rem" />
+  
+  </div>
+
+}
+            </div>
+         
       <DialogBox
         visible={visible}
         flag={flag}

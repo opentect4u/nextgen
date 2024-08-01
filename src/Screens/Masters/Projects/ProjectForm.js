@@ -7,21 +7,22 @@ import {
   LoadingOutlined,
   ArrowRightOutlined,
   ArrowLeftOutlined,
+  InfoOutlined 
 } from "@ant-design/icons";
 import { Spin } from "antd";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import axios from "axios";
 import { url } from "../../../Address/BaseUrl";
 import AuditTrail from "../../../Components/AuditTrail";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import { Button } from "primereact/button";
+import DialogBox from "../../../Components/DialogBox";
 
 function ProjectForm() {
   const navigate = useNavigate();
   const [client, setClient] = useState([]);
+  const [globalClient,setGlobal]=useState([])
   const params = useParams();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
@@ -57,6 +58,10 @@ function ProjectForm() {
   const [p_pan, setPAN] = useState("");
   const [proj_des, setDes] = useState("");
   const [clientLocList, setClientLocList] = useState([]);
+  const [visible,setVisible]=useState(false)
+  const [clientInfo,setClientInfo]=useState()
+  const [flag,setFlag]=useState()
+  const[info,setInfo]=useState()
   const [pocSet, setPocSet] = useState([
     { sl_no: 0, poc_name: "", poc_ph_1: "", poc_designation: "", poc_email: "" },
   ]);
@@ -65,16 +70,18 @@ function ProjectForm() {
     const selected = pocList.find((poc) => poc.sl_no == event.target.value);
     console.log(selected)
     let data = [...pocSet];
-    // data[index][event.target.name] = event.target.value;
+    console.log(data)
+    console.log(event.target.name,event.target.value)
+      
     data[index][event.target.name] = event.target.value;
+    // data[index]['poc_name'] = selected.sl_no;
     data[index]['poc_email'] = selected.poc_email;
     data[index]['poc_ph_1'] = selected.poc_ph_1;
     data[index]['poc_designation']= selected.poc_designation
     setPocSet(data);
   };
   const addDt = () => {
-    setPocSet([...pocSet,{ sl_no: 0, poc_name: "", poc_ph_1: "", poc_designation: "", poc_email: "" },
-      ,
+    setPocSet([...pocSet,{ sl_no: 0, poc_name: "", poc_ph_1: "", poc_designation: "", poc_email: "" }
     ]);
   };
   const removeDt = (index) => {
@@ -113,6 +120,7 @@ function ProjectForm() {
       setGstPan(false);
     }
     axios.post(url + "/api/getclient", { id: value }).then((res) => {
+      setClientInfo(res.data.msg)
       console.log(res.data.msg.client_gst, "getclient project");
     });
     axios.post(url + "/api/getclientpoc", { id: value }).then((res) => {
@@ -156,6 +164,7 @@ function ProjectForm() {
         });
       }
       setClient(clientList);
+      setGlobal(res.data.msg)
 
    
 
@@ -172,7 +181,7 @@ function ProjectForm() {
     setStatusList(projectStatusOptions);
     setPriceBasisList(priceBasisList);
     setYesNoList(yesNoList);
-
+    console.log(globalClient)
     if (+params.id > 0) {
       setLoading(true);
     
@@ -213,15 +222,18 @@ function ProjectForm() {
                               poc_designation: res?.data?.msg[i].poc_designation,
                               poc_email:res?.data?.msg[i].poc_email
                             });
-                            // setLocList(locList);
-                           
-
                           }
                           setPocSet(pocSet)
                           setProjID(resProj?.data?.msg.proj_id)
                           setAssign(resProj?.data?.msg.proj_manager)
                           setProjnm(resProj?.data?.msg.proj_name)
                           setClientID(resProj?.data?.msg.client_id)
+                          console.log(globalClient)
+                          axios.post(url + "/api/getclient", { id: 0 })
+                          .then((resclientdt) => {
+                          setClientInfo(resclientdt.data.msg?.filter(e=>e.sl_no==resProj?.data?.msg.client_id)[0])
+                          console.log(resclientdt.data.msg?.filter(e=>e.sl_no==resProj?.data?.msg.client_id)[0],"gggggggg")
+                          })
                           setGST(resProj?.data?.msg.client_gst)
                           setPAN(resProj?.data?.msg.client_pan)
                           setClientLoc(resProj?.data?.msg.client_location)
@@ -243,24 +255,45 @@ function ProjectForm() {
 
                   });
               });
-           
-           
-           
     })
-
-    
 }
   }, []);
-  const onSubmitStatus = (values) => {
-    console.log("status called");
-    console.log(values);
-  };
+ 
   const onSubmitClient = (values) => {
     console.log("client called");
       console.log(client_id,assgn_pm,client_loc,p_gst,p_pan,proj_des,end_user,proj_consultant,epc_con,pocSet);
       setLoading(true)
+       const formData=new FormData()
+      //  formData.append("id",+params.id)
+      //  formData.append("user",localStorage.getItem("email"))
 
-       axios.post(url + "/api/addproject", {
+      //  formData.append("proj_id", proj_id);
+      //       formData.append("proj_name", projnm);
+      //       formData.append("client_id", client_id);
+      //       formData.append("client_location", client_loc);
+      //       formData.append("client_gst", p_gst);
+      //       formData.append("client_pan", p_pan);
+      //       formData.append("order_id", order_id);
+      //       formData.append("order_date", order_dt);
+      //       formData.append("proj_delivery_date", proj_end_delvry_dt);
+      //       formData.append("proj_desc", proj_des);
+      //       formData.append("proj_order_val", proj_ordr_val);
+      //       formData.append("proj_end_user", end_user);
+      //       formData.append("proj_consultant", proj_consultant);
+      //       formData.append("epc_contractor", epc_con);
+      //       formData.append("price_basis", prc_basis);
+      //       formData.append("ld_clause_flag", ld_cls);
+      //       formData.append("ld_clause", ld_cls_dtl);
+      //       formData.append("erection_responsibility", erctn_res);
+      //       formData.append("warranty", warranty_check);
+      //       formData.append("proj_manager", +assgn_pm);
+      //       formData.append("proj_poc", pocSet);
+            // console.log(docs);
+            // formData.append("docs",docs)
+           
+              // arr.push(dt)
+          
+       axios.post(url + "/api/addproject",  {
             id: +params.id,
             user: localStorage.getItem("email"),
             proj_id: proj_id,
@@ -269,7 +302,6 @@ function ProjectForm() {
             client_location:client_loc,
             client_gst:p_gst,
             client_pan:p_pan,
-
             order_id: order_id,
             order_date: order_dt,
             proj_delivery_date: proj_end_delvry_dt,
@@ -285,14 +317,32 @@ function ProjectForm() {
             warranty: warranty_check,
             proj_manager: +assgn_pm,
             proj_poc:pocSet
-            // c_location: values.poc_location,
+           // c_location: values.poc_location,
             // c_address: values.poc_address,
 
-        })
+        }
+        )
         .then((res) => {
             setData(res.data?.msg);
             if (res.data.suc > 0) {
-                Message("success", res.data.msg);
+              formData.append("proj_id",proj_id)
+              var arr=new Array()
+              formData.append("user",localStorage.getItem("email"))
+              for(let dt of docs){
+                arr.push(dt)
+                formData.append("docs",arr)
+              }
+            console.log(formData,docs)
+              
+                axios.post(url+'/api/add_proj_files',formData).then(resProjFile=>{
+                  if(resProjFile.data.suc>0){
+                    Message("success", res.data.msg);
+                  }
+                  else{
+                    Message("error", res.data.msg);
+
+                  }
+                })
             } else {
                 Message("error", res.data.msg);
             }
@@ -304,10 +354,10 @@ function ProjectForm() {
         });
   };
   const onSubmitProject = () => {
-   
+   console.log(docs)
    
   };
- 
+
   return (
     <section className="bg-transparent dark:bg-[#001529]">
       {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
@@ -470,6 +520,7 @@ function ProjectForm() {
                       type="file"
                       label="PO & Other Docs"
                       name="docs"
+                      multiple={true}
                       // formControlName={docs[0]}
                       handleChange={(event) => setDocs(event.target.files)}
                       mode={1}
@@ -502,7 +553,7 @@ function ProjectForm() {
           spinning={loading}
         >
                 <div className="grid gap-4 sm:grid-cols-6 sm:gap-6">
-                  <div className="sm:col-span-6">
+                  <div className="sm:col-span-4">
                     <TDInputTemplate
                       placeholder="Select client..."
                       type="text"
@@ -511,6 +562,7 @@ function ProjectForm() {
                       formControlName={client_id}
                       handleChange={(text) => {
                         setClientID(text.target.value);
+                        console.log(clientLocList,pocList)
                         handleChangeClient(text);
                       }}
                       data={client}
@@ -518,7 +570,13 @@ function ProjectForm() {
                       disabled={params.id > 0}
                     />
                   </div>
+                  <div className="sm:col-span-2 flex justify-center">
+                {client_id &&   <button className=" disabled:bg-gray-400 
+                  disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" onClick={()=>{setFlag(5);setVisible(true)}}>
+                    View client Details
 
+                   </button>}
+                  </div>
                   <>
                     {" "}
                     <div className="sm:col-span-2">
@@ -625,28 +683,41 @@ function ProjectForm() {
                 </div>
                 {pocSet.map((input, index) => (
                     <>
-                      <div key={index} className="flex-col gap-3 justify-between mt-5">
-                        <div className="flex gap-2 justify-end">
+                      <div key={index} className="flex-col gap-3 justify-between mt-12">
+                        <div className="flex gap-2 justify-end mt-4 -mb-5">
                           {pocSet.length > 1 && (
                             <button
-                              className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-9 w-9  bg-red-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
+                              className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-6 w-6  bg-red-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
                               onClick={() => removeDt(index)}
                             >
                               -
                             </button>
                           )}
                           <button
-                            className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-9 w-9  bg-green-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
+                            className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-6 w-6  bg-green-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
                             onClick={() => addDt()}
                           >
                             +
                           </button>
+                        {pocSet[index]?.poc_name &&  <button
+                            className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-6 w-6 bg-blue-700 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>
+                            {  console.log(pocSet[index])
+                             setFlag(6)
+                             setInfo(pocList.filter(e=>e.sl_no==+pocSet[index]?.poc_name)[0])
+                             setVisible(true)
+                            }
+                            
+                            }
+                          >
+                            <InfoOutlined/>
+                          </button>}
                         </div>
-                        <div className="grid grid-cols-2 gap-5 mb-5">
+                        <div className="grid grid-cols-3 gap-5 mb-5">
+                         
+                       
                         <div className="col-span-1">
                         <TDInputTemplate
                           placeholder="Choose name"
-                          type="date"
                           formControlName={input?.poc_name}
                           handleChange={event => handleDtChange(index, event)}
                           label="Contact Person"
@@ -654,27 +725,14 @@ function ProjectForm() {
                           data={nameList}
                           mode={2}
                         />
-
-
                         </div>
-                       
                               <>
-                                <div className="sm:col-span-1">
+                                <div className="sm:col-span-1 hidden">
                                   <TDInputTemplate
                                     type="text"
                                     label="Email"
                                     name="poc_email"
                                     formControlName={input?.poc_email}
-                                    mode={1}
-                                    disabled
-                                  />
-                                </div>
-                                <div  className="sm:col-span-1">
-                                  <TDInputTemplate
-                                    type="text"
-                                    label="POC Primary Phone No."
-                                    name="poc_ph_1"
-                                    formControlName={input?.poc_ph_1}
                                     mode={1}
                                     disabled
                                   />
@@ -689,6 +747,17 @@ function ProjectForm() {
                                     disabled
                                   />
                                 </div>
+                                <div  className="sm:col-span-1">
+                                  <TDInputTemplate
+                                    type="text"
+                                    label="POC Primary Phone No."
+                                    name="poc_ph_1"
+                                    formControlName={input?.poc_ph_1}
+                                    mode={1}
+                                    disabled
+                                  />
+                                </div>
+                               
                               </>
                         
                         </div>
@@ -727,6 +796,12 @@ function ProjectForm() {
           </div>
         </Spin>
       </div>
+      <DialogBox
+        visible={visible}
+        flag={flag}
+        data={flag==5?{poc:pocList,loc:clientLocList,info:clientInfo}:{info:info}}
+        onPress={() => setVisible(false)}
+      />
     </section>
   );
 }

@@ -85,8 +85,9 @@ export const masterheaders={
     btnText:'Add GST',
     headers: [
       { name: "serial_number", value: "#" },
-      { name: "gst_title", value: "GST Type" },
+      { name: "gst_type", value: "GST Type" },
       { name: "gst_rate", value: "GST Rate" },
+      { name: "created_by", value: "Created By" },
     ],
   },
   'projects': {

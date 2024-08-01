@@ -58,8 +58,10 @@ function App() {
         itemBorderRadius:50,
         itemMarginInline:15,
         itemHoverBg:'white',
-        itemSelectedColor:'#7FB685',
+        itemSelectedColor:'#4C9F70',
+        // itemSelectedColor:'#8CB369',
         itemHoverColor:'#014737',
+        // itemPaddingInline:10
       },
       Segmented:{
         itemActiveBg:'#046c4e',
