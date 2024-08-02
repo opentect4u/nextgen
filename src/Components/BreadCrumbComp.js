@@ -23,6 +23,7 @@ function BreadCrumbComp() {
 <div className="col-span-4 space-y-2 mb-8">
 <Segmented
   itemActiveBg="#08453c"
+  className="shadow-lg font-sans"
   value={isNaN(paths[paths.length-1])?paths[paths.length-1]:paths[paths.length-2]}
   options={pathnames}
   onChange={(value) => {

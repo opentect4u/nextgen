@@ -88,6 +88,8 @@
   font-style: normal;
 } */
 
-.p-stepper-toggleable-content{
-  background: green;
+.p-stepper-number{
+  background-color: #eb8d00;
+  color:'white'
 }
+

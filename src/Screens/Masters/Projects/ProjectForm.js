@@ -48,6 +48,8 @@ function ProjectForm() {
   const [warranty_check, setWarranty] = useState("");
   const [erctn_res, setErection] = useState("");
   const [docs, setDocs] = useState();
+  const [docs2, setDocs2] = useState();
+  const [docs3, setDocs3] = useState();
   const [locList, setLocList] = useState([]);
   const [client_id, setClientID] = useState("");
   const [end_user, setEndUser] = useState("");
@@ -109,6 +111,7 @@ function ProjectForm() {
 
  
   const handleChangeClient = (event) => {
+    setLoading(true)
     console.log(client_id);
     const value = event.target.value;
     console.log(value, "handleChangeClient");
@@ -146,6 +149,7 @@ function ProjectForm() {
           code: res?.data?.msg[i].c_loc,
         });
         setLocList(locList);
+        setLoading(false)
       }
     });
   };
@@ -515,10 +519,13 @@ function ProjectForm() {
                       mode={2}
                     />
                   </div>
-                  <div className="sm:col-span-2">
+                 
+                </div>
+                <div className="grid grid-cols-6 my-6 gap-2">
+                <div className="sm:col-span-2">
                     <TDInputTemplate
                       type="file"
-                      label="PO & Other Docs"
+                      label="Purchase Order"
                       name="docs"
                       multiple={true}
                       // formControlName={docs[0]}
@@ -526,7 +533,29 @@ function ProjectForm() {
                       mode={1}
                     />
                   </div>
-                </div>
+                  <div className="sm:col-span-2">
+                    <TDInputTemplate
+                      type="file"
+                      label="Document 1"
+                      name="docs1"
+                      multiple={true}
+                      // formControlName={docs[0]}
+                      handleChange={(event) => setDocs2(event.target.files)}
+                      mode={1}
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <TDInputTemplate
+                      type="file"
+                      label="Document 2"
+                      name="docs2"
+                      multiple={true}
+                      // formControlName={docs[0]}
+                      handleChange={(event) => setDocs2(event.target.files)}
+                      mode={1}
+                    />
+                  </div>
+                  </div>
                 {/* </div> */}
                 <div className="flex pt-4 justify-content-end">
                   <button
@@ -561,9 +590,11 @@ function ProjectForm() {
                       name="client_id"
                       formControlName={client_id}
                       handleChange={(text) => {
+                        if(text.target.value!='Select client...'){
                         setClientID(text.target.value);
                         console.log(clientLocList,pocList)
                         handleChangeClient(text);
+                        }
                       }}
                       data={client}
                       mode={2}
@@ -719,7 +750,9 @@ function ProjectForm() {
                         <TDInputTemplate
                           placeholder="Choose name"
                           formControlName={input?.poc_name}
-                          handleChange={event => handleDtChange(index, event)}
+                          handleChange={event =>{
+                            if(event.target.value!='Choose name')
+                            handleDtChange(index, event)}}
                           label="Contact Person"
                           name="poc_name"
                           data={nameList}
