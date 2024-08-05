@@ -19,19 +19,22 @@ logging.basicConfig(level=logging.INFO)
 poRouter = APIRouter()
 class prodDetails(BaseModel):
     sl_no:Optional[int]=None
-    item_id:Optional[int]=None
-    quantity:Optional[int]=None
-    item_rt:Optional[float]=None
-    discount:Optional[float]=None
-    unit_id:Optional[int]=None
-    cgst_id:Optional[int]=None
-    sgst_id:Optional[int]=None
-    igst_id:Optional[int]=None
-    delivery_dt:Optional[str]=None
-class paymentTerms(BaseModel):
+    item_name:Optional[int]=None
+    qty:Optional[int]=None
+    rate:Optional[float]=None
+    disc:Optional[float]=None
+    unit:Optional[int]=None
+    unit_price:Optional[str]=None
+    CGST:Optional[int]=None
+    SGST:Optional[int]=None
+    IGST:Optional[int]=None
+    delivery_date:Optional[str]=None
+     
+class payTerms(BaseModel):
     sl_no:Optional[int]=None
     stage:Optional[str]=None
-    terms_dtls:Optional[str]=None
+    term:Optional[str]=None
+
 class PoModel(BaseModel):
     sl_no:Optional[int]=None
     po_id:Optional[str]=None
@@ -43,7 +46,6 @@ class PoModel(BaseModel):
     price_basis:Optional[str]=None
     price_basis_desc:Optional[str]=None
     packing_fwd_per:Optional[float]=None
-    packing_fwd_val:Optional[float]=None
     freight_ins:Optional[str]=None
     test_certificate:Optional[str]=None
     test_certificate_desc:Optional[str]=None
@@ -63,12 +65,18 @@ class PoModel(BaseModel):
     packing_type:Optional[str]=None
     manufacture_clearance:Optional[str]=None
     manufacture_clearance_desc:Optional[str]=None
-    payment_terms:Optional[list[paymentTerms]]
+    payment_terms:Optional[list[payTerms]]
     bill_to:str
     ship_to:Optional[str]=None
     warehouse_flag:Optional[str]=None
     po_notes:Optional[str]=None
-
+    mdcc:Optional[str]=None
+    mdcc_scope:Optional[str]=None
+    inspection:Optional[str]=None
+    inspection_scope:Optional[str]=None
+    draw:Optional[str]=None
+    draw_scope:Optional[str]=None
+    draw_period:Optional[str]=None
     user:str
 
 
