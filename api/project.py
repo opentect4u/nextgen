@@ -10,39 +10,50 @@ from models.masterApiModel import db_select, db_Insert
 from datetime import datetime
 import datetime as dt
 import random
-from typing import Optional
+from typing import Optional, Annotated, Union
+import os
+
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+# Define the upload folder
+UPLOAD_FOLDER = "upload_file"
+
+# Ensure the upload folder exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 projectRouter = APIRouter()
 class ProjectPoc(BaseModel):
-    sl_no:int = Form(...)
-    poc_name:str = Form(...)
-    poc_ph_1:Optional[str]=Form(None)
-    poc_designation:Optional[str]=Form(None)
-    poc_email:Optional[str]=Form(None)
+    sl_no:int
+    poc_name:str
+    poc_ph_1:Optional[str]
+    poc_designation:Optional[str]
+    poc_email:Optional[str]
 class Project(BaseModel):
-     id:int = Form(...)
-     proj_id:str = Form(...)
-     proj_name:str = Form(...)
-     client_id:int = Form(...)
-     client_location:str = Form(...)
-     client_gst:str = Form(...)
-     client_pan:str = Form(...)
-     order_id:str = Form(...)
-     order_date:str = Form(...)
-     proj_delivery_date:str = Form(...)
-     proj_desc:str = Form(...)
-     proj_order_val:str = Form(...)
-     proj_end_user:str = Form(...)
-     proj_consultant:str = Form(...)
-     epc_contractor:str = Form(...)
-     price_basis:str = Form(...)
-     ld_clause_flag:str = Form(...)
-     ld_clause:str = Form(...)
-     erection_responsibility:str = Form(...)
-     warranty:str = Form(...)
-     proj_manager:int = Form(...)
+     id:int
+     proj_id:str
+     proj_name:str
+     client_id:int
+     client_location:str
+     client_gst:str
+     client_pan:str
+     order_id:str
+     order_date:str
+     proj_delivery_date:str
+     proj_desc:str
+     proj_order_val:str
+     proj_end_user:str
+     proj_consultant:str
+     epc_contractor:str
+     price_basis:str
+     ld_clause_flag:str
+     ld_clause:str
+     erection_responsibility:str
+     warranty:str
+     proj_manager:int
      proj_poc:list[ProjectPoc]
-     docs: Optional[UploadFile] = File(None)
+    #  docs: Union[list[UploadFile], UploadFile, None] = None
     #  proj_remarks:str
      user:str
      
@@ -113,6 +124,70 @@ class GetPoc(BaseModel):
 
 #     return res_dt
 
+@projectRouter.post('/add_proj_files')
+async def add_proj_files(proj_id:str = Form(...), user:str = Form(...), docs:Optional[Union[UploadFile, list[UploadFile]]] = File(None)):
+    print(docs)
+    
+    fileName = ''
+    res_dt = {}
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    if not docs:
+        return {"suc": 0, "msg": "No file sent"}
+    else:
+        if isinstance(docs, list):
+            files = docs
+        else:
+            files = [docs]
+
+        logging.info(f"Number of files received: {len(files)}")
+        logging.info(f"Type of files received: {type(files)}")
+
+        if(type(files) != list):
+            fileName = None if not files else await uploadfileToLocal(files)
+            fields3= f'proj_id,proj_doc,created_by,created_at'
+            values3 = f'"{proj_id}","{fileName}","{user}","{formatted_dt}"' 
+            table_name3 = "td_project_doc"
+            whr3 =  ""
+            flag3 = 0
+            # if(id==0):
+            result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+            res_dt = result3
+        else:
+            # print(docs)
+            for f in files:
+                fileName = ''
+                fileName = None if not f else await uploadfileToLocal(f)
+                fields3= f'proj_id,proj_doc,created_by,created_at'
+                values3 = f'"{proj_id}","{fileName}","{user}","{formatted_dt}"' 
+                table_name3 = "td_project_doc"
+                whr3 =  ""
+                flag3 = 0
+                # if(id==0):
+                result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+                res_dt = result3
+        return res_dt
+
+async def uploadfileToLocal(file):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(UPLOAD_FOLDER, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
+
 @projectRouter.post('/addproject')
 async def addproject(dt:Project):
     print(dt)
@@ -129,34 +204,34 @@ async def addproject(dt:Project):
     lastID=dt.id if dt.id>0 else result["lastId"]
 
     if(result['suc']>0):
-            fields1= f'proj_id,proj_manager,created_by,created_at' if dt.id==0 else f'proj_manager="{dt.proj_manager}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
-            values1 = f'"{dt.proj_id}","{dt.proj_manager}","{dt.user}","{formatted_dt}"'
-            table_name1 = "td_project_assign"
-            whr1 =f'proj_id="{dt.proj_id}"' if dt.id>0 else None
-            flag1 = 1 if dt.id>0 else 0
-            result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+        fields1= f'proj_id,proj_manager,created_by,created_at' if dt.id==0 else f'proj_manager="{dt.proj_manager}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+        values1 = f'"{dt.proj_id}","{dt.proj_manager}","{dt.user}","{formatted_dt}"'
+        table_name1 = "td_project_assign"
+        whr1 =f'proj_id="{dt.proj_id}"' if dt.id>0 else None
+        flag1 = 1 if dt.id>0 else 0
+        result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
 
-            # fields2= f'proj_id,proj_remarks,created_by,created_at'
-            # values2 = f'"{dt.proj_id}","{dt.proj_remarks}","{dt.user}","{formatted_dt}"'
-            # table_name2 = "td_project_remarks"
-            # whr2 =  None
-            # flag2 = 1 if dt.id>0 else 0
-            # result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
+        # fields2= f'proj_id,proj_remarks,created_by,created_at'
+        # values2 = f'"{dt.proj_id}","{dt.proj_remarks}","{dt.user}","{formatted_dt}"'
+        # table_name2 = "td_project_remarks"
+        # whr2 =  None
+        # flag2 = 1 if dt.id>0 else 0
+        # result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
 
-            for v in dt.proj_poc:
-                fields= f'poc_name="{v.poc_name}", poc_email="{v.poc_email}",poc_phone_1="{v.poc_ph_1}",poc_designation="{v.poc_designation}",poc_email="{v.poc_email}",modified_by="{dt.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'proj_id,poc_name,poc_email,poc_phone_1,poc_designation,created_by,created_at'
-                values = f'"{dt.proj_id}","{v.poc_name}","{v.poc_email}","{v.poc_ph_1}","{v.poc_designation}","{dt.user}","{formatted_dt}"'
-                table_name = "td_project_poc"
-                whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
-                flag2 = 1 if v.sl_no>0 else 0
-                result2 = await db_Insert(table_name, fields, values, whr, flag2)
+        for v in dt.proj_poc:
+            fields= f'poc_name="{v.poc_name}", poc_email="{v.poc_email}",poc_phone_1="{v.poc_ph_1}",poc_designation="{v.poc_designation}",poc_email="{v.poc_email}",modified_by="{dt.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'proj_id,poc_name,poc_email,poc_phone_1,poc_designation,created_by,created_at'
+            values = f'"{dt.proj_id}","{v.poc_name}","{v.poc_email}","{v.poc_ph_1}","{v.poc_designation}","{dt.user}","{formatted_dt}"'
+            table_name = "td_project_poc"
+            whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
+            flag2 = 1 if v.sl_no>0 else 0
+            result2 = await db_Insert(table_name, fields, values, whr, flag2)
 
-            if result1['suc'] and result2['suc']>0 :
-                res_dt = {"suc": 1, "msg": f"Project saved successfully!" if dt.id==0 else  f"Project updated successfully!" }
-            else:
-                res_dt = {"suc": 0, "msg": "Error!"}
-    else:
+        if result1['suc'] and result2['suc']>0 :
+            res_dt = {"suc": 1, "msg": f"Project saved successfully!" if dt.id==0 else  f"Project updated successfully!", "proj_id": dt.proj_id }
+        else:
             res_dt = {"suc": 0, "msg": "Error!"}
+    else:
+        res_dt = {"suc": 0, "msg": "Error!"}
     
 
     return res_dt
