@@ -115,8 +115,16 @@ async def addpo(data:PoModel):
     flag2 = 1 if data.sl_no>0 else 0
 
     result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
+
+    for c in data.payment_terms:
+        fields3= f'stage_no="{c.stage}",terms_dtls="{c.term}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,stage_no,terms_dtls,created_by,created_at'
+        values3 = f'"{lastID}","{c.stage}","{c.term}","{data.user}","{formatted_dt}"'
+        table_name3 = "td_po_payment_dtls"
+        whr3=  f'po_sl_no="{c.sl_no}"' if c.sl_no > 0 else None
+        flag3 = 1 if c.sl_no>0 else 0
+        result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
     
-    if(result['suc']>0 and result1['suc']>0 and result2['suc']>0):
+    if(result['suc']>0 and result1['suc']>0 and result2['suc']>0 and result3['suc']>0):
         res_dt = {"suc": 1, "msg": f"Saved successfully!" if data.sl_no==0 else f"Updated successfully!"}
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating"}
