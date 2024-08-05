@@ -7,14 +7,12 @@ from fastapi.staticfiles import StaticFiles
 # import ssl
 # testing git
 app = FastAPI()
-# app.mount("/uploads", StaticFiles(directory="upload_file"), name="uploads")
+app.mount("/uploads", StaticFiles(directory="upload_file"), name="uploads")
 
 # ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 # ssl_context.load_cert_chain('./ssl_apinextgen_100724/apinextgen.pem', keyfile='./ssl_apinextgen_100724/private-key.pem')
 
-origins = [
-    "*"
-]
+origins = [ "*" ]
 
 if __name__ == "__main__":
    uvicorn.run("main:app", host="0.0.0.0", port=3011, ssl_keyfile='./ssl_apinextgen_100724/private-key.pem',

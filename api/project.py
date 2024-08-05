@@ -125,36 +125,27 @@ class GetPoc(BaseModel):
 #     return res_dt
 
 @projectRouter.post('/add_proj_files')
-async def add_proj_files(proj_id:str = Form(...), user:str = Form(...), docs:Optional[Union[UploadFile, list[UploadFile]]] = File(None)):
-    print(docs)
+async def add_proj_files(proj_id:str = Form(...), user:str = Form(...), docs:Optional[Union[UploadFile, None]] = File(None), docs1:Optional[Union[UploadFile, None]] = File(None), docs2:Optional[Union[UploadFile, None]] = File(None)):
     
     fileName = ''
     res_dt = {}
+    files = []
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    if not docs:
+    if not docs or not docs1 or not docs2:
         return {"suc": 0, "msg": "No file sent"}
     else:
-        if isinstance(docs, list):
-            files = docs
-        else:
-            files = [docs]
+        if docs:
+            files.append(docs)
+        if docs1:
+            files.append(docs1)
+        if docs2:
+            files.append(docs2)
 
         logging.info(f"Number of files received: {len(files)}")
         logging.info(f"Type of files received: {type(files)}")
 
-        if(type(files) != list):
-            fileName = None if not files else await uploadfileToLocal(files)
-            fields3= f'proj_id,proj_doc,created_by,created_at'
-            values3 = f'"{proj_id}","{fileName}","{user}","{formatted_dt}"' 
-            table_name3 = "td_project_doc"
-            whr3 =  ""
-            flag3 = 0
-            # if(id==0):
-            result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
-            res_dt = result3
-        else:
-            # print(docs)
+        if(len(files) > 0):
             for f in files:
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal(f)
@@ -167,6 +158,31 @@ async def add_proj_files(proj_id:str = Form(...), user:str = Form(...), docs:Opt
                 result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
                 res_dt = result3
         return res_dt
+
+        # if(type(files) != list):
+        #     fileName = None if not files else await uploadfileToLocal(files)
+        #     fields3= f'proj_id,proj_doc,created_by,created_at'
+        #     values3 = f'"{proj_id}","{fileName}","{user}","{formatted_dt}"' 
+        #     table_name3 = "td_project_doc"
+        #     whr3 =  ""
+        #     flag3 = 0
+        #     # if(id==0):
+        #     result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+        #     res_dt = result3
+        # else:
+        #     # print(docs)
+        #     for f in files:
+        #         fileName = ''
+        #         fileName = None if not f else await uploadfileToLocal(f)
+        #         fields3= f'proj_id,proj_doc,created_by,created_at'
+        #         values3 = f'"{proj_id}","{fileName}","{user}","{formatted_dt}"' 
+        #         table_name3 = "td_project_doc"
+        #         whr3 =  ""
+        #         flag3 = 0
+        #         # if(id==0):
+        #         result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+        #         res_dt = result3
+        # return res_dt
 
 async def uploadfileToLocal(file):
     current_datetime = datetime.now()

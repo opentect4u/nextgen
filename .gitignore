@@ -8,3 +8,4 @@ package-lock.json
 .env*
 *.sql
 __pycache__
+upload_file/*
