@@ -93,7 +93,7 @@ async def addpo(data:PoModel):
     values = f'"{data.po_date}","{data.po_type}","{data.project_id}","{data.po_id}","{data.vendor_id}","{data.user}","{formatted_dt}"'
     table_name = "td_po_basic"
     whr = f'sl_no="{data.sl_no}"' if data.sl_no > 0 else None
-    flag = 1 if data.c_id>0 else 0
+    flag = 1 if data.sl_no>0 else 0
 
     result = await db_Insert(table_name, fields, values, whr, flag)
 
