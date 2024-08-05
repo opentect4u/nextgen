@@ -6,14 +6,14 @@ import VError from "../../Components/VError";
 import { useParams } from "react-router-dom";
 import { Switch } from "antd";
 
-function Delivery({ pressBack, pressNext, type }) {
-  console.log(type);
+function Delivery({ pressBack, pressNext, data }) {
+  console.log(data);
 
   const [deliveryConfirm, setDelivery] = useState(false);
   const [delivery, setDeliveryAdd] = useState(
-    type == "G"
+    data.type == "G"
       ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
-      : ""
+      : (data.delivery?data.delivery:"")
   );
   const params = useParams();
 
@@ -44,7 +44,7 @@ function Delivery({ pressBack, pressNext, type }) {
               mode={3}
             />
 
-            {type == "P" && (
+            {data.type == "P" && (
               <p
                 className="mt-3 text-sm text-gray-500 font-bold float-right dark:text-gray-300"
                 id="file_input_help"
@@ -82,7 +82,7 @@ function Delivery({ pressBack, pressNext, type }) {
               name="ship_to"
               value={delivery}
               onChange={(text) => setDeliveryAdd(text.target.value)}
-              disabled={type == "G" || deliveryConfirm ? true : false}
+              disabled={data.type == "G" || deliveryConfirm ? true : false}
             />
             {!delivery && <VError title={"Address is required"} />}
           </div>

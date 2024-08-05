@@ -8,6 +8,9 @@ import { routePaths } from '../Assets/Data/Routes';
 import '../Styles/styles.css'
 import ClientInfo from './ClientInfo';
 import PocInfo from './PocInfo';
+import ProjectInfo from './ProjectInfo';
+import VendorInfo from './VendorInfo';
+import ProdInfo from './ProdInfo';
 const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
   const navigate = useNavigate();
   console.log(data)
@@ -27,7 +30,7 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
     }
   ];
   return (
-      <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2 && flag!=5?'Warning!':'Information'}</div>} visible={visible} maximizable style={{
+      <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2 && flag!=5  && flag!=6 && flag!=7 && flag!=8 && flag!=9?'Warning!':'Information'}</div>} visible={visible} maximizable style={{
          width: '50vw',
          background:'black'
          }} onHide={() => {if (!visible) return; onPress() }}>
@@ -72,6 +75,27 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
         
         <p className="m-0">
           <PocInfo data={data}/>
+        </p>
+        
+        }
+         {flag==7 && 
+        
+        <p className="m-0">
+          <ProjectInfo data={data}/>
+        </p>
+        
+        }
+         {flag==8 && 
+        
+        <p className="m-0">
+          <VendorInfo data={data}/>
+        </p>
+        
+        }
+         {flag==9 && 
+        
+        <p className="m-0">
+          <ProdInfo data={data}/>
         </p>
         
         }

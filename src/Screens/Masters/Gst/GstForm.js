@@ -105,7 +105,7 @@ function GstForm() {
         >
           <form onSubmit={formik.handleSubmit}>
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-1">
   
                 <TDInputTemplate
                   placeholder="GST Type"
@@ -122,7 +122,7 @@ function GstForm() {
                   <VError title={formik.errors.gst_type} />
                 ) : null}
               </div>
-              <div className="sm:col-span-2 mb-2">
+              <div className="sm:col-span-1 mb-2">
                 <TDInputTemplate
                   placeholder="Type GST Rate"
                   type="text"

@@ -112,14 +112,14 @@ function ClientForm() {
     c_vendor_code: Yup.string().required("Vendor code is required"),
     dynamicFields: Yup.array().of(
       Yup.object().shape({
-        poc_name: Yup.string().optional(),
+        poc_name: Yup.string().required('Please enter name'),
         poc_designation: Yup.string().optional(),
         poc_department: Yup.string().optional(),
-        poc_email: Yup.string().optional(),
+        poc_email: Yup.string().required('Please enter email').email("Incorrect email format"),
         poc_direct_no: Yup.string().optional(),
         poc_ext_no: Yup.string().optional(),
-        poc_ph_1: Yup.string().optional(),
-        poc_ph_2: Yup.string().optional(),
+        poc_ph_1: Yup.string().required('Please enter primary number').length(10),
+        poc_ph_2: Yup.string().optional().length(10),
         poc_location: Yup.string().optional(),
       })
     ),
@@ -276,11 +276,11 @@ function ClientForm() {
                 <React.Fragment key={index}>
                   {/* <div className="sm:col-span-2 flex gap-2 justify-end my-2"> */}
                   <div className="sm:col-span-6 flex gap-2 justify-end  mt-6 -mb-6">
-                    <Button
+                 {values.locationFields?.length>1 &&   <Button
                       className="rounded-full text-white bg-red-800 border-red-800"
                       onClick={() => remove(index)}
                       icon={<MinusOutlined />}
-                    ></Button>
+                    ></Button>}
                     <Button
                       className="rounded-full bg-green-900 text-white"
                       onClick={() => push({ sl_no:0, c_location: "", c_gst: "", pan: "" })}
@@ -350,11 +350,11 @@ function ClientForm() {
                         {values.dynamicFields.map((field, index) => (
                           <React.Fragment key={index}>
                             <div className="sm:col-span-6 flex gap-2 justify-end mt-6 -mb-6">
-                            <Button
+                         {values.dynamicFields?.length>1 &&   <Button
                               className="rounded-full text-white bg-red-800 border-red-800"
                               onClick={() => remove(index)}
                               icon={<MinusOutlined />}
-                            ></Button>
+                            ></Button>}
 
                             <Button
                               className="rounded-full bg-green-900 text-white"
@@ -389,6 +389,9 @@ function ClientForm() {
                                 handleBlur={handleBlur}
                                 mode={1}
                               />
+                               {errors.dynamicFields?.[index]?.poc_name && touched.dynamicFields?.[index]?.poc_name && (
+                      <VError title={errors.dynamicFields[index].poc_name} />
+                    )}
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
@@ -398,7 +401,7 @@ function ClientForm() {
                                 name={`dynamicFields[${index}].poc_designation`}
                                 formControlName={
                                   values.dynamicFields[index]
-                                    ?.poc_designation || ""
+                                    ?.poc_designation
                                 }
                                 handleChange={handleChange}
                                 handleBlur={handleBlur}
@@ -436,6 +439,9 @@ function ClientForm() {
                                 handleBlur={handleBlur}
                                 mode={1}
                               />
+                               {errors.dynamicFields?.[index]?.poc_email && touched.dynamicFields?.[index]?.poc_email && (
+                      <VError title={errors.dynamicFields[index].poc_email} />
+                    )}
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
@@ -479,6 +485,9 @@ function ClientForm() {
                                 handleBlur={handleBlur}
                                 mode={1}
                               />
+                               {errors.dynamicFields?.[index]?.poc_ph_1 && touched.dynamicFields?.[index]?.poc_ph_1 && (
+                      <VError title={errors.dynamicFields[index].poc_ph_1} />
+                    )}
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate

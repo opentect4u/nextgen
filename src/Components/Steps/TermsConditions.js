@@ -4,34 +4,31 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import VError from "../../Components/VError";
 import { useParams } from "react-router-dom";
-function TermsConditions({pressNext,pressBack}) {
+function TermsConditions({pressNext,pressBack,data}) {
     const params = useParams();
     const initialValues = {
-      price_basis_flag: "",
-      price_basis_desc:"",
-      packing_forwarding:"",
-      freight_insurance:"",
-      payment_terms:"",
-      payment_terms_value:"",
-      against:"",
-      test_certificate:"",
-      ld_charges:"",
-      ld_applicable_date:"",
-      ld_applied_on:"",
-      ld_value:"",
-      mrn_date:"",
-      po_total_value:"",
-      vendor_dispatch_date:"",
-      pending_material_value:"",
-      others:"",
-      warranty_guarantee_flag:"",
-      duration:"",
-      om_manual_flag:"",
-      om_manual_desc:"",
-      oi_flag:"",
-      oi_desc:"",
-      packing_type:"",
-      manufacture_clearance:""
+      price_basis_flag: data.price_basis_flag?data.price_basis_flag:"",
+      price_basis_desc:data.price_basis_desc?data.price_basis_desc:"",
+      packing_forwarding:data.packing_forwarding?data.packing_forwarding:"",
+      freight_insurance:data.freight_insurance?data.freight_insurance:"",
+      test_certificate:data.test_certificate?data.test_certificate:"",
+      test_certificate_desc:data.test_certificate_desc?data.test_certificate_desc:"",
+      ld_applicable_date:data.ld_applicable_date?data.ld_applicable_date:"",
+      ld_applied_on:data.ld_applied_on?data.ld_applied_on:"",
+      ld_value:data.ld_value?data.ld_value:"",
+      po_min_value:data.po_min_value?data.po_min_value:"",
+      others_ld:data.others_ld?data.others_ld:"",
+      others_applied:data.others_applied?data.others_applied:"",
+      warranty_guarantee_flag:data.warranty_guarantee_flag?data.warranty_guarantee_flag:"",
+      duration:data.duration?data.duration:"",
+      duration_val:data.duration_val?data.duration_val:"",
+      om_manual_flag:data.om_manual_flag?data.om_manual_flag:"",
+      om_manual_desc:data.om_manual_desc?data.om_manual_desc:"",
+      oi_flag:data.oi_flag?data.oi_flag:"",
+      oi_desc:data.oi_desc?data.oi_desc:"",
+      packing_type:data.packing_type?data.packing_type:"",
+      manufacture_clearance:data.manufacture_clearance?data.manufacture_clearance:"",
+      manufacture_clearance_desc:data.manufacture_clearance_desc?data.manufacture_clearance_desc:""
     };
     const [formValues, setValues] = useState(initialValues);
     const validationSchema = Yup.object({
@@ -39,27 +36,43 @@ function TermsConditions({pressNext,pressBack}) {
       price_basis_desc:Yup.string().required("Price Basis is required"),
       packing_forwarding:Yup.string().required("Packing & Forwarding is required"),
       freight_insurance:Yup.string().required("Freight Insurance is required"),
-      payment_terms:Yup.string().required("Payment Terms is required"),
-      payment_terms_value:Yup.string().required("Value is required"),
-      against:Yup.string().required("Against is required"),
       test_certificate:Yup.string().required("Test Certificate is required"),
-      ld_charges:Yup.string().required("LD Charges is required"),
+      test_certificate_desc: Yup.string().when('test_certificate', {
+        is: 'Y',
+        then: () => Yup.string().required("Test Certificate description is required"),
+        otherwise: () => Yup.string()}),
       ld_applicable_date:Yup.string().required("LD applicable date is required"),
+      others_ld: Yup.string().when('ld_applicable_date', {
+        is: 'O',
+        then: () => Yup.string().required("Required"),
+        otherwise: () => Yup.string()}),
+
       ld_applied_on:Yup.string().required("LD applied on is required"),
+      others_applied: Yup.string().when('ld_applied_on', {
+        is: 'O',
+        then: () => Yup.string().required("Required"),
+        otherwise: () => Yup.string()}),
       ld_value:Yup.string().required("LD values is required"),
-      mrn_date:Yup.string().required("MRN date is required"),
-      po_total_value:Yup.string().required("PO total value is required"),
-      vendor_dispatch_date:Yup.string().required("Vendor dispatch date is required"),
-      pending_material_value:Yup.string().required("Pending material value is required"),
-      others:Yup.string().required("Others is required"),
+      po_min_value:Yup.string().required("PO total value is required"),
       warranty_guarantee_flag:Yup.string().required("Warranty/Guarantee is required"),
       duration:Yup.string().required("Duration is required"),
+      duration_val:Yup.string().required("Duration desctription is required"),
       om_manual_flag:Yup.string().required("O&M Manual is required"),
-      om_manual_desc:Yup.string().required("O&M Manual description is required"),
+      om_manual_desc: Yup.string().when('om_manual_flag', {
+        is: 'A',
+        then: () => Yup.string().required("O&M Manual description is required"),
+        otherwise: () => Yup.string()}),
       oi_flag:Yup.string().required("Operation/Installation is required"),
-      oi_desc:Yup.string().required("Operation/Installation description is required"),
+      oi_desc: Yup.string().when('oi_flag', {
+        is: 'A',
+        then: () => Yup.string().required("Operation/Installation description is required"),
+        otherwise: () => Yup.string()}),
       packing_type:Yup.string().required("Packing type is required"),
-      manufacture_clearance:Yup.string().required("Manufacture clearance is required")
+      manufacture_clearance:Yup.string().required("Manufacture clearance is required"),
+      manufacture_clearance_desc: Yup.string().when('manufacture_clearance', {
+        is: 'A',
+        then: () => Yup.string().required("Manufacture clearance description is required"),
+        otherwise: () => Yup.string()}),
     });
    
     const onSubmit = (values) => {
@@ -80,16 +93,16 @@ function TermsConditions({pressNext,pressBack}) {
         Terms & Conditions
         </h2>
     <form onSubmit={formik.handleSubmit}>
-      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-        <div className="sm:col-span-2">
+      <div className="grid gap-4 sm:grid-cols-10 sm:gap-6">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Price Basis"
                         type="text"
                         label="Price Basis"
                         name="price_basis_flag"
                         data={[
-                          { name: "For", code: "F" },
-                          { name: "Ex-works", code: "E" },
+                          { name: "FOR", code: "F" },
+                          { name: "EX-WORKS", code: "E" },
                         ]}
                         formControlName={formik.values.price_basis_flag}
                         handleChange={formik.handleChange}
@@ -100,7 +113,7 @@ function TermsConditions({pressNext,pressBack}) {
                       <VError title={formik.errors.price_basis_flag} />
                     )}
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Price Basis Description"
                         type="text"
@@ -110,17 +123,17 @@ function TermsConditions({pressNext,pressBack}) {
                         formControlName={formik.values.price_basis_desc}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        mode={3}
                       />
                       {formik.errors.price_basis_desc && formik.touched.price_basis_desc && (
                       <VError title={formik.errors.price_basis_desc} />
                     )}
         </div>
       
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Packing & Forwaring"
-                        type="text"
+                        type="number"
                         label="Packing & Forwaring"
                         name="packing_forwarding"
                         
@@ -134,7 +147,7 @@ function TermsConditions({pressNext,pressBack}) {
                     )}
         </div>
 
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Freight & Insurance"
                         type="text"
@@ -144,65 +157,15 @@ function TermsConditions({pressNext,pressBack}) {
                         formControlName={formik.values.freight_insurance}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        mode={3}
                       />
                       {formik.errors.freight_insurance && formik.touched.freight_insurance && (
                       <VError title={formik.errors.freight_insurance} />
                     )}
         </div>
-        <div className="sm:col-span-2">
-        <TDInputTemplate
-                        placeholder="Payment Terms"
-                        type="text"
-                        label="Payment Terms"
-                        name="payment_terms"
-                        data={[
-                          { name: "PI", code: "pi" },
-                          { name: "PDC", code: "pdc" },
-                          { name: "Others", code: "O" }
-                        ]}
-                        formControlName={formik.values.payment_terms}
-                        handleChange={formik.handleChange}
-                        handleBlur={formik.handleBlur}
-                        mode={2}
-                      />
-                      {formik.errors.payment_terms && formik.touched.payment_terms && (
-                      <VError title={formik.errors.payment_terms} />
-                    )}
-        </div>
-        <div className="sm:col-span-2">
-        <TDInputTemplate
-                        placeholder="Payment Terms Value"
-                        type="text"
-                        label="Payment Terms Value"
-                        name="payment_terms_value"
-                       
-                        formControlName={formik.values.payment_terms_value}
-                        handleChange={formik.handleChange}
-                        handleBlur={formik.handleBlur}
-                        mode={1}
-                      />
-                      {formik.errors.payment_terms_value && formik.touched.payment_terms_value && (
-                      <VError title={formik.errors.payment_terms_value} />
-                    )}
-        </div>
-        <div className="sm:col-span-2">
-        <TDInputTemplate
-                        placeholder="Against"
-                        type="text"
-                        label="Against"
-                        name="against"
-                       
-                        formControlName={formik.values.against}
-                        handleChange={formik.handleChange}
-                        handleBlur={formik.handleBlur}
-                        mode={1}
-                      />
-                      {formik.errors.against && formik.touched.against && (
-                      <VError title={formik.errors.against} />
-                    )}
-        </div>
-        <div className="sm:col-span-2">
+       
+      
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Test Certificate"
                         type="text"
@@ -212,42 +175,60 @@ function TermsConditions({pressNext,pressBack}) {
                         formControlName={formik.values.test_certificate}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        data={[{code:'Y',name:'Yes'},{code:'N',name:'No'}]}
+                        mode={2}
                       />
                       {formik.errors.test_certificate && formik.touched.test_certificate && (
                       <VError title={formik.errors.test_certificate} />
                     )}
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
-                        placeholder="LD Charges"
+                        placeholder="Test Certificate Description"
                         type="text"
-                        label="LD Charges"
-                        name="ld_charges"
+                        label="Test Certificate Description"
+                        name="test_certificate_desc"
                        
-                        formControlName={formik.values.ld_charges}
+                        formControlName={formik.values.test_certificate_desc}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        mode={3}
                       />
-                      {formik.errors.ld_charges && formik.touched.ld_charges && (
-                      <VError title={formik.errors.ld_charges} />
+                      {formik.errors.test_certificate_desc && formik.touched.test_certificate_desc && (
+                      <VError title={formik.errors.test_certificate_desc} />
                     )}
         </div>
+       
         <div className="sm:col-span-2">
         <TDInputTemplate
                         placeholder="LD applicable date"
                         type="date"
                         label="LD applicable date"
                         name="ld_applicable_date"
-                       
+                        data={[{name:'MRN Date',code:'M'},{name:'Dispatch Date',code:'D'},{name:'Others',code:'O'}]}
                         formControlName={formik.values.ld_applicable_date}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        mode={2}
+                      />
+                      {formik.errors.ld_applicable_date && formik.touched.ld_applicable_date && (
+                      <VError title={formik.errors.ld_applicable_date} />
+                    )}
+        </div>
+        <div className="sm:col-span-2">
+        <TDInputTemplate
+                        placeholder="Others"
+                        type="text"
+                        label="Others"
+                        name="others_ld"
+                       
+                        formControlName={formik.values.others_ld}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {formik.errors.ld_applicable_date && formik.touched.ld_applicable_date && (
-                      <VError title={formik.errors.ld_applicable_date} />
+                      {formik.errors.others_ld && formik.touched.others_ld && (
+                      <VError title={formik.errors.others_ld} />
                     )}
         </div>
         <div className="sm:col-span-2">
@@ -256,11 +237,11 @@ function TermsConditions({pressNext,pressBack}) {
                         type="text"
                         label="LD value applied on"
                         name="ld_applied_on"
-                       
+                        data={[{code:'T',name:'PO Total Value(%)'},{code:'P',name:'Pending Material Value'},{name:'Others',code:'O'}]}
                         formControlName={formik.values.ld_applied_on}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        mode={2}
                       />
                       {formik.errors.ld_applied_on && formik.touched.ld_applied_on && (
                       <VError title={formik.errors.ld_applied_on} />
@@ -268,8 +249,23 @@ function TermsConditions({pressNext,pressBack}) {
         </div>
         <div className="sm:col-span-2">
         <TDInputTemplate
-                        placeholder="LD value (%)"
+                        placeholder="Others"
                         type="text"
+                        label="Others"
+                        name="others_applied"
+                        formControlName={formik.values.others_applied}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        mode={1}
+                      />
+                      {formik.errors.others_applied && formik.touched.others_applied && (
+                      <VError title={formik.errors.others_applied} />
+                    )}
+        </div>
+        <div className="sm:col-span-2">
+        <TDInputTemplate
+                        placeholder="LD value (%)"
+                        type="number"
                         label="LD value (%)"
                         name="ld_value"
                        
@@ -282,87 +278,26 @@ function TermsConditions({pressNext,pressBack}) {
                       <VError title={formik.errors.ld_value} />
                     )}
         </div>
-        <div className="sm:col-span-2">
+       
+        <div className="sm:col-span-10">
         <TDInputTemplate
-                        placeholder="MRN Date"
-                        type="date"
-                        label="MRN Date"
-                        name="mrn_date"
+                        placeholder="Minimum % on PO value"
+                        type="number"
+                        label="Minimum % on PO value"
+                        name="po_min_value"
                        
-                        formControlName={formik.values.mrn_date}
+                        formControlName={formik.values.po_min_value}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
                         mode={1}
                       />
-                      {formik.errors.mrn_date && formik.touched.mrn_date && (
-                      <VError title={formik.errors.mrn_date} />
+                      {formik.errors.po_min_value && formik.touched.po_min_value && (
+                      <VError title={formik.errors.po_min_value} />
                     )}
         </div>
-        <div className="sm:col-span-2">
-        <TDInputTemplate
-                        placeholder="PO total value"
-                        type="text"
-                        label="PO total value"
-                        name="po_total_value"
-                       
-                        formControlName={formik.values.po_total_value}
-                        handleChange={formik.handleChange}
-                        handleBlur={formik.handleBlur}
-                        mode={1}
-                      />
-                      {formik.errors.po_total_value && formik.touched.po_total_value && (
-                      <VError title={formik.errors.po_total_value} />
-                    )}
-        </div>
-        <div className="sm:col-span-2">
-        <TDInputTemplate
-                        placeholder="Vendor dispatch date"
-                        type="date"
-                        label="Vendor dispatch date"
-                        name="vendor_dispatch_date"
-                       
-                        formControlName={formik.values.vendor_dispatch_date}
-                        handleChange={formik.handleChange}
-                        handleBlur={formik.handleBlur}
-                        mode={1}
-                      />
-                      {formik.errors.vendor_dispatch_date && formik.touched.vendor_dispatch_date && (
-                      <VError title={formik.errors.vendor_dispatch_date} />
-                    )}
-        </div>
-        <div className="sm:col-span-2">
-        <TDInputTemplate
-                        placeholder="Pending material value"
-                        type="text"
-                        label="Pending material value"
-                        name="pending_material_value"
-                       
-                        formControlName={formik.values.pending_material_value}
-                        handleChange={formik.handleChange}
-                        handleBlur={formik.handleBlur}
-                        mode={1}
-                      />
-                      {formik.errors.pending_material_value && formik.touched.pending_material_value && (
-                      <VError title={formik.errors.pending_material_value} />
-                    )}
-        </div>
-        <div className="sm:col-span-2">
-        <TDInputTemplate
-                        placeholder="Others"
-                        type="text"
-                        label="Others"
-                        name="others"
-                       
-                        formControlName={formik.values.others}
-                        handleChange={formik.handleChange}
-                        handleBlur={formik.handleBlur}
-                        mode={1}
-                      />
-                      {formik.errors.others && formik.touched.others && (
-                      <VError title={formik.errors.others} />
-                    )}
-        </div>
-        <div className="sm:col-span-2">
+       
+       
+        <div className="sm:col-span-10">
         <TDInputTemplate
                         placeholder="Warranty/Guarantee"
                         type="text"
@@ -381,25 +316,41 @@ function TermsConditions({pressNext,pressBack}) {
                       <VError title={formik.errors.warranty_guarantee_flag} />
                     )}
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Duration"
                         type="date"
                         label="Duration"
                         name="duration"
-                       
+                        data={[{code:'D',name:'DD'},{code:'M',name:'MM'},{name:'YY',code:'Y'}]}
                         formControlName={formik.values.duration}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        mode={2}
                       />
                       {formik.errors.duration && formik.touched.duration && (
                       <VError title={formik.errors.duration} />
                     )}
         </div>
-      
+        <div className="sm:col-span-5">
+        <TDInputTemplate
+                        placeholder="Duration Value"
+                        type="text"
+                        label="Duration Value"
+                        name="duration_val"
+                       
+                        formControlName={formik.values.duration_val}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        mode={1}
+                      />
+                      {formik.errors.duration_val && formik.touched.duration_val && (
+                      <VError title={formik.errors.duration_val} />
+                    )}
+        </div>
+       
         
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="O&M Manual"
                         type="text"
@@ -418,7 +369,7 @@ function TermsConditions({pressNext,pressBack}) {
                       <VError title={formik.errors.om_manual_flag} />
                     )}
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="O&M Manual Description"
                         type="text"
@@ -427,13 +378,13 @@ function TermsConditions({pressNext,pressBack}) {
                         formControlName={formik.values.om_manual_desc}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        mode={3}
                       />
                       {formik.errors.om_manual_desc && formik.touched.om_manual_desc && (
                       <VError title={formik.errors.om_manual_desc} />
                     )}
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Operation/Installation"
                         type="text"
@@ -452,7 +403,7 @@ function TermsConditions({pressNext,pressBack}) {
                       <VError title={formik.errors.oi_flag} />
                     )}
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Operation/Installation Description"
                         type="text"
@@ -461,13 +412,13 @@ function TermsConditions({pressNext,pressBack}) {
                         formControlName={formik.values.oi_desc}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        mode={3}
                       />
                       {formik.errors.oi_desc && formik.touched.oi_desc && (
                       <VError title={formik.errors.oi_desc} />
                     )}
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-10">
         <TDInputTemplate
                         placeholder="Packing type"
                         type="text"
@@ -476,13 +427,13 @@ function TermsConditions({pressNext,pressBack}) {
                         formControlName={formik.values.packing_type}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        mode={3}
                       />
                       {formik.errors.packing_type && formik.touched.packing_type && (
                       <VError title={formik.errors.packing_type} />
                     )}
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Manufacture Clearance"
                         type="text"
@@ -499,6 +450,21 @@ function TermsConditions({pressNext,pressBack}) {
                       />
                       {formik.errors.manufacture_clearance && formik.touched.manufacture_clearance && (
                       <VError title={formik.errors.manufacture_clearance} />
+                    )}
+        </div>
+        <div className="sm:col-span-5">
+        <TDInputTemplate
+                        placeholder="Manufacture Clearance Description"
+                        type="text"
+                        label="Manufacture Clearance Description"
+                        name="manufacture_clearance_desc"
+                        formControlName={formik.values.manufacture_clearance_desc}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        mode={3}
+                      />
+                      {formik.errors.manufacture_clearance_desc && formik.touched.manufacture_clearance_desc && (
+                      <VError title={formik.errors.manufacture_clearance_desc} />
                     )}
         </div>
       </div>

@@ -7,7 +7,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
-import { SearchOutlined, PrinterOutlined } from '@ant-design/icons'
+import { SearchOutlined, PrinterOutlined,EditOutlined } from '@ant-design/icons'
 import { motion } from "framer-motion"
 
 function DTableMaster({ headers,
@@ -31,7 +31,7 @@ function DTableMaster({ headers,
       <VisibilityIcon className="text-blue-900" />
       
     ) : (
-      <EditIcon className="text-green-900" />
+      <EditOutlined  className="text-green-900" />
     );
   };
 
@@ -94,22 +94,26 @@ function DTableMaster({ headers,
     <>
     <div className='hidden justify-end sm:flex'>
     <motion.section initial={{ opacity: 0, y: 1000 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, type: 'tween', stiffness: 100 }} className="bg-transparent dark:bg-[#001529] py-3 sm:py-3 -mt-5">
-      <div className="flex items-center h-14 w-auto bg-green-900 dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 md:space-x-4 rounded-lg">
+      <div className="flex items-center h-14 -mt-[68px] w-auto dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 rounded-lg">
         {btnText && <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, type: 'just' }} className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
           <Tooltip title={btnText}>
-            <Link to={to + 0}
+            {/* <Link to={to + 0}
               type="submit"
-              className="flex items-center justify-center text-green-900 bg-white hover:bg-primary-800  font-medium rounded-full transition ease-in-out hover:-translate-x-1 hover:scale-110 text-sm p-2 px-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2"
+              className="flex items-center justify-center text-white bg-[#eb8d00] hover:bg-primary-800  font-semibold rounded-l-md transition ease-in-out hover:-translate-x-1 hover:scale-110 text-xs p-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2"
+            > */}
+              <Link to={to + 0}
+              type="submit"
+              className="flex items-center justify-center border-2 border-white border-r-0 text-white bg-green-900 hover:bg-primary-800 text-nowrap rounded-l-md transition ease-in-out  active:scale-90 text-sm p-1 px-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none shadow-lg  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2 font-sans"
             >
-              <AddIcon /> {btnText}
+              <AddIcon className='text-sm' /> {btnText}
             </Link>
           </Tooltip>
         </motion.div>}
-        <button onClick={() => print()} className='text-white text-2xl p-4'>
+        <motion.button initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.3, type: 'just' }} onClick={() => print()} className='bg-white border-2 border-l-0 text-green-900 font-semibold text-xl rounded-r-full p-1 shadow-lg'>
         <Tooltip title="Print this table" arrow>
         <PrinterOutlined />
         </Tooltip>
-        </button>
+        </motion.button>
       </div>
     </motion.section>
     </div>
@@ -145,7 +149,7 @@ function DTableMaster({ headers,
                       type="text"
                       id="simple-search"
                       initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: '95%' }} transition={{ delay: 1.1, type: 'just' }}
-                      className="bg-gray-200 border rounded-full border-emerald-500 text-gray-800 text-sm  block w-full  pl-10 dark:bg-gray-800 md:ml-4  duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="bg-white border rounded-full border-emerald-500 text-gray-800 text-sm  block w-full  pl-10 dark:bg-gray-800 md:ml-4  duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Search"
                       required=""
                       onChange={(text) => setSearch(text.target.value)} />
@@ -173,7 +177,7 @@ function DTableMaster({ headers,
             </div>
           </div>}
         <div>
-          <div className="card w-full mt-5">
+          <div className="card w-full mt-5 ">
 
             <DataTable
               value={data}
@@ -186,8 +190,10 @@ function DTableMaster({ headers,
 
               rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
 
-              rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-green-700 hover:text-white  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
-
+              // rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-green-700 hover:text-white  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
+              // rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-[#C4F1BE] hover:text-green-700 hover:font-extrabold  duration-500 space-y-2 dark:hover:text-[#1e4834]'
+              rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-gray-200 hover:text-green-700 duration-500 space-y-2 dark:hover:text-[#1e4834]'
+              
               tableStyle={{ minWidth: "100%", fontSize: '14px' }}
               paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
               paginatorClassName='bg-white text-emerald-500'
@@ -209,7 +215,7 @@ function DTableMaster({ headers,
                   key={index}
                   field={item.name}
                   header={item.value}
-                  headerClassName={'text-green-900 bg-green-100 border-b-green-900  dark:bg-gray-700 dark:text-white dark:font-bold'}
+                  headerClassName={'text-green-900 bg-[#C4F1BE] border-b-green-900  dark:bg-gray-700 dark:text-white dark:font-bold'}
 
                   style={{ width: "10%" }}
                   body={(rowData) => renderTooltip(rowData, item.name)}
@@ -218,8 +224,8 @@ function DTableMaster({ headers,
               {/* {flag == 1 && ( */}
                 <Column
                   body={iconTemplate}
-                  header={"Action"}
-                  headerClassName={'text-green-900 bg-green-100 border-b-green-900  dark:bg-gray-700 dark:text-white dark:font-bold'}
+                  header={"Edit/View"}
+                  headerClassName={'text-green-900 bg-[#C4F1BE] border-b-green-900  dark:bg-gray-700 dark:text-white dark:font-bold'}
                   style={{ width: "10%" }}
                   frozen
                 ></Column>
@@ -248,7 +254,8 @@ function DTableMaster({ headers,
               paginator
               rows={data?.length}
               rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
-              rowClassName=' border border-b-gray-300 dark:border-green-900 hover:bg-emerald-500 hover:font-semibold dark:hover:bg-[#1e4834]'
+              // rowClassName=' border border-b-gray-300 dark:border-green-900 hover:bg-emerald-500 hover:font-semibold dark:hover:bg-[#1e4834]'
+              rowClassName=' border border-b-gray-300 dark:border-green-900 hover:bg-emerald-500 hover:font-semibold dark:hover:text-green-900'
               tableStyle={{ minWidth: "100%", fontSize: '14px' }}
               paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
               paginatorClassName='dark:bg-white dark:text-gray-700'
@@ -270,14 +277,14 @@ function DTableMaster({ headers,
                   key={index}
                   field={item.name}
                   header={item.value}
-                  headerClassName={theme > 0 ? `bg-color-theme-${theme} text-green-800 dark:bg-gray-700 dark:text-white dark:font-bold` : 'text-green-800 bg-gray-300 dark:bg-gray-700 dark:text-white dark:font-bold'}
+                  headerClassName={'text-green-800 bg-gray-300 dark:bg-gray-700 dark:text-white dark:font-bold'}
                   style={{ width: "10%" }}
                 ></Column>
               ))}
               {flag == 1 && (
                 <Column
                   body={iconTemplate}
-                  header={"Action"}
+                  header={"Edit/View"}
                   headerClassName="text-blue-900 bg-blue-300"
                   style={{ width: "10%" }}
                   frozen
@@ -286,7 +293,7 @@ function DTableMaster({ headers,
               {flag == 2 && (
                 <Column
                   body={iconTemplate}
-                  header={"Action"}
+                  header={"Edit/View"}
                   headerClassName="text-blue-900 bg-blue-300"
                   style={{ width: "10%" }}
                   frozen

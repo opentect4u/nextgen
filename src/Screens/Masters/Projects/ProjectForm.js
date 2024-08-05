@@ -7,7 +7,7 @@ import {
   LoadingOutlined,
   ArrowRightOutlined,
   ArrowLeftOutlined,
-  InfoOutlined 
+  InfoOutlined,
 } from "@ant-design/icons";
 import { Spin } from "antd";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
@@ -18,6 +18,7 @@ import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import { Button } from "primereact/button";
 import DialogBox from "../../../Components/DialogBox";
+import Viewdetails from "../../../Components/Viewdetails";
 
 function ProjectForm() {
   const navigate = useNavigate();
@@ -379,11 +380,11 @@ function ProjectForm() {
           spinning={loading}
         >
           <div className="card flex justify-content-center">
-            <Stepper ref={stepperRef} style={{ flexBasis: "80rem" }}>
+            <Stepper ref={stepperRef} style={{ flexBasis: "100%" }}>
               <StepperPanel header="Project Details">
                 {/* <div className="flex flex-column h-12rem"> */}
                 {/* <form > */}
-
+                <h2 className="font-bold text-2xl text-green-900 my-3">Project Details</h2>
                 <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                   <div>
                     <TDInputTemplate
@@ -581,6 +582,8 @@ function ProjectForm() {
           className="text-green-900 dark:text-gray-400"
           spinning={loading}
         >
+                <h2 className="font-bold text-2xl text-green-900 my-3">Client Details</h2>
+
                 <div className="grid gap-4 sm:grid-cols-6 sm:gap-6">
                   <div className="sm:col-span-4">
                     <TDInputTemplate
@@ -600,13 +603,15 @@ function ProjectForm() {
                       mode={2}
                       disabled={params.id > 0}
                     />
+                  {client_id && <Viewdetails click={()=>{setFlag(5);setVisible(true)}}/>}
+
                   </div>
                   <div className="sm:col-span-2 flex justify-center">
-                {client_id &&   <button className=" disabled:bg-gray-400 
+                {/* {client_id &&   <button className=" disabled:bg-gray-400 
                   disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" onClick={()=>{setFlag(5);setVisible(true)}}>
                     View client Details
 
-                   </button>}
+                   </button>} */}
                   </div>
                   <>
                     {" "}
@@ -716,22 +721,22 @@ function ProjectForm() {
                     <>
                       <div key={index} className="flex-col gap-3 justify-between mt-12">
                         <div className="flex gap-2 justify-end mt-4 -mb-5">
-                          {pocSet.length > 1 && (
+                          {pocSet?.length > 1 && (
                             <button
-                              className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-6 w-6  bg-red-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
+                              className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-8 w-8  bg-red-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
                               onClick={() => removeDt(index)}
                             >
                               -
                             </button>
                           )}
                           <button
-                            className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-6 w-6  bg-green-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
+                            className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-8 w-8  bg-green-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
                             onClick={() => addDt()}
                           >
                             +
                           </button>
                         {pocSet[index]?.poc_name &&  <button
-                            className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-6 w-6 bg-blue-700 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>
+                            className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-8 w-8 bg-blue-700 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>
                             {  console.log(pocSet[index])
                              setFlag(6)
                              setInfo(pocList.filter(e=>e.sl_no==+pocSet[index]?.poc_name)[0])

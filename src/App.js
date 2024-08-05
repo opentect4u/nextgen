@@ -64,10 +64,18 @@ function App() {
         // itemPaddingInline:10
       },
       Segmented:{
-        itemActiveBg:'#046c4e',
-        itemColor:'#046c4e',
+        itemActiveBg:'#014737',
+        itemColor:'#014737',
         itemSelectedColor:'white',
-        itemSelectedBg:'#046c4e'
+        itemSelectedBg:'#014737',
+        
+      },
+      FloatButton:{
+        borderRadiusLG:20,
+        borderRadiusSM:20,
+        colorPrimary:'#eb8d00',
+        colorPrimaryHover:'#eb8d00',
+        margin:30
       },
       Switch:{
         // colorPrimary:'#025129',
