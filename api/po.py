@@ -104,7 +104,7 @@ async def addpo(data:PoModel):
         fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount="{c.disc}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,created_by,created_at'
         values1 = f'"{lastID}","{c.item_name}","{c.qty}","{c.rate}","{c.disc}","{c.unit}","{c.CGST}","{c.SGST}","{c.IGST}","{c.delivery_date}","{data.user}","{formatted_dt}"'
         table_name1 = "td_po_items"
-        whr1=  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
+        whr1=  f'sl_no="{c.sl_no}" and po_sl_no="{data.sl_no}"' if c.sl_no > 0 else None
         flag1 = 1 if c.sl_no>0 else 0
         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
 
@@ -121,7 +121,7 @@ async def addpo(data:PoModel):
         fields3= f'stage_no="{c.stage}",terms_dtls="{c.term}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,stage_no,terms_dtls,created_by,created_at'
         values3 = f'"{lastID}","{c.stage}","{c.term}","{data.user}","{formatted_dt}"'
         table_name3 = "td_po_payment_dtls"
-        whr3=  f'po_sl_no="{c.sl_no}"' if c.sl_no > 0 else None
+        whr3=  f'sl_no="{c.sl_no}" and po_sl_no="{data.sl_no}"' if c.sl_no > 0 else None
         flag3 = 1 if c.sl_no>0 else 0
         result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
 
