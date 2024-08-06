@@ -19,64 +19,64 @@ logging.basicConfig(level=logging.INFO)
 poRouter = APIRouter()
 class prodDetails(BaseModel):
     sl_no:Optional[int]=None
-    item_name:Optional[int]=None
-    qty:Optional[int]=None
-    rate:Optional[float]=None
-    disc:Optional[float]=None
-    unit:Optional[int]=None
-    unit_price:Optional[int]=None
-    CGST:Optional[float]=None
-    SGST:Optional[float]=None
-    IGST:Optional[float]=None
-    delivery_date:Optional[str]=None
+    item_name:Optional[Union[int,str,None]]=None
+    qty:Optional[Union[int,str,None]]=None
+    rate:Optional[Union[float,str,None]]=None
+    disc:Optional[Union[float,str,None]]=None
+    unit:Optional[Union[int,str,None]]=None
+    unit_price:Optional[Union[int,str,None]]=None
+    CGST:Optional[Union[float,str,None]]=None
+    SGST:Optional[Union[float,str,None]]=None
+    IGST:Optional[Union[float,str,None]]=None
+    delivery_date:Optional[Union[str,None]]=None
      
 class payTerms(BaseModel):
     sl_no:Optional[int]=None
-    stage:Optional[str]=None
-    term:Optional[str]=None
+    stage:Optional[Union[str,None]]=None
+    term:Optional[Union[str,None]]=None
 
 class PoModel(BaseModel):
     sl_no:Optional[int]=None
-    po_id:Optional[str]=None
-    po_date:Optional[str]=None
-    po_type:Optional[str]=None
-    project_id:Optional[int]=None
-    vendor_id:Optional[int]=None
+    po_id:Optional[Union[str,None]]=None
+    po_date:Optional[Union[str,None]]=None
+    po_type:Optional[Union[str,None]]=None
+    project_id:Optional[Union[int,str,None]]=None
+    vendor_id:Optional[Union[int,str,None]]=None
     item_dtl:Optional[list[prodDetails]]=None
-    price_basis:Optional[str]=None
-    price_basis_desc:Optional[str]=None
+    price_basis:Optional[Union[str,None]]=None
+    price_basis_desc:Optional[Union[str,None]]=None
     packing_fwd_per:Optional[float]=None
-    freight_ins:Optional[str]=None
-    test_certificate:Optional[str]=None
-    test_certificate_desc:Optional[str]=None
-    ld_date:Optional[str]=None
-    ld_date_desc:Optional[str]=None
-    ld_val:Optional[str]=None
-    ld_val_desc:Optional[str]=None
-    ld_val_per:Optional[float]=None
-    min_per:Optional[float]=None
-    warranty_guaranty:Optional[str]=None
-    duration:Optional[str]=None
-    duration_value:Optional[str]=None
-    o_m_manual:Optional[str]=None
-    o_m_desc:Optional[str]=None
-    operation_installation:Optional[str]=None
-    operation_installation_desc:Optional[str]=None
-    packing_type:Optional[str]=None
-    manufacture_clearance:Optional[str]=None
-    manufacture_clearance_desc:Optional[str]=None
+    freight_ins:Optional[Union[str,None]]=None
+    test_certificate:Optional[Union[str,None]]=None
+    test_certificate_desc:Optional[Union[str,None]]=None
+    ld_date:Optional[Union[str,None]]=None
+    ld_date_desc:Optional[Union[str,None]]=None
+    ld_val:Optional[Union[str,None]]=None
+    ld_val_desc:Optional[Union[str,None]]=None
+    ld_val_per:Optional[Union[float,str,None]]=None
+    min_per:Optional[Union[float,str,None]]=None
+    warranty_guaranty:Optional[Union[str,None]]=None
+    duration:Optional[Union[str,None]]=None
+    duration_value:Optional[Union[str,None]]=None
+    o_m_manual:Optional[Union[str,None]]=None
+    o_m_desc:Optional[Union[str,None]]=None
+    operation_installation:Optional[Union[str,None]]=None
+    operation_installation_desc:Optional[Union[str,None]]=None
+    packing_type:Optional[Union[str,None]]=None
+    manufacture_clearance:Optional[Union[str,None]]=None
+    manufacture_clearance_desc:Optional[Union[str,None]]=None
     payment_terms:Optional[list[payTerms]]
     bill_to:str
-    ship_to:Optional[str]=None
-    warehouse_flag:Optional[str]=None
-    po_notes:Optional[str]=None
-    mdcc:Optional[str]=None
-    mdcc_scope:Optional[str]=None
-    inspection:Optional[str]=None
-    inspection_scope:Optional[str]=None
-    draw:Optional[str]=None
-    draw_scope:Optional[str]=None
-    draw_period:Optional[str]=None
+    ship_to:Optional[Union[str,None]]=None
+    warehouse_flag:Optional[Union[str,None]]=None
+    po_notes:Optional[Union[str,None]]=None
+    mdcc:Optional[Union[str,None]]=None
+    mdcc_scope:Optional[Union[str,None]]=None
+    inspection:Optional[Union[str,None]]=None
+    inspection_scope:Optional[Union[str,None]]=None
+    draw:Optional[Union[str,None]]=None
+    draw_scope:Optional[Union[str,None]]=None
+    draw_period:Optional[Union[str,None]]=None
     user:str
 
 
@@ -123,8 +123,24 @@ async def addpo(data:PoModel):
         whr3=  f'po_sl_no="{c.sl_no}"' if c.sl_no > 0 else None
         flag3 = 1 if c.sl_no>0 else 0
         result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+
+    fields4= f'ship_to="{data.ship_to}",warehouse_flag="{data.warehouse_flag}",po_notes="{data.po_notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_sl_no,bill_to,ship_to,warehouse_flag,po_notes,created_by,created_at'
+    values4 = f'"{lastID}"{data.bill_to}","{data.ship_to}","{data.warehouse_flag}","{data.po_notes}","{data.user}","{formatted_dt}"'
+    table_name4 = "td_po_delivery"
+    whr4 = f'po_sl_no="{data.sl_no}"' if data.sl_no > 0 else None
+    flag4 = 1 if data.sl_no>0 else 0
+
+    result4 = await db_Insert(table_name4, fields4, values4, whr4, flag4)
+
+    fields5= f'mdcc="{data.mdcc}",mdcc_scope="{data.mdcc_scope}",inspection="{data.inspection}",inspection_scope="{data.inspection_scope}",draw="{data.draw}",draw_scope="{data.draw_scope}",draw_period="{data.draw_period}",modified_by="{data.user}",modified_dt="{formatted_dt}"' if data.sl_no > 0 else f'po_sl_no,mdcc,mdcc_scope,inspection,inspection_scope,draw,draw_scope,draw_period,created_by,created_dt'
+    values5 = f'"{lastID}"{data.mdcc}","{data.mdcc_scope}","{data.inspection}","{data.inspection_scope}","{data.draw}","{data.draw_scope}","{data.draw_period}","{data.user}","{formatted_dt}"'
+    table_name5 = "td_po_more"
+    whr5 = f'po_sl_no="{data.sl_no}"' if data.sl_no > 0 else None
+    flag5 = 1 if data.sl_no>0 else 0
+
+    result5 = await db_Insert(table_name4, fields4, values4, whr4, flag4)
     
-    if(result['suc']>0 and result1['suc']>0 and result2['suc']>0 and result3['suc']>0):
+    if(result['suc']>0 and result1['suc']>0 and result2['suc']>0 and result3['suc']>0 and result4['suc']>0 and result5['suc']>0):
         res_dt = {"suc": 1, "msg": f"Saved successfully!" if data.sl_no==0 else f"Updated successfully!"}
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating"}
