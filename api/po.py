@@ -149,15 +149,17 @@ async def addpo(data:PoModel):
     return res_dt
 
 @poRouter.post('/getpo')
-async def addpo(data:GetPo):
-    print(data.id)
+async def getprojectpoc(id:GetPo):
+    print(id.id)
     res_dt = {}
 
-    select = "*"
-    schema = "td_po_basic"
-    where = f"sl_no='{data.id}'" if data.id>0 else ""
-    order = ""
-    flag = 1 if data.id>0 else 0
+    select = "@a:=@a+1 serial_number,po_id,po_date,po_type,project_id,vendor_id,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
+    schema = "td_po_basic,(SELECT @a:= 0) AS a"
+    where = f"sl_no='{id.id}'" if id.id>0 else None
+    order = "ORDER BY created_at DESC"
+    flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
