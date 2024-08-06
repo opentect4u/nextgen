@@ -61,8 +61,8 @@ class addPoc(BaseModel):
       poc_email:str
       poc_direct_no:str
       poc_ext_no:str
-      poc_ph_1:str
-      poc_ph_2:str
+      poc_ph_1:int
+      poc_ph_2:int
     #   poc_address:str
       poc_location:str
 
