@@ -190,4 +190,19 @@ async def getprojectpoc(id:GetPo):
     print(result, 'RESULT')
     return result
 
+@poRouter.post('/getpopayterms')
+async def getprojectpoc(id:GetPo):
+    print(id.id)
+    res_dt = {}
+
+    select = "*"
+    schema = "td_po_payment_dtls"
+    where = f"po_sl_no='{id.id}'" if id.id>0 else ""
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
 
