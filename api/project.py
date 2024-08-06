@@ -273,3 +273,17 @@ async def getproject(id:GetProject):
     return result
 
 
+@projectRouter.post('/getprojectpoc')
+async def getprojectpoc(id:GetPoc):
+    print(id.id)
+    res_dt = {}
+
+    select = "*"
+    schema = "td_project_poc"
+    where = f"proj_id='{id.id}'"
+    order = ""
+    flag = 1 if id.id else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
