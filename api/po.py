@@ -155,7 +155,7 @@ async def getprojectpoc(id:GetPo):
 
     select = "@a:=@a+1 serial_number,po_id,po_date,po_type,project_id,vendor_id,created_by,created_at,created_by,created_at,modified_by,modified_at,sl_no"
     schema = "td_po_basic,(SELECT @a:= 0) AS a"
-    where = f"sl_no='{id.id}'" if id.id>0 else None
+    where = f"sl_no='{id.id}'" if id.id>0 else ""
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
