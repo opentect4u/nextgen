@@ -124,7 +124,7 @@ async def addpo(data:PoModel):
         flag3 = 1 if c.sl_no>0 else 0
         result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
 
-    fields4= f'ship_to="{data.ship_to}",warehouse_flag="{data.warehouse_flag}",po_notes="{data.po_notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_sl_no,bill_to,ship_to,warehouse_flag,po_notes,created_by,created_at'
+    fields4= f'ship_to="{data.ship_to}",ware_house_flag="{data.warehouse_flag}",po_notes="{data.po_notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_sl_no,bill_to,ship_to,ware_house_flag,po_notes,created_by,created_at'
     values4 = f'"{lastID}","{data.bill_to}","{data.ship_to}","{data.warehouse_flag}","{data.po_notes}","{data.user}","{formatted_dt}"'
     table_name4 = "td_po_delivery"
     whr4 = f'po_sl_no="{data.sl_no}"' if data.sl_no > 0 else None
