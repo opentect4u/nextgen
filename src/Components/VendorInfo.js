@@ -8,109 +8,109 @@ function VendorInfo({data}) {
         {
           key: "1",
           label: "Name",
-          children: <p>{data.info.vendor_name}</p>,
+          children: <p>{data?.info?.vendor_name}</p>,
         },
         {
           key: "2",
           label: "Phone",
-          children: <p>{data.info.vendor_phone}</p>,
+          children: <p>{data?.info?.vendor_phone}</p>,
         },
         {
             key: "email",
             label: "Email",
-            children: <p>{data.info.vendor_email}</p>,
+            children: <p>{data?.info?.vendor_email}</p>,
           },
         {
             key: "address",
             label: "Address",
-            children: <p>{data.info.vendor_address}</p>,
+            children: <p>{data?.info?.vendor_address}</p>,
           },
         {
           key: "3",
           label: "PAN",
-          children: <p>{data.info.vendor_pan}</p>,
+          children: <p>{data?.info?.vendor_pan}</p>,
         },
         {
           key: "4",
           label: "GST",
-          children: <p>{data.info.vendor_gst}</p>,
+          children: <p>{data?.info?.vendor_gst}</p>,
         },
         {
           key: "5",
           label: "TAN",
-          children: <p>{data.info.tan_no}</p>,
+          children: <p>{data?.info?.tan_no}</p>,
         },
         {
           key: "6",
           label: "MSME",
-          children: <p>{data.info.msme_no}</p>,
+          children: <p>{data?.info?.msme_no}</p>,
         },
         {
             key: "7",
             label: "LD Clause",
-            children: <p>{data.info.ld_clause_flag == "Y" ? "Yes" : "No"}</p>,
+            children: <p>{data?.info?.ld_clause_flag == "Y" ? "Yes" : "No"}</p>,
           },
           {
             key: "8",
             label: "LD Clause Description",
-            children: <p>{data.info.ld_clause}</p>,
+            children: <p>{data?.info?.ld_clause}</p>,
           },
           {
             key: "9",
             label: "Warranty",
-            children: <p>{data.info.warranty}</p>,
+            children: <p>{data?.info?.warranty}</p>,
           },
           {
             key: "10",
             label: "Erection Responsibility",
-            children: <p>{data.info.erection_responsibility=='Y'?'Yes':'No'}</p>,
+            children: <p>{data?.info?.erection_responsibility=='Y'?'Yes':'No'}</p>,
           }
           ,
           {
             key: "11",
             label: "Client Name",
-            children: <p>{data.info.client_id}</p>,
+            children: <p>{data?.info?.client_id}</p>,
           }
           ,
           {
             key: "12",
             label: "Client Location",
-            children: <p>{data.info.client_location}</p>,
+            children: <p>{data?.info?.client_location}</p>,
           }
           ,
           {
             key: "13",
             label: "Client GST",
-            children: <p>{data.info.client_gst}</p>,
+            children: <p>{data?.info?.client_gst}</p>,
           },
           {
             key: "14",
             label: "Client PAN",
-            children: <p>{data.info.client_gst}</p>,
+            children: <p>{data?.info?.client_gst}</p>,
           }
           ,
           {
             key: "15",
             label: "TDS",
-            children: <p>{data.info.tds_flag=='Y'?'Yes':'No'}</p>,
+            children: <p>{data?.info?.tds_flag=='Y'?'Yes':'No'}</p>,
           }
           ,
           {
             key: "16",
             label: "TDS(%)",
-            children: <p>{data.info.tds_prtg}</p>,
+            children: <p>{data?.info?.tds_prtg}</p>,
           }
           ,
           {
             key: "17",
             label: "TCS",
-            children: <p>{data.info.tcs_flag=='Y'?'Yes':'No'}</p>,
+            children: <p>{data?.info?.tcs_flag=='Y'?'Yes':'No'}</p>,
           }
           ,
           {
             key: "18",
             label: "TCS(%)",
-            children: <p>{data.info.tcs_prtg}</p>,
+            children: <p>{data?.info?.tcs_prtg}</p>,
           }
          
       ];
@@ -136,10 +136,10 @@ function VendorInfo({data}) {
             </tr>
         </thead>
         <tbody>
-        {data.deals.map((item)=>
+        {data?.deals?.map((item)=>
             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {item.category_id}
+                    {item?.category_id}
                 </th>
                
               
@@ -150,7 +150,7 @@ function VendorInfo({data}) {
         </tbody>
     </table>
 </div> </> }
-{data.poc.length>0 && <>
+{data?.poc?.length>0 && <>
 <p className='font-semibold text-green-900 my-2'> Contact Person Information </p>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -174,21 +174,21 @@ function VendorInfo({data}) {
             </tr>
         </thead>
         <tbody>
-        {data.poc.map((item)=>
+        {data?.poc?.map((item)=>
             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {item.poc_name}
+                    {item?.poc_name}
                 </th>
                 
                 <td class="px-6 py-4">
-                   {item.poc_ph_1}
+                   {item?.poc_ph_1}
                 </td>
                 <td class="px-6 py-4">
-                   {item.poc_ph_2}
+                   {item?.poc_ph_2}
                 </td>
                 
                 <td class="px-6 py-4">
-                   {item.poc_email}
+                   {item?.poc_email}
                 </td>
               
             </tr>

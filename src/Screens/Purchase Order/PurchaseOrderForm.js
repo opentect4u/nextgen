@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
@@ -16,7 +17,7 @@ import axios from "axios";
 import { url } from "../../Address/BaseUrl";
 import { Spin } from "antd";
 import { Message } from "../../Components/Message";
-
+import { message } from 'antd';
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const params = useParams();
@@ -30,6 +31,7 @@ function PurchaseOrderForm() {
   const [vendor_name, setVendorName] = useState("");
   const [order_id, setOrderId] = useState("");
   const [itemList, setItemList] = useState([]);
+  const [termList, setTermList] = useState([]);
   const [notes, setNotes] = useState("");
 
   const [insp_flag, setInspFlag] = useState("N");
@@ -67,11 +69,141 @@ function PurchaseOrderForm() {
   const [packing_type, setPackingType] = useState("");
   const [manufacture_clearance, setManufactureClearance] = useState("");
   const [manufacture_clearance_desc, setManufactureDesc] = useState("");
+  const navigate=useNavigate()
+  useState(()=>{
+  if(+params.id>0){
+    axios.post(url+'/api/getpo',{id:+params.id}).then(res=>{
+      console.log(res)
+      localStorage.setItem('id',params.id)
+      localStorage.setItem("order_id",res.data.msg.po_id)
+      localStorage.setItem("order_date",res.data.msg.po_date)
+      localStorage.setItem("order_type",res.data.msg.type)
+      localStorage.setItem("proj_name",res.data.msg.project_id)
+      localStorage.setItem("vendor_name",res.data.msg.vendor_id)
+      setBOrderDt(res.data.msg.po_date)
+      setOrderType(res.data.msg.type)
+      setOrderId(res.data.msg.po_id)
+      setProjectName(res.data.msg.project_id)
+      setVendorName(res.data.msg.vendor_id)
+      axios.post(url+'/api/getpoitem',{id:+params.id}).then(resItem=>{
+        
+        console.log(resItem)
+        for(let i=0;i<resItem?.data?.msg?.length;i++){
+          itemList.push({
+            sl_no:resItem?.data?.msg[i].sl_no,
+            item_name:resItem?.data?.msg[i].item_id,
+            qty:resItem?.data?.msg[i].quantity,
+            rate:resItem?.data?.msg[i].item_rt,
+            unit:resItem?.data?.msg[i].unit_id,
+            disc:resItem?.data?.msg[i].discount,
+            SGST:resItem?.data?.msg[i].sgst_id,
+            CGST:resItem?.data?.msg[i].cgst_id,
+            IGST:resItem?.data?.msg[i].igst_id,
+            unit_price:resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount,
+            delivery_date:resItem?.data?.msg[i].delivery_dt,
+            total:resItem?.data?.msg[i].cgst_id? ((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].cgst_id)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].cgst_id):((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].igst_id)
+          })
+        }
+        setItemList(itemList)
+        localStorage.setItem('itemList',JSON.stringify(itemList))
+        axios.post(url+'/api/getpoterms',{id:+params.id}).then(resTerm=>{
+          console.log(resTerm)
+          setPriceBasisFlag(resTerm?.data?.msg[0]?.price_basis)
+          setPriceBasisDesc(resTerm?.data?.msg[0]?.price_basis_desc)
+          setPackingForwarding(resTerm?.data?.msg[0]?.packing_fwd_per)
+          setFreightInsurance(resTerm?.data?.msg[0]?.freight_ins)
+          setTestCertificate(resTerm?.data?.msg[0]?.test_certificate)
+          setTestCertificateDesc(resTerm?.data?.msg[0]?.test_certificate_desc)
+          setLDApplicableDate(resTerm?.data?.msg[0]?.ld_date)
+          setOthersLd(resTerm?.data?.msg[0]?.ld_date_desc)
+          setLDAppliedOn(resTerm?.data?.msg[0]?.ld_val)
+          setOthersApplied(resTerm?.data?.msg[0]?.ld_val_desc)
+          setLDValue(resTerm?.data?.msg[0]?.ld_val_per)
+          setPOMinValue(resTerm?.data?.msg[0]?.min_per)
+          setWarrantyFlag(resTerm?.data?.msg[0]?.warranty_guarantee)
+          setDuration(resTerm?.data?.msg[0]?.duration)
+          setDurationVal(resTerm?.data?.msg[0]?.duration_value)
+          setOMFlag(resTerm?.data?.msg[0]?.o_m_manual)
+          setOMDesc(resTerm?.data?.msg[0]?.o_m_desc)
+          setOIFlag(resTerm?.data?.msg[0]?.operation_installation)
+          setOIDesc(resTerm?.data?.msg[0]?.operation_installation_desc)
+          setPackingType(resTerm?.data?.msg[0]?.packing_type)
+          setManufactureClearance(resTerm?.data?.msg[0]?.manufacture_clearance)
+          setManufactureDesc(resTerm?.data?.msg[0]?.manufacture_clearance_desc)
+          const terms_conditions={
+            price_basis_flag: resTerm?.data?.msg[0]?.price_basis,
+            price_basis_desc:resTerm?.data?.msg[0]?.price_basis_desc,
+            packing_forwarding:resTerm?.data?.msg[0]?.packing_fwd_per,
+            freight_insurance:resTerm?.data?.msg[0]?.freight_ins,
+            test_certificate:resTerm?.data?.msg[0]?.test_certificate,
+            test_certificate_desc:resTerm?.data?.msg[0]?.test_certificate_desc,
+            ld_applicable_date:resTerm?.data?.msg[0]?.ld_date,
+            ld_applied_on:resTerm?.data?.msg[0]?.ld_val,
+            ld_value:resTerm?.data?.msg[0]?.ld_val_per,
+            po_min_value:resTerm?.data?.msg[0]?.min_per,
+            others_ld:resTerm?.data?.msg[0]?.ld_date_desc,
+            others_applied:resTerm?.data?.msg[0]?.ld_val_desc,
+            warranty_guarantee_flag:resTerm?.data?.msg[0]?.warranty_guarantee_flag,
+            duration:resTerm?.data?.msg[0]?.duration,
+            duration_val:resTerm?.data?.msg[0]?.duration_value,
+            om_manual_flag:resTerm?.data?.msg[0]?.o_m_manual,
+            om_manual_desc:resTerm?.data?.msg[0]?.o_m_desc,
+            oi_flag:resTerm?.data?.msg[0]?.oi_flag,
+            oi_desc:resTerm?.data?.msg[0]?.oi_desc,
+            packing_type:resTerm?.data?.msg[0]?.packing_type,
+            manufacture_clearance:resTerm?.data?.msg[0]?.manufacture_clearance,
+            manufacture_clearance_desc:resTerm?.data?.msg[0]?.manufacture_clearance_desc
+          };
+          console.log(terms_conditions)
+          localStorage.setItem('terms',JSON.stringify(terms_conditions))
+        })
+      axios.post(url+'/api/getpopayterms',{id:+params.id}).then(resPay=>{
+        console.log(resPay)
+        for(let i=0;i<resPay?.data?.msg?.length;i++){
+          termList.push({
+            sl_no:resPay?.data?.msg[i]?.sl_no,
+            stage:resPay?.data?.msg[i]?.stage_no,
+            term:resPay?.data?.msg[i]?.terms_dtls
+        })
+        }
+        setTermList(termList)
+        localStorage.setItem('termList',JSON.stringify(termList))
+        axios.post(url+'/api/getpodelivery',{id:+params.id}).then(resDel=>{
+          console.log(resDel)
+          setDeliveryAdd(resDel?.data?.msg[0]?.ship_to)
+          setNotes(resDel?.data?.msg[0]?.po_notes)
+
+          axios.post(url+'/api/getpomore',{id:+params.id}).then(resMore=>{
+            console.log(resMore)
+            setInspFlag(resMore?.data?.msg[0]?.inspection)
+            setInsp(resMore?.data?.msg[0]?.inspection_scope)
+            setMdccFlag(resMore?.data?.msg[0]?.mdcc)
+            setMdcc(resMore?.data?.msg[0]?.mdcc_scope)
+            setDrawingFlag(resMore?.data?.msg[0]?.draw)
+            setDrawing(resMore?.data?.msg[0]?.draw_scope)
+            setDrawingDate(resMore?.data?.msg[0]?.draw_period)
+            localStorage.setItem("mdcc_flag",resMore?.data?.msg[0]?.mdcc)
+            localStorage.setItem("mdcc",resMore?.data?.msg[0]?.mdcc)
+            localStorage.setItem("insp_flag",resMore?.data?.msg[0]?.inspection)
+            localStorage.setItem("insp",resMore?.data?.msg[0]?.inspection_scope)
+            localStorage.setItem("drawing_flag",resMore?.data?.msg[0]?.draw)
+            localStorage.setItem("drawing",resMore?.data?.msg[0]?.draw_scope)
+            localStorage.setItem("dt",resMore?.data?.msg[0]?.draw_period)
+
+          })
+        })
+      })
+
+      })
+    })
+  }
+  },[])
   return (
     <>
       <FloatButton
-        icon={<FileTextOutlined />}
+        icon={loading?<LoadingOutlined spin />:<FileTextOutlined />}
         tooltip="Save draft"
+        disabled={loading?true:false}
         type="primary"
         style={{
           insetInlineEnd: 100,
@@ -154,8 +286,12 @@ function PurchaseOrderForm() {
             if (res.data.suc > 0) {
               Message("success", res.data.msg);
               // if (params.id == 0) handleReset();
-              setLoading(false)
-            } else {
+            
+              setTimeout(navigate(-1),2500)
+              
+            
+            } 
+            else {
               Message("error", res.data.msg);
               setLoading(false)
 
@@ -168,7 +304,7 @@ function PurchaseOrderForm() {
         text={params.id > 0 ? "Update purchase order" : "Create purchase order"}
         mode={params.id > 0 ? 1 : 0}
         title={"Purchase Order"}
-        // data={params.id && data?data:''}
+        data={''}
       />
        <Spin
         indicator={<LoadingOutlined spin />}
@@ -277,6 +413,7 @@ function PurchaseOrderForm() {
           </StepperPanel>
           <StepperPanel header="Payment Terms">
             <PaymentTerms
+            data={{ termList: termList }}
               pressNext={() => {
                 stepperRef.current.nextCallback();
               }}

@@ -36,9 +36,19 @@ function BasicDetails({ pressNext, pressBack, data }) {
     setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name});
     pressNext(val)
   };
- 
+  useEffect(()=>{
+    setProjName(data.proj_name)
+    setVendorName(data.vendor_name)
+    setOrderDate(data.order_date)
+    setOrderId(data.order_id)
+    setType(data.type)
+  },[data])
   useEffect(() => {
     setLoading(true);
+    setVendorList([])
+    setVendors([])
+    setProjects([])
+    setProjectList([])
     axios.post(url + "/api/getproject", { id: 0 }).then((resProj) => {
       setProjects(resProj?.data?.msg);
       for (let i = 0; i < resProj?.data?.msg?.length; i++) {
@@ -62,6 +72,29 @@ function BasicDetails({ pressNext, pressBack, data }) {
       setLoading(false);
       })
     });
+    
+    console.log(data)
+    if(data){
+      setProjectInfo(projects.filter((e) => e.sl_no == data.proj_name))
+
+        setLoading(true)
+        axios.post(url + "/api/getprojectpoc", { id: data.proj_name.toString()}).then((res) => {
+          console.log(res)
+          setPoc(res?.data?.msg)
+          setLoading(false)
+      })
+      setVendorInfo(vendors?.filter(e=>e.sl_no==data.vendor_name))
+      axios.post(url+'/api/getvendorpoc',{id:+data.vendor_name}).then((resPoc)=>{
+        console.log(resPoc)
+        setPocList(resPoc?.data?.msg)
+        axios.post(url+'/api/getvendordeals',{id:+data.vendor_name}).then(resDeals=>{
+          console.log(resDeals)
+          setDeals(resDeals?.data?.msg)
+          setLoading(false)
+        })
+        
+      })
+    }
   }, []);
   const onSelectProject = (event) => {
     console.log(event.target.value)

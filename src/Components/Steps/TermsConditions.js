@@ -11,7 +11,9 @@ function TermsConditions({pressNext,pressBack,data}) {
       price_basis_flag: data.price_basis_flag?data.price_basis_flag:"",
       price_basis_desc:data.price_basis_desc?data.price_basis_desc:"",
       packing_forwarding:data.packing_forwarding?data.packing_forwarding:"",
+      packing_forwarding_val:data.packing_forwarding?data.packing_forwarding_val:"",
       freight_insurance:data.freight_insurance?data.freight_insurance:"",
+      freight_insurance_val:data.freight_insurance?data.freight_insurance:"",
       test_certificate:data.test_certificate?data.test_certificate:"",
       test_certificate_desc:data.test_certificate_desc?data.test_certificate_desc:"",
       ld_applicable_date:data.ld_applicable_date?data.ld_applicable_date:"",
@@ -36,7 +38,15 @@ function TermsConditions({pressNext,pressBack,data}) {
       price_basis_flag: Yup.string().required("Price basis date is required"),
       price_basis_desc:Yup.string().required("Price Basis is required"),
       packing_forwarding:Yup.string().required("Packing & Forwarding is required"),
+      packing_forwarding_val: Yup.string().when('packing_forwarding', {
+        is: 'E',
+        then: () => Yup.string().required("Extra value is required"),
+        otherwise: () => Yup.string()}),
       freight_insurance:Yup.string().required("Freight Insurance is required"),
+      freight_insurance_val: Yup.string().when('freight_insurance', {
+        is: 'E',
+        then: () => Yup.string().required("Extra value is required"),
+        otherwise: () => Yup.string()}),
       test_certificate:Yup.string().required("Test Certificate is required"),
       test_certificate_desc: Yup.string().when('test_certificate', {
         is: 'Y',
@@ -134,40 +144,96 @@ function TermsConditions({pressNext,pressBack,data}) {
                       <VError title={formik.errors.price_basis_desc} />
                     )}
         </div>
-      
-        <div className="sm:col-span-5">
+      </div>
+      <div className="grid gap-4 sm:grid-cols-6 sm:gap-6 my-10">
+        <div className="sm:col-span-2">
+        
         <TDInputTemplate
                         placeholder="Packing & Forwaring"
                         type="number"
                         label="Packing & Forwaring"
                         name="packing_forwarding"
-                        
+                        data={[{name:'Inclusive',code:"I"},{name:'Extra(%)',code:'E'}]}
                         formControlName={formik.values.packing_forwarding}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={1}
+                        mode={2}
                       />
                       {formik.errors.packing_forwarding && formik.touched.packing_forwarding && (
                       <VError title={formik.errors.packing_forwarding} />
                     )}
         </div>
+        <div className="sm:col-span-2">
+        
+        <TDInputTemplate
+                        placeholder="Packing & Forwaring Extra (%)"
+                        type="number"
+                        label="Packing & Forwaring Extra"
+                        name="packing_forwarding_val"
+                        
+                        formControlName={formik.values.packing_forwarding_val}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        mode={1}
+                      />
+                      {formik.errors.packing_forwarding_val && formik.touched.packing_forwarding_val && (
+                      <VError title={formik.errors.packing_forwarding_val} />
+                    )}
+        </div>
 
-        <div className="sm:col-span-5">
+        <div className="sm:col-span-2">
+        
+        <TDInputTemplate
+                        placeholder="Packing & Forwaring Extra Value"
+                        type="number"
+                        label="Packing & Forwaring"
+                        name="packing_forwarding"
+                        
+                        formControlName={formik.values.packing_forwarding_val}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        mode={1}
+                      />
+                      {formik.errors.packing_forwarding_val && formik.touched.packing_forwarding_val && (
+                      <VError title={formik.errors.packing_forwarding_val} />
+                    )}
+        </div>
+        <div className="sm:col-span-3">
         <TDInputTemplate
                         placeholder="Freight & Insurance"
                         type="text"
                         label="Freight & Insurance"
                         name="freight_insurance"
+                        data={[{name:'Inclusive',code:"I"},{name:'Extra',code:'E'}]}
                         
                         formControlName={formik.values.freight_insurance}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
-                        mode={3}
+                        mode={2}
                       />
                       {formik.errors.freight_insurance && formik.touched.freight_insurance && (
                       <VError title={formik.errors.freight_insurance} />
                     )}
         </div>
+        <div className="sm:col-span-3">
+        <TDInputTemplate
+                        placeholder="Freight & Insurance Description"
+                        type="text"
+                        label="Freight & Insurance Description"
+                        name="freight_insurance_desc"
+                        
+                        formControlName={formik.values.freight_insurance_desc}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        mode={3}
+                      />
+                      {formik.errors.freight_insurance_desc && formik.touched.freight_insurance_desc && (
+                      <VError title={formik.errors.freight_insurance_desc} />
+                    )}
+        </div>
+       </div>
+       <div className="grid gap-4 sm:grid-cols-10 sm:gap-6 my-10">
+        
        
       
         <div className="sm:col-span-5">
@@ -286,9 +352,9 @@ function TermsConditions({pressNext,pressBack,data}) {
        
         <div className="sm:col-span-10">
         <TDInputTemplate
-                        placeholder="Minimum % on PO value"
+                        placeholder="Maximum % on PO value"
                         type="number"
-                        label="Minimum % on PO value"
+                        label="Maximum % on PO value"
                         name="po_min_value"
                        
                         formControlName={formik.values.po_min_value}

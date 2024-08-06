@@ -56,20 +56,7 @@ function More({ pressNext, pressBack, type,data }) {
             mode={2}
           />
           {mdcc_flag == "MDCC" && <VError title={"MDCC is required"} />}
-          {mdcc_flag == "Y" && (
-            <TDInputTemplate
-              placeholder="MDCC Scope"
-              type="text"
-              label="MDCC Scope"
-              name="mdcc"
-              formControlName={mdcc}
-              handleChange={(text) => {setMdcc(text.target.value); localStorage.setItem('mdcc',text.target.value)}}
-              mode={1}
-            />
-          )}
-          {mdcc_flag == "Y" && !mdcc && (
-            <VError title={"MDCC scope is required"} />
-          )}
+         
         </div>
         <div className="flex flex-col sm:col-span-1 gap-3 mt-5">
           <TDInputTemplate
@@ -92,20 +79,7 @@ function More({ pressNext, pressBack, type,data }) {
           {insp_flag == "Inspection required?" && (
             <VError title={"Inspection flag is required"} />
           )}
-          {insp_flag == "Y" && (
-            <TDInputTemplate
-              placeholder="Inspection Scope"
-              type="text"
-              formControlName={insp}
-              handleChange={(text) => {setInsp(text.target.value);localStorage.setItem('insp',text.target.value)}}
-              label="Inspection Scope"
-              name="insp"
-              mode={1}
-            />
-          )}
-          {insp_flag == "Y" && !insp && (
-            <VError title={"Inspection scope is required"} />
-          )}
+         
         </div>
         <div className="flex flex-col sm:col-span-1 gap-3 mt-5">
           <TDInputTemplate
@@ -128,7 +102,38 @@ function More({ pressNext, pressBack, type,data }) {
           {drawing_flag == "Drawing/Datasheet?" && (
             <VError title={"Drawing/Datasheet flag is required"} />
           )}
-          {drawing_flag == "Y" && (
+          
+        </div>
+        <div  className="flex flex-col sm:col-span-3 gap-3 mt-5"> 
+        {mdcc_flag == "Y" && (
+            <TDInputTemplate
+              placeholder="MDCC Scope"
+              type="text"
+              label="MDCC Scope"
+              name="mdcc"
+              formControlName={mdcc}
+              handleChange={(text) => {setMdcc(text.target.value); localStorage.setItem('mdcc',text.target.value)}}
+              mode={3}
+            />
+          )}
+          {mdcc_flag == "Y" && !mdcc && (
+            <VError title={"MDCC scope is required"} />
+          )} 
+         {insp_flag == "Y" && (
+            <TDInputTemplate
+              placeholder="Inspection Scope"
+              type="text"
+              formControlName={insp}
+              handleChange={(text) => {setInsp(text.target.value);localStorage.setItem('insp',text.target.value)}}
+              label="Inspection Scope"
+              name="insp"
+              mode={3}
+            />
+          )}
+          {insp_flag == "Y" && !insp && (
+            <VError title={"Inspection scope is required"} />
+          )}
+        {drawing_flag == "Y" && (
             <>
               <TDInputTemplate
                 placeholder="Drawing/Datasheet Scope"
@@ -137,7 +142,7 @@ function More({ pressNext, pressBack, type,data }) {
                 handleChange={(e) => {setDrawing(e.target.value);localStorage.setItem('drawing',e.target.value)}}
                 label="Drawing/Datasheet Scope"
                 name="drawing"
-                mode={1}
+                mode={3}
               />
               {drawing_flag == "Y" && !drawing && (
                 <VError title={"Drawing scope is required"} />
@@ -153,16 +158,15 @@ function More({ pressNext, pressBack, type,data }) {
                       formControlName={drawingDate}
                       handleChange={(event) => {setDrawingDate(event.target.value);localStorage.setItem('dt',event.target.value)}}
                       // handleChange={e=>setDrawing(e.target.value)}
-                      label="Drawing date"
+                      label="Drawing submission date"
                       name="dt"
-                      mode={1}
+                      mode={3}
                     />
                   </div>
                 </>
             </>
           )}
-        </div>
-       
+       </div>
       </div>
       <div className="flex pt-4 justify-between w-full">
         <button

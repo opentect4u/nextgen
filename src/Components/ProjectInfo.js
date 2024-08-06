@@ -7,110 +7,110 @@ function ProjectInfo({ data }) {
     {
         key: "ppp",
         label: "ID",
-        children: <p>{data.info.proj_id}</p>,
+        children: <p>{data?.info?.proj_id}</p>,
       },
     {
       key: "1",
       label: "Name",
-      children: <p>{data.info.proj_name}</p>,
+      children: <p>{data?.info?.proj_name}</p>,
     },
     {
       key: "2",
       label: "Order ID",
-      children: <p>{data.info.order_id}</p>,
+      children: <p>{data?.info?.order_id}</p>,
     },
     {
       key: "3",
       label: "Order Date",
-      children: <p>{data.info.order_date}</p>,
+      children: <p>{data?.info?.order_date}</p>,
     },
     {
       key: "4",
       label: "Delivery Date",
-      children: <p>{data.info.proj_delivery_date}</p>,
+      children: <p>{data?.info?.proj_delivery_date}</p>,
     },
     {
       key: "5",
       label: "Project Order Value",
-      children: <p>{data.info.proj_order_val}</p>,
+      children: <p>{data?.info?.proj_order_val}</p>,
     },
     {
       key: "6",
       label: "Price Basis",
-      children: <p>{data.info.price_basis == "F" ? "For" : "Ex-Works"}</p>,
+      children: <p>{data?.info?.price_basis == "F" ? "For" : "Ex-Works"}</p>,
     },
     {
         key: "7",
         label: "LD Clause",
-        children: <p>{data.info.ld_clause_flag == "Y" ? "Yes" : "No"}</p>,
+        children: <p>{data?.info?.ld_clause_flag == "Y" ? "Yes" : "No"}</p>,
       },
       {
         key: "8",
         label: "LD Clause Description",
-        children: <p>{data.info.ld_clause}</p>,
+        children: <p>{data?.info?.ld_clause}</p>,
       },
       {
         key: "9",
         label: "Warranty",
-        children: <p>{data.info.warranty}</p>,
+        children: <p>{data?.info?.warranty}</p>,
       },
       {
         key: "10",
         label: "Erection Responsibility",
-        children: <p>{data.info.erection_responsibility=='Y'?'Yes':'No'}</p>,
+        children: <p>{data?.info?.erection_responsibility=='Y'?'Yes':'No'}</p>,
       }
       ,
       {
         key: "11",
         label: "Client Name",
-        children: <p>{data.info.client_id}</p>,
+        children: <p>{data?.info?.client_id}</p>,
       }
       ,
       {
         key: "12",
         label: "Client Location",
-        children: <p>{data.info.client_location}</p>,
+        children: <p>{data?.info?.client_location}</p>,
       }
       ,
       {
         key: "13",
         label: "Client GST",
-        children: <p>{data.info.client_gst}</p>,
+        children: <p>{data?.info?.client_gst}</p>,
       },
       {
         key: "14",
         label: "Client PAN",
-        children: <p>{data.info.client_gst}</p>,
+        children: <p>{data?.info?.client_gst}</p>,
       }
       ,
       {
         key: "15",
         label: "Project Description",
-        children: <p>{data.info.proj_desc}</p>,
+        children: <p>{data?.info?.proj_desc}</p>,
       }
       ,
       {
         key: "16",
         label: "End User",
-        children: <p>{data.info.proj_end_user}</p>,
+        children: <p>{data?.info?.proj_end_user}</p>,
       }
       ,
       {
         key: "17",
         label: "Consultant",
-        children: <p>{data.info.proj_consultant}</p>,
+        children: <p>{data?.info?.proj_consultant}</p>,
       }
       ,
       {
         key: "18",
         label: "EPC Contractor",
-        children: <p>{data.info.epc_contractor}</p>,
+        children: <p>{data?.info?.epc_contractor}</p>,
       }
       ,
       {
         key: "19",
         label: "Project Manager",
-        children: <p>{data.info.proj_manager_name}</p>,
+        children: <p>{data?.info?.proj_manager_name}</p>,
       }
   ];
   return (

@@ -100,4 +100,15 @@ export const masterheaders={
       { name: "created_by", value: "Created by" },
     ],
   },
+  'purchaseorder':{
+    title: "Vendor Orders",
+    btnText:'Add vendor orders',
+    headers: [
+      { name: "serial_number", value: "#" },
+      { name: "po_id", value: "ID" },
+      { name: "proj_name", value: "Project" },
+      { name: "po_type", value: "Type" },
+      { name: "po_date", value: "Date" },
+    ],
+  }
 }
