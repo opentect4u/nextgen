@@ -50,7 +50,8 @@ function More({ pressNext, pressBack, type,data }) {
             formControlName={mdcc_flag}
             handleChange={(e) => {
               setMdccFlag(e.target.value);
-              console.log(mdcc_flag);
+              console.log(mdcc_flag)
+              localStorage.setItem('mdcc_flag',e.target.value);
             }}
             mode={2}
           />
@@ -62,7 +63,7 @@ function More({ pressNext, pressBack, type,data }) {
               label="MDCC Scope"
               name="mdcc"
               formControlName={mdcc}
-              handleChange={(text) => setMdcc(text.target.value)}
+              handleChange={(text) => {setMdcc(text.target.value); localStorage.setItem('mdcc',text.target.value)}}
               mode={1}
             />
           )}
@@ -79,6 +80,7 @@ function More({ pressNext, pressBack, type,data }) {
             handleChange={(e) => {
               setInspFlag(e.target.value);
               console.log(insp_flag);
+              localStorage.setItem('insp_flag',e.target.value)
             }}
             formControlName={insp_flag}
             data={[
@@ -95,7 +97,7 @@ function More({ pressNext, pressBack, type,data }) {
               placeholder="Inspection Scope"
               type="text"
               formControlName={insp}
-              handleChange={(text) => setInsp(text.target.value)}
+              handleChange={(text) => {setInsp(text.target.value);localStorage.setItem('insp',text.target.value)}}
               label="Inspection Scope"
               name="insp"
               mode={1}
@@ -119,6 +121,7 @@ function More({ pressNext, pressBack, type,data }) {
             handleChange={(e) => {
               setDrawingFlag(e.target.value);
               console.log(drawing_flag);
+              localStorage.setItem('drawing_flag',e.target.value)
             }}
             formControlName={drawing_flag}
           />
@@ -131,7 +134,7 @@ function More({ pressNext, pressBack, type,data }) {
                 placeholder="Drawing/Datasheet Scope"
                 type="text"
                 formControlName={drawing}
-                handleChange={(e) => setDrawing(e.target.value)}
+                handleChange={(e) => {setDrawing(e.target.value);localStorage.setItem('drawing',e.target.value)}}
                 label="Drawing/Datasheet Scope"
                 name="drawing"
                 mode={1}
@@ -146,9 +149,9 @@ function More({ pressNext, pressBack, type,data }) {
                     
                     <TDInputTemplate
                       placeholder=""
-                      type="date"
+                      type="text"
                       formControlName={drawingDate}
-                      handleChange={(event) => setDrawingDate(event.target.value)}
+                      handleChange={(event) => {setDrawingDate(event.target.value);localStorage.setItem('dt',event.target.value)}}
                       // handleChange={e=>setDrawing(e.target.value)}
                       label="Drawing date"
                       name="dt"

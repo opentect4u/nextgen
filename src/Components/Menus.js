@@ -48,9 +48,6 @@ function Menus({ theme}) {
       label: "Masters",
       key: "sub2",
       icon: <DatabaseOutlined />,
-      children: [
-        {
-          type: "group",
           children: [
             {
               key: "masters:dept",
@@ -106,16 +103,12 @@ function Menus({ theme}) {
             //   label: <Link to={routePaths.USERS}>Company User </Link>,
             // },
           ],
-        },
-      ],
+       
     },
     {
       label: "Orders",
       key: "sub4",
       icon: <AuditOutlined />,
-      children: [
-        {
-          type: "group",
           children: [
             {
               // key: "client-order",
@@ -131,8 +124,7 @@ function Menus({ theme}) {
               icon: <SolutionOutlined />,
             }
           ],
-        },
-      ],
+       
     },
     {
       label: "Stock",
@@ -196,15 +188,8 @@ function Menus({ theme}) {
   return (
     <div >
       <Menu
-        
-        // onClick={onClick}
-        // selectedKeys={[current]}
-        // items={items}
-
         onClick={onClick}
-        // openKeys={['sub1']}
         selectedKeys={[current]}
-        // mode="vertical"
         items={items}
       />
     </div>

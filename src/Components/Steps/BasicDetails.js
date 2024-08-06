@@ -72,8 +72,12 @@ function BasicDetails({ pressNext, pressBack, data }) {
     setProjectInfo(projects.filter((e) => e.sl_no == event.target.value))
     setOrderDate(projects.filter((e) => e.sl_no == event.target.value)[0]
         .order_date)
+    localStorage.setItem('order_date',projects.filter((e) => e.sl_no == event.target.value)[0]
+    .order_date)
     setOrderId(projects.filter((e) => e.sl_no == event.target.value)[0]
         .order_id)
+      localStorage.setItem('order_id',projects.filter((e) => e.sl_no == event.target.value)[0]
+      .order_id)
         setLoading(true)
         axios.post(url + "/api/getprojectpoc", { id: projects.filter((e) => e.sl_no == event.target.value)[0]
           .proj_id}).then((res) => {
@@ -122,7 +126,11 @@ function BasicDetails({ pressNext, pressBack, data }) {
                   { name: "Project Specific", code: "P" },
                 ]}
                 formControlName={type}
-                handleChange={(txt) => setType(txt.target.value)}
+                handleChange={(txt) => 
+                  {setType(txt.target.value)
+                  localStorage.setItem('order_type',txt.target.value)
+                }
+                }
                 mode={2}
               />
               {/* {formik.errors.order_type && formik.touched.order_type && (
@@ -141,7 +149,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
                 data={projectList}
                 formControlName={proj_name}
                 handleChange={(event) => {
-                 
+                  localStorage.setItem('proj_name',event.target.value)
                   setProjName(event.target.value=='Project name'?'':event.target.value)
                   if(event.target.value!='Project name')
                     {onSelectProject(event)}
@@ -209,6 +217,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
                   setVendorName(event.target.value)
                   if(event.target.value!='Vendor name')
                     {onSelectVendor(event)
+                    localStorage.setItem('vendor_name',event.target.value)
                   setVendorInfo(vendors?.filter(e=>e.sl_no==event.target.value))
                     }
                   else{

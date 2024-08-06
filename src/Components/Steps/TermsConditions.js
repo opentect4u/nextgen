@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TDInputTemplate from '../TDInputTemplate'
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import VError from "../../Components/VError";
 import { useParams } from "react-router-dom";
 function TermsConditions({pressNext,pressBack,data}) {
+    
     const params = useParams();
     const initialValues = {
       price_basis_flag: data.price_basis_flag?data.price_basis_flag:"",
@@ -86,7 +87,11 @@ function TermsConditions({pressNext,pressBack,data}) {
       validateOnMount: true,
       enableReinitialize: true,
     });
-  
+   useEffect(()=>{
+    localStorage.removeItem('terms')
+    localStorage.setItem('terms',JSON.stringify(formik.values))
+    
+   },[formik.values])
   return (
     <div className="py-2 px-4 mx-auto w-full lg:py-2">
      <h2 className="text-2xl text-green-900 font-bold my-3">
@@ -322,7 +327,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="date"
                         label="Duration"
                         name="duration"
-                        data={[{code:'D',name:'DD'},{code:'M',name:'MM'},{name:'YY',code:'Y'}]}
+                        data={[{code:'D',name:'Day'},{code:'M',name:'Month'},{name:'YY',code:'Year'}]}
                         formControlName={formik.values.duration}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}

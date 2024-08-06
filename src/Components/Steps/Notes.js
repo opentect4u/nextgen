@@ -11,7 +11,7 @@ const [notes,setNotes]=useState(data.notes?data.notes:'')
                                 label="Notes"
                                 name='notes'
                                 formControlName={notes}
-                                handleChange={(notes)=>setNotes(notes.target.value)}
+                                handleChange={(notes)=>{setNotes(notes.target.value);localStorage.setItem('notes',notes.target.value)}}
                                 mode={3}
                               />
                                          <div className="flex pt-4 justify-between w-full">

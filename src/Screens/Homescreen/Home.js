@@ -27,7 +27,7 @@ function Home() {
             "p-4 h-auto rounded-3xl bg-transparent dark:border-gray-700 dark:bg-transparent dark:text-white min-w-screen-xl"
           }
         >
-          {!(paths.length == 2 && paths[1] == "home") && <BreadCrumbComp />}
+          {!(paths.length == 2 && paths[1] == "home") && <BreadCrumbComp  />}
           <ErrorBoundary
             FallbackComponent={Error}
             onError={(error) => {

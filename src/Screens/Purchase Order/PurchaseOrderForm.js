@@ -13,11 +13,15 @@ import Notes from "../../Components/Steps/Notes";
 import { FileTextOutlined } from "@ant-design/icons";
 import { FloatButton } from "antd";
 import PaymentTerms from "../../Components/Steps/PaymentTerms";
+import axios from "axios";
+import { url } from "../../Address/BaseUrl";
+
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
-
   const params = useParams();
   console.log(params, "params");
+  localStorage.setItem("id", params.id);
+
   const [delivery, setDeliveryAdd] = useState("");
   const [order_type, setOrderType] = useState("");
   const [b_order_dt, setBOrderDt] = useState("");
@@ -28,10 +32,15 @@ function PurchaseOrderForm() {
   const [notes, setNotes] = useState("");
 
   const [insp_flag, setInspFlag] = useState("N");
+  localStorage.setItem("insp_flag", "N");
   const [insp, setInsp] = useState("");
   const [drawing_flag, setDrawingFlag] = useState("N");
+  localStorage.setItem("drawing_flag", "N");
+
   const [drawing, setDrawing] = useState("");
   const [mdcc_flag, setMdccFlag] = useState("N");
+  localStorage.setItem("mdcc_flag", "N");
+
   const [mdcc, setMdcc] = useState("");
   const [drawingDate, setDrawingDate] = useState("");
 
@@ -69,6 +78,97 @@ function PurchaseOrderForm() {
           bottom: 100,
           height: 50,
           width: 50,
+        }}
+        onClick={() => {
+          console.log(
+            localStorage.getItem("order_type"),
+            localStorage.getItem("proj_name"),
+            localStorage.getItem("order_id"),
+            localStorage.getItem("vendor_name"),
+            JSON.parse(localStorage.getItem("itemList")),
+            JSON.parse(localStorage.getItem("termList")),
+            localStorage.getItem("bill_to"),
+            localStorage.getItem("ship_to"),
+            localStorage.getItem("mdcc_flag"),
+            localStorage.getItem("mdcc"),
+            localStorage.getItem("insp_flag"),
+            localStorage.getItem("insp"),
+            localStorage.getItem("drawing_flag"),
+            localStorage.getItem("drawing"),
+            localStorage.getItem("dt"),
+            localStorage.getItem("notes"),
+            JSON.parse(localStorage.getItem("terms"))
+          );
+
+          axios.post(url + "/api/addpo", {
+            sl_no:+localStorage.getItem('id'),
+            po_id: localStorage.getItem("order_id"),
+            po_date: localStorage.getItem("order_date"),
+            po_type: localStorage.getItem("order_type"),
+            project_id: localStorage.getItem("proj_name"),
+            vendor_id: localStorage.getItem("vendor_name"),
+            item_dtl:JSON.parse(localStorage.getItem("itemList")),
+            price_basis: JSON.parse(localStorage.getItem("terms"))
+              ? JSON.parse(localStorage.getItem("terms"))
+              .price_basis_flag:"",
+            price_basis_desc:JSON.parse(localStorage.getItem("terms"))
+            ? JSON.parse(localStorage.getItem("terms"))
+              .price_basis_desc :"",
+            packing_fwd_per:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+              .packing_forwarding):0.0,
+            freight_ins: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .freight_insurance:"",
+            test_certificate:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .test_certificate:"",
+            test_certificate_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .test_certificate_desc:"",
+            ld_date: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .ld_applicable_date:"",
+            ld_date_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).others_ld:"",
+            ld_val: JSON.parse(localStorage.getItem("terms"))?JSON.parse(localStorage.getItem("terms")).ld_applied_on:"",
+            ld_val_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .others_applied:"",
+            ld_val_per: JSON.parse(localStorage.getItem("terms"))?parseFloat(JSON.parse(localStorage.getItem("terms")).ld_value):0.0,
+            min_per:JSON.parse(localStorage.getItem("terms"))?  parseFloat(JSON.parse(localStorage.getItem("terms")).po_min_value):0.0,
+            warranty_guaranty:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .warranty_guarantee_flag:"",
+            duration:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).duration:"",
+            duration_value:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .duration_val:"",
+            o_m_manual:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .om_manual_flag:"",
+            o_m_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).om_manual_desc:'',
+            operation_installation:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .oi_flag:"",
+            operation_installation_desc:JSON.parse(
+              localStorage.getItem("terms")
+            )? JSON.parse(
+              localStorage.getItem("terms")
+            ).oi_desc:"",
+            packing_type: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .packing_type:"",
+            manufacture_clearance:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .manufacture_clearance:"",
+            manufacture_clearance_desc:JSON.parse(
+              localStorage.getItem("terms")
+            )? JSON.parse(
+              localStorage.getItem("terms")
+            ).manufacture_clearance_desc:"",
+            payment_terms:JSON.parse(localStorage.getItem('termList')),
+            bill_to:'NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046',
+            ship_to:localStorage.getItem("ship_to"),
+            warehouse_flag:'Y',
+            po_notes:localStorage.getItem("notes"),
+            mdcc:localStorage.getItem("mdcc_flag"),
+            mdcc_scope:localStorage.getItem("mdcc"),
+            inspection:localStorage.getItem("insp_flag"),
+            inspection_scope:localStorage.getItem("insp"),
+            draw:localStorage.getItem("drawing_flag"),
+            draw_scope:localStorage.getItem("drawing"),
+            draw_period:localStorage.getItem("dt"),
+            user:localStorage.getItem('email')
+
+          }).then(res=>console.log(res));
         }}
       />
       <HeadingTemplate
@@ -128,7 +228,7 @@ function PurchaseOrderForm() {
                 freight_insurance: freight_insurance,
                 test_certificate: test_certificate,
                 test_certificate_desc: test_certificate_desc,
-                ld_applicable_date:ld_applicable_date,
+                ld_applicable_date: ld_applicable_date,
                 ld_applied_on: ld_applied_on,
                 ld_value: ld_value,
                 po_min_value: po_min_value,

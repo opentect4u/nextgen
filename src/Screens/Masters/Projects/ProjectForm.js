@@ -103,8 +103,8 @@ function ProjectForm() {
     { code: "N", name: "No" },
   ];
   let priceBasisList = [
-    { code: "F", name: "For" },
-    { code: "E", name: "Ex-Work" },
+    { code: "F", name: "FOR" },
+    { code: "E", name: "EX-WORKS" },
   ];
 
   var clientList = [];
@@ -331,13 +331,10 @@ function ProjectForm() {
             setData(res.data?.msg);
             if (res.data.suc > 0) {
               formData.append("proj_id",proj_id)
-              var arr=new Array()
               formData.append("user",localStorage.getItem("email"))
-              for(let dt of docs){
-                arr.push(dt)
-                formData.append("docs",arr)
-              }
-            console.log(formData,docs)
+              formData.append("docs",docs)
+              formData.append("docs1",docs2)
+              formData.append("docs2",docs3)
               
                 axios.post(url+'/api/add_proj_files',formData).then(resProjFile=>{
                   if(resProjFile.data.suc>0){
@@ -530,7 +527,7 @@ function ProjectForm() {
                       name="docs"
                       multiple={true}
                       // formControlName={docs[0]}
-                      handleChange={(event) => setDocs(event.target.files)}
+                      handleChange={(event) => setDocs(event.target.files[0])}
                       mode={1}
                     />
                   </div>
@@ -541,7 +538,7 @@ function ProjectForm() {
                       name="docs1"
                       multiple={true}
                       // formControlName={docs[0]}
-                      handleChange={(event) => setDocs2(event.target.files)}
+                      handleChange={(event) => setDocs2(event.target.files[0])}
                       mode={1}
                     />
                   </div>
@@ -552,7 +549,7 @@ function ProjectForm() {
                       name="docs2"
                       multiple={true}
                       // formControlName={docs[0]}
-                      handleChange={(event) => setDocs2(event.target.files)}
+                      handleChange={(event) => setDocs3(event.target.files[0])}
                       mode={1}
                     />
                   </div>

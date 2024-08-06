@@ -29,17 +29,17 @@ function ProductDetails({ pressBack, pressNext,data }) {
   const [itemList,setItemList]=useState(data?.itemList?.length?data?.itemList:[
     {
       sl_no: 0,
-      item_name: "",
-      qty: "",
-      rate:"",
-      disc: "",
-      unit: "",
-      unit_price: "",
-      total: "",
-      CGST: "",
-      SGST: "",
-      IGST: "",
-      delivery_date: ""
+      item_name: 0,
+      qty: 0,
+      rate:0,
+      disc: 0,
+      unit: 0,
+      unit_price: 0,
+      total: 0,
+      CGST: 0,
+      SGST: 0,
+      IGST:0,
+      delivery_date:0
   }
 ])
   const handleDtChange=(index,event)=>{
@@ -47,15 +47,17 @@ function ProductDetails({ pressBack, pressNext,data }) {
     if(event.target.name=='item_name')
     setProdInfo(products.filter(e=>e.sl_no==+event.target.value))
     let data = [...itemList];
-    data[index][event.target.name] = event.target.value;
-    data[index]['unit_price']=data[index]['rate']-data[index]['disc']
+    data[index][event.target.name] = +event.target.value;
+    data[index]['unit_price']=+(data[index]['rate']-data[index]['disc'])
     
     if(!data[index]['IGST'])
-    data[index]['total']=(data[index]['unit_price']*data[index]['qty']*data[index]['CGST']+data[index]['unit_price']*data[index]['qty']*data[index]['SGST'])
+    data[index]['total']=+(data[index]['unit_price']*data[index]['qty']*data[index]['CGST']+data[index]['unit_price']*data[index]['qty']*data[index]['SGST'])
     else
-    data[index]['total']=(data[index]['unit_price']*data[index]['qty']*data[index]['IGST'])
+    data[index]['total']=+(data[index]['unit_price']*data[index]['qty']*data[index]['IGST'])
     setItemList(data)
     console.log(itemList)
+    localStorage.removeItem('itemList')
+    localStorage.setItem('itemList',JSON.stringify(data))
   }
   const addDt=(dt)=>{
     setItemList([...itemList,dt
@@ -76,11 +78,15 @@ function ProductDetails({ pressBack, pressNext,data }) {
 ])
 
     console.log(itemList)
+    localStorage.removeItem('itemList')
+    localStorage.setItem('itemList',JSON.stringify(itemList))
   }
   const removeDt = (index) => {
     let data = [...itemList];
     data.splice(index, 1)
     setItemList(data)
+    localStorage.removeItem('itemList')
+    localStorage.setItem('itemList',JSON.stringify(data))
 }
   useEffect(() => {
     axios.post(url + "/api/getproduct", { id: 0 }).then((resProd) => {
@@ -165,16 +171,16 @@ function ProductDetails({ pressBack, pressNext,data }) {
                               console.log(itemList[index])
                               addDt({
                                 sl_no: 0,
-                                item_name: "",
-                                qty: "",
-                                rate:"",
-                                disc: "",
-                                unit: "",
-                                unit_price: "",
-                                total: "",
-                                CGST: "",
-                                SGST: "",
-                                IGST: "",
+                                item_name: 0,
+                                qty: 0,
+                                rate:0,
+                                disc: 0,
+                                unit: 0,
+                                unit_price: 0,
+                                total: 0,
+                                CGST: 0,
+                                SGST: 0,
+                                IGST: 0,
                                 delivery_date:itemList[index].delivery_date?itemList[index].delivery_date:"",
                                 // poc_address: "",
                               })

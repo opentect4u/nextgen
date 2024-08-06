@@ -19,7 +19,7 @@ function TDInputTemplate(props) {
           value={props.formControlName}
           multiple={props.multiple}
 
-          className="bg-white border-gray-400 text-gray-800 text-sm rounded-lg  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          className="bg-white border-gray-400 text-gray-800 text-sm rounded-md  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 
           placeholder={props.placeholder}
           onChange={props.handleChange}
@@ -51,7 +51,6 @@ function TDInputTemplate(props) {
         // optionLabel="name"
         // onBlur={props.handleBlur}
         // />
-
     <select id="countries" className="bg-white border-1 border-gray-400 text-gray-800 text-sm rounded-lg  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 
     value={props.formControlName} 

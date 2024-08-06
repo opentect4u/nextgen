@@ -18,20 +18,12 @@ function App() {
         tailColor:'#22543d',
         colorPrimary:'#22543d',
         },
-      // Select:{
-      //   colorPrimary:'#22543d',
-      //   colorPrimaryHover:'#22543d'
-      // },
-     
       Select: {
         colorPrimary: '#22543d',
         colorPrimaryHover: '#22543d',
         optionActiveBg: '#22543d',
         optionSelectedColor:'#000000',
-        // optionActiveT: '#22543d',
         optionSelectedFontWeight: '700',
-        // optionSelectedFontColor:'#ffffff',
-        // controlOutline:'#22543d'
 
       },
       DatePicker:{
@@ -41,27 +33,17 @@ function App() {
       },
       Breadcrumb:{separatorColor:'#052d27', itemColor:'#052d27', lastItemColor:'#052d27',fontSize:15},
       Menu: {
-        // itemSelectedBg:'#e4eae1',
-        // itemSelectedColor:'#025129',
-        // horizontalItemHoverColor:'#025129',
-        // horizontalItemSelectedColor:'#025129',
-
-        // itemSelectedBg:'#e4eae1',
         itemBg:'#014737',
         subMenuItemBg:'#014737',
         subMenuItemBorderRadius:50,
         popupBg:'#014737',
-        // itemColor:'#D1D5DB',
         itemColor:'#D1D5DB',
-        // itemSelectedBg:'#347865',
         itemSelectedBg:'white',
         itemBorderRadius:50,
         itemMarginInline:15,
         itemHoverBg:'white',
         itemSelectedColor:'#4C9F70',
-        // itemSelectedColor:'#8CB369',
         itemHoverColor:'#014737',
-        // itemPaddingInline:10
       },
       Segmented:{
         itemActiveBg:'#014737',

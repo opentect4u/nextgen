@@ -8,7 +8,7 @@ import { Switch } from "antd";
 
 function Delivery({ pressBack, pressNext, data }) {
   console.log(data);
-
+  localStorage.setItem("bill_to",'NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046')
   const [deliveryConfirm, setDelivery] = useState(false);
   const [delivery, setDeliveryAdd] = useState(
     data.type == "G"
@@ -81,7 +81,7 @@ function Delivery({ pressBack, pressNext, data }) {
               placeholder="Ship To"
               name="ship_to"
               value={delivery}
-              onChange={(text) => setDeliveryAdd(text.target.value)}
+              onChange={(text) => {setDeliveryAdd(text.target.value); localStorage.setItem('ship_to',text.target.value)}}
               disabled={data.type == "G" || deliveryConfirm ? true : false}
             />
             {!delivery && <VError title={"Address is required"} />}

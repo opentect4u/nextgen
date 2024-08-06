@@ -20,7 +20,8 @@ import { Avatar, Button } from 'antd';
 import '../Styles/styles.css'
 import { Badge } from 'antd';
 import { useNavigate } from "react-router-dom";
-
+import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
+import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
 function Header() {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
@@ -190,7 +191,7 @@ function Header() {
 
       <nav className={`bg-gray-200 px-5 pb-2 dark:bg-gray-800`}>
 
-        <div className="flex flex-wrap justify-between items-center mx-auto min-w-screen-xl p-4">
+        <div className="flex  justify-between items-center mx-auto min-w-screen-xl p-4">
           <Link
             to={routePaths.HOME}
             className="flex items-center space-x-3 w-4/5"
@@ -275,17 +276,17 @@ function Header() {
               }}
             >
               <MenuItem
-                className="text-green-900 hover:text-green-900"
+                className="text-green-900 hover:text-green-900 p-2"
                 onClick={() => handleCloseProfile("", 2)}
               >
-                Profile
+               <AccountCircleSharpIcon className="text-green-900 mr-2"/> Profile
               </MenuItem>
-
+              <Divider />
               <MenuItem
                 className="text-green-900 hover:text-green-900"
                 onClick={() => handleCloseProfile("/", 1)}
               >
-                Logout
+               <LogoutSharpIcon className="text-green-900 mr-2" /> Logout
               </MenuItem>
             </Menu>
             {/* </div> */}

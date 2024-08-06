@@ -92,7 +92,7 @@ function ClientForm() {
         setData(res.data?.msg);
         if (res.data.suc > 0) {
           Message("success", res.data.msg);
-          // if (params.id == 0) formik.handleReset();
+          // if (params.id == 0) handleReset();
         } else {
           Message("error", res.data.msg);
         }

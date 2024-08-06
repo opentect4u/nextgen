@@ -19,16 +19,24 @@ function PaymentTerms({ pressBack, pressNext, data }) {
     console.log(event.target.value);
     let data = [...termList];
     data[index][event.target.name] = event.target.value;
+    setTermList(data)
+    console.log(termList)
+    localStorage.removeItem('termList')
+    localStorage.setItem('termList',JSON.stringify(data))
   };
   const addDt = (dt) => {
     setTermList([...termList, dt]);
 
     console.log(termList);
+    localStorage.removeItem('termList')
+    localStorage.setItem('termList',JSON.stringify(termList))
   };
   const removeDt = (index) => {
     let data = [...termList];
     data.splice(index, 1);
     setTermList(data);
+    localStorage.removeItem('termList')
+    localStorage.setItem('termList',JSON.stringify(termList))
   };
   return (
     <div className="py-2 px-4 mx-auto w-full lg:py-2">
@@ -66,11 +74,11 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                 type="text"
                 label="Stage"
                 name="stage"
-                data={[
-                  { name: "FOR", code: "F" },
-                  { name: "EX-WORKS", code: "E" },
-                ]}
                 formControlName={input.stage}
+                handleChange={(event)=>{
+                    handleDtChange(index,event)
+                
+                }}
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
                 mode={1}
@@ -86,6 +94,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                 label="Payment Terms"
                 name="term"
                 formControlName={input.term}
+                handleChange={(event)=>{handleDtChange(index,event)}}
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
                 mode={3}

@@ -215,7 +215,7 @@ function DTableMaster({ headers,
                   key={index}
                   field={item.name}
                   header={item.value}
-                  headerClassName={'text-green-900 bg-[#C4F1BE] border-b-green-900  dark:bg-gray-700 dark:text-white dark:font-bold'}
+                  headerClassName={'text-green-900 bg-[#C4F1BE] border-b-green-900 dark:bg-gray-700 dark:text-white dark:font-bold'}
 
                   style={{ width: "10%" }}
                   body={(rowData) => renderTooltip(rowData, item.name)}
