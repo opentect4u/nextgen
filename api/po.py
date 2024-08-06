@@ -133,7 +133,7 @@ async def addpo(data:PoModel):
     result4 = await db_Insert(table_name4, fields4, values4, whr4, flag4)
 
     fields5= f'mdcc="{data.mdcc}",mdcc_scope="{data.mdcc_scope}",inspection="{data.inspection}",inspection_scope="{data.inspection_scope}",draw="{data.draw}",draw_scope="{data.draw_scope}",draw_period="{data.draw_period}",modified_by="{data.user}",modified_dt="{formatted_dt}"' if data.sl_no > 0 else f'po_sl_no,mdcc,mdcc_scope,inspection,inspection_scope,draw,draw_scope,draw_period,created_by,created_dt'
-    values5 = f'"{lastID}"{data.mdcc}","{data.mdcc_scope}","{data.inspection}","{data.inspection_scope}","{data.draw}","{data.draw_scope}","{data.draw_period}","{data.user}","{formatted_dt}"'
+    values5 = f'"{lastID}",{data.mdcc}","{data.mdcc_scope}","{data.inspection}","{data.inspection_scope}","{data.draw}","{data.draw_scope}","{data.draw_period}","{data.user}","{formatted_dt}"'
     table_name5 = "td_po_more"
     whr5 = f'po_sl_no="{data.sl_no}"' if data.sl_no > 0 else None
     flag5 = 1 if data.sl_no>0 else 0
