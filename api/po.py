@@ -79,7 +79,8 @@ class PoModel(BaseModel):
     draw_period:Optional[Union[str,None]]=None
     user:str
 
-
+class GetPo(BaseModel):
+    id:int
 
 
 @poRouter.post('/addpo')
@@ -144,34 +145,19 @@ async def addpo(data:PoModel):
         res_dt = {"suc": 1, "msg": f"Saved successfully!" if data.sl_no==0 else f"Updated successfully!"}
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating"}
-    # del_table_name = 'md_client_poc'
-    # del_whr = f"sl_no not in()"
-    # del_qry = await db_Delete(del_table_name, del_whr)
-    # for c in data.c_loc:
-    #     fields= f'c_loc="{c.c_location}",c_gst="{c.c_gst}",c_pan="{c.c_pan}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,c_loc,c_gst,c_pan,created_by,created_at'
-    #     values = f'"{lastID}","{c.c_location}","{c.c_gst}","{c.c_pan}","{data.user}","{formatted_dt}"'
-    #     table_name = "md_client_loc"
-    #     whr =  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
-    #     flag1 = 1 if c.sl_no>0 else 0
-    #     result = await db_Insert(table_name, fields, values, whr, flag1)
-
-    #     # if(result['suc']>0):
-    #     #     res_dt = {"suc": 1, "msg": f"Client saved successfully!" if c.sl_no==0 else f"Client updated successfully!"}
-    #     # else:
-    #     #     res_dt = {"suc": 0, "msg": f"Error while saving!" if c.sl_no==0 else f"Error while updating"}
-
-
-    # for c in data.c_poc:
-    #     fields= f'poc_name="{c.poc_name}",poc_email="{c.poc_email}",poc_designation="{c.poc_designation}",poc_department="{c.poc_department}",poc_direct_no="{c.poc_direct_no}",poc_ext_no="{c.poc_ext_no}", poc_ph_1="{c.poc_ph_1}",poc_ph_2="{c.poc_ph_2}",poc_location="{c.poc_location}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_location,created_by,created_at'
-    #     values = f'"{lastID}","{c.poc_name}","{c.poc_email}","{c.poc_designation}","{c.poc_department}","{c.poc_direct_no}","{c.poc_ext_no}","{c.poc_ph_1}","{c.poc_ph_2}","{c.poc_location}","{data.user}","{formatted_dt}"'
-    #     table_name = "md_client_poc"
-    #     whr =  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
-    #     flag1 = 1 if c.sl_no>0 else 0
-    #     result = await db_Insert(table_name, fields, values, whr, flag1)
-
-    #     if(result['suc']>0):
-    #         res_dt = {"suc": 1, "msg": f"Client saved successfully!" if c.sl_no==0 else f"Client updated successfully!"}
-    #     else:
-    #         res_dt = {"suc": 0, "msg": f"Error while saving!" if c.sl_no==0 else f"Error while updating"}
-
+  
     return res_dt
+
+@poRouter.post('/getpo')
+async def addpo(data:GetPo):
+    print(id.id)
+    res_dt = {}
+
+    select = "*"
+    schema = "td_po_basic"
+    where = f"sl_no='{data.id}'" if data.id>0 else ""
+    order = ""
+    flag = 1 if data.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
