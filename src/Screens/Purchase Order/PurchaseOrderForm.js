@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { useParams } from "react-router";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
-import OrderType from "../../Components/Steps/OrderType";
 import BasicDetails from "../../Components/Steps/BasicDetails";
 import Delivery from "../../Components/Steps/Delivery";
 import More from "../../Components/Steps/More";
@@ -10,18 +9,20 @@ import TermsConditions from "../../Components/Steps/TermsConditions";
 import ProductDetails from "../../Components/Steps/ProductDetails";
 import HeadingTemplate from "../../Components/HeadingTemplate";
 import Notes from "../../Components/Steps/Notes";
-import { FileTextOutlined } from "@ant-design/icons";
+import { FileTextOutlined, LoadingOutlined } from "@ant-design/icons";
 import { FloatButton } from "antd";
 import PaymentTerms from "../../Components/Steps/PaymentTerms";
 import axios from "axios";
 import { url } from "../../Address/BaseUrl";
+import { Spin } from "antd";
+import { Message } from "../../Components/Message";
 
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const params = useParams();
   console.log(params, "params");
   localStorage.setItem("id", params.id);
-
+  const [loading,setLoading] = useState(false)
   const [delivery, setDeliveryAdd] = useState("");
   const [order_type, setOrderType] = useState("");
   const [b_order_dt, setBOrderDt] = useState("");
@@ -43,7 +44,7 @@ function PurchaseOrderForm() {
 
   const [mdcc, setMdcc] = useState("");
   const [drawingDate, setDrawingDate] = useState("");
-
+ 
   const [price_basis_flag, setPriceBasisFlag] = useState("");
   const [price_basis_desc, setPriceBasisDesc] = useState("");
   const [packing_forwarding, setPackingForwarding] = useState("");
@@ -80,26 +81,7 @@ function PurchaseOrderForm() {
           width: 50,
         }}
         onClick={() => {
-          console.log(
-            localStorage.getItem("order_type"),
-            localStorage.getItem("proj_name"),
-            localStorage.getItem("order_id"),
-            localStorage.getItem("vendor_name"),
-            JSON.parse(localStorage.getItem("itemList")),
-            JSON.parse(localStorage.getItem("termList")),
-            localStorage.getItem("bill_to"),
-            localStorage.getItem("ship_to"),
-            localStorage.getItem("mdcc_flag"),
-            localStorage.getItem("mdcc"),
-            localStorage.getItem("insp_flag"),
-            localStorage.getItem("insp"),
-            localStorage.getItem("drawing_flag"),
-            localStorage.getItem("drawing"),
-            localStorage.getItem("dt"),
-            localStorage.getItem("notes"),
-            JSON.parse(localStorage.getItem("terms"))
-          );
-
+          setLoading(true)
           axios.post(url + "/api/addpo", {
             sl_no:+localStorage.getItem('id'),
             po_id: localStorage.getItem("order_id"),
@@ -168,7 +150,18 @@ function PurchaseOrderForm() {
             draw_period:localStorage.getItem("dt"),
             user:localStorage.getItem('email')
 
-          }).then(res=>console.log(res));
+          }).then(res=>{
+            if (res.data.suc > 0) {
+              Message("success", res.data.msg);
+              // if (params.id == 0) handleReset();
+              setLoading(false)
+            } else {
+              Message("error", res.data.msg);
+              setLoading(false)
+
+            }
+            console.log(res)})
+            .catch(err=>Message("err", err));
         }}
       />
       <HeadingTemplate
@@ -177,6 +170,12 @@ function PurchaseOrderForm() {
         title={"Purchase Order"}
         // data={params.id && data?data:''}
       />
+       <Spin
+        indicator={<LoadingOutlined spin />}
+        size="large"
+        className="text-green-900 dark:text-gray-400"
+        spinning={loading}
+      >
       <div className="card bg-white rounded-lg p-5">
         <Stepper
           ref={stepperRef}
@@ -371,6 +370,7 @@ function PurchaseOrderForm() {
           </StepperPanel>
         </Stepper>
       </div>
+      </Spin>
     </>
   );
 }

@@ -9,9 +9,6 @@ import { LoadingOutlined } from "@ant-design/icons";
 import Viewdetails from "../Viewdetails";
 import DialogBox from "../DialogBox";
 
-// import { AutoComplete } from 'antd';
-// import  { AutoCompleteProps } from 'antd';
-import { AutoComplete } from "primereact/autocomplete";
 function BasicDetails({ pressNext, pressBack, data }) {
   console.log(data)
   const params = useParams();

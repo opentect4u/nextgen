@@ -6,19 +6,15 @@ import VError from "../../../Components/VError";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
 
 import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-
 import { Formik, FieldArray } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Message } from "../../../Components/Message";
 import { url } from "../../../Address/BaseUrl";
 import { Spin } from "antd";
-import { LoadingOutlined, ArrowRightOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { LoadingOutlined} from "@ant-design/icons";
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Radio } from 'antd';
-import { Stepper } from 'primereact/stepper';
-import { StepperPanel } from 'primereact/stepperpanel';
 // import { Button } from 'primereact/button';
 
 function VendorForm() {

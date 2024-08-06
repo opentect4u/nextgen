@@ -47,7 +47,7 @@ function ProductDetails({ pressBack, pressNext,data }) {
     if(event.target.name=='item_name')
     setProdInfo(products.filter(e=>e.sl_no==+event.target.value))
     let data = [...itemList];
-    data[index][event.target.name] = +event.target.value;
+    data[index][event.target.name] = event.target.value;
     data[index]['unit_price']=+(data[index]['rate']-data[index]['disc'])
     
     if(!data[index]['IGST'])
@@ -181,6 +181,7 @@ function ProductDetails({ pressBack, pressNext,data }) {
                                 CGST: "",
                                 SGST: "",
                                 IGST: "",
+                                delivery_date:itemList[index].delivery_date
                                 // poc_address: "",
                               })
                             }
