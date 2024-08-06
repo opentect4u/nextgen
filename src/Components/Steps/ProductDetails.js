@@ -29,17 +29,17 @@ function ProductDetails({ pressBack, pressNext,data }) {
   const [itemList,setItemList]=useState(data?.itemList?.length?data?.itemList:[
     {
       sl_no: 0,
-      item_name: 0,
-      qty: 0,
-      rate:0,
-      disc: 0,
-      unit: 0,
-      unit_price: 0,
-      total: 0,
-      CGST: 0,
-      SGST: 0,
-      IGST:0,
-      delivery_date:0
+      item_name: "",
+      qty: "",
+      rate:"",
+      disc: "",
+      unit: "",
+      unit_price: "",
+      total: "",
+      CGST: "",
+      SGST: "",
+      IGST:"",
+      delivery_date:""
   }
 ])
   const handleDtChange=(index,event)=>{
@@ -171,17 +171,16 @@ function ProductDetails({ pressBack, pressNext,data }) {
                               console.log(itemList[index])
                               addDt({
                                 sl_no: 0,
-                                item_name: 0,
-                                qty: 0,
-                                rate:0,
-                                disc: 0,
-                                unit: 0,
-                                unit_price: 0,
-                                total: 0,
-                                CGST: 0,
-                                SGST: 0,
-                                IGST: 0,
-                                delivery_date:itemList[index].delivery_date?itemList[index].delivery_date:"",
+                                item_name: "",
+                                qty: "",
+                                rate:"",
+                                disc: "",
+                                unit: "",
+                                unit_price: "",
+                                total: "",
+                                CGST: "",
+                                SGST: "",
+                                IGST: "",
                                 // poc_address: "",
                               })
                             }
