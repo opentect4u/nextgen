@@ -150,7 +150,7 @@ async def addpo(data:PoModel):
 
 @poRouter.post('/getpo')
 async def addpo(data:GetPo):
-    print(id.id)
+    print(data.id)
     res_dt = {}
 
     select = "*"
