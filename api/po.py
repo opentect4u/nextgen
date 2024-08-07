@@ -38,6 +38,8 @@ class payTerms(BaseModel):
 class PoModel(BaseModel):
     sl_no:Optional[int]=None
     po_id:Optional[Union[str,None]]=None
+    po_status:Optional[Union[str,None]]=None
+    po_issue_date:Optional[Union[str,None]]=None
     po_date:Optional[Union[str,None]]=None
     po_type:Optional[Union[str,None]]=None
     project_id:Optional[Union[int,str,None]]=None
@@ -93,8 +95,8 @@ async def addpo(data:PoModel):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_date="{data.po_date}",po_type="{data.po_type}",project_id="{data.project_id}",po_id="{data.po_id}",vendor_id="{data.vendor_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_date,po_type,project_id,po_id,vendor_id,created_by,created_at'
-    values = f'"{data.po_date}","{data.po_type}","{data.project_id}","{data.po_id}","{data.vendor_id}","{data.user}","{formatted_dt}"'
+    fields= f'po_date="{data.po_date}",po_status="{data.po_status}",po_issue_date="{data.po_issue_date}",po_type="{data.po_type}",project_id="{data.project_id}",po_id="{data.po_id}",vendor_id="{data.vendor_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_date,po_type,project_id,po_id,vendor_id,po_status,po_issue_date,created_by,created_at'
+    values = f'"{data.po_date}","{data.po_type}","{data.project_id}","{data.po_id}","{data.vendor_id}","{data.po_status}","{data.po_issue_date}","{data.user}","{formatted_dt}"'
     table_name = "td_po_basic"
     whr = f'sl_no="{data.sl_no}"' if data.sl_no > 0 else None
     flag = 1 if data.sl_no>0 else 0
