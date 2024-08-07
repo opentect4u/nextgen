@@ -45,7 +45,9 @@ class PoModel(BaseModel):
     item_dtl:Optional[list[prodDetails]]=None
     price_basis:Optional[Union[str,None]]=None
     price_basis_desc:Optional[Union[str,None]]=None
-    packing_fwd_per:Optional[float]=None
+    packing_fwd_val:Optional[str]=None
+    packing_fwd_extra:Optional[float]=None
+    packing_fwd_extra_val:Optional[float]=None
     freight_ins:Optional[Union[str,None]]=None
     test_certificate:Optional[Union[str,None]]=None
     test_certificate_desc:Optional[Union[str,None]]=None
