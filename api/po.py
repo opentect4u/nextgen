@@ -156,7 +156,7 @@ async def getprojectpoc(id:GetPo):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='U', 'Approval pending',IF(b.po_status='A','Approved',IFa(b.po_status='L',IF(b.po_status='D',''))))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no"
+    select = "@a:=@a+1 serial_number,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='U', 'Approval pending',IF(b.po_status='A','Approved',IF(b.po_status='L',IF(b.po_status='D',''))))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no"
     schema = "td_po_basic b,td_project p,md_vendor v,(SELECT @a:= 0) AS a"
     where = f"b.sl_no='{id.id}' and p.sl_no=b.project_id and v.sl_no=b.vendor_id" if id.id>0 else "p.sl_no=b.project_id and v.sl_no=b.vendor_id"
     order = "ORDER BY b.created_at DESC"
