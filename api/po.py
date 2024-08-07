@@ -49,6 +49,7 @@ class PoModel(BaseModel):
     packing_fwd_extra:Optional[float]=None
     packing_fwd_extra_val:Optional[float]=None
     freight_ins:Optional[Union[str,None]]=None
+    freight_ins_val:Optional[Union[str,None]]=None
     test_certificate:Optional[Union[str,None]]=None
     test_certificate_desc:Optional[Union[str,None]]=None
     ld_date:Optional[Union[str,None]]=None
