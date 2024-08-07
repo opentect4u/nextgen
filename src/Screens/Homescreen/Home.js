@@ -35,8 +35,9 @@ function Home() {
             }}
           >
             <ScrollTop style={{ backgroundColor: "#92140C" }} />
-          </ErrorBoundary>
+         
           <Outlet />
+          </ErrorBoundary>
         </div>
       </div>
     </div>

@@ -167,12 +167,12 @@ function VendorForm() {
 
   const validationSchema = Yup.object({
     v_name: Yup.string().required("Name is required"),
-    v_phone: Yup.string().required("Phone is required").length(10),
+    v_phone: Yup.string().required("Phone is required").length(10,'Must be 10 digits!').matches(/^[2-9]{2}[0-9]{8}$/,'Invalid phone no.'),
     v_email: Yup.string()
       .required("Email is required")
-      .email("Incorrect email format"),
-    v_gst: Yup.string(),
-    v_pan: Yup.string(),
+      .email("Incorrect format!"),
+    v_gst: Yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,'Incorrect format!'),
+    v_pan: Yup.string().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,'Incorrect format!'),
     v_msme: Yup.string().required("MSME is required"),
     v_msmeno: Yup.string().when('v_msme', {
       is: 'Y',
@@ -183,18 +183,18 @@ function VendorForm() {
     v_banknm: Yup.string().required("Bank name required"),
     v_ac: Yup.string().required("Account no. required"),
     v_micr: Yup.string().required("MICR code required"),
-    v_ifsc: Yup.string().required("IFSC required"),
+    v_ifsc: Yup.string().required("IFSC required").matches(/^[A-Z]{4}0[A-Z0-9]{6}$/,'Incorrect format!'),
     v_tan: Yup.string().required("TAN is required"),
     v_tds: Yup.string().required("TDS is required"),
-    tds_perc: Yup.string().when('v_tds', {
+    tds_perc: Yup.number().when('v_tds', {
       is: 'Y',
-      then: () => Yup.string().required('TDS percentage is required'),
+      then: () => Yup.string().required('TDS percentage is required').max(100,'Invalid value!').min(0,'Invalid Value'),
       otherwise: () => Yup.string()
     }),
     v_tcs: Yup.string().required("TCS is required"),
-    tcs_perc: Yup.string().when('v_tcs', {
+    tcs_perc: Yup.number().when('v_tcs', {
       is: 'Y',
-      then: () => Yup.string().required('TCS percentage is required'),
+      then: () => Yup.string().required('TCS percentage is required').max(100,'Invalid value!').min(0,'Invalid Value'),
       otherwise: () => Yup.string()
     }),
 
@@ -204,9 +204,9 @@ function VendorForm() {
     dynamicFields: Yup.array().of(
       Yup.object().shape({
         poc_name: Yup.string().required("Contact person is required"),
-        poc_ph_1: Yup.string().required("Phone is required").length(10),
-        poc_ph_2: Yup.string().required("Phone is required").length(10),
-        poc_email: Yup.string().required("Email is required").email(),
+        poc_ph_1: Yup.string().required("Phone is required").length(10,'Must be 10 digits!').matches(/^[2-9]{2}[0-9]{8}$/,'Invalid phone no.'),
+        poc_ph_2: Yup.string().length(10,'Must be 10 digits!').matches(/^[2-9]{2}[0-9]{8}$/,'Invalid phone no.'),
+        poc_email: Yup.string().required("Email is required").email('Incorrect format!'),
       })
     ),
     dynamicFields_category: Yup.array().of(
@@ -475,7 +475,7 @@ function VendorForm() {
         setLoading(false);
         if (res.data.suc > 0) {
           Message("success", res.data.msg);
-          // if (params.id == 0) formik.handleReset();
+          if (params.id == 0) navigate(-1);
         } else {
           Message("error", res.data.msg);
         }
@@ -742,7 +742,7 @@ function VendorForm() {
                           <div>
                             <TDInputTemplate
                               placeholder="Type TDS Percentage"
-                              type="text"
+                              type="number"
                               label="TDS Percentage"
                               name="tds_perc"
                               formControlName={values.tds_perc}
@@ -771,7 +771,7 @@ function VendorForm() {
                           <div >
                             <TDInputTemplate
                               placeholder="Type TCS Percentage"
-                              type="text"
+                              type="number"
                               label="TCS Percentage"
                               name="tcs_perc"
                               formControlName={values.tcs_perc}

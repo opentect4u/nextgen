@@ -92,7 +92,7 @@ function ClientForm() {
         setData(res.data?.msg);
         if (res.data.suc > 0) {
           Message("success", res.data.msg);
-          // if (params.id == 0) handleReset();
+          if (params.id == 0) navigate(-1);
         } else {
           Message("error", res.data.msg);
         }
@@ -104,9 +104,12 @@ function ClientForm() {
   };
   const validationSchema = Yup.object({
     clnt_name: Yup.string().required("Client's name is required"),
+    
     locationFields: Yup.array().of(
       Yup.object().shape({
         c_location: Yup.string().required("Client location is required"),
+        c_gst: Yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,'Incorrect format!'),
+    c_pan: Yup.string().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,'Incorrect format!'),
        
     })),   
     c_vendor_code: Yup.string().required("Vendor code is required"),
@@ -118,8 +121,8 @@ function ClientForm() {
         poc_email: Yup.string().required('Please enter email').email("Incorrect email format"),
         poc_direct_no: Yup.string().optional(),
         poc_ext_no: Yup.string().optional(),
-        poc_ph_1: Yup.string().required('Please enter primary number').length(10),
-        poc_ph_2: Yup.string().optional().length(10),
+        poc_ph_1: Yup.string().required('Please enter primary number').length(10,'Must be 10 digits!').matches(/^[2-9]{2}[0-9]{8}$/,'Invalid phone no.'),
+        poc_ph_2: Yup.string().length(10,'Must be 10 digits!').matches(/^[2-9]{2}[0-9]{8}$/,'Invalid phone no.'),
         poc_location: Yup.string().optional(),
       })
     ),

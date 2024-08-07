@@ -9,7 +9,7 @@ import { Switch } from "antd";
 function Delivery({ pressBack, pressNext, data }) {
   console.log(data);
   localStorage.setItem("bill_to",'NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046')
-  const [deliveryConfirm, setDelivery] = useState(false);
+  const [deliveryConfirm, setDelivery] = useState(data.ware_house_flag=='Y'?true:false);
   const [delivery, setDeliveryAdd] = useState(
     data.type == "G"
       ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
@@ -54,7 +54,9 @@ function Delivery({ pressBack, pressNext, data }) {
                   size="small"
                   value={deliveryConfirm}
                   onClick={(e) => {
+                    
                     console.log(e);
+                    localStorage.setItem('ware_house_flag',e==false?'N':'Y')
                     setDelivery(e);
                     if (deliveryConfirm == false) {
                       console.log(deliveryConfirm);

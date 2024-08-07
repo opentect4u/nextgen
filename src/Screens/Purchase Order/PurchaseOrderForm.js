@@ -50,7 +50,10 @@ function PurchaseOrderForm() {
   const [price_basis_flag, setPriceBasisFlag] = useState("");
   const [price_basis_desc, setPriceBasisDesc] = useState("");
   const [packing_forwarding, setPackingForwarding] = useState("");
+  const [packing_forwardingExtra, setPackingForwardingExtra] = useState("");
+  const [packing_forwardingExtraVal, setPackingForwardingExtraVal] = useState("");
   const [freight_insurance, setFreightInsurance] = useState("");
+  const [freight_insurance_val, setFreightInsuranceVal] = useState("");
   const [test_certificate, setTestCertificate] = useState("");
   const [test_certificate_desc, setTestCertificateDesc] = useState("");
   const [ld_applicable_date, setLDApplicableDate] = useState("");
@@ -66,6 +69,7 @@ function PurchaseOrderForm() {
   const [om_manual_desc, setOMDesc] = useState("");
   const [oi_flag, setOIFlag] = useState("");
   const [oi_desc, setOIDesc] = useState("");
+  const [ware_house_flag,setWareHouse]=useState("")
   const [packing_type, setPackingType] = useState("");
   const [manufacture_clearance, setManufactureClearance] = useState("");
   const [manufacture_clearance_desc, setManufactureDesc] = useState("");
@@ -110,8 +114,11 @@ function PurchaseOrderForm() {
           console.log(resTerm)
           setPriceBasisFlag(resTerm?.data?.msg[0]?.price_basis)
           setPriceBasisDesc(resTerm?.data?.msg[0]?.price_basis_desc)
-          setPackingForwarding(resTerm?.data?.msg[0]?.packing_fwd_per)
+          setPackingForwarding(resTerm?.data?.msg[0]?.packing_fwd_val)
+          setPackingForwardingExtra(resTerm?.data?.msg[0]?.packing_fwd_extra)
+          setPackingForwardingExtraVal(resTerm?.data?.msg[0]?.packing_fwd_extra_val)
           setFreightInsurance(resTerm?.data?.msg[0]?.freight_ins)
+          setFreightInsuranceVal(resTerm?.data?.msg[0]?.freight_ins_val)
           setTestCertificate(resTerm?.data?.msg[0]?.test_certificate)
           setTestCertificateDesc(resTerm?.data?.msg[0]?.test_certificate_desc)
           setLDApplicableDate(resTerm?.data?.msg[0]?.ld_date)
@@ -133,8 +140,11 @@ function PurchaseOrderForm() {
           const terms_conditions={
             price_basis_flag: resTerm?.data?.msg[0]?.price_basis,
             price_basis_desc:resTerm?.data?.msg[0]?.price_basis_desc,
-            packing_forwarding:resTerm?.data?.msg[0]?.packing_fwd_per,
+            packing_forwarding_val:resTerm?.data?.msg[0]?.packing_fwd_val,
+            packing_forwarding_extra:resTerm?.data?.msg[0]?.packing_fwd_extra,
+            packing_forwarding_extra_val:resTerm?.data?.msg[0]?.packing_fwd_extra_val,
             freight_insurance:resTerm?.data?.msg[0]?.freight_ins,
+            freight_insurance_val:resTerm?.data?.msg[0]?.freight_ins_val,
             test_certificate:resTerm?.data?.msg[0]?.test_certificate,
             test_certificate_desc:resTerm?.data?.msg[0]?.test_certificate_desc,
             ld_applicable_date:resTerm?.data?.msg[0]?.ld_date,
@@ -171,6 +181,7 @@ function PurchaseOrderForm() {
         axios.post(url+'/api/getpodelivery',{id:+params.id}).then(resDel=>{
           console.log(resDel)
           setDeliveryAdd(resDel?.data?.msg[0]?.ship_to)
+          setWareHouse(resDel?.data?.msg[0]?.ware_house_flag)
           setNotes(resDel?.data?.msg[0]?.po_notes)
 
           axios.post(url+'/api/getpomore',{id:+params.id}).then(resMore=>{
@@ -228,10 +239,16 @@ function PurchaseOrderForm() {
             price_basis_desc:JSON.parse(localStorage.getItem("terms"))
             ? JSON.parse(localStorage.getItem("terms"))
               .price_basis_desc :"",
-            packing_fwd_per:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
-              .packing_forwarding):0.0,
+            packing_fwd_val:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .packing_forwarding_val:"",
+              packing_fwd_extra:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+              .packing_forwarding_extra):0.0,
+              packing_fwd_extra_val:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+              .packing_forwarding_extra_val):0.0,
             freight_ins: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
               .freight_insurance:"",
+              freight_ins_val: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+              .freight_insurance_val:"",
             test_certificate:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
               .test_certificate:"",
             test_certificate_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
@@ -271,7 +288,7 @@ function PurchaseOrderForm() {
             payment_terms:JSON.parse(localStorage.getItem('termList')),
             bill_to:'NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046',
             ship_to:localStorage.getItem("ship_to"),
-            warehouse_flag:'Y',
+            warehouse_flag:localStorage.getItem('ware_house_flag'),
             po_notes:localStorage.getItem("notes"),
             mdcc:localStorage.getItem("mdcc_flag"),
             mdcc_scope:localStorage.getItem("mdcc"),
@@ -317,6 +334,7 @@ function PurchaseOrderForm() {
           ref={stepperRef}
           style={{ flexBasis: "100%" }}
           orientation="vertical"
+          linear={+params.id>0?false:true}
         >
           <StepperPanel header="Basic Details">
             <BasicDetails
@@ -329,12 +347,14 @@ function PurchaseOrderForm() {
               }}
               pressNext={(values) => {
                 console.log(values);
-                setOrderType(values.type);
-                setBOrderDt(values.order_date);
-                setVendorName(values.vendor_name);
-                setProjectName(values.proj_name);
-                setOrderId(values.order_id);
+                // if(values){
+                setOrderType(values?.type);
+                setBOrderDt(values?.order_date);
+                setVendorName(values?.vendor_name);
+                setProjectName(values?.proj_name);
+                setOrderId(values?.order_id);
                 stepperRef.current.nextCallback();
+                // }
               }}
               pressBack={(values) => {
                 stepperRef.current.prevCallback();
@@ -360,7 +380,10 @@ function PurchaseOrderForm() {
                 price_basis_flag: price_basis_flag,
                 price_basis_desc: price_basis_desc,
                 packing_forwarding: packing_forwarding,
+                packing_forwarding_extra:packing_forwardingExtra,
+                packing_forwarding_extra_val:packing_forwardingExtraVal,
                 freight_insurance: freight_insurance,
+                freight_insurance_val: freight_insurance_val,
                 test_certificate: test_certificate,
                 test_certificate_desc: test_certificate_desc,
                 ld_applicable_date: ld_applicable_date,
@@ -385,7 +408,10 @@ function PurchaseOrderForm() {
                 setPriceBasisFlag(values.price_basis_flag);
                 setPriceBasisDesc(values.price_basis_desc);
                 setPackingForwarding(values.packing_forwarding);
+                setPackingForwardingExtra(values.packing_forwarding_extra);
+                setPackingForwardingExtraVal(values.packing_forwarding_extra_val);
                 setFreightInsurance(values.freight_insurance);
+                setFreightInsuranceVal(values.freight_insurance_val);
                 setTestCertificate(values.test_certificate);
                 setTestCertificateDesc(values.test_certificate_desc);
                 setLDApplicableDate(values.ld_applicable_date);
@@ -424,7 +450,7 @@ function PurchaseOrderForm() {
           </StepperPanel>
           <StepperPanel header="Delivery Details">
             <Delivery
-              data={{ type: order_type, delivery: delivery }}
+              data={{ type: order_type, delivery: delivery,ware_house_flag: ware_house_flag}}
               pressNext={(values) => {
                 console.log(values);
                 setDeliveryAdd(values);
@@ -490,21 +516,7 @@ function PurchaseOrderForm() {
             /> */}
             </div>
           </StepperPanel>
-          <StepperPanel header="Logs">
-            <div className="flex flex-column h-12rem">
-              <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
-                Content III
-              </div>
-            </div>
-            <div className="flex pt-4 justify-content-start">
-              {/* <Button
-              label="Back"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              onClick={() => stepperRef.current.prevCallback()}
-            /> */}
-            </div>
-          </StepperPanel>
+        
         </Stepper>
       </div>
       </Spin>

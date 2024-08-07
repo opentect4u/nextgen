@@ -26,6 +26,8 @@ function ProductDetails({ pressBack, pressNext,data }) {
   const [igstList, setiGstList] = useState([]);
   const [visible,setVisible]=useState(false)
   const [loading,setLoading]=useState(false)
+  const [grand_total,setGrandTotal]=useState(0)
+  var tot=0
   const [itemList,setItemList]=useState(data?.itemList?.length?data?.itemList:[
     {
       sl_no: 0,
@@ -42,6 +44,16 @@ function ProductDetails({ pressBack, pressNext,data }) {
       delivery_date:""
   }
 ])
+useEffect(()=>{
+  if(data?.itemList?.length){
+    for(let i=0;i<itemList.length;i++){
+      tot+=itemList[i].total
+    }
+    setGrandTotal(tot)
+    tot=0
+  }
+},[])
+  
   const handleDtChange=(index,event)=>{
     console.log(event.target.value)
     if(event.target.name=='item_name')
@@ -54,6 +66,11 @@ function ProductDetails({ pressBack, pressNext,data }) {
     data[index]['total']=+(data[index]['unit_price']*data[index]['qty']*data[index]['CGST']+data[index]['unit_price']*data[index]['qty']*data[index]['SGST'])
     else
     data[index]['total']=+(data[index]['unit_price']*data[index]['qty']*data[index]['IGST'])
+    for(let i=0;i<itemList.length;i++){
+      tot+=itemList[i].total
+    }
+    setGrandTotal(tot)
+    tot=0
     setItemList(data)
     console.log(itemList)
     localStorage.removeItem('itemList')
@@ -419,6 +436,9 @@ function ProductDetails({ pressBack, pressNext,data }) {
                       <VError title={formik.errors.price_basis_desc} />
                     )} */}
                           </div>
+                       {index==itemList.length-1 &&   <div className="sm:col-span-2 font-bold flex flex-col justify-center items-start">
+                            Grand Total: {grand_total}
+                          </div>}
                         </div>
                       </React.Fragment>
         )}

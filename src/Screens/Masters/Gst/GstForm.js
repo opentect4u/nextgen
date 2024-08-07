@@ -51,7 +51,7 @@ function GstForm() {
   };
   const validationSchema = Yup.object({
     gst_type: Yup.string().required("Type is required"),
-    gst_rate:Yup.string().required("Rate is required"),
+    gst_rate:Yup.number().required("Rate is required").max(100,'Invalid value!').min(0,'Invalid Value'),
   });
   const formik = useFormik({
     initialValues: +params.id > 0 ? formValues : initialValues,
@@ -125,7 +125,7 @@ function GstForm() {
               <div className="sm:col-span-1 mb-2">
                 <TDInputTemplate
                   placeholder="Type GST Rate"
-                  type="text"
+                  type="number"
                   label="GST Rate"
                   name="gst_rate"
                   formControlName={formik.values.gst_rate}

@@ -23,8 +23,12 @@ function Error({error}) {
           The content you wanted has the following error(s):
         </Text>
       </Paragraph>
-      {error.message &&  <Paragraph>
-  <CloseCircleOutlined className="site-result-demo-error-icon text-red-500" /> {error.message}
+      {error.message &&  <Paragraph className='flex flex-col justify-center'>
+  <span>
+  <CloseCircleOutlined className="site-result-demo-error-icon text-red-700" /> {error.message}
+
+  </span>
+  <button className='rounded-full my-5 mx-auto bg-red-700 text-white p-2 w-24' onClick={()=>window.location.reload()}> Reload</button>
       </Paragraph>}
     
     </div>

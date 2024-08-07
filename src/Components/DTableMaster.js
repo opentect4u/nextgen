@@ -103,7 +103,7 @@ function DTableMaster({ headers,
             > */}
               <Link to={to + 0}
               type="submit"
-              className="flex items-center justify-center border-2 border-white border-r-0 text-white bg-green-900 hover:bg-primary-800 text-nowrap rounded-l-md transition ease-in-out  active:scale-90 text-sm p-1 px-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none shadow-lg  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2 font-sans"
+              className="flex items-center justify-center border-2 border-white border-r-0 text-white bg-green-900 hover:bg-primary-800 text-nowrap rounded-l-md transition ease-in-out  active:scale-90 text-sm p-1 px-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none shadow-lg  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2 capitalize"
             >
               <AddIcon className='text-sm' /> {btnText}
             </Link>
@@ -123,14 +123,14 @@ function DTableMaster({ headers,
             <div className="flex flex-col p-1 bg-green-900 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
               <div className="w-full">
                 <div className="flex items-center justify-between">
-                  <motion.h2 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, type: 'just' }} className="text-xl w-48 text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5">
+                  <motion.h2 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, type: 'just' }} className="text-xl w-48 capitalize text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5">
                     {title}
                   </motion.h2>
 
                   <label for="simple-search" className="sr-only">
                     Search
                   </label>
-                  <div className="relative w-full -right-6">
+                  <div className="relative w-full -right-6 2xl:-right-12">
                     <div className="absolute inset-y-0 left-0 flex items-center md:ml-4 pl-3 pointer-events-none">
                       <svg
                         aria-hidden="true"

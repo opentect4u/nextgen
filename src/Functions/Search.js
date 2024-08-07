@@ -29,4 +29,6 @@ export const Search=(e,word,dt)=>{
   else if(e=='clients'){
     return dt?.filter(e=>e?.client_name?.toLowerCase().includes(word?.toLowerCase()) || e?.vendor_code?.toString().toLowerCase().includes(word?.toLowerCase()) ||e?.created_by?.toLowerCase().includes(word?.toLowerCase()) )
   }
+  else if(e=='purchaseorder')
+    return dt?.filter(e=>e?.po_id?.toLowerCase().includes(word?.toLowerCase()) || e?.proj_name?.toLowerCase().includes(word?.toLowerCase()) )
 }
