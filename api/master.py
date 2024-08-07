@@ -110,8 +110,8 @@ class addVendor(BaseModel):
       tan_no:str 
       tds_flag:str 
       tcs_flag:str 
-      tds_prtg:Optional[str] = None
-      tcs_prtg:Optional[str] = None 
+      tds_prtg:Optional[float] = None
+      tcs_prtg:Optional[float] = None 
       supply_flag:str 
       composite:Optional[str] = None
       gst_no:Optional[str] = None
