@@ -69,9 +69,9 @@ function App() {
       Descriptions:{
         titleColor:'#014737',
         colorTextLabel:'#014737',
-        colorText:'014737',
-        colorSplit:'014737',
-        labelBg:'#014737'
+        colorText:'#014737',
+        colorSplit:'#014737',
+        labelBg:'#F1F5F9'
         
       },
       Tabs:{

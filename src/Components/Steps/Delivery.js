@@ -63,6 +63,7 @@ function Delivery({ pressBack, pressNext, data }) {
                       setDeliveryAdd(
                         "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
                       );
+                      localStorage.setItem('ship_to', "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046")
                       console.log(delivery);
                     } else {
                       setDeliveryAdd("");
@@ -83,7 +84,7 @@ function Delivery({ pressBack, pressNext, data }) {
               placeholder="Ship To"
               name="ship_to"
               value={delivery}
-              onChange={(text) => {setDeliveryAdd(text.target.value); localStorage.setItem('ship_to',text.target.value)}}
+              onChange={(text) => {setDeliveryAdd(text.target.value); localStorage.setItem('ship_to',delivery)}}
               disabled={data.type == "G" || deliveryConfirm ? true : false}
             />
             {!delivery && <VError title={"Address is required"} />}
