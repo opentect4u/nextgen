@@ -242,7 +242,7 @@ async def getpreviewitems(id:GetPo):
     res_dt = {}
     select = "p.prod_name,p.prod_make,c.catg_name,p.part_no,p.model_no,p.article_no,p.hsn_code,p.prod_desc,i.quantity,i.item_rt,i.discount,u.unit_name"
     schema = "md_product p,td_po_items i,md_category c,md_unit u"
-    where = f"i.po_sl_no='{id.id}' and c.sl_no=p.prod_cat and i.item_id=p.sl_no,i.unit_id=u.sl_no" if id.id>0 else ""
+    where = f"i.po_sl_no='{id.id}' and c.sl_no=p.prod_cat and i.item_id=p.sl_no and i.unit_id=u.sl_no" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
