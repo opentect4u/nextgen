@@ -22,6 +22,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
   const [order_id, setOrderId] = useState(data.order_id);
   const [order_date, setOrderDate] = useState(data.order_date);
   const [vendor_name,setVendorName]=useState(data.vendor_name)
+  const [po_issue_date,setPoIssueDate]=useState(data.po_issue_date)
   const [visible,setVisible]=useState(false)
   const [projectInfo,setProjectInfo]=useState([])
   const [vendorInfo,setVendorInfo]=useState([])
@@ -42,6 +43,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
     setOrderDate(data.order_date)
     setOrderId(data.order_id)
     setType(data.type)
+    setPoIssueDate(data.po_issue_date)
   },[data.type])
   useEffect(() => {
     setLoading(true);
@@ -144,8 +146,27 @@ function BasicDetails({ pressNext, pressBack, data }) {
             Basic Details
           </h2>
 
-          <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-            <div className={type=='P'?"sm:col-span-1":"sm:col-span-2"}>
+          <div className="grid gap-4 sm:grid-cols-6 sm:gap-6">
+          <div className="sm:col-span-3">
+              <TDInputTemplate
+                placeholder="PO Date"
+                type="date"
+                label="PO Date"
+                name="po_issue_date"
+               
+                formControlName={po_issue_date}
+                handleChange={(txt) => 
+                  {setPoIssueDate(txt.target.value)
+                  localStorage.setItem('po_issue_date',txt.target.value)
+                }
+                }
+                mode={1}
+              />
+              {/* {formik.errors.order_type && formik.touched.order_type && (
+            <VError title={formik.errors.order_type} />
+          )} */}
+            </div>
+            <div className="sm:col-span-3">
               <TDInputTemplate
                 placeholder="Order type"
                 type="text"
@@ -170,7 +191,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
            {type=='P' &&
            <>
            
-           <div className="sm:col-span-1">
+           <div className="sm:col-span-2">
               <TDInputTemplate
                 placeholder="Project name"
                 type="text"
@@ -201,7 +222,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
                 <VError title={formik.errors.project_name} />
               )} */}
             </div>
-            <div className="sm:col-span-1">
+            <div className="sm:col-span-2">
               <div className="flex flex-col">
                 <TDInputTemplate
                   placeholder="Order date"
@@ -217,7 +238,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
                 )} */}
               </div>
             </div>
-            <div className="sm:col-span-1">
+            <div className="sm:col-span-2">
               <div className="flex flex-col">
                 <TDInputTemplate
                   placeholder="Order No."
@@ -235,7 +256,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
             </div>
            </>
             }
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-6">
               <TDInputTemplate
                 placeholder="Vendor name"
                 type="text"

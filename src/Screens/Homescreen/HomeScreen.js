@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Chart } from "primereact/chart";
-import HELLO from "../../Assets/Images/hellooffice1.png";
-import STAT from "../../Assets/Images/stat.png";
+
 import { motion } from "framer-motion";
 import { Segmented } from "antd";
 import {

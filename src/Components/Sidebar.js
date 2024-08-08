@@ -1,8 +1,6 @@
 import React,{ useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import LOGO from '../Assets/Images/inverted.png'
-import sidebar1 from '../Assets/Images/sidebar1.png'
-import sidebar2 from '../Assets/Images/sidebar2.png'
 import Menus from './Menus';
 import { Divider } from '@mui/material';
 import { Drawer } from "antd";

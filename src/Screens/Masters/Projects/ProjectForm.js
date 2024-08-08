@@ -8,6 +8,8 @@ import {
   ArrowRightOutlined,
   ArrowLeftOutlined,
   InfoOutlined,
+  PlusOutlined,
+  MinusOutlined,
 } from "@ant-design/icons";
 import { Spin } from "antd";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
@@ -16,9 +18,10 @@ import { url } from "../../../Address/BaseUrl";
 import AuditTrail from "../../../Components/AuditTrail";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
-import { Button } from "primereact/button";
 import DialogBox from "../../../Components/DialogBox";
 import Viewdetails from "../../../Components/Viewdetails";
+import { Button, Form, Input } from "antd";
+import VError from "../../../Components/VError";
 
 function ProjectForm() {
   const navigate = useNavigate();
@@ -255,6 +258,7 @@ function ProjectForm() {
                           setDtl(resProj?.data?.msg.ld_clause)
                           setErection(resProj?.data?.msg.erection_responsibility)
                           setWarranty(resProj?.data?.msg.warranty)
+                          setEndDel(resProj?.data?.msg.proj_delivery_date)
                           setLoading(false)
                       })
 
@@ -337,8 +341,12 @@ function ProjectForm() {
               formData.append("docs2",docs3)
               
                 axios.post(url+'/api/add_proj_files',formData).then(resProjFile=>{
+            setLoading(false)
+
                   if(resProjFile.data.suc>0){
-                    Message("success", res.data.msg);
+                    Message("success", res.data.msg); 
+                    if(+params.id==0)
+                      navigate(-1)
                   }
                   else{
                     Message("error", res.data.msg);
@@ -347,8 +355,8 @@ function ProjectForm() {
                 })
             } else {
                 Message("error", res.data.msg);
+                
             }
-            setLoading(false)
         })
         .catch((err) => {
             console.log(err);
@@ -357,6 +365,15 @@ function ProjectForm() {
   };
   const onSubmitProject = () => {
    console.log(docs)
+   if(proj_id && projnm && order_id && order_dt && proj_end_delvry_dt){
+   if(!ldClsVal)
+   stepperRef.current.nextCallback();
+   else if(ldClsVal && ld_cls_dtl){
+   stepperRef.current.nextCallback();
+   }
+   
+   }
+
    
   };
 
@@ -394,11 +411,12 @@ function ProjectForm() {
                       mode={1}
                       disabled={params.id > 0}
                     />
+                    {!proj_id && <VError title={'A unique project ID is required!'} />}
                   </div>
 
                   <div className="sm:col-span-1">
                     <TDInputTemplate
-                      placeholder="Type product name..."
+                      placeholder="Type project name..."
                       type="text"
                       label="Project Name"
                       name="projnm"
@@ -406,6 +424,8 @@ function ProjectForm() {
                       handleChange={(txt) => setProjnm(txt.target.value)}
                       mode={1}
                     />
+                    {!projnm && <VError title={'Project name is required!'} />}
+
                   </div>
 
                   <div>
@@ -419,6 +439,8 @@ function ProjectForm() {
                       mode={1}
                       disabled={params.id > 0}
                     />
+                    {!order_id && <VError title={'Order No. is required!'} />}
+
                   </div>
                   <div>
                     <TDInputTemplate
@@ -430,6 +452,8 @@ function ProjectForm() {
                       handleChange={(txt) => setOrderDt(txt.target.value)}
                       mode={1}
                     />
+                    {!order_dt && <VError title={'Date is required!'} />}
+                    
                   </div>
                   <div>
                     <TDInputTemplate
@@ -464,6 +488,8 @@ function ProjectForm() {
                       handleChange={(txt) => setEndDel(txt.target.value)}
                       mode={1}
                     />
+                    {!proj_end_delvry_dt && <VError title={'Delivery is required!'} />}
+
                   </div>
                   <div>
                     <TDInputTemplate
@@ -474,7 +500,7 @@ function ProjectForm() {
                       formControlName={ld_cls}
                       handleChange={(txt) => {
                         setLdClause(txt.target.value);
-                        setLdClsVal(ld_cls == "Y" ? false : true);
+                        setLdClsVal(txt.target.value == "Y" ? true : false);
                       }}
                       data={yesNo}
                       mode={2}
@@ -491,6 +517,8 @@ function ProjectForm() {
                         handleChange={(txt) => setDtl(txt.target.value)}
                         mode={3}
                       />
+                    {ldClsVal && !ld_cls_dtl && <VError title={'Details is required!'} />}
+
                     </div>
                   )}
                   <div>
@@ -562,7 +590,6 @@ function ProjectForm() {
                     iconPos="right"
                     onClick={() => {
                       onSubmitProject();
-                      stepperRef.current.nextCallback();
                     }}
                   >
                     {" "}
@@ -719,31 +746,55 @@ function ProjectForm() {
                       <div key={index} className="flex-col gap-3 justify-between mt-12">
                         <div className="flex gap-2 justify-end mt-4 -mb-5">
                           {pocSet?.length > 1 && (
-                            <button
-                              className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-8 w-8  bg-red-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
-                              onClick={() => removeDt(index)}
-                            >
-                              -
-                            </button>
+                            // <button
+                            //   className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-8 w-8  bg-red-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
+                            //   onClick={() => removeDt(index)}
+                            // >
+                            //   -
+                            // </button>
+                            <Button
+                            className="rounded-full text-white bg-red-800 border-red-800"
+                            onClick={() => removeDt(index)}
+                            icon={<MinusOutlined />}
+                          ></Button>
                           )}
-                          <button
+                          {/* <button
                             className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-8 w-8  bg-green-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800"
                             onClick={() => addDt()}
                           >
                             +
-                          </button>
-                        {pocSet[index]?.poc_name &&  <button
-                            className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-8 w-8 bg-blue-700 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>
-                            {  console.log(pocSet[index])
-                             setFlag(6)
-                             setInfo(pocList.filter(e=>e.sl_no==+pocSet[index]?.poc_name)[0])
-                             setVisible(true)
-                            }
+                          </button> */}
+                          <Button
+                      className="rounded-full bg-green-900 text-white"
+                      onClick={() => addDt()}
+                      icon={<PlusOutlined />}
+                    ></Button>
+                        {pocSet[index]?.poc_name &&  
+                        // <button
+                        //     className=" inline-flex items-center justify-center -mt-1 text-sm font-medium text-center text-white bg-primary-700 h-8 w-8 bg-blue-700 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>
+                        //     {  console.log(pocSet[index])
+                        //      setFlag(6)
+                        //      setInfo(pocList.filter(e=>e.sl_no==+pocSet[index]?.poc_name)[0])
+                        //      setVisible(true)
+                        //     }
                             
-                            }
-                          >
-                            <InfoOutlined/>
-                          </button>}
+                        //     }
+                        //   >
+                        //     <InfoOutlined/>
+                        //   </button>
+                            <Button
+                            className="rounded-full bg-blue-800 text-white"
+                            onClick={()=>
+                              {  console.log(pocSet[index])
+                               setFlag(6)
+                               setInfo(pocList.filter(e=>e.sl_no==+pocSet[index]?.poc_name)[0])
+                               setVisible(true)
+                              }
+                              
+                              }
+                            icon={<InfoOutlined />}
+                          ></Button>
+                          }
                         </div>
                         <div className="grid grid-cols-3 gap-5 mb-5">
                          
@@ -814,13 +865,13 @@ function ProjectForm() {
                   />
                 </div>
                 <div className="flex pt-4 justify-content-start">
-                  <Button
+                  <button
                     className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900"
                     onClick={() => stepperRef.current.prevCallback()}
                   >
                     <ArrowLeftOutlined className="mr-2" />
                     Back
-                  </Button>
+                  </button>
                   <button className=" disabled:bg-gray-400 
                   disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600" onClick={()=>onSubmitClient()}>Submit</button>
                  

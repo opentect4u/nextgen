@@ -7,6 +7,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
+import nodata from '../../src/Assets/Images/nodata.png'
+import { Tag } from 'primereact/tag';
 import { SearchOutlined, PrinterOutlined,EditOutlined } from '@ant-design/icons'
 import { motion } from "framer-motion"
 
@@ -34,7 +36,31 @@ function DTableMaster({ headers,
       <EditOutlined  className="text-green-900" />
     );
   };
+  const getSeverity = (status) => {
+    switch (status) {
+        case 'In Progress':
+            return 'warning';
 
+        case 'Approved':
+            return 'success';
+
+        case 'Unapproved':
+            return 'error';
+
+        case 'Delivered':
+            return 'success';
+        
+      case 'Partial Delivery':
+              return 'warning';
+
+        case 'renewal':
+            return null;
+    }
+};
+const statusBodyTemplate = (rowData) => {
+  console.log(rowData)
+  return <Tag value={rowData.po_status_val} severity={getSeverity(rowData.po_status_val)} />;
+};
   const onViewSelect = (event) => {
     id = event;
     navigate(to + id.sl_no)
@@ -118,7 +144,7 @@ function DTableMaster({ headers,
     </motion.section>
     </div>
       <motion.section initial={{ opacity: 0, y: 1000 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, type: 'tween', stiffness: 100 }} className="bg-transparent dark:bg-[#001529] py-3 sm:py-5 w-full -mt-5">
-        {title &&
+        {title && data &&
           <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
             <div className="flex flex-col p-1 bg-green-900 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
               <div className="w-full">
@@ -176,7 +202,7 @@ function DTableMaster({ headers,
               </div>
             </div>
           </div>}
-        <div>
+       {data && <div>
           <div className="card w-full mt-5 ">
 
             <DataTable
@@ -187,12 +213,13 @@ function DTableMaster({ headers,
               scrollable
               paginator
               rows={10}
-
+              body={statusBodyTemplate}
               rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
 
               // rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-green-700 hover:text-white  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
               // rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-[#C4F1BE] hover:text-green-700 hover:font-extrabold  duration-500 space-y-2 dark:hover:text-[#1e4834]'
-              rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-gray-200 hover:text-green-700 duration-500 space-y-2 dark:hover:text-[#1e4834]'
+              rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-gray-200 hover:text-green-700 duration-500 space-y-2 dark:hover:text-[#1e4834] 
+              text-ellipsis overflow-hidden truncate w-2'
               
               tableStyle={{ minWidth: "100%", fontSize: '14px' }}
               paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
@@ -229,6 +256,8 @@ function DTableMaster({ headers,
                   style={{ width: "10%" }}
                   frozen
                 ></Column>
+             
+                
               {/* )} */}
               {/* {flag == 2 && (
                 <Column
@@ -301,7 +330,15 @@ function DTableMaster({ headers,
               )}
             </DataTable>
           </div>
-        </div>
+        </div>}
+        {!data && 
+      <div className='flex-col ml-72 mx-auto justify-center items-center'>
+<motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1, type:'spring'
+              }} src={nodata} className="h-96 w-96 2xl:ml-48 2xl:h-full" alt="Flowbite Logo" />
+          <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1, type:'spring'
+              }} className="h-12 text-green-900 -mt-16 ml-9 2xl:ml-48 2xl:h-24 font-bold">Please create something to view data here!!</motion.h2>
+      </div> 
+        }
       </motion.section></>
   );
 }

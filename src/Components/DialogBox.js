@@ -11,6 +11,7 @@ import PocInfo from './PocInfo';
 import ProjectInfo from './ProjectInfo';
 import VendorInfo from './VendorInfo';
 import ProdInfo from './ProdInfo';
+import PoPreview from './Steps/PoPreview';
 const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
   const navigate = useNavigate();
   console.log(data)
@@ -30,7 +31,7 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
     }
   ];
   return (
-      <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2 && flag!=5  && flag!=6 && flag!=7 && flag!=8 && flag!=9?'Warning!':'Information'}</div>} visible={visible} maximizable style={{
+      <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2 && flag!=5  && flag!=6 && flag!=7 && flag!=8 && flag!=9 && flag!=10?'Warning!':flag!=10?'Information':'Preview'}</div>} visible={visible} maximizable style={{
          width: '50vw',
          background:'black'
          }} onHide={() => {if (!visible) return; onPress() }}>
@@ -96,6 +97,13 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
         
         <p className="m-0">
           <ProdInfo data={data}/>
+        </p>
+        
+        }
+         {flag==10 && 
+        
+        <p className="m-0">
+          <PoPreview data={data}/>
         </p>
         
         }

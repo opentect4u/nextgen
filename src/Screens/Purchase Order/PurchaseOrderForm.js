@@ -17,18 +17,22 @@ import axios from "axios";
 import { url } from "../../Address/BaseUrl";
 import { Spin } from "antd";
 import { Message } from "../../Components/Message";
-import { message } from 'antd';
+import DialogBox from "../../Components/DialogBox";
+
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const params = useParams();
   console.log(params, "params");
   localStorage.setItem("id", params.id);
   const [loading,setLoading] = useState(false)
+  const [visible,setVisible] = useState(false)
   const [delivery, setDeliveryAdd] = useState("");
   const [order_type, setOrderType] = useState("");
   const [b_order_dt, setBOrderDt] = useState("");
   const [proj_name, setProjectName] = useState("");
   const [vendor_name, setVendorName] = useState("");
+  const [po_issue_date,setPoIssueDate]=useState("")
+
   const [order_id, setOrderId] = useState("");
   const [itemList, setItemList] = useState([]);
   const [termList, setTermList] = useState([]);
@@ -73,22 +77,118 @@ function PurchaseOrderForm() {
   const [packing_type, setPackingType] = useState("");
   const [manufacture_clearance, setManufactureClearance] = useState("");
   const [manufacture_clearance_desc, setManufactureDesc] = useState("");
+  const [clickFlag,setClickFlag]=useState("P")
   const navigate=useNavigate()
+  const submitPo=()=>{
+    axios.post(url + "/api/addpo", {
+      sl_no:+localStorage.getItem('id'),
+      po_status:clickFlag,
+      po_issue_date:localStorage.getItem('po_issue_date'),
+      po_id: localStorage.getItem("order_id"),
+      po_date: localStorage.getItem("order_date"),
+      po_type: localStorage.getItem("order_type"),
+      project_id: localStorage.getItem("proj_name"),
+      vendor_id: localStorage.getItem("vendor_name"),
+      item_dtl:JSON.parse(localStorage.getItem("itemList")),
+      price_basis: JSON.parse(localStorage.getItem("terms"))
+        ? JSON.parse(localStorage.getItem("terms"))
+        .price_basis_flag:"",
+      price_basis_desc:JSON.parse(localStorage.getItem("terms"))
+      ? JSON.parse(localStorage.getItem("terms"))
+        .price_basis_desc :"",
+      packing_fwd_val:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .packing_forwarding_val:"",
+        packing_fwd_extra:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .packing_forwarding_extra):0.0,
+        packing_fwd_extra_val:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .packing_forwarding_extra_val):0.0,
+      freight_ins: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .freight_insurance:"",
+        freight_ins_val: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .freight_insurance_val:"",
+      test_certificate:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .test_certificate:"",
+      test_certificate_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .test_certificate_desc:"",
+      ld_date: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .ld_applicable_date:"",
+      ld_date_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).others_ld:"",
+      ld_val: JSON.parse(localStorage.getItem("terms"))?JSON.parse(localStorage.getItem("terms")).ld_applied_on:"",
+      ld_val_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .others_applied:"",
+      ld_val_per: JSON.parse(localStorage.getItem("terms"))?parseFloat(JSON.parse(localStorage.getItem("terms")).ld_value):0.0,
+      min_per:JSON.parse(localStorage.getItem("terms"))?  parseFloat(JSON.parse(localStorage.getItem("terms")).po_min_value):0.0,
+      warranty_guaranty:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .warranty_guarantee_flag:"",
+      duration:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).duration:"",
+      duration_value:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .duration_val:"",
+      o_m_manual:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .om_manual_flag:"",
+      o_m_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).om_manual_desc:'',
+      operation_installation:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .oi_flag:"",
+      operation_installation_desc:JSON.parse(
+        localStorage.getItem("terms")
+      )? JSON.parse(
+        localStorage.getItem("terms")
+      ).oi_desc:"",
+      packing_type: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .packing_type:"",
+      manufacture_clearance:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .manufacture_clearance:"",
+      manufacture_clearance_desc:JSON.parse(
+        localStorage.getItem("terms")
+      )? JSON.parse(
+        localStorage.getItem("terms")
+      ).manufacture_clearance_desc:"",
+      payment_terms:JSON.parse(localStorage.getItem('termList')),
+      bill_to:'NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046',
+      ship_to:localStorage.getItem("ship_to"),
+      warehouse_flag:localStorage.getItem('ware_house_flag'),
+      po_notes:localStorage.getItem("notes"),
+      mdcc:localStorage.getItem("mdcc_flag"),
+      mdcc_scope:localStorage.getItem("mdcc"),
+      inspection:localStorage.getItem("insp_flag"),
+      inspection_scope:localStorage.getItem("insp"),
+      draw:localStorage.getItem("drawing_flag"),
+      draw_scope:localStorage.getItem("drawing"),
+      draw_period:localStorage.getItem("dt"),
+      user:localStorage.getItem('email')
+
+    }).then(res=>{
+      if (res.data.suc > 0) {
+        Message("success", res.data.msg);
+        // if (params.id == 0) handleReset();
+      
+        setTimeout(navigate(-1),2500)
+      } 
+      else {
+        Message("error", res.data.msg);
+        setLoading(false)
+      }
+      console.log(res)})
+      .catch(err=>Message("err", err));
+  }
   useState(()=>{
   if(+params.id>0){
     axios.post(url+'/api/getpo',{id:+params.id}).then(res=>{
       console.log(res)
       localStorage.setItem('id',params.id)
-      localStorage.setItem("order_id",res.data.msg.po_id)
-      localStorage.setItem("order_date",res.data.msg.po_date)
-      localStorage.setItem("order_type",res.data.msg.type)
-      localStorage.setItem("proj_name",res.data.msg.project_id)
-      localStorage.setItem("vendor_name",res.data.msg.vendor_id)
-      setBOrderDt(res.data.msg.po_date)
-      setOrderType(res.data.msg.type)
-      setOrderId(res.data.msg.po_id)
-      setProjectName(res.data.msg.project_id)
-      setVendorName(res.data.msg.vendor_id)
+      localStorage.setItem("order_id",res?.data?.msg?.po_id)
+      localStorage.setItem("order_date",res?.data?.msg?.po_date)
+      localStorage.setItem("order_type",res?.data?.msg?.type)
+      localStorage.setItem("proj_name",res?.data?.msg?.project_id)
+      localStorage.setItem("vendor_name",res?.data?.msg?.vendor_id)
+      localStorage.setItem("po_status",res?.data?.msg?.po_status)
+      localStorage.setItem("po_issue_date",res?.data?.msg?.po_issue_date)
+      setClickFlag(res?.data?.msg?.po_status)
+      setBOrderDt(res?.data?.msg?.po_date)
+      setOrderType(res?.data?.msg?.type)
+      setOrderId(res?.data?.msg?.po_id)
+      setProjectName(res?.data?.msg?.project_id)
+      setVendorName(res?.data?.msg?.vendor_id)
+      setPoIssueDate(res?.data?.msg?.po_issue_date)
       axios.post(url+'/api/getpoitem',{id:+params.id}).then(resItem=>{
         
         console.log(resItem)
@@ -223,99 +323,10 @@ function PurchaseOrderForm() {
           height: 50,
           width: 50,
         }}
-        onClick={() => {
-          setLoading(true)
-          axios.post(url + "/api/addpo", {
-            sl_no:+localStorage.getItem('id'),
-            po_id: localStorage.getItem("order_id"),
-            po_date: localStorage.getItem("order_date"),
-            po_type: localStorage.getItem("order_type"),
-            project_id: localStorage.getItem("proj_name"),
-            vendor_id: localStorage.getItem("vendor_name"),
-            item_dtl:JSON.parse(localStorage.getItem("itemList")),
-            price_basis: JSON.parse(localStorage.getItem("terms"))
-              ? JSON.parse(localStorage.getItem("terms"))
-              .price_basis_flag:"",
-            price_basis_desc:JSON.parse(localStorage.getItem("terms"))
-            ? JSON.parse(localStorage.getItem("terms"))
-              .price_basis_desc :"",
-            packing_fwd_val:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .packing_forwarding_val:"",
-              packing_fwd_extra:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
-              .packing_forwarding_extra):0.0,
-              packing_fwd_extra_val:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
-              .packing_forwarding_extra_val):0.0,
-            freight_ins: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .freight_insurance:"",
-              freight_ins_val: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .freight_insurance_val:"",
-            test_certificate:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .test_certificate:"",
-            test_certificate_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .test_certificate_desc:"",
-            ld_date: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .ld_applicable_date:"",
-            ld_date_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).others_ld:"",
-            ld_val: JSON.parse(localStorage.getItem("terms"))?JSON.parse(localStorage.getItem("terms")).ld_applied_on:"",
-            ld_val_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .others_applied:"",
-            ld_val_per: JSON.parse(localStorage.getItem("terms"))?parseFloat(JSON.parse(localStorage.getItem("terms")).ld_value):0.0,
-            min_per:JSON.parse(localStorage.getItem("terms"))?  parseFloat(JSON.parse(localStorage.getItem("terms")).po_min_value):0.0,
-            warranty_guaranty:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .warranty_guarantee_flag:"",
-            duration:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).duration:"",
-            duration_value:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .duration_val:"",
-            o_m_manual:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .om_manual_flag:"",
-            o_m_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).om_manual_desc:'',
-            operation_installation:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .oi_flag:"",
-            operation_installation_desc:JSON.parse(
-              localStorage.getItem("terms")
-            )? JSON.parse(
-              localStorage.getItem("terms")
-            ).oi_desc:"",
-            packing_type: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .packing_type:"",
-            manufacture_clearance:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
-              .manufacture_clearance:"",
-            manufacture_clearance_desc:JSON.parse(
-              localStorage.getItem("terms")
-            )? JSON.parse(
-              localStorage.getItem("terms")
-            ).manufacture_clearance_desc:"",
-            payment_terms:JSON.parse(localStorage.getItem('termList')),
-            bill_to:'NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046',
-            ship_to:localStorage.getItem("ship_to"),
-            warehouse_flag:localStorage.getItem('ware_house_flag'),
-            po_notes:localStorage.getItem("notes"),
-            mdcc:localStorage.getItem("mdcc_flag"),
-            mdcc_scope:localStorage.getItem("mdcc"),
-            inspection:localStorage.getItem("insp_flag"),
-            inspection_scope:localStorage.getItem("insp"),
-            draw:localStorage.getItem("drawing_flag"),
-            draw_scope:localStorage.getItem("drawing"),
-            draw_period:localStorage.getItem("dt"),
-            user:localStorage.getItem('email')
-
-          }).then(res=>{
-            if (res.data.suc > 0) {
-              Message("success", res.data.msg);
-              // if (params.id == 0) handleReset();
-            
-              setTimeout(navigate(-1),2500)
-              
-            
-            } 
-            else {
-              Message("error", res.data.msg);
-              setLoading(false)
-
-            }
-            console.log(res)})
-            .catch(err=>Message("err", err));
-        }}
+        onClick={() => {setLoading(true); setClickFlag("P"); submitPo()}
+        
+        
+        }
       />
       <HeadingTemplate
         text={params.id > 0 ? "Update purchase order" : "Create purchase order"}
@@ -344,6 +355,7 @@ function PurchaseOrderForm() {
                 vendor_name: vendor_name,
                 type: order_type,
                 order_id: order_id,
+                po_issue_date:po_issue_date
               }}
               pressNext={(values) => {
                 console.log(values);
@@ -353,6 +365,7 @@ function PurchaseOrderForm() {
                 setVendorName(values?.vendor_name);
                 setProjectName(values?.proj_name);
                 setOrderId(values?.order_id);
+                setPoIssueDate(values.po_issue_date)
                 stepperRef.current.nextCallback();
                 // }
               }}
@@ -504,7 +517,13 @@ function PurchaseOrderForm() {
           <StepperPanel header="Preview">
             <div className="flex flex-column h-12rem">
               <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
-                Content III
+              <button
+          type="submit"
+          className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          onClick={()=>setVisible(true)}
+        >
+          View
+        </button>
               </div>
             </div>
             <div className="flex pt-4 justify-content-start">
@@ -520,6 +539,7 @@ function PurchaseOrderForm() {
         </Stepper>
       </div>
       </Spin>
+      <DialogBox visible={visible} flag={10} data={''} onPress={()=>setVisible(false)}/>
     </>
   );
 }

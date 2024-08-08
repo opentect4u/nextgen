@@ -105,10 +105,15 @@ export const masterheaders={
     btnText:'Add vendor orders',
     headers: [
       { name: "serial_number", value: "#" },
-      { name: "po_id", value: "ID" },
+      { name: "sl_no", value:"PO No."},
       { name: "proj_name", value: "Project" },
       { name: "po_type", value: "Type" },
-      { name: "po_date", value: "Date" },
+      { name: "po_issue_date", value: "Date" },
+      { name: "vendor_name", value: "Vendor" },
+      { name: "po_status_val", value: "Status" },
+      { name: "created_by", value: "Created by" },
+
+
     ],
   }
 }
