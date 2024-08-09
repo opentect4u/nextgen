@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { Stepper } from "primereact/stepper";
@@ -18,12 +18,13 @@ import { url } from "../../Address/BaseUrl";
 import { Spin } from "antd";
 import { Message } from "../../Components/Message";
 import DialogBox from "../../Components/DialogBox";
-
+import { Divider, Flex, Tag } from 'antd';
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const params = useParams();
   console.log(params, "params");
   localStorage.setItem("id", params.id);
+  const [floatShow,setFloatShow]=useState(false)
   const [loading,setLoading] = useState(false)
   const [visible,setVisible] = useState(false)
   const [delivery, setDeliveryAdd] = useState("");
@@ -39,14 +40,14 @@ function PurchaseOrderForm() {
   const [notes, setNotes] = useState("");
 
   const [insp_flag, setInspFlag] = useState("N");
-  localStorage.setItem("insp_flag", "N");
+  // localStorage.setItem("insp_flag", "N");
   const [insp, setInsp] = useState("");
   const [drawing_flag, setDrawingFlag] = useState("N");
-  localStorage.setItem("drawing_flag", "N");
+  // localStorage.setItem("drawing_flag", "N");
 
   const [drawing, setDrawing] = useState("");
   const [mdcc_flag, setMdccFlag] = useState("N");
-  localStorage.setItem("mdcc_flag", "N");
+  // localStorage.setItem("mdcc_flag", "N");
 
   const [mdcc, setMdcc] = useState("");
   const [drawingDate, setDrawingDate] = useState("");
@@ -79,10 +80,11 @@ function PurchaseOrderForm() {
   const [manufacture_clearance_desc, setManufactureDesc] = useState("");
   const [clickFlag,setClickFlag]=useState("P")
   const navigate=useNavigate()
+   
   const submitPo=()=>{
     axios.post(url + "/api/addpo", {
       sl_no:+localStorage.getItem('id'),
-      po_status:clickFlag,
+      po_status:localStorage.getItem('po_status'),
       po_issue_date:localStorage.getItem('po_issue_date'),
       po_id: localStorage.getItem("order_id"),
       po_date: localStorage.getItem("order_date"),
@@ -170,7 +172,10 @@ function PurchaseOrderForm() {
       console.log(res)})
       .catch(err=>Message("err", err));
   }
-  useState(()=>{
+  useEffect(()=>{
+    setFloatShow((localStorage.getItem('po_status')=='P' || localStorage.getItem('po_status')=='U') && (localStorage.getItem('order_date') || localStorage.getItem('vendor_name'))?true:false)
+  },[localStorage.getItem('order_date'),localStorage.getItem('vendor_name')])
+  useEffect(()=>{
   if(+params.id>0){
     axios.post(url+'/api/getpo',{id:+params.id}).then(res=>{
       console.log(res)
@@ -281,9 +286,11 @@ function PurchaseOrderForm() {
         axios.post(url+'/api/getpodelivery',{id:+params.id}).then(resDel=>{
           console.log(resDel)
           setDeliveryAdd(resDel?.data?.msg[0]?.ship_to)
+          localStorage.setItem('ship_to',resDel?.data?.msg[0]?.ship_to)
           setWareHouse(resDel?.data?.msg[0]?.ware_house_flag)
+          localStorage.setItem('ware_house_flag',resDel?.data?.msg[0]?.ware_house_flag)
           setNotes(resDel?.data?.msg[0]?.po_notes)
-
+          localStorage.setItem('notes',resDel?.data?.msg[0]?.po_notes)
           axios.post(url+'/api/getpomore',{id:+params.id}).then(resMore=>{
             console.log(resMore)
             setInspFlag(resMore?.data?.msg[0]?.inspection)
@@ -294,7 +301,7 @@ function PurchaseOrderForm() {
             setDrawing(resMore?.data?.msg[0]?.draw_scope)
             setDrawingDate(resMore?.data?.msg[0]?.draw_period)
             localStorage.setItem("mdcc_flag",resMore?.data?.msg[0]?.mdcc)
-            localStorage.setItem("mdcc",resMore?.data?.msg[0]?.mdcc)
+            localStorage.setItem("mdcc",resMore?.data?.msg[0]?.mdcc_scope)
             localStorage.setItem("insp_flag",resMore?.data?.msg[0]?.inspection)
             localStorage.setItem("insp",resMore?.data?.msg[0]?.inspection_scope)
             localStorage.setItem("drawing_flag",resMore?.data?.msg[0]?.draw)
@@ -311,7 +318,7 @@ function PurchaseOrderForm() {
   },[])
   return (
     <>
-      <FloatButton
+    {floatShow && <FloatButton
         icon={loading?<LoadingOutlined spin />:<FileTextOutlined />}
         tooltip="Save draft"
         disabled={loading?true:false}
@@ -323,11 +330,9 @@ function PurchaseOrderForm() {
           height: 50,
           width: 50,
         }}
-        onClick={() => {setLoading(true); setClickFlag("P"); submitPo()}
-        
-        
+        onClick={() => {setLoading(true); setClickFlag("P"); localStorage.setItem('po_status','P'); submitPo()}
         }
-      />
+      />}
       <HeadingTemplate
         text={params.id > 0 ? "Update purchase order" : "Create purchase order"}
         mode={params.id > 0 ? 1 : 0}
@@ -341,21 +346,46 @@ function PurchaseOrderForm() {
         spinning={loading}
       >
       <div className="card bg-white rounded-lg p-5">
+        
+        
+      
+         
+        <div className="flex gap-5 justify-end">
+        {localStorage.getItem('po_status')=='P'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="processing">
+        In Progress
+      </Tag>:localStorage.getItem('po_status')=='U'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="gold">
+        Approval Pending
+      </Tag>:localStorage.getItem('po_status')=='A'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="lime">
+       Approved
+      </Tag>:<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="lime">
+       Delivered
+        
+        </Tag>}
+        
+        </div>
+       
         <Stepper
           ref={stepperRef}
           style={{ flexBasis: "100%" }}
           orientation="vertical"
           linear={+params.id>0?false:true}
+          className="-mt-11"
         >
           <StepperPanel header="Basic Details">
             <BasicDetails
               data={{
-                order_date: b_order_dt,
-                proj_name: proj_name,
-                vendor_name: vendor_name,
-                type: order_type,
-                order_id: order_id,
-                po_issue_date:po_issue_date
+                // order_date: b_order_dt,
+                // proj_name: proj_name,
+                // vendor_name: vendor_name,
+                // type: order_type,
+                // order_id: order_id,
+                // po_issue_date:po_issue_date
+                order_date: localStorage.getItem('order_date'),
+                proj_name: localStorage.getItem('proj_name'),
+                vendor_name: localStorage.getItem('vendor_name'),
+                type: localStorage.getItem('order_type'),
+                order_id: localStorage.getItem('order_id'),
+                po_issue_date:localStorage.getItem('po_issue_date')
               }}
               pressNext={(values) => {
                 console.log(values);
@@ -365,7 +395,7 @@ function PurchaseOrderForm() {
                 setVendorName(values?.vendor_name);
                 setProjectName(values?.proj_name);
                 setOrderId(values?.order_id);
-                setPoIssueDate(values.po_issue_date)
+                setPoIssueDate(values?.po_issue_date)
                 stepperRef.current.nextCallback();
                 // }
               }}
@@ -453,7 +483,8 @@ function PurchaseOrderForm() {
           <StepperPanel header="Payment Terms">
             <PaymentTerms
             data={{ termList: termList }}
-              pressNext={() => {
+              pressNext={(values) => {
+                setTermList(values);
                 stepperRef.current.nextCallback();
               }}
               pressBack={() => {
@@ -515,16 +546,39 @@ function PurchaseOrderForm() {
             />
           </StepperPanel>
           <StepperPanel header="Preview">
-            <div className="flex flex-column h-12rem">
-              <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+            <div className="flex p-4 gap-5">
               <button
           type="submit"
-          className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          className=" w-full justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
           onClick={()=>setVisible(true)}
         >
           View
         </button>
-              </div>
+    
+    {localStorage.getItem('po_status')=='U' && <>  
+    <button
+          type="submit"
+          className=" w-full justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          onClick={()=>setVisible(true)}
+        >
+          Approve
+        </button>
+        <button
+          type="submit"
+          className=" w-full justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          onClick={()=>setVisible(true)}
+        >
+          Unapprove
+        </button>
+      
+      </>  }
+      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='P') &&  <button
+          type="submit"
+          className=" w-full justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          onClick={() => {setLoading(true); setClickFlag("U"); localStorage.setItem('po_status','U') ;submitPo()}}
+        >
+          Save
+        </button>}
             </div>
             <div className="flex pt-4 justify-content-start">
               {/* <Button

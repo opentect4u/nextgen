@@ -270,8 +270,7 @@ function ProjectForm() {
  
   const onSubmitClient = (values) => {
     console.log("client called");
-      console.log(client_id,assgn_pm,client_loc,p_gst,p_pan,proj_des,end_user,proj_consultant,epc_con,pocSet);
-      setLoading(true)
+      console.log('',client_id,assgn_pm,client_loc,p_gst,p_pan,proj_des,end_user,proj_consultant,epc_con,pocSet);
        const formData=new FormData()
       //  formData.append("id",+params.id)
       //  formData.append("user",localStorage.getItem("email"))
@@ -301,7 +300,9 @@ function ProjectForm() {
             // formData.append("docs",docs)
            
               // arr.push(dt)
-          
+    if(client_id && client_loc && assgn_pm && proj_id && projnm && order_id && order_dt && proj_end_delvry_dt && (!ldClsVal || (ldClsVal && ld_cls_dtl))){
+      setLoading(true)
+
        axios.post(url + "/api/addproject",  {
             id: +params.id,
             user: localStorage.getItem("email"),
@@ -340,7 +341,8 @@ function ProjectForm() {
               formData.append("docs1",docs2)
               formData.append("docs2",docs3)
               
-                axios.post(url+'/api/add_proj_files',formData).then(resProjFile=>{
+                axios.post(url+'/api/add_proj_files',formData)
+                .then(resProjFile=>{
             setLoading(false)
 
                   if(resProjFile.data.suc>0){
@@ -352,7 +354,11 @@ function ProjectForm() {
                     Message("error", res.data.msg);
 
                   }
-                })
+                }) .catch((err) => {
+            console.log(err);
+            setLoading(false)
+            navigate("/error" + "/" + err.code + "/" + err.message);
+        });
             } else {
                 Message("error", res.data.msg);
                 
@@ -360,8 +366,10 @@ function ProjectForm() {
         })
         .catch((err) => {
             console.log(err);
+            setLoading(false)
             navigate("/error" + "/" + err.code + "/" + err.message);
         });
+      }
   };
   const onSubmitProject = () => {
    console.log(docs)
@@ -394,7 +402,7 @@ function ProjectForm() {
           spinning={loading}
         >
           <div className="card flex justify-content-center">
-            <Stepper ref={stepperRef} style={{ flexBasis: "100%" }}>
+            <Stepper ref={stepperRef} style={{ flexBasis: "100%" }} linear={params.id>0?false:true}>
               <StepperPanel header="Project Details">
                 {/* <div className="flex flex-column h-12rem"> */}
                 {/* <form > */}
@@ -627,6 +635,7 @@ function ProjectForm() {
                       mode={2}
                       disabled={params.id > 0}
                     />
+                  {!client_id && <VError title={'Client is required!'}/>}
                   {client_id && <Viewdetails click={()=>{setFlag(5);setVisible(true)}}/>}
 
                   </div>
@@ -669,6 +678,8 @@ function ProjectForm() {
                         mode={2}
                         disabled={params.id > 0}
                       />
+                  {!client_loc && <VError title={'Client location is required!'}/>}
+
                     </div>
                     <div className="col-span-2">
                       <TDInputTemplate
@@ -863,6 +874,8 @@ function ProjectForm() {
                     mode={2}
                     disabled={params.id > 0}
                   />
+                  {!assgn_pm && <VError title={'Project manager is required!'}/>}
+
                 </div>
                 <div className="flex pt-4 justify-content-start">
                   <button

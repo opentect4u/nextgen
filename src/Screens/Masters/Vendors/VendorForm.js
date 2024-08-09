@@ -148,7 +148,6 @@ function VendorForm() {
     v_tcs: "",
     tcs_perc: "",
     supply_flag: "",
-    v_gst_no: "",
     v_composite: "",
     v_e_r_supply: "",
     v_state: "",
@@ -171,7 +170,7 @@ function VendorForm() {
     v_email: Yup.string()
       .required("Email is required")
       .email("Incorrect format!"),
-    v_gst: Yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,'Incorrect format!'),
+   
     v_pan: Yup.string().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,'Incorrect format!'),
     v_msme: Yup.string().required("MSME is required"),
     v_msmeno: Yup.string().when('v_msme', {
@@ -182,9 +181,7 @@ function VendorForm() {
     v_brnnm: Yup.string().required("Branch name required"),
     v_banknm: Yup.string().required("Bank name required"),
     v_ac: Yup.string().required("Account no. required"),
-    v_micr: Yup.string().required("MICR code required"),
     v_ifsc: Yup.string().required("IFSC required").matches(/^[A-Z]{4}0[A-Z0-9]{6}$/,'Incorrect format!'),
-    v_tan: Yup.string().required("TAN is required"),
     v_tds: Yup.string().required("TDS is required"),
     tds_perc: Yup.number().when('v_tds', {
       is: 'Y',
@@ -197,8 +194,11 @@ function VendorForm() {
       then: () => Yup.string().required('TCS percentage is required').max(100,'Invalid value!').min(0,'Invalid Value'),
       otherwise: () => Yup.string()
     }),
-
-
+    supply_flag:Yup.string().required("Required"),
+    v_gst: Yup.string().when('supply_flag', {
+      is: 'R',
+      then:()=>Yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,'Incorrect format!').required('GST is required!'),
+    }),
 
     v_address: Yup.string().required("Address is required"),
     dynamicFields: Yup.array().of(
@@ -359,7 +359,6 @@ function VendorForm() {
                 v_tcs:resVendor.data.msg.tcs_flag,
                 tcs_perc:resVendor.data.msg.tcs_prtg,
                 supply_flag:resVendor.data.msg.supply_flag,
-                v_gst_no:resVendor.data.msg.gst_no,
                 v_composite:resVendor.data.msg.org_type,
                 v_e_r_supply:resVendor.data.msg.e_r_supply,
                 v_state:resVendor.data.msg.state,
@@ -459,11 +458,10 @@ function VendorForm() {
         v_ac:values.v_ac,
         tan_no: values.v_tan,
         tds_flag: values.v_tds,
-        tds_prtg: values.tds_perc,
+        tds_prtg: values.tds_perc?values.tds_perc:0.0,
         tcs_flag: values.v_tcs,
-        tcs_prtg: values.tcs_perc,
+        tcs_prtg: values.tcs_perc?values.tcs_perc:0.0,
         supply_flag: values.supply_flag,
-        gst_no: values.v_gst_no,
         composite: values.v_composite,
         e_r_supply: values.v_e_r_supply,
         state: values.v_state,
@@ -527,16 +525,16 @@ function VendorForm() {
                         </div>
                         <div className="sm:col-span-2">
                           <TDInputTemplate
-                            placeholder="Type GST..."
+                            placeholder="Type TAN..."
                             type="text"
-                            label="GST"
-                            name="v_gst"
-                            formControlName={values.v_gst}
+                            label="TAN"
+                            name="v_tan"
+                            formControlName={values.v_tan}
                             handleChange={handleChange}
                             handleBlur={handleBlur}
                             mode={1}
                           />
-                          {errors.v_gst && touched.v_gst ? <VError title={errors.v_gst} /> : null}
+                          {errors.v_tan && touched.v_tan ? <VError title={errors.v_tan} /> : null}
                         </div>
                         <div className="sm:col-span-2">
                           <TDInputTemplate
@@ -692,7 +690,7 @@ function VendorForm() {
                           />
                           {errors.v_ifsc && touched.v_ifsc ? <VError title={errors.v_ifsc} /> : null}
                         </div>
-                        <div >
+                        <div className="sm:col-span-2">
                           <TDInputTemplate
                             placeholder="Type MICR Code"
                             type="text"
@@ -707,19 +705,7 @@ function VendorForm() {
                         </div>
                         {/* <div className="sm:col-span-1"></div> */}
 
-                        <div className="sm:col-span-1">
-                          <TDInputTemplate
-                            placeholder="Type TAN..."
-                            type="text"
-                            label="TAN"
-                            name="v_tan"
-                            formControlName={values.v_tan}
-                            handleChange={handleChange}
-                            handleBlur={handleBlur}
-                            mode={1}
-                          />
-                          {errors.v_tan && touched.v_tan ? <VError title={errors.v_tan} /> : null}
-                        </div>
+                       
                         {/* <div className="sm:col-span-1"></div> */}
 
                         {/* <div className="sm:col-span-1"></div> */}
@@ -790,25 +776,28 @@ function VendorForm() {
                         </Radio.Group>
                         {errors.supply_flag && touched.supply_flag ? <VError title={errors.supply_flag} /> : null}
                         {gstNoTrue &&
-                          <div className='sm:col-span-2' >
-                            <TDInputTemplate
-                              placeholder="Type GST No."
-                              type="text"
-                              label="GST No."
-                              name="v_gst_no"
-                              formControlName={values.v_gst_no}
-                              handleChange={handleChange}
-                              handleBlur={handleBlur}
-                              mode={1}
-                            />
-                            {errors.v_gst_no && touched.v_gst_no ? <VError title={errors.v_gst_no} /> : null}
-                          </div>}
+                          <div className="sm:col-span-2">
+                          <TDInputTemplate
+                            placeholder="Type GST..."
+                            type="text"
+                            label="GST"
+                            name="v_gst"
+                            formControlName={values.v_gst}
+                            handleChange={handleChange}
+                            handleBlur={handleBlur}
+                            mode={1}
+                          />
+                          {errors.v_gst && touched.v_gst ? <VError title={errors.v_gst} /> : null}
+                        </div>
+                          
+                          
+                          }
                         {compositeTrue &&
                           <div className='sm:col-span-2' >
                             <TDInputTemplate
-                              placeholder="Type composite"
+                              placeholder="Choose GST Type"
                               type="text"
-                              label="Composite"
+                              label="GST Type"
                               name="v_composite"
                               formControlName={values.v_composite}
                               handleChange={handleChange}

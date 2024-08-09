@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TDInputTemplate from "../TDInputTemplate";
 import VError from "../../Components/VError";
 // import { useFormik } from "formik";
@@ -9,14 +9,16 @@ import { Switch } from "antd";
 function Delivery({ pressBack, pressNext, data }) {
   console.log(data);
   localStorage.setItem("bill_to",'NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046')
-  const [deliveryConfirm, setDelivery] = useState(data.ware_house_flag=='Y'?true:false);
+  const [deliveryConfirm, setDelivery] = useState(false);
   const [delivery, setDeliveryAdd] = useState(
     data.type == "G"
       ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
       : (data.delivery?data.delivery:"")
   );
   const params = useParams();
-
+  useEffect(()=>{
+   setDelivery(localStorage.getItem('ware_house_flag')=='Y'?true:false)
+  },[localStorage.getItem('ware_house_flag')])
   const onSubmit = () => {
     if (delivery) {
       console.log(delivery);

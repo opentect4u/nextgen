@@ -10,7 +10,7 @@ function HeadingTemplate({text,mode,data,title}) {
 
     <motion.h2 initial={{opacity:0,y:-50}} animate={{opacity:1,y:0}} transition={{delay:0.2, type:'just'}} className="text-xl font-semibold text-white capitalize dark:text-gray-400 ">{text}</motion.h2>
     <div className='absolute right-4'>
-    {mode==1 && <PrintComp toPrint={data} title={title}/>}
+    {mode==1 && data && <PrintComp toPrint={data} title={title}/>}
     </div>
     
     </div>

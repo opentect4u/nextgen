@@ -119,7 +119,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
           <button
             type="submit"
             className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
-            onClick={() => pressNext()}
+            onClick={() => pressNext(termList)}
           >
             Next
           </button>

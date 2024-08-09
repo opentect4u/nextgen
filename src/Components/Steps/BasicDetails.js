@@ -8,7 +8,7 @@ import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import Viewdetails from "../Viewdetails";
 import DialogBox from "../DialogBox";
-
+import moment from 'moment'
 function BasicDetails({ pressNext, pressBack, data }) {
   console.log(data)
   const params = useParams();
@@ -38,12 +38,12 @@ function BasicDetails({ pressNext, pressBack, data }) {
     pressNext(val)
   };
   useEffect(()=>{
-    setProjName(data.proj_name)
-    setVendorName(data.vendor_name)
-    setOrderDate(data.order_date)
-    setOrderId(data.order_id)
-    setType(data.type)
-    setPoIssueDate(data.po_issue_date)
+    setProjName(localStorage.getItem('proj_name'))
+    setVendorName(localStorage.getItem('vendor_name'))
+    setOrderDate(localStorage.getItem('order_date'))
+    setOrderId(localStorage.getItem('order_id'))
+    setType(localStorage.getItem('order_type'))
+    setPoIssueDate(localStorage.getItem('po_issue_date'))
   },[data.type])
   useEffect(() => {
     setLoading(true);
@@ -51,6 +51,10 @@ function BasicDetails({ pressNext, pressBack, data }) {
     setVendors([])
     setProjects([])
     setProjectList([])
+    const date = new Date();
+    console.log(date); 
+    if(params.id==0)
+    {setPoIssueDate(moment(date).format('yyyy-MM-DD'));localStorage.setItem('po_issue_date',moment(date).format('yyyy-MM-DD'))}
     axios.post(url + "/api/getproject", { id: 0 }).then((resProj) => {
       setProjects(resProj?.data?.msg);
       for (let i = 0; i < resProj?.data?.msg?.length; i++) {
@@ -76,20 +80,20 @@ function BasicDetails({ pressNext, pressBack, data }) {
     });
     
     console.log(data)
-    if(data){
+    // if(localStorage.getItem('proj_name')!=null){
       setProjectInfo(projects.filter((e) => e.sl_no == data.proj_name))
-
+     if(data?.proj_name && data?.vendor_name){
         setLoading(true)
-        axios.post(url + "/api/getprojectpoc", { id: data.proj_name.toString()}).then((res) => {
+        axios.post(url + "/api/getprojectpoc", { id: data?.proj_name?.toString()?data?.proj_name?.toString():localStorage.getItem('proj_name')}).then((res) => {
           console.log(res)
           setPoc(res?.data?.msg)
           setLoading(false)
       })
       setVendorInfo(vendors?.filter(e=>e.sl_no==data.vendor_name))
-      axios.post(url+'/api/getvendorpoc',{id:+data.vendor_name}).then((resPoc)=>{
+      axios.post(url+'/api/getvendorpoc',{id:+data?.vendor_name?+data?.vendor_name:+localStorage.getItem('vendor_name')}).then((resPoc)=>{
         console.log(resPoc)
         setPocList(resPoc?.data?.msg)
-        axios.post(url+'/api/getvendordeals',{id:+data.vendor_name}).then(resDeals=>{
+        axios.post(url+'/api/getvendordeals',{id:+data?.vendor_name?+data?.vendor_name:localStorage.getItem('vendor_name')}).then(resDeals=>{
           console.log(resDeals)
           setDeals(resDeals?.data?.msg)
           setLoading(false)
@@ -97,6 +101,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
         
       })
     }
+    // }
   }, []);
   const onSelectProject = (event) => {
     console.log(event.target.value)
@@ -153,7 +158,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
                 type="date"
                 label="PO Date"
                 name="po_issue_date"
-               
+                disabled={true}
                 formControlName={po_issue_date}
                 handleChange={(txt) => 
                   {setPoIssueDate(txt.target.value)

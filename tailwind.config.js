@@ -38,7 +38,8 @@ module.exports = {
             800 	: '#052d27',
             900 	: '#031714'
           }
-        }
+        },
+       
       },
   },
   plugins: [require('flowbite/plugin')({
