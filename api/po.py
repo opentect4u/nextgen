@@ -104,7 +104,7 @@ async def addpo(data:PoModel):
     result = await db_Insert(table_name, fields, values, whr, flag)
 
     lastID=data.sl_no if data.sl_no>0 else result["lastId"]
-    if len(data.item_dtl)>0 or type(data.item_dtl)!='NoneType':
+    if len(data.item_dtl)>0 and type(data.item_dtl)!='NoneType':
         for c in data.item_dtl:
             fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount="{c.disc}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,created_by,created_at'
             values1 = f'"{lastID}","{c.item_name}","{c.qty}","{c.rate}","{c.disc}","{c.unit}","{c.CGST}","{c.SGST}","{c.IGST}","{c.delivery_date}","{data.user}","{formatted_dt}"'
@@ -122,7 +122,7 @@ async def addpo(data:PoModel):
     flag2 = 1 if data.sl_no>0 else 0
 
     result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
-    if len(data.payment_terms)  or type(data.payment_terms)!='NoneType':
+    if len(data.payment_terms)>0  and type(data.payment_terms)!='NoneType':
      for c in data.payment_terms:
         fields3= f'stage_no="{c.stage}",terms_dtls="{c.term}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,stage_no,terms_dtls,created_by,created_at'
         values3 = f'"{lastID}","{c.stage}","{c.term}","{data.user}","{formatted_dt}"'
