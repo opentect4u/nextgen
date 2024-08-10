@@ -118,6 +118,7 @@ async def addpo(data:PoModel):
                 item_save=1 if result1['suc']>0 else 0
     except:
         print('Error')
+        item_save=1
     # else:
     #         fields1= f'po_sl_no,created_by,created_at'
     #         values1 = f'"{lastID}","{data.user}","{formatted_dt}"'
@@ -148,6 +149,8 @@ async def addpo(data:PoModel):
                 payment_save=1 if result3['suc']>0 else 0
     except:
         print('Error')
+        payment_save=1
+
     # else:
     #     fields3= f'po_sl_no,created_by,created_at'
     #     values3 = f'"{lastID}","{data.user}","{formatted_dt}"'
