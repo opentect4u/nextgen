@@ -125,7 +125,7 @@ class GetPoc(BaseModel):
 #     return res_dt
 
 @projectRouter.post('/add_proj_files')
-async def add_proj_files(proj_id:str = Form(...), user:str = Form(...), docs:Optional[Union[UploadFile, None]] = File(None), docs1:Optional[Union[UploadFile, None]] = File(None), docs2:Optional[Union[UploadFile, None]] = File(None)):
+async def add_proj_files(proj_id:str = Form(...), user:str = Form(...), docs:Optional[Union[UploadFile, None]] = None, docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
     
     fileName = ''
     res_dt = {}
