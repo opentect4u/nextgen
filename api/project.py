@@ -6,7 +6,7 @@ from enum import Enum
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from models.masterApiModel import db_select, db_Insert
+from models.masterApiModel import db_select, db_Insert, db_Delete
 from datetime import datetime
 import datetime as dt
 import random
@@ -126,14 +126,13 @@ class GetPoc(BaseModel):
 
 @projectRouter.post('/add_proj_files')
 async def add_proj_files(proj_id:str = Form(...), user:str = Form(...), docs:Optional[Union[UploadFile, None]] = None, docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
-    
     fileName = ''
     res_dt = {}
     files = []
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    if not docs or not docs1 or not docs2:
-        return {"suc": 0, "msg": "No file sent"}
+    if not docs and not docs1 and not docs2:
+        return {"suc": 1, "msg": "No file sent"}
     else:
         if docs:
             files.append(docs)
@@ -234,6 +233,15 @@ async def addproject(dt:Project):
         # flag2 = 1 if dt.id>0 else 0
         # result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
 
+        if(dt.id > 0):
+            poc_ids = ",".join(str(p.sl_no) for p in dt.proj_poc)
+            try:
+                del_table_name = 'td_project_poc'
+                del_whr = f"proj_id = '{dt.proj_id}' AND sl_no not in({poc_ids})"
+                del_qry = await db_Delete(del_table_name, del_whr)
+            except:
+                print('Error while delete td_project_poc')
+
         for v in dt.proj_poc:
             fields= f'poc_name="{v.poc_name}", poc_email="{v.poc_email}",poc_phone_1="{v.poc_ph_1}",poc_designation="{v.poc_designation}",poc_email="{v.poc_email}",modified_by="{dt.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'proj_id,poc_name,poc_email,poc_phone_1,poc_designation,created_by,created_at'
             values = f'"{dt.proj_id}","{v.poc_name}","{v.poc_email}","{v.poc_ph_1}","{v.poc_designation}","{dt.user}","{formatted_dt}"'
@@ -287,3 +295,23 @@ async def getprojectpoc(id:GetPoc):
     print(result, 'RESULT')
     return result
 
+@projectRouter.post('/get_proj_files')
+async def getprojectpoc(id:GetPoc):
+    print(id.id)
+
+    sel = "sl_no, proj_doc"
+    sel_frm = "td_project_doc"
+    whr = f"proj_id='{id.id}'"
+    flg = 1
+    file_res = await db_select(sel, sel_frm, whr, "", flg)
+    print(file_res, 'RESULT')
+    return file_res
+
+@projectRouter.post('/del_proj_files')
+async def getprojectpoc(id:GetProject):
+    print(id.id)
+
+    del_table_name = 'td_project_doc'
+    del_whr = f"sl_no = {id.id}"
+    del_qry = await db_Delete(del_table_name, del_whr)
+    return del_qry

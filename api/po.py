@@ -6,7 +6,7 @@ from enum import Enum
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from models.masterApiModel import db_select, db_Insert
+from models.masterApiModel import db_select, db_Insert, db_Delete
 from datetime import datetime
 import datetime as dt
 import random
@@ -92,7 +92,7 @@ class GetPo(BaseModel):
 async def addpo(data:PoModel):
     
     res_dt = {}
-    print(data)
+    # print(data)
     item_save=0
     payment_save=0
     current_datetime = datetime.now()
@@ -105,9 +105,20 @@ async def addpo(data:PoModel):
 
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=data.sl_no if data.sl_no>0 else result["lastId"]
+
     print(data.item_dtl,type(data.item_dtl))
     try:
         if type(data.item_dtl) is not None and len(data.item_dtl)>0:
+
+            if(data.sl_no > 0):
+                item_ids = ",".join(str(idt.sl_no) for idt in data.item_dtl)
+                try:
+                    del_table_name = 'td_po_items'
+                    del_whr = f"sl_no not in({item_ids})"
+                    del_qry = await db_Delete(del_table_name, del_whr)
+                except:
+                    print('Error while delete td_po_items')
+
             for c in data.item_dtl:
                 fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount="{c.disc}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,created_by,created_at'
                 values1 = f'"{lastID}","{c.item_name}","{c.qty}","{c.rate}","{c.disc}","{c.unit}","{c.CGST}","{c.SGST}","{c.IGST}","{c.delivery_date}","{data.user}","{formatted_dt}"'
@@ -123,7 +134,7 @@ async def addpo(data:PoModel):
             # whr1= None
             # flag1 = 0
             # result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
-                item_save=1 
+            item_save=1 
     except:
         print('Error')
         item_save=1
@@ -140,6 +151,15 @@ async def addpo(data:PoModel):
     print(data.payment_terms,type(data.payment_terms))
     try:
         if type(data.payment_terms) is not None and len(data.payment_terms)>0:
+            if(data.sl_no > 0):
+                pay_ids = ",".join(str(pdt.sl_no) for pdt in data.payment_terms)
+                try:
+                    del_table_name = 'td_po_payment_dtls'
+                    del_whr = f"sl_no not in({pay_ids})"
+                    del_qry = await db_Delete(del_table_name, del_whr)
+                except:
+                    print('Error while delete td_po_payment_dtls')
+
             for c in data.payment_terms:
                 fields3= f'stage_no="{c.stage}",terms_dtls="{c.term}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,stage_no,terms_dtls,created_by,created_at'
                 values3 = f'"{lastID}","{c.stage}","{c.term}","{data.user}","{formatted_dt}"'
@@ -179,7 +199,24 @@ async def addpo(data:PoModel):
     flag5 = 1 if data.sl_no>0 else 0
 
     result5 = await db_Insert(table_name5, fields5, values5, whr5, flag5)
-    
+
+    ''' FOR FINAL SAVE '''
+    try:
+        if(data.final_save > 0 and lastID > 0):
+            currYear = current_datetime.strftime("%Y")
+            max_form_no = await db_select("IF(MAX(SUBSTRING(po_no, -4)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -4) as unsigned))+1, 6, '0'), '000001') max_form", "td_po_basic", f"SUBSTRING(po_no, 4) = {currYear}", "", 1)
+            po_no = f"{currYear}{max_form_no['msg']['max_form']}"
+
+            pfields= f'po_no="{po_no}"'
+            pvalues = None
+            ptable_name = "td_po_basic"
+            pwhr = f'sl_no="{lastID}"'
+            pflag = 1
+            po_save = await db_Insert(ptable_name, pfields, pvalues, pwhr, pflag)
+    except:
+        print('Error While saving PO Number')
+    ''' END '''
+
     if(result['suc']>0 and item_save>0 and result2['suc']>0 and payment_save>0 and result4['suc']>0 and result5['suc']>0):
         res_dt = {"suc": 1, "msg": f"Saved successfully!" if data.sl_no==0 else f"Updated successfully!"}
     else:
@@ -189,7 +226,7 @@ async def addpo(data:PoModel):
 
 @poRouter.post('/getpo')
 async def getprojectpoc(id:GetPo):
-    print(id.id)
+    # print(id.id)
     res_dt = {}
 
     select = "@a:=@a+1 serial_number,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no"
@@ -198,12 +235,12 @@ async def getprojectpoc(id:GetPo):
     order = "ORDER BY b.created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @poRouter.post('/getpoitem')
 async def getprojectpoc(id:GetPo):
-    print(id.id)
+    # print(id.id)
     res_dt = {}
 
     select = "*"
@@ -212,7 +249,7 @@ async def getprojectpoc(id:GetPo):
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @poRouter.post('/getpoterms')
@@ -226,7 +263,7 @@ async def getprojectpoc(id:GetPo):
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @poRouter.post('/getpopayterms')
@@ -240,7 +277,7 @@ async def getprojectpoc(id:GetPo):
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @poRouter.post('/getpodelivery')
@@ -254,7 +291,7 @@ async def getprojectpoc(id:GetPo):
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @poRouter.post('/getpomore')
@@ -267,7 +304,7 @@ async def getprojectpoc(id:GetPo):
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @poRouter.post('/getpreviewitems')
@@ -280,6 +317,6 @@ async def getpreviewitems(id:GetPo):
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 

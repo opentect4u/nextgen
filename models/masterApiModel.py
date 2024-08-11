@@ -6,7 +6,7 @@ async def db_select(select, schema, where, order, flag):
     whr = f"WHERE {where}" if where != '' else ''
     sql = f"SELECT {select} FROM {schema} {whr} {order}"
     res_dt = {}
-    print(sql)
+    # print(sql)
     try:
         conn = connect()
         cursor = conn.cursor()
@@ -39,12 +39,12 @@ async def db_Insert(table_name, fields, values, where, flag):
 
     if (flag > 0):
         sql = f"UPDATE {table_name} SET {fields} {whr}"
-        print(sql)
+        # print(sql)
         msg = "Updated Successfully !!"
         errMsg = "Data not updated !!"
     else:
         sql = f"INSERT INTO {table_name} ({fields}) VALUES ({values})"
-        print(sql)
+        # print(sql)
         msg = "Inserted Successfully !!"
         errMsg = "Data not inserted  !!"
 
@@ -57,13 +57,13 @@ async def db_Insert(table_name, fields, values, where, flag):
         conn.commit()
         conn.close()
         cursor.close()
-        print(cursor.rowcount,'rowcount')
+        # print(cursor.rowcount,'rowcount')
         # if cursor.rowcount>0:
         res_dt = {"suc":1, "msg":msg, "lastId":cursor.lastrowid}
         # else:
         #     res_dt = {"suc":0, "msg":errMsg, "lastId":0}
 
-        print(res_dt,"##############")
+        # print(res_dt,"##############")
     except mysql.connector.Error as err:
         # conn.close()
         # cursor.close()
@@ -75,7 +75,7 @@ async def db_Insert(table_name, fields, values, where, flag):
         return res_dt
     
 
-async def db_Delete(table_name, fields, values, where, flag):
+async def db_Delete(table_name, where):
     res_dt = {}
     msg = ''
     errMsg = ''
@@ -95,12 +95,12 @@ async def db_Delete(table_name, fields, values, where, flag):
         conn.close()
         cursor.close()
 
-        if cursor.rowcount>0:
-            res_dt = {"suc":1, "msg":msg}
-        else:
-            res_dt = {"suc":0, "msg":errMsg}
+        # if cursor.rowcount>0:
+        res_dt = {"suc":1, "msg":msg}
+        # else:
+            # res_dt = {"suc":0, "msg":errMsg}
 
-        print(res_dt,"##############")
+        # print(res_dt,"##############")
     except mysql.connector.Error as err:
         # conn.close()
         # cursor.close()

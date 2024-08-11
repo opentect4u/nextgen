@@ -721,6 +721,16 @@ async def addclient(data:addClient):
     # del_table_name = 'md_client_poc'
     # del_whr = f"sl_no not in()"
     # del_qry = await db_Delete(del_table_name, del_whr)
+
+    if(data.c_id > 0):
+        loc_ids = ",".join(str(dt.sl_no) for dt in data.c_loc)
+        try:
+            del_table_name = 'md_client_loc'
+            del_whr = f"client_id = {lastID} AND sl_no not in({loc_ids})"
+            del_qry = await db_Delete(del_table_name, del_whr)
+        except:
+            print('Error while delete md_client_loc')
+
     for c in data.c_loc:
         fields= f'c_loc="{c.c_location}",c_gst="{c.c_gst}",c_pan="{c.c_pan}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,c_loc,c_gst,c_pan,created_by,created_at'
         values = f'"{lastID}","{c.c_location}","{c.c_gst}","{c.c_pan}","{data.user}","{formatted_dt}"'
@@ -734,6 +744,14 @@ async def addclient(data:addClient):
         # else:
         #     res_dt = {"suc": 0, "msg": f"Error while saving!" if c.sl_no==0 else f"Error while updating"}
 
+    if(data.c_id > 0):
+        poc_ids = ",".join(str(dt.sl_no) for dt in data.c_poc)
+        try:
+            del_table_name = 'md_client_poc'
+            del_whr = f"client_id = {lastID} AND sl_no not in({poc_ids})"
+            del_qry = await db_Delete(del_table_name, del_whr)
+        except:
+            print('Error while delete md_client_poc')
 
     for c in data.c_poc:
         fields= f'poc_name="{c.poc_name}",poc_email="{c.poc_email}",poc_designation="{c.poc_designation}",poc_department="{c.poc_department}",poc_direct_no="{c.poc_direct_no}",poc_ext_no="{c.poc_ext_no}", poc_ph_1="{c.poc_ph_1}",poc_ph_2="{c.poc_ph_2}",poc_location="{c.poc_location}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_location,created_by,created_at'
@@ -900,6 +918,16 @@ async def addvendor(data:addVendor):
     # for r in rows['msg']:
     #     k.append(r['sl_no'])
     # print(k,'rows')
+
+    if(data.v_id > 0):
+        catg_ids = ",".join(str(dt.sl_no) for dt in data.v_deals)
+        try:
+            del_table_name = 'md_vendor_deals'
+            del_whr = f"vendor_id = {lastID} AND sl_no not in({catg_ids})"
+            del_qry = await db_Delete(del_table_name, del_whr)
+        except:
+            print('Error while delete md_vendor_deals')
+
     for v in data.v_deals:
         fields= f'category_id="{v.category_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,category_id,created_by,created_at'
         values = f'"{lastID}","{v.category_id}","{data.user}","{formatted_dt}"'
@@ -912,6 +940,15 @@ async def addvendor(data:addVendor):
             res_dt = {"suc": 1, "msg": f"Vendor deals saved successfully!" if v.sl_no==0 else f"Vendor deals updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
+
+    if(data.v_id > 0):
+        poc_ids = ",".join(str(dt.sl_no) for dt in data.v_poc)
+        try:
+            del_table_name = 'md_vendor_poc'
+            del_whr = f"vendor_id = {lastID} AND sl_no not in({poc_ids})"
+            del_qry = await db_Delete(del_table_name, del_whr)
+        except:
+            print('Error while delete md_vendor_poc')
 
     for v in data.v_poc:
         fields= f'poc_name="{v.poc_name}", poc_email="{v.poc_email}",poc_ph_1="{v.poc_ph_1}",poc_ph_2="{v.poc_ph_2}",poc_email="{v.poc_email}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,poc_name,poc_email, poc_ph_1,poc_ph_2,created_by,created_at'
