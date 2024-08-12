@@ -91,6 +91,7 @@ class GetPo(BaseModel):
 class approvePO(BaseModel):
     id:int
     status:str
+    comments:str
     user:str
 @poRouter.post('/addpo')
 async def addpo(data:PoModel):
@@ -227,6 +228,34 @@ async def addpo(data:PoModel):
   
     return res_dt
 
+@poRouter.post('/getpopending')
+async def getprojectpoc(id:GetPo):
+    # print(id.id)
+    res_dt = {}
+
+    select = "@a:=@a+1 serial_number,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no"
+    schema = "td_po_basic b,td_project p,md_vendor v,(SELECT @a:= 0) AS a"
+    where = f"b.sl_no='{id.id}' and p.sl_no=b.project_id and v.sl_no=b.vendor_id and po_status='P'" if id.id>0 else "p.sl_no=b.project_id and v.sl_no=b.vendor_id and b.po_status='P'"
+    order = "ORDER BY b.created_at DESC"
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
+
+@poRouter.post('/getpoapproved')
+async def getprojectpoc(id:GetPo):
+    # print(id.id)
+    res_dt = {}
+
+    select = "@a:=@a+1 serial_number,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no"
+    schema = "td_po_basic b,td_project p,md_vendor v,(SELECT @a:= 0) AS a"
+    where = f"b.sl_no='{id.id}' and p.sl_no=b.project_id and v.sl_no=b.vendor_id and po_status='P'" if id.id>0 else "p.sl_no=b.project_id and v.sl_no=b.vendor_id and b.po_status!='P'"
+    order = "ORDER BY b.created_at DESC"
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
+
 @poRouter.post('/getpo')
 async def getprojectpoc(id:GetPo):
     # print(id.id)
@@ -327,7 +356,7 @@ async def getpreviewitems(id:GetPo):
 async def approvepo(id:approvePO):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_status="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
+    fields= f'po_status="{id.status}",po_status="{id.comments}",modified_by="{id.user}",modified_at="{formatted_dt}"'
     values = f''
     table_name = "td_po_basic"
     whr = f'sl_no="{id.id}"' if id.id > 0 else None
@@ -341,5 +370,6 @@ async def approvepo(id:approvePO):
   
     return res_dt
       
-     
+# poRouter.post('/addcomment')
+# async def approvepo(id:approvePO):
 
