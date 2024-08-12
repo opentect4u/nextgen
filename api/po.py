@@ -82,7 +82,7 @@ class PoModel(BaseModel):
     draw:Optional[Union[str,None]]=None
     draw_scope:Optional[Union[str,None]]=None
     draw_period:Optional[Union[str,None]]=None
-    final_save:Optional[Union[int,None]]=None
+    final_save:Optional[Union[int,str,None]]=None
     user:str
 
 class GetPo(BaseModel):
