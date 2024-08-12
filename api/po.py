@@ -370,6 +370,4 @@ async def approvepo(id:approvePO):
   
     return res_dt
       
-# poRouter.post('/addcomment')
-# async def approvepo(id:approvePO):
 
