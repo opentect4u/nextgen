@@ -331,7 +331,7 @@ async def approvepo(id:approvePO):
     fields= f'po_status="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
     values = f''
     table_name = "td_po_basic"
-    whr = f'po_sl_no="{id.id}"' if id.id > 0 else None
+    whr = f'sl_no="{id.id}"' if id.id > 0 else None
     flag = 1 if id.id>0 else 0
 
     result = await db_Insert(table_name, fields, values, whr, flag)
