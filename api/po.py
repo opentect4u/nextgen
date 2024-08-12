@@ -394,3 +394,16 @@ async def addpocomments(id:getComments):
     return res_dt
       
 
+@poRouter.post('/getpocomments')
+async def getpocomments(id:GetPo):
+    print(id.id)
+    res_dt = {}
+    select = "proj_remarks,created_by,created_at"
+    where = f"proj_id='{id.id}'" if id.id>0 else ""
+    schema = "td_project_remarks"
+
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
