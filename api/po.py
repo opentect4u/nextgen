@@ -381,7 +381,7 @@ async def addpocomments(id:getComments):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'proj_id,proj_remarks,created_by,created_at'
     values = f'"{id.id}","{id.comments}","{id.user}","{formatted_dt}"'
-    table_name = "td_proj_remarks"
+    table_name = "td_project_remarks"
     whr = f'' if id.id > 0 else None
     flag =  0
 
