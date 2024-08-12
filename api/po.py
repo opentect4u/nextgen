@@ -387,9 +387,9 @@ async def addpocomments(id:getComments):
 
     result = await db_Insert(table_name, fields, values, whr, flag)
     if result['suc']:
-        res_dt = {"suc": 1, "msg": f"Action Successful!"}
+        res_dt = {"suc": 1, "msg": f"Comments updated!"}
     else:
-        res_dt = {"suc": 0, "msg": f"Error while saving!"}
+        res_dt = {"suc": 0, "msg": f"Error while updated!"}
   
     return res_dt
       
