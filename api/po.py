@@ -119,7 +119,7 @@ async def addpo(data:PoModel):
                 item_ids = ",".join(str(idt.sl_no) for idt in data.item_dtl)
                 try:
                     del_table_name = 'td_po_items'
-                    del_whr = f"sl_no not in({item_ids})"
+                    del_whr = f"sl_no not in({item_ids}) and po_sl_no='{data.sl_no}'"
                     del_qry = await db_Delete(del_table_name, del_whr)
                 except:
                     print('Error while delete td_po_items')
@@ -160,7 +160,7 @@ async def addpo(data:PoModel):
                 pay_ids = ",".join(str(pdt.sl_no) for pdt in data.payment_terms)
                 try:
                     del_table_name = 'td_po_payment_dtls'
-                    del_whr = f"sl_no not in({pay_ids})"
+                    del_whr = f"sl_no not in({pay_ids}) and po_sl_no='{data.sl_no}'"
                     del_qry = await db_Delete(del_table_name, del_whr)
                 except:
                     print('Error while delete td_po_payment_dtls')
