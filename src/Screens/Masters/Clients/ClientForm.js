@@ -19,6 +19,7 @@ import AuditTrail from "../../../Components/AuditTrail";
 function ClientForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [count,setCount]=useState(0)
   // const [vendor, setVendor] = useState([]);
   var vendorList = [];
   const params = useParams();
@@ -92,6 +93,7 @@ function ClientForm() {
         setData(res.data?.msg);
         if (res.data.suc > 0) {
           Message("success", res.data.msg);
+          setCount(prev=>prev+1)
           if (params.id == 0) navigate(-1);
         } else {
           Message("error", res.data.msg);
@@ -208,7 +210,7 @@ function ClientForm() {
     }
     console.log(formValues, "formValues");
     console.log(params.id, "params.id");
-  }, [params.id]);
+  }, [params.id,count]);
   return (
     <section className="bg-transparent dark:bg-[#001529]">
       <HeadingTemplate

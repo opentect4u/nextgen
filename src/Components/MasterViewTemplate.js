@@ -28,7 +28,7 @@ function MasterViewTemplate({templateData,template,_url,to}) {
       }
     }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
  
-},[])
+},[templateData])
 
 useEffect(()=>{
     setDataSet(Search(template,searchParam,dataSet1))

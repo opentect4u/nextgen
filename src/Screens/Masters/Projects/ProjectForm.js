@@ -10,6 +10,12 @@ import {
   InfoOutlined,
   PlusOutlined,
   MinusOutlined,
+  FileTextOutlined,
+  DeleteOutlined,
+  FilePdfOutlined,
+  FileWordOutlined,
+  FileImageOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 import { Spin } from "antd";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
@@ -68,6 +74,8 @@ function ProjectForm() {
   const [clientInfo,setClientInfo]=useState()
   const [flag,setFlag]=useState()
   const[info,setInfo]=useState()
+  const[file_paths,setFilePaths]=useState([])
+  const [delId,setDelId]=useState()
   const [pocSet, setPocSet] = useState([
     { sl_no: 0, poc_name: "", poc_ph_1: "", poc_designation: "", poc_email: "" },
   ]);
@@ -158,7 +166,22 @@ function ProjectForm() {
     });
   };
  
- 
+ const deleteDoc=()=>{
+  setLoading(true)
+  axios.post(url+'/api/del_proj_files',{id:file_paths[delId].sl_no}).then(res=>{
+    console.log(res);
+    setLoading(false)
+    setVisible(false)
+    if(res.data.suc>0){
+    file_paths.splice(delId,1)
+    setFilePaths(file_paths)
+    Message('success',res.data.msg) 
+    }
+    else
+    Message('error',res.data.msg)
+  }
+  ).catch(err=>Message('error',err))
+ }
 
   useEffect(() => {
     setLoading(true)
@@ -259,7 +282,12 @@ function ProjectForm() {
                           setErection(resProj?.data?.msg.erection_responsibility)
                           setWarranty(resProj?.data?.msg.warranty)
                           setEndDel(resProj?.data?.msg.proj_delivery_date)
-                          setLoading(false)
+                          axios.post(url+'/api/get_proj_files',{id:resProj?.data?.msg.proj_id}).then(resFiles=>{console.log(resFiles)
+                            setFilePaths(resFiles.data.msg)
+                            setLoading(false)
+
+
+                          })
                       })
 
                   });
@@ -337,8 +365,11 @@ function ProjectForm() {
             if (res.data.suc > 0) {
               formData.append("proj_id",proj_id)
               formData.append("user",localStorage.getItem("email"))
+              if(docs)
               formData.append("docs",docs)
+              if(docs2)
               formData.append("docs1",docs2)
+              if(docs3)
               formData.append("docs2",docs3)
               
                 axios.post(url+'/api/add_proj_files',formData)
@@ -566,6 +597,7 @@ function ProjectForm() {
                       handleChange={(event) => setDocs(event.target.files[0])}
                       mode={1}
                     />
+                   
                   </div>
                   <div className="sm:col-span-2">
                     <TDInputTemplate
@@ -577,6 +609,7 @@ function ProjectForm() {
                       handleChange={(event) => setDocs2(event.target.files[0])}
                       mode={1}
                     />
+                  
                   </div>
                   <div className="sm:col-span-2">
                     <TDInputTemplate
@@ -588,7 +621,53 @@ function ProjectForm() {
                       handleChange={(event) => setDocs3(event.target.files[0])}
                       mode={1}
                     />
+                                      
+
                   </div>
+                  <div className="flex justify-start gap-16">
+                  {file_paths[0] && 
+                  <div className="relative">
+                  <a target="_blank" href={url+'/uploads/'+file_paths[0].proj_doc}>
+                  {file_paths[0].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[0].proj_doc.split(".")[1].includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[0].proj_doc.split(".")[1]=='xls'||file_paths[0].proj_doc.split(".")[1]=='csv')? <FileExcelOutlined  className="text-6xl my-7 text-yellow-500"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                  
+                  
+                  </a>
+                  <DeleteOutlined className='text-red-800 absolute top-6 '
+                   onClick={()=>{setDelId(0);setFlag(4);setVisible(true)}}
+                  />
+                  </div>
+                   
+                   
+                   }
+                    { file_paths[1] &&
+                   <div className="relative">
+                   <a target="_blank" href={url+'/uploads/'+file_paths[1].proj_doc}>
+                   {file_paths[1].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[1].proj_doc.split(".")[1].includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[1].proj_doc.split(".")[1]=='xls'||file_paths[1].proj_doc.split(".")[1]=='csv') ? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                   
+                   </a>
+                   <DeleteOutlined className='text-red-800 absolute top-6 '  onClick={()=>{setDelId(1);setFlag(4);setVisible(true)}}/>
+                   </div>
+                   
+                   
+                   
+                   }
+                  {file_paths[2] && 
+                                       <div className="relative">
+                                        <a target="_blank" href={url+'/uploads/'+file_paths[2].proj_doc}>
+                                        
+                                        {file_paths[2].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[2].proj_doc.split(".")[1].includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[2].proj_doc.split(".")[1]=='xls'||file_paths[2].proj_doc.split(".")[1]=='csv')? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                                        
+                                        </a>
+                  <DeleteOutlined className='text-red-800 absolute top-6 ' 
+                  
+                   onClick={()=>{setDelId(2);setFlag(4);setVisible(true)}}
+                  />
+                                      
+                                       </div>
+                                      
+                                       
+                                       }
+                                      </div>
                   </div>
                 {/* </div> */}
                 <div className="flex pt-4 justify-content-end">
@@ -900,6 +979,7 @@ function ProjectForm() {
         flag={flag}
         data={flag==5?{poc:pocList,loc:clientLocList,info:clientInfo}:{info:info}}
         onPress={() => setVisible(false)}
+        onDelete={()=>deleteDoc()}
       />
     </section>
   );

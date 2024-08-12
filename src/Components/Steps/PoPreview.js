@@ -4,15 +4,13 @@ import Divider from '@mui/material/Divider';
 import { Spin } from "antd";
 import {
     LoadingOutlined,
-    CheckOutlined,
-    CloseOutlined,
-    SaveOutlined
   } from "@ant-design/icons";
 import { PrinterOutlined } from '@ant-design/icons';
 import Fab from '@mui/material/Fab';
 import axios from "axios";
 import { url } from "../../Address/BaseUrl";
 function PoPreview({ data }) {
+ var tot=0
  const [loading,setLoading]=useState(false)
  const [v_name,setVName]=useState('')
  const [v_address,setVAddress]=useState('')
@@ -21,6 +19,8 @@ function PoPreview({ data }) {
  const [v_gst,setVGST]=useState('')
  const [v_pan,setVPAN]=useState('')
  const [prodInfo,setProdInfo]=useState()
+ const [grandTot,setGrandTot]=useState(0)
+ const [po_no,setPoNo]=useState('')
   useEffect(()=>{
     
     axios.post(url+'/api/getvendor',{id:+localStorage.getItem('vendor_name')}).then(res=>{
@@ -34,8 +34,20 @@ function PoPreview({ data }) {
         setVPAN(res?.data?.msg?.vendor_pan)
         axios.post(url+'/api/getpreviewitems',{id:+localStorage.getItem('id')}).then(resItems=>{
             console.log(resItems)
+            tot=0
             setProdInfo(resItems?.data?.msg)
             console.log(prodInfo)
+            for(let item of resItems?.data?.msg){
+                if(item.sgst_id){
+                  tot+=((item.item_rt-item.discount)*item.quantity*item.cgst_id/100)+(item.item_rt-item.discount)*item.quantity*(item.sgst_id/100)
+                }
+                else{
+                   tot+=((item.item_rt-item.discount)*item.quantity*item.igst_id/100)
+                }
+            }
+            console.log(tot)
+            setGrandTot(tot.toFixed(2))
+            tot=0
             // "prod_name": "Prod_2",
             // "prod_make": "Make_2",
             // "catg_name": "Misc",
@@ -58,10 +70,16 @@ function PoPreview({ data }) {
             // setVGST(res?.data?.msg?.vendor_gst)
             // setVPAN(res?.data?.msg?.vendor_pan)
             // setLoading(false)
+            axios.post(url+'/api/getpo',{id:localStorage.getItem('id')}).then(res=>{
+                console.log(res)
+                setPoNo(res?.data?.msg?.po_no)
             setLoading(false)
+
+            })
         
         })
     })
+    
   
   },[])
   function print() {
@@ -105,25 +123,6 @@ function PoPreview({ data }) {
      <Fab color="primary" size="small" aria-label="add" onClick={()=>print()}>
         <PrinterOutlined />
       </Fab>}
-     
-      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='P') &&
-     <Fab color="success" size="small" aria-label="add">
-     <SaveOutlined />
-      </Fab>}
-    {localStorage.getItem('po_status')=='U' &&
-    <> 
-    <Fab color="success" size="small" aria-label="add">
-        <CheckOutlined />
-      </Fab>
-      <Fab color="error" size="small" aria-label="add">
-        <CloseOutlined />
-      </Fab>
-    
-    </>
-     }
-     
-     
-
      </div>
       
          <Spin
@@ -150,7 +149,7 @@ function PoPreview({ data }) {
           </span>
         </div>
         <div className="col-span-3 flex flex-col text-xs gap-3 text-black ">
-          <span className="uppercase font-extrabold">PO No.:</span>
+          <span className="uppercase font-extrabold">PO No.:{po_no?po_no:''}</span>
           <span className="uppercase font-extrabold">PO Date:  {localStorage.getItem('po_issue_date')}</span>
           <span className="uppercase font-extrabold">Latest Amendement No:</span>
           <span className="uppercase font-extrabold">Amendment Date:</span>
@@ -202,7 +201,7 @@ function PoPreview({ data }) {
 
       <p className="mb-5">
       <div className="my-2 w-full p-2 text-black font-semibold  border-2 border-blue-400 bg-blue-400 rounded-lg">
-          Material Abstract
+          Item Description
 
           </div>
 
@@ -250,7 +249,7 @@ function PoPreview({ data }) {
                     {+item.item_rt-(+item.discount)}
                 </td>
                 <td className="px-6 py-4" rowSpan={2}>
-                    {((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id))+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.cgst_id)}
+                    {item.sgst_id>0?(((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100))+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)).toFixed(2):((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)).toFixed(2)}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -269,6 +268,12 @@ function PoPreview({ data }) {
         )}
           
         </tbody>
+        <tfoot>
+            <tr class="font-semibold text-gray-900 dark:text-white">
+                <th scope="row" class="px-6 py-3 text-base font-bold" colSpan={5}>Total</th>
+                <th class="px-6 py-3 text-base font-bold">{grandTot}</th>
+            </tr>
+        </tfoot>
     </table>
 </div>
 
@@ -339,7 +344,7 @@ function PoPreview({ data }) {
                     Warranty/Guarantee
                 </th>
                 <td className="px-6 py-4">
-                {JSON.parse(localStorage.getItem('terms')).warranty_guarantee_flag=='W'?'Warranty':'Guarantee'}
+                {JSON.parse(localStorage.getItem('terms')).warranty_guarantee_flag=='W'?'Warranty':'Guarantee'} {JSON.parse(localStorage.getItem('terms')).duration_val} {JSON.parse(localStorage.getItem('terms')).duration=='M'?'Month(s)':JSON.parse(localStorage.getItem('terms')).duration=='D'?'Day(s)':'Year(s)'}
                 </td>
             </tr>
             
@@ -402,9 +407,6 @@ function PoPreview({ data }) {
                     Ld value(%)
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Duration
-                </th>
-                <th scope="col" className="px-6 py-3">
                     Maximum (%) on PO value
                 </th>
                 
@@ -421,9 +423,7 @@ function PoPreview({ data }) {
                 <td className="px-6 py-4">
                 {JSON.parse(localStorage.getItem('terms')).ld_value}
                 </td>
-                <td className="px-6 py-4">
-                    {JSON.parse(localStorage.getItem('terms')).duration_val} {JSON.parse(localStorage.getItem('terms')).duration=='M'?'Month(s)':JSON.parse(localStorage.getItem('terms')).duration_val=='W'?'Week(s)':'Year(s)'}
-                </td>
+                
                 <td className="px-6 py-4">
                 {JSON.parse(localStorage.getItem('terms')).po_min_value}
                 </td>
@@ -465,6 +465,16 @@ function PoPreview({ data }) {
    </table>
      
       </p>
+      <Divider/>
+      <p className="mb-5">
+      <div className="my-2 w-full p-2 text-black font-semibold  border-2 border-blue-400 bg-blue-400 rounded-lg">
+          Notes
+
+          </div>
+          <span className="p-2">
+          {localStorage.getItem('notes')}
+          </span>
+        </p>
     
     
       </div>

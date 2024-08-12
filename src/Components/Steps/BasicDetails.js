@@ -188,6 +188,8 @@ function BasicDetails({ pressNext, pressBack, data }) {
                 }
                 }
                 mode={2}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
               />
               {/* {formik.errors.order_type && formik.touched.order_type && (
             <VError title={formik.errors.order_type} />
@@ -214,6 +216,8 @@ function BasicDetails({ pressNext, pressBack, data }) {
                     }
                 }}
                 mode={2}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
               />
                {/* <AutoComplete
       style={{ width: 200 }}
@@ -230,13 +234,14 @@ function BasicDetails({ pressNext, pressBack, data }) {
             <div className="sm:col-span-2">
               <div className="flex flex-col">
                 <TDInputTemplate
-                  placeholder="Order date"
+                  placeholder="Client Order date"
                   type="date"
-                  label="Order Date"
+                  label="Client Order Date"
                   name="order_date"
                   formControlName={order_date}
                   disabled={true}
                   mode={1}
+
                 />
                 {/* {formik.errors.order_date && formik.touched.order_date && (
                   <VError title={formik.errors.order_date} />
@@ -246,9 +251,9 @@ function BasicDetails({ pressNext, pressBack, data }) {
             <div className="sm:col-span-2">
               <div className="flex flex-col">
                 <TDInputTemplate
-                  placeholder="Order No."
+                  placeholder="Client Order No."
                   type="text"
-                  label="Order No."
+                  label="Client Order No."
                   name="order_no"
                   formControlName={order_id}
                   disabled={true}
@@ -282,6 +287,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
 
                 }}
                 // handleBlur={formik.handleBlur}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
 
                 mode={2}
               />

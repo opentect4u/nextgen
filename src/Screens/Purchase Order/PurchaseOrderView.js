@@ -5,14 +5,20 @@ import MasterViewTemplate from '../../Components/MasterViewTemplate';
 import { masterheaders } from '../../Assets/Data/ColumnData';
 function PurchaseOrderView() {
   const locationpath = useLocation();
+  
   var template =
     locationpath.pathname.split("/")[
       locationpath.pathname.split("/").length - 1
     ];
   var templateData = masterheaders[template];
+  // console.log(locationpath.pathname.split("/")[
+  //   locationpath.pathname.split("/").length - 1
+  // ])
   useEffect(()=>{
     localStorage.removeItem('id')
     localStorage.removeItem('po_issue_date')
+    localStorage.removeItem('po_status')
+
      localStorage.removeItem("order_id")
      localStorage.removeItem("order_date")
      localStorage.removeItem("order_type")
@@ -32,14 +38,23 @@ function PurchaseOrderView() {
       localStorage.removeItem("drawing_flag")
       localStorage.removeItem("drawing")
       localStorage.removeItem("dt")
-  },[])
+  },[ locationpath.pathname.split("/")[
+    locationpath.pathname.split("/").length - 1
+  ]])
     return (
-        <MasterViewTemplate
+      locationpath.pathname.split("/")[
+        locationpath.pathname.split("/").length - 1
+      ]=='P' ?  <MasterViewTemplate
       to={routePaths.PURCHASEORDERFORM}
       templateData={templateData}
       template={template}
-      _url={"/api/getpo"}
-    />
+      _url={"/api/getpopending"}
+    />: <MasterViewTemplate
+    to={routePaths.PURCHASEORDERFORM}
+    templateData={templateData}
+    template={template}
+    _url={"/api/getpoapproved"}
+  />
     )
 }
 

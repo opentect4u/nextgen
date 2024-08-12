@@ -10,15 +10,22 @@ import TermsConditions from "../../Components/Steps/TermsConditions";
 import ProductDetails from "../../Components/Steps/ProductDetails";
 import HeadingTemplate from "../../Components/HeadingTemplate";
 import Notes from "../../Components/Steps/Notes";
-import { FileTextOutlined, LoadingOutlined } from "@ant-design/icons";
-import { FloatButton } from "antd";
+import Tooltip from '@mui/material/Tooltip';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+import { CheckOutlined, EyeOutlined, FileTextOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Button, FloatButton } from "antd";
 import PaymentTerms from "../../Components/Steps/PaymentTerms";
 import axios from "axios";
 import { url } from "../../Address/BaseUrl";
 import { Spin } from "antd";
 import { Message } from "../../Components/Message";
 import DialogBox from "../../Components/DialogBox";
-import { Divider, Flex, Tag } from 'antd';
+import { Tag } from 'antd';
+import { Timeline } from 'antd';
+
+import TDInputTemplate from "../../Components/TDInputTemplate";
+import { CloseOutlined, SaveOutlined } from "@mui/icons-material";
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const params = useParams();
@@ -51,7 +58,7 @@ function PurchaseOrderForm() {
 
   const [mdcc, setMdcc] = useState("");
   const [drawingDate, setDrawingDate] = useState("");
- 
+  const [timeline,setTimeline]=useState([])
   const [price_basis_flag, setPriceBasisFlag] = useState("");
   const [price_basis_desc, setPriceBasisDesc] = useState("");
   const [packing_forwarding, setPackingForwarding] = useState("");
@@ -78,9 +85,47 @@ function PurchaseOrderForm() {
   const [packing_type, setPackingType] = useState("");
   const [manufacture_clearance, setManufactureClearance] = useState("");
   const [manufacture_clearance_desc, setManufactureDesc] = useState("");
+  const [comment,setComment] = useState("")
   const [clickFlag,setClickFlag]=useState("P")
   const navigate=useNavigate()
-   
+  const addcomment=()=>{
+    setLoading(true)
+    axios.post(url+'/api/addpocomments',{id:+params.id,comments:localStorage.getItem('po_comments'),user:localStorage.getItem('email')}).then(res=>{
+      console.log(res)
+      if(res.data.suc>0){
+        Message('success',res?.data?.msg)
+        axios.post(url+'/api/getpocomments',{id:+params.id}).then(resCom=>{
+          // setTimeline([])
+          console.log(resCom)
+          for(let i=0;i<resCom?.data?.msg?.length;i++){
+            timeline.push({
+              label:resCom?.data?.msg[i].created_at.toString().split('T').join(' '),
+              children:resCom?.data?.msg[i].proj_remarks+' by '+resCom?.data?.msg[i].created_by.toString()
+            })
+          }
+          setTimeline(timeline)
+      })
+      }
+    })
+      setLoading(false)
+  }
+  const approvepo=()=>{
+    setLoading(true)
+    axios.post(url+'/api/approvepo',{id:+params.id,status:localStorage.getItem('po_status'),user:localStorage.getItem('email')}).then(res=>{
+      console.log(res)
+      setLoading(false)
+      if(res?.data?.suc>0){
+        Message('success',res?.data?.msg)
+      }
+    
+      else{
+        Message('error',res?.data?.msg)
+
+      }
+    
+    }).catch(err=> Message('error',err)
+  )
+  }
   const submitPo=()=>{
     axios.post(url + "/api/addpo", {
       sl_no:+localStorage.getItem('id'),
@@ -156,8 +201,8 @@ function PurchaseOrderForm() {
       draw:localStorage.getItem("drawing_flag"),
       draw_scope:localStorage.getItem("drawing"),
       draw_period:localStorage.getItem("dt"),
+      final_save:localStorage.getItem("po_status")=='U'?1:0,
       user:localStorage.getItem('email')
-
     }).then(res=>{
       if (res.data.suc > 0) {
         Message("success", res.data.msg);
@@ -170,9 +215,15 @@ function PurchaseOrderForm() {
         setLoading(false)
       }
       console.log(res)})
-      .catch(err=>Message("err", err));
+      .catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
   }
   useEffect(()=>{
+   if(+params.id==0)
+    localStorage.setItem('po_status','P')
+    setClickFlag(localStorage.getItem('po_status'))
+  },[localStorage.getItem('po_status')])
+  useEffect(()=>{
+
     setFloatShow((localStorage.getItem('po_status')=='P' || localStorage.getItem('po_status')=='U') && (localStorage.getItem('order_date') || localStorage.getItem('vendor_name'))?true:false)
   },[localStorage.getItem('order_date'),localStorage.getItem('vendor_name')])
   useEffect(()=>{
@@ -210,7 +261,7 @@ function PurchaseOrderForm() {
             IGST:resItem?.data?.msg[i].igst_id,
             unit_price:resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount,
             delivery_date:resItem?.data?.msg[i].delivery_dt,
-            total:resItem?.data?.msg[i].cgst_id? ((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].cgst_id)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].cgst_id):((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].igst_id)
+            total:resItem?.data?.msg[i].cgst_id? ((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].cgst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].sgst_id/100):((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].igst_id/100)
           })
         }
         setItemList(itemList)
@@ -245,7 +296,7 @@ function PurchaseOrderForm() {
           const terms_conditions={
             price_basis_flag: resTerm?.data?.msg[0]?.price_basis,
             price_basis_desc:resTerm?.data?.msg[0]?.price_basis_desc,
-            packing_forwarding_val:resTerm?.data?.msg[0]?.packing_fwd_val,
+            packing_forwarding:resTerm?.data?.msg[0]?.packing_fwd_val,
             packing_forwarding_extra:resTerm?.data?.msg[0]?.packing_fwd_extra,
             packing_forwarding_extra_val:resTerm?.data?.msg[0]?.packing_fwd_extra_val,
             freight_insurance:resTerm?.data?.msg[0]?.freight_ins,
@@ -307,7 +358,20 @@ function PurchaseOrderForm() {
             localStorage.setItem("drawing_flag",resMore?.data?.msg[0]?.draw)
             localStorage.setItem("drawing",resMore?.data?.msg[0]?.draw_scope)
             localStorage.setItem("dt",resMore?.data?.msg[0]?.draw_period)
-
+            axios.post(url+'/api/getpocomments',{id:+params.id}).then(resCom=>{
+              // setTimeline([])
+              console.log(resCom)
+              for(let i=0;i<resCom?.data?.msg?.length;i++){
+                timeline.push({
+                  label:resCom?.data?.msg[i].created_at.toString().split('T').join(' '),
+                  children:resCom?.data?.msg[i].proj_remarks+' by '+resCom?.data?.msg[i].created_by.toString()
+                })
+              }
+              setTimeline(timeline)
+              console.log(timeline)
+              
+            
+            })
           })
         })
       })
@@ -350,8 +414,8 @@ function PurchaseOrderForm() {
         
       
          
-        <div className="flex gap-5 justify-end">
-        {localStorage.getItem('po_status')=='P'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="processing">
+     {clickFlag &&   <div className="flex gap-5 justify-end">
+        {/* {localStorage.getItem('po_status')=='P'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="processing">
         In Progress
       </Tag>:localStorage.getItem('po_status')=='U'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="gold">
         Approval Pending
@@ -360,15 +424,25 @@ function PurchaseOrderForm() {
       </Tag>:<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="lime">
        Delivered
         
+        </Tag>} */}
+         {clickFlag=='P'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="processing">
+        In Progress
+      </Tag>:clickFlag=='U'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="gold">
+        Approval Pending
+      </Tag>:clickFlag=='A'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="green">
+       Approved
+      </Tag>:<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="green">
+       Delivered
+        
         </Tag>}
         
-        </div>
+        </div>}
        
         <Stepper
           ref={stepperRef}
           style={{ flexBasis: "100%" }}
           orientation="vertical"
-          linear={+params.id>0?false:true}
+          linear={localStorage.getItem('po_status')=='U'||localStorage.getItem('po_status')=='A'?false:true}
           className="-mt-11"
         >
           <StepperPanel header="Basic Details">
@@ -450,7 +524,7 @@ function PurchaseOrderForm() {
                 console.log(values);
                 setPriceBasisFlag(values.price_basis_flag);
                 setPriceBasisDesc(values.price_basis_desc);
-                setPackingForwarding(values.packing_forwarding);
+                setPackingForwarding(values.packing_forwarding_val);
                 setPackingForwardingExtra(values.packing_forwarding_extra);
                 setPackingForwardingExtraVal(values.packing_forwarding_extra_val);
                 setFreightInsurance(values.freight_insurance);
@@ -546,48 +620,93 @@ function PurchaseOrderForm() {
             />
           </StepperPanel>
           <StepperPanel header="Preview">
-            <div className="flex p-4 gap-5">
-              <button
+            <div className="ml-72 border-b-gray-300 w-1/4 flex justify-center items-center rounded-full gap-5 -mt-16">
+            <Tooltip title='Back'>
+            <Button
           type="submit"
-          className=" w-full justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-900 transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          onClick={()=>{stepperRef.current.prevCallback()}}
+          icon={<ArrowBackIcon />}
+        />
+        </Tooltip>
+          <Tooltip title='View PO'>
+
+              <Button
+          type="submit"
+          className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-[#eb8d00] transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
           onClick={()=>setVisible(true)}
-        >
-          View
-        </button>
+          tooltip={'View Purchase Order'}
+          icon={<EyeOutlined />}
+        />
+        </Tooltip>
+          
+        
     
     {localStorage.getItem('po_status')=='U' && <>  
-    <button
+      <Tooltip title='Approve PO'>
+
+    <Button
           type="submit"
-          className=" w-full justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
-          onClick={()=>setVisible(true)}
-        >
-          Approve
-        </button>
-        <button
+          className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          onClick={()=>{localStorage.setItem('po_status','A');approvepo()}}
+          icon={<CheckOutlined />}
+        />
+        </Tooltip>
+        
+        <Tooltip title='Reject PO'>
+       
+        <Button
           type="submit"
-          className=" w-full justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
-          onClick={()=>setVisible(true)}
-        >
-          Unapprove
-        </button>
+          className=" w-1/6 justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-500 transition ease-in-out  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          onClick={()=>{localStorage.setItem('po_status','U');approvepo()}}
+          icon={<CloseOutlined />}
+        />
+       </Tooltip>
+       
+
       
       </>  }
-      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='P') &&  <button
+      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='P') && 
+          <Tooltip title='Save PO'>
+      
+      <Button
           type="submit"
-          className=" w-full justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+          className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-500 transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
           onClick={() => {setLoading(true); setClickFlag("U"); localStorage.setItem('po_status','U') ;submitPo()}}
-        >
-          Save
-        </button>}
+          tooltip={'Save Purchase Order'}
+         icon={<SaveOutlined />}
+       />
+          </Tooltip>
+        }
             </div>
-            <div className="flex pt-4 justify-content-start">
-              {/* <Button
-              label="Back"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              onClick={() => stepperRef.current.prevCallback()}
-            /> */}
-            </div>
+    <div className="grid grid-cols-2 gap-5 my-10">
+   <div className="sm:col-span-1">
+   {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='A' ) && <Timeline
+            mode={'left'}
+        items={timeline}
+      />}
+      </div>
+      <div className="sm:col-span-1">
+      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='A' ) &&  <span className="sm:col-span-4">
+           <TDInputTemplate
+                        placeholder="Comments"
+                        type="text"
+                        label="Comments"
+                        name="po_comments"
+                        
+                        formControlName={comment}
+                        handleChange={(txt)=>{setComment(txt.target.value);localStorage.setItem('po_comments',txt.target.value)}}
+                        mode={3}
+  
+                      /> 
+                     <button  className="bg-green-900 hover:duration-500 w-full hover:scale-105  text-white p-1 my-3 rounded-full" onClick={()=>{addcomment()}}> Add comment </button>
+        
+           </span>}
+      </div>
+       
+
+    </div>
+            
           </StepperPanel>
         
         </Stepper>

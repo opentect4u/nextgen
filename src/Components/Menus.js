@@ -29,6 +29,7 @@ import {
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import { routePaths } from "../Assets/Data/Routes";
+import { CheckOutlined } from "@mui/icons-material";
 
 function Menus({ theme}) {
   const [current, setCurrent] = React.useState('sub1');
@@ -115,13 +116,19 @@ function Menus({ theme}) {
               // icon: <UserOutlined />,
               // label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
               key: "master:projects",
-              icon: <ProjectOutlined />,
+              icon: <UserSwitchOutlined />,
               label: <Link to={routePaths.PROJECTS}>Client Orders</Link>,
             },
             {
-              label: <Link to={routePaths.PURCHASEORDER}>Vendor Orders</Link>,
+              label: <Link to={routePaths.PURCHASEORDER+'/P'}>Vendor Orders</Link>,
               key: "purchase-order",
               icon: <SolutionOutlined />,
+            }
+            ,
+            {
+              label: <Link to={routePaths.PURCHASEORDER+'/A'}>Approve Vendor Orders</Link>,
+              key: "approve-purchase-order",
+              icon: <CheckOutlined />,
             }
           ],
        

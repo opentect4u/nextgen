@@ -15,6 +15,7 @@ import { Spin } from "antd";
 import { LoadingOutlined} from "@ant-design/icons";
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Radio } from 'antd';
+import AuditTrail from "../../../Components/AuditTrail";
 // import { Button } from 'primereact/button';
 
 function VendorForm() {
@@ -32,6 +33,8 @@ function VendorForm() {
   const [gstNoTrue, setGstNoTrue] = useState(false)
   const [exFlag, setExempted] = useState(false)
   const [cat,setCat]=useState([])
+  const [count,setCount]=useState(0)
+
   console.log(params, "params");
   var categories=[]
 
@@ -185,13 +188,13 @@ function VendorForm() {
     v_tds: Yup.string().required("TDS is required"),
     tds_perc: Yup.number().when('v_tds', {
       is: 'Y',
-      then: () => Yup.string().required('TDS percentage is required').max(100,'Invalid value!').min(0,'Invalid Value'),
+      then: () => Yup.string().required('TDS percentage is required').max(100,'Invalid value!').min(0,'Invalid Value').matches(/^[0-9.]+$/,'Invalid value'),
       otherwise: () => Yup.string()
     }),
     v_tcs: Yup.string().required("TCS is required"),
     tcs_perc: Yup.number().when('v_tcs', {
       is: 'Y',
-      then: () => Yup.string().required('TCS percentage is required').max(100,'Invalid value!').min(0,'Invalid Value'),
+      then: () => Yup.string().required('TCS percentage is required').max(100,'Invalid value!').min(0,'Invalid Value').matches(/^[0-9.]+$/,'Invalid value'),
       otherwise: () => Yup.string()
     }),
     supply_flag:Yup.string().required("Required"),
@@ -199,7 +202,10 @@ function VendorForm() {
       is: 'R',
       then:()=>Yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,'Incorrect format!').required('GST is required!'),
     }),
-
+    v_e_r_supply: Yup.string().when('v_composite', {
+      is: 'O',
+      then:()=>Yup.string().required('Required!'),
+    }),
     v_address: Yup.string().required("Address is required"),
     dynamicFields: Yup.array().of(
       Yup.object().shape({
@@ -255,6 +261,8 @@ function VendorForm() {
       //     });
       //   }).catch(err => { console.log(err); navigate('/error' + '/' + err.code + '/' + err.message) });
       axios.post(url + "/api/getvendor", { id: params.id }).then((resVendor) => {
+      setData(resVendor.data?.msg)
+
         // setValues({
         //   // ...formValues,
         //   v_name: res.data.msg.vendor_name,
@@ -434,7 +442,7 @@ function VendorForm() {
       //   setLoading(false);
       // });
     }
-  }, []);
+  }, [count]);
   
   const onSubmit = (values) => {
     console.log("onsubmit called")
@@ -473,6 +481,7 @@ function VendorForm() {
         setLoading(false);
         if (res.data.suc > 0) {
           Message("success", res.data.msg);
+          setCount(prev=>prev+1)
           if (params.id == 0) navigate(-1);
         } else {
           Message("error", res.data.msg);
@@ -795,30 +804,29 @@ function VendorForm() {
                         {compositeTrue &&
                           <div className='sm:col-span-2' >
                             <TDInputTemplate
-                              placeholder="Choose GST Type"
+                              placeholder="Choose Tax Prayer Type"
                               type="text"
-                              label="GST Type"
+                              label="Tax Prayer Type"
                               name="v_composite"
                               formControlName={values.v_composite}
                               handleChange={handleChange}
                               handleBlur={handleBlur}
-                              data={[{name:'Composite 1',code:'c1'},{name:'Composite 2',code:'c2'},{name:'Composite 3',code:'c3'}]}
+                              data={[{name:'Regular',code:'R'},{name:'Composite',code:'c2'},{name:'Others',code:'O'}]}
                               mode={2}
                             />
                             {errors.v_composite && touched.v_composite ? <VError title={errors.v_composite} /> : null}
                           </div>}
 
-                       {exFlag && <div className='sm:col-span-2' >
+                       {exFlag && values.v_composite=='O' && <div className='sm:col-span-2' >
                           <TDInputTemplate
-                            placeholder="Type Exempted rated supply"
+                            placeholder="Other"
                             type="text"
-                            label="Exempted rated supply"
+                            label="Other"
                             name="v_e_r_supply"
                             formControlName={values.v_e_r_supply}
                             handleChange={handleChange}
                             handleBlur={handleBlur}
-                            data={[{name:'Yes',code:'Y'},{name:'No',code:'N'}]}
-                            mode={2}
+                            mode={3}
                           />
                           {errors.v_e_r_supply && touched.v_e_r_supply ? <VError title={errors.v_e_r_supply} /> : null}
                         </div>}
@@ -973,6 +981,8 @@ function VendorForm() {
                                             <ArrowLeftOutlined className='mr-2' />
                                             Back
                                         </Button> */}
+            { params.id>0 &&  <AuditTrail data={data}/>}
+
                                         <BtnComp
                                             mode={params.id > 0 ? "E" : "A"}
                                           onReset={handleReset}

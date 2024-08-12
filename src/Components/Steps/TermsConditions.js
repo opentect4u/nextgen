@@ -37,15 +37,15 @@ function TermsConditions({pressNext,pressBack,data}) {
     const [formValues, setValues] = useState(initialValues);
     const validationSchema = Yup.object({
       price_basis_flag: Yup.string().required("Price basis date is required"),
-      price_basis_desc:Yup.string().required("Price Basis is required"),
+      // price_basis_desc:Yup.string().required("Price Basis is required"),
       packing_forwarding_val:Yup.string().required("Packing & Forwarding is required"),
       packing_forwarding_extra: Yup.string().when('packing_forwarding_val', {
         is: 'E',
-        then: () => Yup.string().required("Extra is required"),
+        then: () => Yup.string().required("Extra is required").matches(/^[0-9.]+$/,'Invalid value'),
         otherwise: () => Yup.string()}),
       packing_forwarding_extra_val: Yup.string().when('packing_forwarding', {
         is: 'E',
-        then: () => Yup.string().required("Extra value is required"),
+        then: () => Yup.string().required("Extra value is required").matches(/^[0-9.]+$/,'Invalid value'),
         otherwise: () => Yup.string()}),
       freight_insurance:Yup.string().required("Freight Insurance is required"),
       freight_insurance_val: Yup.string().when('freight_insurance', {
@@ -68,11 +68,11 @@ function TermsConditions({pressNext,pressBack,data}) {
         is: 'O',
         then: () => Yup.string().required("Required"),
         otherwise: () => Yup.string()}),
-      ld_value:Yup.string().required("LD values is required"),
-      po_min_value:Yup.string().required("PO total value is required"),
+      ld_value:Yup.string().required("LD values is required").min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
+      po_min_value:Yup.string().required("PO total value is required").min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
       warranty_guarantee_flag:Yup.string().required("Warranty/Guarantee is required"),
       duration:Yup.string().required("Duration is required"),
-      duration_val:Yup.string().required("Duration desctription is required"),
+      duration_val:Yup.string().required("Duration value is required").min(0,'Invalid value').matches(/^[0-9]+$/,'Only whole numbers allowed'),
       om_manual_flag:Yup.string().required("O&M Manual is required"),
       om_manual_desc: Yup.string().when('om_manual_flag', {
         is: 'A',
@@ -128,6 +128,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
                         mode={2}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                       />
                       {formik.errors.price_basis_flag && formik.touched.price_basis_flag && (
                       <VError title={formik.errors.price_basis_flag} />
@@ -144,6 +146,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
                         mode={3}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                       />
                       {formik.errors.price_basis_desc && formik.touched.price_basis_desc && (
                       <VError title={formik.errors.price_basis_desc} />
@@ -162,6 +166,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         formControlName={formik.values.packing_forwarding_val}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         mode={2}
                       />
                       {formik.errors.packing_forwarding_val && formik.touched.packing_forwarding_val && (
@@ -175,6 +181,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="number"
                         label="Packing & Forwaring Extra"
                         name="packing_forwarding_extra"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                         
                         formControlName={formik.values.packing_forwarding_extra}
                         handleChange={formik.handleChange}
@@ -194,6 +201,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="number"
                         label="Packing & Forwaring Value"
                         name="packing_forwarding_extra_val"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                         
                         formControlName={formik.values.packing_forwarding_extra_val}
                         handleChange={formik.handleChange}
@@ -212,6 +220,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         label="Freight & Insurance"
                         name="freight_insurance"
                         data={[{name:'Inclusive',code:"I"},{name:'Extra',code:'E'}]}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                         
                         formControlName={formik.values.freight_insurance}
                         handleChange={formik.handleChange}
@@ -228,6 +237,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="text"
                         label="Freight & Insurance Description"
                         name="freight_insurance_val"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                         
                         formControlName={formik.values.freight_insurance_val}
                         handleChange={formik.handleChange}
@@ -249,6 +259,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="text"
                         label="Test Certificate"
                         name="test_certificate"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                        
                         formControlName={formik.values.test_certificate}
                         handleChange={formik.handleChange}
@@ -267,6 +278,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="text"
                         label="Test Certificate Description"
                         name="test_certificate_desc"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                        
                         formControlName={formik.values.test_certificate_desc}
                         handleChange={formik.handleChange}
@@ -285,6 +297,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         label="LD applicable date"
                         name="ld_applicable_date"
                         data={[{name:'MRN Date',code:'M'},{name:'Dispatch Date',code:'D'},{name:'Others',code:'O'}]}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         formControlName={formik.values.ld_applicable_date}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
@@ -301,6 +315,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="text"
                         label="Others"
                         name="others_ld"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                        
                         formControlName={formik.values.others_ld}
                         handleChange={formik.handleChange}
@@ -317,6 +332,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="text"
                         label="LD value applied on"
                         name="ld_applied_on"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         data={[{code:'T',name:'PO Total Value(%)'},{code:'P',name:'Pending Material Value'},{name:'Others',code:'O'}]}
                         formControlName={formik.values.ld_applied_on}
                         handleChange={formik.handleChange}
@@ -334,6 +351,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="text"
                         label="Others"
                         name="others_applied"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         formControlName={formik.values.others_applied}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
@@ -349,6 +368,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="number"
                         label="LD value (%)"
                         name="ld_value"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                        
                         formControlName={formik.values.ld_value}
                         handleChange={formik.handleChange}
@@ -366,6 +386,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="number"
                         label="Maximum % on PO value"
                         name="po_min_value"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                        
                         formControlName={formik.values.po_min_value}
                         handleChange={formik.handleChange}
@@ -388,6 +409,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                           { name: "Warranty", code: "W" },
                           { name: "Guarantee", code: "G" },
                         ]}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         formControlName={formik.values.warranty_guarantee_flag}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
@@ -408,6 +431,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
                         mode={2}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                       />
                       {formik.errors.duration && formik.touched.duration && (
                       <VError title={formik.errors.duration} />
@@ -419,6 +444,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="text"
                         label="Duration Value"
                         name="duration_val"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
                        
                         formControlName={formik.values.duration_val}
                         handleChange={formik.handleChange}
@@ -441,6 +467,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                           { name: "Applicable", code: "A" },
                           { name: "Not Applicable", code: "NA" },
                         ]}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         formControlName={formik.values.om_manual_flag}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
@@ -461,6 +489,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         formControlName={formik.values.om_manual_desc}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         mode={3}
                       />}
                       {formik.errors.om_manual_desc && formik.touched.om_manual_desc && (
@@ -481,6 +511,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
                         mode={2}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                       />
                       {formik.errors.oi_flag && formik.touched.oi_flag && (
                       <VError title={formik.errors.oi_flag} />
@@ -496,6 +528,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         formControlName={formik.values.oi_desc}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         mode={3}
                       />}
                       {formik.errors.oi_desc && formik.touched.oi_desc && (
@@ -511,6 +545,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         formControlName={formik.values.packing_type}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         mode={3}
                       />
                       {formik.errors.packing_type && formik.touched.packing_type && (
@@ -530,6 +566,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         formControlName={formik.values.manufacture_clearance}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         mode={2}
                       />
                       {formik.errors.manufacture_clearance && formik.touched.manufacture_clearance && (
@@ -546,6 +584,8 @@ function TermsConditions({pressNext,pressBack,data}) {
                         formControlName={formik.values.manufacture_clearance_desc}
                         handleChange={formik.handleChange}
                         handleBlur={formik.handleBlur}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                         mode={3}
                       />}
                       {formik.errors.manufacture_clearance_desc && formik.touched.manufacture_clearance_desc && (
@@ -555,6 +595,7 @@ function TermsConditions({pressNext,pressBack,data}) {
       </div>
       <div className="flex pt-4 justify-between w-full">
         <button
+        type="button"
           className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900"
           onClick={pressBack}
         >

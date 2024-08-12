@@ -8,20 +8,18 @@ import MenuItem from "@mui/material/MenuItem";
 import DialogBox from "./DialogBox";
 import { routePaths } from "../Assets/Data/Routes";
 import Divider from '@mui/material/Divider';
-import Paper from '@mui/material/Paper';
 import MenuList from '@mui/material/MenuList';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import Typography from '@mui/material/Typography';
-import Cloud from '@mui/icons-material/Cloud';
-import { Dropdown } from "antd";
+import { motion } from "framer-motion"
 import { Avatar, Button } from 'antd';
 import '../Styles/styles.css'
 import { Badge } from 'antd';
 import { useNavigate } from "react-router-dom";
 import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
+import { DownOutlined } from "@ant-design/icons";
 function Header() {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
@@ -29,10 +27,8 @@ function Header() {
   const location = useLocation();
   const paths = location.pathname.split("/");
   const [flag, setFlag] = useState();
-  const colors = ["#C2EFB3", "#FAA916"];
   const [anchorElProfile, setAnchorElProfile] = React.useState(null);
   const openProfile = Boolean(anchorElProfile);
-  const [theme, setTheme] = useState(0);
   const [anchorElnoti, setAnchorElnoti] = React.useState(null);
   const openNoti = Boolean(anchorElnoti);
 
@@ -192,16 +188,17 @@ function Header() {
       <nav className={`bg-gray-200 px-5 pb-2 dark:bg-gray-800`}>
 
         <div className="flex  justify-between items-center mx-auto min-w-screen-xl p-4">
-          <Link
-            to={routePaths.HOME}
-            className="flex items-center space-x-3 w-4/5"
+          <div
+            className="flex justify-between items-center space-x-3 w-4/5"
           >
             <img
               src={!dark ? IMG : IMGINV}
-              className="sm:h-14 h-9"
+              className="sm:h-9 h-9"
               alt="Flowbite Logo"
             />
-          </Link>
+            <div className="h-5 w-12 rounded-full ml-72"></div>
+
+          </div>
           <div className="flex items-center space-x-6 rtl:space-x-reverse mr-2">
             <span className="relative inline-flex items-center">
               <Badge count={5} color="orange" >
@@ -257,9 +254,14 @@ function Header() {
               </MenuList>
             </Menu>
             {/* <Avatar className="cursor-pointer " onClick={handleClickProfile} style={{ backgroundColor: '#eb8d00', verticalAlign: 'middle' }} size="large"> */}
-            <Avatar className="cursor-pointer " onClick={handleClickProfile} style={{ backgroundColor: '#014737', verticalAlign: 'middle' }} size="large">
-              PM
+            <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: '95%' }} transition={{ delay: 1.1, type: 'just' }} className="w-auto cursor-pointer text-nowrap px-3 p-2 rounded-full bg-white flex justify-start items-center gap-2" onClick={handleClickProfile}>
+            <Avatar className="cursor-pointer "  style={{ backgroundColor: '#014737', verticalAlign: 'middle' }} size="small">
+              {localStorage.getItem('user_name').indexOf(' ')>0? localStorage.getItem('user_name').split(' ')[0]+localStorage.getItem('user_name').split(' ')[1]:localStorage.getItem('user_name').charAt(0)}
             </Avatar>
+            <span className="text-sm text-nowrap text-green-900 font-bold">Hi, {localStorage.getItem('user_name')}</span>
+            <DownOutlined className="text-sm text-nowrap text-gray-500 font-bold"/>
+            </motion.div>
+           
             <Menu
               id="basic-menu"
               sx={{

@@ -15,9 +15,9 @@ function Delivery({ pressBack, pressNext, data }) {
       ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
       : (data.delivery?data.delivery:"")
   );
-  const params = useParams();
   useEffect(()=>{
    setDelivery(localStorage.getItem('ware_house_flag')=='Y'?true:false)
+   setDeliveryAdd(localStorage.getItem('ship_to'))
   },[localStorage.getItem('ware_house_flag')])
   const onSubmit = () => {
     if (delivery) {
@@ -31,7 +31,6 @@ function Delivery({ pressBack, pressNext, data }) {
         <h2 className="text-2xl text-green-900 font-bold my-3">
           Delivery Details
         </h2>
-
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
           <div className="sm:col-span-2">
             <TDInputTemplate
@@ -46,7 +45,7 @@ function Delivery({ pressBack, pressNext, data }) {
               mode={3}
             />
 
-            {data.type == "P" && (
+            {localStorage.getItem('order_type') == "P" && (
               <p
                 className="mt-3 text-sm text-gray-500 font-bold float-right dark:text-gray-300"
                 id="file_input_help"
@@ -69,6 +68,7 @@ function Delivery({ pressBack, pressNext, data }) {
                       console.log(delivery);
                     } else {
                       setDeliveryAdd("");
+                      localStorage.setItem('ship_to','')
                     }
                   }}
                   defaultChecked
@@ -86,8 +86,13 @@ function Delivery({ pressBack, pressNext, data }) {
               placeholder="Ship To"
               name="ship_to"
               value={delivery}
-              onChange={(text) => {setDeliveryAdd(text.target.value); localStorage.setItem('ship_to',delivery)}}
-              disabled={data.type == "G" || deliveryConfirm ? true : false}
+              onChange={(text) => {setDeliveryAdd(text.target.value); localStorage.setItem('ship_to',text.target.value)}}
+              disabled={data.type == "G" || deliveryConfirm ? true : false || 
+
+                localStorage.getItem('po_status')=='A'?true:false
+
+
+              }
             />
             {!delivery && <VError title={"Address is required"} />}
           </div>

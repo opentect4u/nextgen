@@ -100,9 +100,25 @@ export const masterheaders={
       { name: "created_by", value: "Created by" },
     ],
   },
-  'purchaseorder':{
+  'P':{
     title: "Vendor Orders",
     btnText:'Add vendor orders',
+    headers: [
+      { name: "serial_number", value: "#" },
+      { name: "sl_no", value:"PO No."},
+      { name: "proj_name", value: "Project" },
+      { name: "po_type", value: "Type" },
+      { name: "po_issue_date", value: "Date" },
+      { name: "vendor_name", value: "Vendor" },
+      { name: "po_status_val", value: "Status" },
+      { name: "created_by", value: "Created by" },
+
+
+    ],
+  },
+  'A':{
+    title: "Approve Vendor Orders",
+    // btnText:'Add vendor orders',
     headers: [
       { name: "serial_number", value: "#" },
       { name: "sl_no", value:"PO No."},

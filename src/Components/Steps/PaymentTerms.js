@@ -32,11 +32,12 @@ function PaymentTerms({ pressBack, pressNext, data }) {
     localStorage.setItem('termList',JSON.stringify(termList))
   };
   const removeDt = (index) => {
+    console.log(index)
     let data = [...termList];
     data.splice(index, 1);
     setTermList(data);
     localStorage.removeItem('termList')
-    localStorage.setItem('termList',JSON.stringify(termList))
+    localStorage.setItem('termList',JSON.stringify(data))
   };
   return (
     <div className="py-2 px-4 mx-auto w-full lg:py-2">
@@ -79,6 +80,8 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                     handleDtChange(index,event)
                 
                 }}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
                 mode={1}
@@ -98,6 +101,8 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
                 mode={3}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
               />
               {/* {formik.errors.price_basis_desc && formik.touched.price_basis_desc && (
                       <VError title={formik.errors.price_basis_desc} />

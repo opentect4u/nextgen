@@ -327,7 +327,7 @@ const router = createBrowserRouter([
                 ],
               },
               {
-                path: "purchaseorder",
+                path: "purchaseorder/:flag",
                 element: <PurchaseOrderView />,
               },
               {

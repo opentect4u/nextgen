@@ -12,18 +12,15 @@ function BreadCrumbComp() {
     console.log(paths[paths.length-1])
     paths.forEach(
       (e) => isNaN(e) && pathnames.push({ label: pathMap[e],value:e })
-      // (e) => isNaN(e) && pathnames.push(pathMap[e])
     );
   
   return (
   
   <>
-   {/* <Breadcrumb className="ml-1 dark:text-gray-400 my-2 -mt-5" separator=">" items={pathnames} /> */}
-
 <div className="col-span-4 space-y-2 mb-8">
 <Segmented
   itemActiveBg="#08453c"
-  className="shadow-lg font-sans"
+  className="shadow-lg font-sans capitalize"
   value={isNaN(paths[paths.length-1])?paths[paths.length-1]:paths[paths.length-2]}
   options={pathnames}
   onChange={(value) => {

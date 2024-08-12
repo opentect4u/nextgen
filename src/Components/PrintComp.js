@@ -1,6 +1,6 @@
 import React from 'react'
 import Tooltip from '@mui/material/Tooltip';
-import {PrinterOutlined,MoreOutlined} from '@ant-design/icons'
+import {PrinterOutlined} from '@ant-design/icons'
 import { FloatButton } from 'antd';
 import DescriptionComp from './DescriptionComp';
 import { printMap } from '../Assets/Data/PrintColumns';

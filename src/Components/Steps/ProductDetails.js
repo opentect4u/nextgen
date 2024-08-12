@@ -56,6 +56,12 @@ useEffect(()=>{
   
   const handleDtChange=(index,event)=>{
     console.log(event.target.value)
+    // if(data[index]['IGST'])
+    //  { data[index]['CGST']=0
+    // data[index]['SGST']=0}
+    // if(data[index]['CGST'] ||data[index]['CGST'] ){
+    //   data[index]['IGST']=0
+    // }
     if(event.target.name=='item_name')
     setProdInfo(products.filter(e=>e.sl_no==+event.target.value))
     let data = [...itemList];
@@ -63,9 +69,9 @@ useEffect(()=>{
     data[index]['unit_price']=+(data[index]['rate']-data[index]['disc'])
     
     if(!data[index]['IGST'])
-    data[index]['total']=+(data[index]['unit_price']*data[index]['qty']*data[index]['CGST']+data[index]['unit_price']*data[index]['qty']*data[index]['SGST'])
+    data[index]['total']=+(data[index]['unit_price']*data[index]['qty']*(data[index]['CGST']/100)+data[index]['unit_price']*data[index]['qty']*(data[index]['SGST']/100))
     else
-    data[index]['total']=+(data[index]['unit_price']*data[index]['qty']*data[index]['IGST'])
+    data[index]['total']=+(data[index]['unit_price']*data[index]['qty']*(data[index]['IGST']/100))
     for(let i=0;i<itemList.length;i++){
       tot+=itemList[i].total
     }
@@ -102,6 +108,12 @@ useEffect(()=>{
     let data = [...itemList];
     data.splice(index, 1)
     setItemList(data)
+    tot=0
+    for(let i=0;i<data.length;i++){
+      tot+=data[i].total
+    }
+    setGrandTotal(tot)
+    tot=0
     localStorage.removeItem('itemList')
     localStorage.setItem('itemList',JSON.stringify(data))
 }
@@ -232,6 +244,8 @@ useEffect(()=>{
                               name='item_name'
                               handleChange={(event)=>{handleDtChange(index,event);}}
                               // handleBlur={handleBlur}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                               mode={2}
                             />
                             {/* {formik.errors.price_basis_flag && formik.touched.price_basis_flag && (
@@ -248,6 +262,8 @@ useEffect(()=>{
                                 input.qty
                               }
                               name='qty'
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                               handleChange={(event)=>handleDtChange(index,event)}
                               // handleChange={handleChange}
                               // handleBlur={handleBlur}
@@ -266,6 +282,8 @@ useEffect(()=>{
                                 input.rate
                               }
                               name='rate'
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                               handleChange={(event)=>handleDtChange(index,event)}
 
                               // handleChange={handleChange}
@@ -285,6 +303,8 @@ useEffect(()=>{
                                 input.disc
                               }
                               name='disc'
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                               handleChange={(event)=>handleDtChange(index,event)}
 
                               // handleChange={handleChange}
@@ -304,6 +324,8 @@ useEffect(()=>{
                               formControlName={
                                input.unit
                               }
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                               name='unit'
                               handleChange={(event)=>handleDtChange(index,event)}
 
@@ -324,6 +346,7 @@ useEffect(()=>{
                                 input.unit_price
                               }
                               name='unit_price'
+                              
                               handleChange={(event)=>handleDtChange(index,event)}
                               disabled={true}
                               // handleChange={handleChange}
@@ -344,6 +367,8 @@ useEffect(()=>{
                                input.CGST
                               }
                               name='CGST'
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                               handleChange={(event)=>handleDtChange(index,event)}
 
                               // handleChange={handleChange}
@@ -360,6 +385,8 @@ useEffect(()=>{
                               placeholder="SGST"
                               type="number"
                               label="SGST"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                               formControlName={
                                 input.SGST
                               }
@@ -380,6 +407,8 @@ useEffect(()=>{
                               placeholder="IGST"
                               type="number"
                               label="IGST"
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                               formControlName={
                                 input.IGST
                               }
@@ -422,6 +451,8 @@ useEffect(()=>{
                               formControlName={
                                 input.delivery_date
                               }
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
+
                               name='delivery_date'
                               handleChange={(event)=>handleDtChange(index,event)}
 
@@ -437,7 +468,7 @@ useEffect(()=>{
                     )} */}
                           </div>
                        {index==itemList.length-1 &&   <div className="sm:col-span-2 font-bold flex flex-col justify-center items-start">
-                            Grand Total: {grand_total}
+                            Grand Total: {grand_total.toFixed(2)}
                           </div>}
                         </div>
                       </React.Fragment>
