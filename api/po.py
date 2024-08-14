@@ -243,7 +243,7 @@ async def getprojectpoc(id:GetPo):
 left join td_project p ON p.sl_no=b.project_id
 join md_vendor v ON v.sl_no=b.vendor_id
 join (SELECT @a:= 0) AS a '''
-    where = f"b.sl_no='{id.id}' and p.sl_no=b.project_id and v.sl_no=b.vendor_id and po_status='P'" if id.id>0 else "p.sl_no=b.project_id and v.sl_no=b.vendor_id and b.po_status='P'"
+    where = f"b.sl_no='{id.id}' and po_status='P'" if id.id>0 else "b.po_status='P'"
     order = "ORDER BY b.created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
