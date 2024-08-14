@@ -48,7 +48,7 @@ async def getstock(data:getData):
     print(data.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number, s.stock_dt,s.created_by,s.created_at,s.modified_by,s.modified_at,s.sl_no,i.prod_name"
+    select = "@a:=@a+1 serial_number, s.stock_dt,s.created_by,s.created_at,s.modified_at,s.sl_no,i.prod_name"
     # select = "@a:=@a+1 serial_number, *"
     schema = "md_stock s,md_product i,(SELECT @a:= 0) AS a"
     where = f"s.sl_no='{data.id}'" if data.id>0 else f"s.delete_flag='N'"
