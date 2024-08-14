@@ -28,6 +28,15 @@ async def add_edit_stock(data:Stock):
     values = None if data.sl_no>0 else f"'{data.item_id}','{data.stock}','{data.stock_dt}','{data.user}','{formatted_dt}'"
     where = f"sl_no={data.sl_no}" if data.sl_no>0 else None
     flag = 1 if data.sl_no>0 else 0
-    res_dt = await db_Insert(table_name,fields,values,where,flag)
-
+    result = await db_Insert(table_name,fields,values,where,flag)
+    if(result['suc']):
+        res_dt = {"suc": 1, "msg": f"Stock opened successfully!" if data.sl_no==0 else f"Stock updated successfully!"}
+    else:
+        res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating"}
+        # if v.sl_no not in k:
+        #     print('here in delete')
+        #     table_name='md_vendor_poc'
+        #     wr=f"sl_no='{v.sl_no}'"
+        #     result = await db_Delete(table_name, wr)
     return res_dt
+
