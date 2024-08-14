@@ -24,7 +24,7 @@ async def add_edit_stock(data:Stock):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     table_name = "md_stock"
-    fields = f"item_id={data.item_id}, stock={data.stock}, modified_by = '{data.user}', modified_dt = '{formatted_dt}'" if data.sl_no>0 else f"item_id,stock,stock_dt,created_by,created_dt"
+    fields = f"item_id={data.item_id}, stock={data.stock}, modified_by = '{data.user}', modified_at = '{formatted_dt}'" if data.sl_no>0 else f"item_id,stock,stock_dt,created_by,created_at"
     values = None if data.sl_no>0 else f"'{data.item_id}','{data.stock}','{data.stock_dt}','{data.user}','{formatted_dt}'"
     where = f"sl_no={data.sl_no}" if data.sl_no>0 else None
     flag = 1 if data.sl_no>0 else 0
