@@ -28,7 +28,7 @@ async def add_edit_stock(data:Stock):
     table_name = "md_stock"
     fields = f"item_id='{data.item_id}', stock='{data.stock}', modified_by = '{data.user}', modified_at = '{formatted_dt}'" if data.sl_no>0 else f"item_id,stock,stock_dt,created_by,created_at"
     values = None if data.sl_no>0 else f"'{data.item_id}','{data.stock}','{data.stock_dt}','{data.user}','{formatted_dt}'"
-    where = f"sl_no={data.sl_no}" if data.sl_no>0 else None
+    where = f"sl_no='{data.sl_no}'" if data.sl_no>0 else None
     flag = 1 if data.sl_no>0 else 0
     result = await db_Insert(table_name,fields,values,where,flag)
     if(result['suc']):
