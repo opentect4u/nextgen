@@ -40,3 +40,7 @@ async def add_edit_stock(data:Stock):
         #     result = await db_Delete(table_name, wr)
     return res_dt
 
+@stockRouter.post("/getstock")
+async def getstock(data:Stock):
+
+
