@@ -17,6 +17,8 @@ class Stock(BaseModel):
     stock_dt:str
     stock:int
     user:str
+class getData(BaseModel):
+    id:int
 
 @stockRouter.post("/add_edit_stock")
 async def add_edit_stock(data:Stock):
@@ -41,6 +43,19 @@ async def add_edit_stock(data:Stock):
     return res_dt
 
 @stockRouter.post("/getstock")
-async def getstock(data:Stock):
+async def getstock(data:getData):
+    print('I am logging in!')
+    print(data.id)
+    res_dt = {}
+    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
+    select = "@a:=@a+1 serial_number, s.stock_dt,s.created_by,s.created_at,s.modified_by,s.modified_at,s.sl_no,i.prod_name"
+    # select = "@a:=@a+1 serial_number, *"
+    schema = "md_stock s,md_product i,(SELECT @a:= 0) AS a"
+    where = f"s.sl_no='{data.id}'" if data.id>0 else f"s.delete_flag='N'"
+    order = "ORDER BY s.created_at DESC"
+    flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
 
 
