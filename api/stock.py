@@ -50,7 +50,7 @@ async def getstock(data:getData):
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
     select = "@a:=@a+1 serial_number,s.stock_dt,s.stock,s.created_by,s.created_at,s.modified_at,s.sl_no,i.prod_name, i.sl_no as item_id"
     # select = "@a:=@a+1 serial_number, *"
-    schema = "md_stock s left join md_product i on i.sl_no=s.item_id,(SELECT @a:= 0) AS a"
+    schema = "md_product left join i md_stock s on i.sl_no=s.item_id,(SELECT @a:= 0) AS a"
     where = f"s.sl_no='{data.id}' and i.sl_no=s.item_id" if data.id>0 else f"s.delete_flag='N'"
     order = "ORDER BY s.created_at DESC"
     flag = 0 if data.id>0 else 1
