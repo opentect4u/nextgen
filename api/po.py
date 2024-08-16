@@ -100,7 +100,6 @@ class getComments(BaseModel):
 
 @poRouter.post('/addpo')
 async def addpo(data:PoModel):
-    
     res_dt = {}
     # print(data)
     item_save=0
