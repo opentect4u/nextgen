@@ -44,13 +44,14 @@ async def add_edit_stock(data:Stock):
 
 @stockRouter.post("/getstock")
 async def getstock(data:getData):
+    print('I am logging in!')
     print(data.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
     select = "@a:=@a+1 serial_number,s.stock_dt,s.stock,s.created_by,s.created_at,s.modified_at,s.sl_no,i.prod_name, i.sl_no as item_id"
     # select = "@a:=@a+1 serial_number, *"
-    schema = "md_product i left join md_stock s on i.sl_no=s.item_id and s.delete_flag='N' join (SELECT @a:= 0) AS a"
-    where = f"s.sl_no='{data.id}' and i.sl_no=s.item_id" if data.id>0 else f""
+    schema = "md_stock s,md_product i,(SELECT @a:= 0) AS a"
+    where = f"s.sl_no='{data.id}' and i.sl_no=s.item_id" if data.id>0 else f"s.delete_flag='N' and i.sl_no=s.item_id"
     order = "ORDER BY s.created_at DESC"
     flag = 0 if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
