@@ -44,7 +44,6 @@ async def add_edit_stock(data:Stock):
 
 @stockRouter.post("/getstock")
 async def getstock(data:getData):
-    print('I am logging in!')
     print(data.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
