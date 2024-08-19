@@ -547,6 +547,7 @@ async def addexistingpo(data:PoModel):
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating"}
   
+    print(res_dt,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
     return res_dt
 
 
