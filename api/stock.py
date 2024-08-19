@@ -59,3 +59,5 @@ async def getstock(data:getData):
     return result
 
 
+
+
