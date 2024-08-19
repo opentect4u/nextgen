@@ -325,7 +325,7 @@ async def check_proj_id(proj_id:GetProjectId):
     res_dt = {}
 
     select = "count(*)"
-    schema = "td_project_"
+    schema = "td_project"
     where = f"proj_id='{proj_id.id}'"
     order = ""
     flag = 1 if proj_id.id else 0
