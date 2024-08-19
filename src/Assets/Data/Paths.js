@@ -24,10 +24,13 @@ export const pathMap={
     'clientorder':'Client Orders',
     'P':'Vendor Orders',
     'A':'Approve Vendor Orders',
+    'existingorder':'Existing Orders',
     'orderform':'Add/Udpate Orders',
-    'purchaseorderform':'Add/Update Vendor Orders',
+    'F':'Add/Update Vendor Orders',
+    'E':'Add/Update Vendor Orders',
     'categoryform':'Add/Update Product categories',
     'stockinview':'Stock-In',
+    'updatestock':'Update Stock',
     'stockoutview':'Stock-Out',
     'stockinform':'Add/update Stock-In',
     'stockoutform':'Add/update Stock-Out',
@@ -36,7 +39,9 @@ export const pathMap={
     'requisitionssentview':'Requisitions Sent',
     'requisitionsrcvdview':'Requisitions Received',
     'requisitionssendform':'Send Requisition',
-    'requisitionsrcvdform':'Requisition Received'
+    'requisitionsrcvdform':'Requisition Received',
+    'stockComp':'Stock',
+    'stockupdateform':'Open/Update Stock'
 
 }
 
@@ -65,8 +70,9 @@ export const routes={
     'poComp':'Orders',
     'clientorder':'poComp/clientorder',
     'purchaseorder':'Purchase Orders',
+    'existingorder':'Existing Orders',
     'orderform':'home/poComp/orderform/',
-    'purchaseorderform':'/home/poComp/purchaseorderform/',
+    'purchaseorderforF':'/home/poComp/purchaseorderform/',
     'categoryform':'/home/mastersComp/categories/categoryform/',
     'stockinview':'stockComp/stockinview',
     'stockoutview':'stockComp/stockoutview',
@@ -77,5 +83,8 @@ export const routes={
     'requisitionssentview':'/home/stockComp/requisitionssentview/',
     'requisitionsrcvdview':'home/stockComp/requisitionsrcvdview/',
     'requisitionssendform':'/home/stockComp/requisitionssendform/',
-    'requisitionsrcvdform':'/home/stockComp/requisitionsrcvdform/'
+    'requisitionsrcvdform':'/home/stockComp/requisitionsrcvdform/',
+    'updatestock':'/home/stockComp/updatestock',
+    'stockupdateform':'/home/stockComp/stockupdateform/'
+    // 'stockupdateform':'Open/Update Stock'
 }

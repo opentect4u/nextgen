@@ -88,7 +88,9 @@ function App() {
 
       },
       Radio:{
-        colorPrimary:"#22543d"
+        colorPrimary:"#014737",
+        buttonColor:'#014737',
+        colorBorder:'#014737'
       }
     },
   }}>

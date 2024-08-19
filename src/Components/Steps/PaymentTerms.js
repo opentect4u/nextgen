@@ -3,7 +3,9 @@ import TDInputTemplate from "../TDInputTemplate";
 import { Button, Form, Input } from "antd";
 import { Spin } from "antd";
 import { LoadingOutlined,PlusOutlined,MinusOutlined } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
 function PaymentTerms({ pressBack, pressNext, data }) {
+  const params=useParams()
   const [termList, setTermList] = useState(
     data?.termList?.length
       ? data?.termList
@@ -80,7 +82,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                     handleDtChange(index,event)
                 
                 }}
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'  && params.flag=='F'?true:false}
 
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
@@ -101,7 +103,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
                 mode={3}
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'  && params.flag=='F'?true:false}
 
               />
               {/* {formik.errors.price_basis_desc && formik.touched.price_basis_desc && (

@@ -80,7 +80,7 @@ function ProjectInfo({ data }) {
       {
         key: "14",
         label: "Client PAN",
-        children: <p>{data?.info?.client_gst}</p>,
+        children: <p>{data?.info?.client_pan}</p>,
       }
       ,
       {
@@ -116,7 +116,7 @@ function ProjectInfo({ data }) {
   return (
     <div>
       <Descriptions
-        title="Vendor Details"
+        title="Project Details"
         className="mx-auto my-6"
         labelStyle={{ color: "#014737",fontWeight:'bold' }}
         items={items}

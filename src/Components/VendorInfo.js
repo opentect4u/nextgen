@@ -66,29 +66,29 @@ function VendorInfo({data}) {
             children: <p>{data?.info?.erection_responsibility=='Y'?'Yes':'No'}</p>,
           }
           ,
-          {
-            key: "11",
-            label: "Client Name",
-            children: <p>{data?.info?.client_id}</p>,
-          }
-          ,
-          {
-            key: "12",
-            label: "Client Location",
-            children: <p>{data?.info?.client_location}</p>,
-          }
-          ,
-          {
-            key: "13",
-            label: "Client GST",
-            children: <p>{data?.info?.client_gst}</p>,
-          },
-          {
-            key: "14",
-            label: "Client PAN",
-            children: <p>{data?.info?.client_gst}</p>,
-          }
-          ,
+          // {
+          //   key: "11",
+          //   label: "Client Name",
+          //   children: <p>{data?.info?.client_id}</p>,
+          // }
+          // ,
+          // {
+          //   key: "12",
+          //   label: "Client Location",
+          //   children: <p>{data?.info?.client_location}</p>,
+          // }
+          // ,
+          // {
+          //   key: "13",
+          //   label: "Client GST",
+          //   children: <p>{data?.info?.client_gst}</p>,
+          // },
+          // {
+          //   key: "14",
+          //   label: "Client PAN",
+          //   children: <p>{data?.info?.client_gst}</p>,
+          // }
+          // ,
           {
             key: "15",
             label: "TDS",
@@ -117,7 +117,7 @@ function VendorInfo({data}) {
       return (
         <div>
           <Descriptions
-            title="Project Details"
+            title="Vendor Details"
             className="mx-auto my-6"
             labelStyle={{ color: "#014737",fontWeight:'bold' }}
             items={items}

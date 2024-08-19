@@ -17,7 +17,7 @@ import {
   FileImageOutlined,
   FileExcelOutlined,
 } from "@ant-design/icons";
-import { Spin } from "antd";
+import { Spin, Tag } from "antd";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
 import axios from "axios";
 import { url } from "../../../Address/BaseUrl";
@@ -28,6 +28,7 @@ import DialogBox from "../../../Components/DialogBox";
 import Viewdetails from "../../../Components/Viewdetails";
 import { Button, Form, Input } from "antd";
 import VError from "../../../Components/VError";
+import DrawerComp from "../../../Components/DrawerComp";
 
 function ProjectForm() {
   const navigate = useNavigate();
@@ -76,6 +77,32 @@ function ProjectForm() {
   const[info,setInfo]=useState()
   const[file_paths,setFilePaths]=useState([])
   const [delId,setDelId]=useState()
+  const [open, setOpen] = useState(false);
+  const [mode,setMode] = useState(0)
+const showDrawer = () => {
+  setOpen(true);
+};
+
+const onClose = () => {
+  setOpen(false);
+  setLoading(true)
+  axios.post(url + "/api/getclient", { id: 0 })
+  .then((res) => {
+    console.log(res, "res client");
+    for (let i = 0; i < res?.data?.msg?.length; i++) {
+      clientList.push({
+        name: res?.data?.msg[i].client_name,
+        code: res?.data?.msg[i].sl_no,
+      });
+    }
+    setClient(clientList);
+    setGlobal(res.data.msg)
+    setLoading(false)
+ 
+
+  });
+
+};
   const [pocSet, setPocSet] = useState([
     { sl_no: 0, poc_name: "", poc_ph_1: "", poc_designation: "", poc_email: "" },
   ]);
@@ -715,8 +742,16 @@ function ProjectForm() {
                       disabled={params.id > 0}
                     />
                   {!client_id && <VError title={'Client is required!'}/>}
-                  {client_id && <Viewdetails click={()=>{setFlag(5);setVisible(true)}}/>}
+                 <div className="flex justify-between items-center">
+                 {client_id && <Viewdetails click={()=>{setFlag(5);setVisible(true)}}/>}
+                  <a className="my-2" onClick={()=>{setMode(4);setOpen(true)}}>
+              <Tag  color="#4FB477">
+                Not in list?
+                </Tag>
+                </a>
+                  </div>   
 
+                 
                   </div>
                   <div className="sm:col-span-2 flex justify-center">
                 {/* {client_id &&   <button className=" disabled:bg-gray-400 
@@ -735,6 +770,7 @@ function ProjectForm() {
                         name="client_loc"
                         formControlName={client_loc}
                         handleChange={(txt) => {
+                          if(txt.target.value!='Select client location'){
                           setClientLoc(txt.target.value);
                           console.log(
                             clientLocList,
@@ -752,6 +788,7 @@ function ProjectForm() {
                               (e) => e.c_loc == txt.target.value
                             )[0].c_pan
                           );
+                        }
                         }}
                         data={locList}
                         mode={2}
@@ -956,6 +993,8 @@ function ProjectForm() {
                   {!assgn_pm && <VError title={'Project manager is required!'}/>}
 
                 </div>
+            { params.id>0 && <AuditTrail data={data}/>}
+
                 <div className="flex pt-4 justify-content-start">
                   <button
                     className="inline-flex items-center px-5 py-2.5 mt-4 mr-2 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-[#92140C] transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 rounded-full  dark:focus:ring-primary-900"
@@ -981,6 +1020,8 @@ function ProjectForm() {
         onPress={() => setVisible(false)}
         onDelete={()=>deleteDoc()}
       />
+      <DrawerComp open={open} flag={mode} onClose={()=>onClose()}/>
+
     </section>
   );
 }

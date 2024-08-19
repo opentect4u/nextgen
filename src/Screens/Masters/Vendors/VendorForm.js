@@ -173,7 +173,7 @@ function VendorForm() {
     v_email: Yup.string()
       .required("Email is required")
       .email("Incorrect format!"),
-   
+    v_micr:Yup.string().matches(/^[0-9]{1,9}$/,'Invalid MICR!'),
     v_pan: Yup.string().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,'Incorrect format!'),
     v_msme: Yup.string().required("MSME is required"),
     v_msmeno: Yup.string().when('v_msme', {
@@ -183,7 +183,7 @@ function VendorForm() {
     }),
     v_brnnm: Yup.string().required("Branch name required"),
     v_banknm: Yup.string().required("Bank name required"),
-    v_ac: Yup.string().required("Account no. required"),
+    v_ac: Yup.string().required("Account no. required").matches(/^[0-9]{9,18}$/,'Invalid account no.!'),
     v_ifsc: Yup.string().required("IFSC required").matches(/^[A-Z]{4}0[A-Z0-9]{6}$/,'Incorrect format!'),
     v_tds: Yup.string().required("TDS is required"),
     tds_perc: Yup.number().when('v_tds', {
@@ -201,6 +201,14 @@ function VendorForm() {
     v_gst: Yup.string().when('supply_flag', {
       is: 'R',
       then:()=>Yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,'Incorrect format!').required('GST is required!'),
+    }),
+    v_composite: Yup.string().when('supply_flag', {
+      is: 'R',
+      then:()=>Yup.string().required('Required!'),
+    }),
+    v_state:Yup.string().when('supply_flag', {
+      is: (val) => val === 'R' || val === 'U',
+      then:()=>Yup.string().required('State is required'),
     }),
     v_e_r_supply: Yup.string().when('v_composite', {
       is: 'O',

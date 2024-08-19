@@ -254,7 +254,7 @@ function Header() {
               </MenuList>
             </Menu>
             {/* <Avatar className="cursor-pointer " onClick={handleClickProfile} style={{ backgroundColor: '#eb8d00', verticalAlign: 'middle' }} size="large"> */}
-            <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: '95%' }} transition={{ delay: 1.1, type: 'just' }} className="w-auto cursor-pointer text-nowrap px-3 p-2 rounded-full bg-white flex justify-start items-center gap-2" onClick={handleClickProfile}>
+            <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: '95%' }} transition={{ delay: 1.1, type: 'just' }} className="w-auto cursor-pointer text-nowrap px-3 p-2 rounded-full bg-white flex shadow-lg justify-start items-center gap-2" onClick={handleClickProfile}>
             <Avatar className="cursor-pointer "  style={{ backgroundColor: '#014737', verticalAlign: 'middle' }} size="small">
               {localStorage.getItem('user_name').indexOf(' ')>0? localStorage.getItem('user_name').split(' ')[0]+localStorage.getItem('user_name').split(' ')[1]:localStorage.getItem('user_name').charAt(0)}
             </Avatar>

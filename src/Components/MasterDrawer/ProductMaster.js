@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
-import BtnComp from "../../../Components/BtnComp";
-import HeadingTemplate from "../../../Components/HeadingTemplate";
+import BtnComp from "../../Components/BtnComp";
+import HeadingTemplate from "../../Components/HeadingTemplate";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import TDInputTemplate from "../../../Components/TDInputTemplate";
-import VError from "../../../Components/VError";
+import TDInputTemplate from "../../Components/TDInputTemplate";
+import VError from "../../Components/VError";
 import axios from "axios";
-import { url } from "../../../Address/BaseUrl";
-import { Message } from "../../../Components/Message";
+import { url } from "../../Address/BaseUrl";
+import { Message } from "../../Components/Message";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import PrintComp from "../../../Components/PrintComp";
-import AuditTrail from "../../../Components/AuditTrail";
-function ProductForm() {
+
+function ProductMaster({onClose}) {
   const [cat, setCat] = useState([]);
   const navigate=useNavigate()
   var categories = [];
@@ -40,7 +39,7 @@ function ProductForm() {
     console.log(values);
     axios
       .post(url + "/api/addproduct", {
-        p_id: +params.id,
+        p_id: 0,
         user: localStorage.getItem("email"),
         p_name: values.prodnm,
         p_cat: values.cat_id.toString(),
@@ -57,7 +56,8 @@ function ProductForm() {
         setCount(prev=>prev+1)
         if (res.data.suc > 0) {
           Message("success", res.data.msg);
-          if (params.id == 0) formik.handleReset();
+          formik.handleReset();
+          onClose()
         } else {
           Message("error", res.data.msg);
         }
@@ -94,26 +94,26 @@ function ProductForm() {
       setCat(categories);
     });
 
-    if (+params.id > 0) {
-      setLoading(true);
+    // if (+params.id > 0) {
+    //   setLoading(true);
 
-      axios.post(url + "/api/getproduct", { id: params.id }).then((res) => {
-        console.log(res.data.msg);
-        setData(res.data?.msg)
-        setLoading(false);
-        setValues({
-          cat_id: res?.data?.msg.prod_cat,
-          prodnm: res?.data?.msg.prod_name,
-          ar_no: res?.data?.msg.article_no,
-          pr_no: res?.data?.msg.part_no,
-          md_no: res?.data?.msg.model_no,
-          hsn_code: res?.data?.msg.hsn_code,
-          // stk_cnt: res?.data?.msg.stk_cnt,
-          prod_make: res?.data?.msg.prod_make,
-          prod_des: res?.data?.msg.prod_desc,
-        });
-      });
-    }
+    //   axios.post(url + "/api/getproduct", { id: params.id }).then((res) => {
+    //     console.log(res.data.msg);
+    //     setData(res.data?.msg)
+    //     setLoading(false);
+    //     setValues({
+    //       cat_id: res?.data?.msg.prod_cat,
+    //       prodnm: res?.data?.msg.prod_name,
+    //       ar_no: res?.data?.msg.article_no,
+    //       pr_no: res?.data?.msg.part_no,
+    //       md_no: res?.data?.msg.model_no,
+    //       hsn_code: res?.data?.msg.hsn_code,
+    //       // stk_cnt: res?.data?.msg.stk_cnt,
+    //       prod_make: res?.data?.msg.prod_make,
+    //       prod_des: res?.data?.msg.prod_desc,
+    //     });
+    //   });
+    // }
   }, [count]);
   // const onChange = (value) => {
   //   console.log(`selected ${value}`);
@@ -125,12 +125,16 @@ function ProductForm() {
   return (
     <section  className="bg-transparent dark:bg-[#001529]">
           {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
-          <HeadingTemplate
+          {/* <HeadingTemplate
               text={params.id > 0 ? "Update product" : "Add product"}
               mode={params.id>0?1:0}
               title={'Product'}
               data={params.id && data?data:''}
-            />
+            /> */}
+             <h2 className="text-2xl text-green-900 font-bold my-3">
+            Add Product
+          </h2>
+          
           <div className="w-full bg-white p-6 rounded-2xl">
         <Spin
           indicator={<LoadingOutlined spin />}
@@ -289,10 +293,9 @@ function ProductForm() {
                   <VError title={formik.errors.prod_des} />
                 ) : null}
               </div>
-              { params.id>0 && <AuditTrail data={data}/>}
             </div>
             <BtnComp
-              mode={params.id > 0 ? "E" : "A"}
+              mode={"A"}
               onReset={formik.handleReset}
             />
           </form>
@@ -302,4 +305,4 @@ function ProductForm() {
   );
 }
 
-export default ProductForm;
+export default ProductMaster

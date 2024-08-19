@@ -21,6 +21,7 @@ function PoPreview({ data }) {
  const [prodInfo,setProdInfo]=useState()
  const [grandTot,setGrandTot]=useState(0)
  const [po_no,setPoNo]=useState('')
+ const [totVal,setTotVal]=useState(0)
   useEffect(()=>{
     
     axios.post(url+'/api/getvendor',{id:+localStorage.getItem('vendor_name')}).then(res=>{
@@ -39,13 +40,14 @@ function PoPreview({ data }) {
             console.log(prodInfo)
             for(let item of resItems?.data?.msg){
                 if(item.sgst_id){
-                  tot+=((item.item_rt-item.discount)*item.quantity*item.cgst_id/100)+(item.item_rt-item.discount)*item.quantity*(item.sgst_id/100)
+                  tot+=((item.item_rt-item.discount)*item.quantity*item.cgst_id/100)+(item.item_rt-item.discount)*item.quantity*(item.sgst_id/100)+((item.item_rt-item.discount)*item.quantity)
                 }
                 else{
-                   tot+=((item.item_rt-item.discount)*item.quantity*item.igst_id/100)
+                   tot+=((item.item_rt-item.discount)*item.quantity*item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)
                 }
             }
             console.log(tot)
+
             setGrandTot(tot.toFixed(2))
             tot=0
             // "prod_name": "Prod_2",
@@ -139,23 +141,24 @@ function PoPreview({ data }) {
         </span>
       </div>
       <p className="grid grid-cols-6 gap-32 items-center mb-2 px-4">
+      <div className="col-span-3 flex text-xs gap-2 text-black ">
+          <span className="uppercase font-extrabold">PO No.:  {po_no?po_no:''}</span>
+          <span className="uppercase font-extrabold">PO Date:  {localStorage.getItem('po_issue_date')}</span>
+          {/* <span className="uppercase font-extrabold">Latest Amendement No:</span> */}
+          {/* <span className="uppercase font-extrabold">Amendment Date:</span> */}
+          <span className="uppercase font-extrabold">Value:  {grandTot}</span>
+          {/* <span className="uppercase font-extrabold">Status No:  {localStorage.getItem('po_status')=='P'?'In Progress':localStorage.getItem('po_status')=='U'?'Unapproved':localStorage.getItem('po_status')=='A'?'Approved':localStorage.getItem('po_status')=='D'?'Delivered':'Partial Delivery'}</span> */}
+        </div>
         <div className="col-span-3 ">
-          <img src={IMG} className="sm:h-14 h-7" alt="Flowbite Logo" />
+          <img src={IMG} className="sm:h-16 h-12" alt="Flowbite Logo" />
           <span className="my-5 mx-3 mb-5 text-xs">
-           <p>Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata
+           <p>Unit - 102, 1st Floor, PS PACE 1/1A,</p> <p> Mahendra Roy Lane Kolkata
            700046 </p>
           <p> Ph-033 4068 6032/6450 0535</p> 
           <p> Email: info@ngapl.com</p> 
           </span>
         </div>
-        <div className="col-span-3 flex flex-col text-xs gap-3 text-black ">
-          <span className="uppercase font-extrabold">PO No.:{po_no?po_no:''}</span>
-          <span className="uppercase font-extrabold">PO Date:  {localStorage.getItem('po_issue_date')}</span>
-          <span className="uppercase font-extrabold">Latest Amendement No:</span>
-          <span className="uppercase font-extrabold">Amendment Date:</span>
-          <span className="uppercase font-extrabold">Value:</span>
-          <span className="uppercase font-extrabold">Status No:  {localStorage.getItem('po_status')=='P'?'In Progress':localStorage.getItem('po_status')=='U'?'Unapproved':localStorage.getItem('po_status')=='A'?'Approved':localStorage.getItem('po_status')=='D'?'Delivered':'Partial Delivery'}</span>
-        </div>
+       
       </p>
       <Divider/>
   
@@ -165,7 +168,7 @@ function PoPreview({ data }) {
   <div className="my-5 w-full p-2 text-black font-semibold border-2 border-blue-400 bg-blue-400 rounded-lg">
           Vendor Details
       </div>
-      <div className="flex flex-col text-xs gap-2 text-black p-2">
+      <div className="flex flex-col text-xs gap-1 text-black px-2 py-1">
           <span className="uppercase font-extrabold gap-4">Name:  {v_name}</span>
           <span className="uppercase font-extrabold">Address:  {v_address}</span>
           <span className="uppercase font-extrabold">Email:  {v_email}</span>
@@ -222,6 +225,9 @@ function PoPreview({ data }) {
                     Discount
                 </th>
                 <th scope="col" className="px-6 py-3">
+                    GST
+                </th>
+                <th scope="col" className="px-6 py-3">
                     Unit Price
                 </th>
                 <th scope="col" className="px-6 py-3">
@@ -246,10 +252,13 @@ function PoPreview({ data }) {
                     {item.discount}
                 </td>
                 <td className="px-6 py-4" rowSpan={2}>
+                {item.sgst_id>0?((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100))+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100):((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2)}
+                </td>
+                 <td className="px-6 py-4" rowSpan={2}>
                     {+item.item_rt-(+item.discount)}
                 </td>
                 <td className="px-6 py-4" rowSpan={2}>
-                    {item.sgst_id>0?(((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100))+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)).toFixed(2):((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)).toFixed(2)}
+                    {item.sgst_id>0?(((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100))+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2):((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2)}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -270,7 +279,7 @@ function PoPreview({ data }) {
         </tbody>
         <tfoot>
             <tr class="font-semibold text-gray-900 dark:text-white">
-                <th scope="row" class="px-6 py-3 text-base font-bold" colSpan={5}>Total</th>
+                <th scope="row" class="px-6 py-3 text-base font-bold" colSpan={6}>Total</th>
                 <th class="px-6 py-3 text-base font-bold">{grandTot}</th>
             </tr>
         </tfoot>
@@ -287,7 +296,7 @@ function PoPreview({ data }) {
        
           </div>
           <ul className="max-w-md space-y-1 text-gray-700 p-2 list-disc list-inside dark:text-gray-400">
-       {JSON.parse(localStorage.getItem('termList')).map(item=> <li>
+       { JSON.parse(localStorage.getItem('termList'))?.length>0 && JSON.parse(localStorage.getItem('termList'))?.map(item=> <li>
         {item.stage} - {item.term}
     </li>)}
    
@@ -319,7 +328,7 @@ function PoPreview({ data }) {
                     Packing & Forwarding
                 </th>
                 <td className="px-6 py-4">
-                {JSON.parse(localStorage.getItem('terms')).packing_forwarding_val=='I'?'Inclusive':`Extra  ${JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra}%`}
+                {JSON.parse(localStorage.getItem('terms')).packing_forwarding_val=='I'?'Inclusive':`Extra  ${JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra}% - ${(grandTot * JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra/100).toFixed(2)}`}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -335,7 +344,7 @@ function PoPreview({ data }) {
                     Test Certificate
                 </th>
                 <td className="px-6 py-4">
-                {JSON.parse(localStorage.getItem('terms')).test_certificate=='Y'?JSON.parse(localStorage.getItem('terms')).test_certificate_desc:'No'}
+                {JSON.parse(localStorage.getItem('terms')).test_certificate=='Y'?'Yes, '+JSON.parse(localStorage.getItem('terms')).test_certificate_desc:'No'}
                 </td>
             </tr>
 
@@ -354,7 +363,7 @@ function PoPreview({ data }) {
                 O & M Manual
                 </th>
                 <td className="px-6 py-4">
-                {JSON.parse(localStorage.getItem('terms')).om_manual_flag=='A'?JSON.parse(localStorage.getItem('terms')).om_manual_desc:'Not Applicable'}
+                {JSON.parse(localStorage.getItem('terms')).om_manual_flag=='A'?'Applicable. '+ JSON.parse(localStorage.getItem('terms')).om_manual_desc:'Not Applicable.'}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -362,7 +371,7 @@ function PoPreview({ data }) {
                 Operation/Installation
                 </th>
                 <td className="px-6 py-4">
-                {JSON.parse(localStorage.getItem('terms')).oi_flag=='A'?JSON.parse(localStorage.getItem('terms')).oi_desc:'Not Applicable'}
+                {JSON.parse(localStorage.getItem('terms')).oi_flag=='A'?'Applicable. ' +JSON.parse(localStorage.getItem('terms')).oi_desc:'Not Applicable.'}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -378,7 +387,7 @@ function PoPreview({ data }) {
                 Manufacture Clearance
                 </th>
                 <td className="px-6 py-4">
-                {JSON.parse(localStorage.getItem('terms')).manufacture_clearance=='A'?JSON.parse(localStorage.getItem('terms')).manufacture_clearance_desc:'Not Applicable'}
+                {JSON.parse(localStorage.getItem('terms')).manufacture_clearance=='A'?'Applicable. '+JSON.parse(localStorage.getItem('terms')).manufacture_clearance_desc:'Not Applicable.'}
                 </td>
             </tr>
         </tbody>
@@ -441,7 +450,7 @@ function PoPreview({ data }) {
                    MDCC
                </th>
                <td className="px-6 py-4">
-               {localStorage.getItem('mdcc_flag')=='Y'?localStorage.getItem('mdcc'):'No'}
+               {localStorage.getItem('mdcc_flag')=='Y'?'Yes. '+localStorage.getItem('mdcc'):'No'}
                </td>
            </tr>
            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -449,7 +458,7 @@ function PoPreview({ data }) {
                    Inspection
                </th>
                <td className="px-6 py-4">
-               {localStorage.getItem('insp_flag')=='Y'?localStorage.getItem('insp'):'No'}
+               {localStorage.getItem('insp_flag')=='Y'?'Yes. ' +localStorage.getItem('insp'):'No'}
                </td>
            </tr>
            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -457,7 +466,7 @@ function PoPreview({ data }) {
                    Drawing/Datasheet
                </th>
                <td className="px-6 py-4">
-               {localStorage.getItem('drawing_flag')=='Y'?localStorage.getItem('drawing')+', '+localStorage.getItem('dt') :'No'}
+               {localStorage.getItem('drawing_flag')=='Y'?'Yes . '+localStorage.getItem('drawing')+', '+localStorage.getItem('dt') :'No'}
                </td>
            </tr>
           

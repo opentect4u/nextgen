@@ -105,9 +105,7 @@ export const masterheaders={
     btnText:'Add vendor orders',
     headers: [
       { name: "serial_number", value: "#" },
-      { name: "sl_no", value:"PO No."},
-      { name: "proj_name", value: "Project" },
-      { name: "po_type", value: "Type" },
+      { name: "po_no", value:"PO No."},
       { name: "po_issue_date", value: "Date" },
       { name: "vendor_name", value: "Vendor" },
       { name: "po_status_val", value: "Status" },
@@ -121,9 +119,7 @@ export const masterheaders={
     // btnText:'Add vendor orders',
     headers: [
       { name: "serial_number", value: "#" },
-      { name: "sl_no", value:"PO No."},
-      { name: "proj_name", value: "Project" },
-      { name: "po_type", value: "Type" },
+      { name: "po_no", value:"PO No."},
       { name: "po_issue_date", value: "Date" },
       { name: "vendor_name", value: "Vendor" },
       { name: "po_status_val", value: "Status" },
@@ -131,5 +127,17 @@ export const masterheaders={
 
 
     ],
-  }
+  },
+  'updatestock':{
+    title: "Open/Update Stock",
+    btnText:'Open/Update Stock',
+    headers: [
+      { name: "serial_number", value: "#" },
+      { name: "stock_dt", value:"Date"},
+      { name: "prod_name", value: "Item" },
+      { name: "stock", value: "Stock" },
+      { name: "created_by", value: "Created by" },
+    ],
+  },
+
 }

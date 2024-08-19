@@ -9,6 +9,8 @@ import { LoadingOutlined } from "@ant-design/icons";
 import Viewdetails from "../Viewdetails";
 import DialogBox from "../DialogBox";
 import moment from 'moment'
+import DrawerComp from "../DrawerComp";
+import { Tag } from 'antd';
 function BasicDetails({ pressNext, pressBack, data }) {
   console.log(data)
   const params = useParams();
@@ -31,11 +33,66 @@ function BasicDetails({ pressNext, pressBack, data }) {
   const [vendorPocList,setPocList]=useState([])
   const [flag,setFlag]=useState(0)
   const [val,setVal]=useState()
-  console.log(params.id);
+  const [po_no,setPoNo]=useState(data.po_no)
+  const [open, setOpen] = useState(false);
+  const [mode,setMode] = useState(0)
+const showDrawer = () => {
+  setOpen(true);
+};
+
+const onClose = () => {
+  setOpen(false);
+  if(mode==1){
+  setLoading(true)
+
+    vendorsList.length=0
+    setVendorList([])
+    axios.post(url + "/api/getvendor", { id: 0 }).then((resVendor) => {
+      setVendorList(resVendor?.data?.msg);
+      setVendors(resVendor?.data?.msg)
+      for (let i = 0; i < resVendor?.data?.msg?.length; i++) {
+        vendorsList.push({
+          name: resVendor?.data?.msg[i].vendor_name,
+          code: resVendor?.data?.msg[i].sl_no,
+        });
+      }
+      setLoading(false)
+    setVendorList(vendorsList);
+  })
+}
+if(mode==2){
+  projectList.length=0
+  setProjects([])
+  setLoading(true)
+  axios.post(url + "/api/getproject", { id: 0 }).then((resProj) => {
+    setProjects(resProj?.data?.msg);
+    for (let i = 0; i < resProj?.data?.msg?.length; i++) {
+      projectList.push({
+        name: resProj?.data?.msg[i].proj_name,
+        code: resProj?.data?.msg[i].sl_no,
+      });
+    }
+    setProjectList(projectList);
+    setLoading(false)
+})}
+
+};
+  console.log(params.id,params.flag);
   const onSubmit = () => {
+
     console.log(type,proj_name,order_id,order_date,vendor_name);
-    setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name});
+    if(type!='P'){
+    if(type && vendor_name){
+    setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
     pressNext(val)
+    }
+  }
+  else{
+    if(type && vendor_name && proj_name){
+      setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
+      pressNext(val)
+      }
+  }
   };
   useEffect(()=>{
     setProjName(localStorage.getItem('proj_name'))
@@ -158,7 +215,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
                 type="date"
                 label="PO Date"
                 name="po_issue_date"
-                disabled={true}
+                disabled={params.flag=='F'?true:false}
                 formControlName={po_issue_date}
                 handleChange={(txt) => 
                   {setPoIssueDate(txt.target.value)
@@ -188,13 +245,34 @@ function BasicDetails({ pressNext, pressBack, data }) {
                 }
                 }
                 mode={2}
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
 
               />
-              {/* {formik.errors.order_type && formik.touched.order_type && (
-            <VError title={formik.errors.order_type} />
-          )} */}
+              {!type && (
+            <VError title={'Select type!'} />
+          )}
             </div>
+          {params.flag=='E' && <div className="sm:col-span-6">
+              <TDInputTemplate
+                placeholder="PO No."
+                type="text"
+                label="PO No."
+                name="po_no"
+               
+                formControlName={po_no}
+                handleChange={(txt) => 
+                  {setPoNo(txt.target.value)
+                  localStorage.setItem('po_no',txt.target.value)
+                }
+                }
+                mode={1}
+                disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
+
+              />
+              { (params.flag=='E' && !po_no) && (
+            <VError title={'Po Number is required!'} />
+          )}
+            </div>}
            {type=='P' &&
            <>
            
@@ -216,20 +294,29 @@ function BasicDetails({ pressNext, pressBack, data }) {
                     }
                 }}
                 mode={2}
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
 
               />
+              
                {/* <AutoComplete
       style={{ width: 200 }}
       onSearch={handleSearch}
       placeholder="input here"
       options={projectList}
     /> */}
-             
+             <div className={proj_name?'flex justify-between':'flex justify-end'}>
              {proj_name && <Viewdetails click={()=>{setFlag(7);setVisible(true)}}/>}
-              {/* {formik.errors.project_name && formik.touched.project_name && (
-                <VError title={formik.errors.project_name} />
-              )} */}
+             {!proj_name && type=='P' && (
+            <VError title={'Project is required!'} />
+          )}
+            <a className="my-1" onClick={()=>{setMode(2);setOpen(true)}}>
+              
+              <Tag color="#4FB477">Not in list?</Tag>
+              </a>
+              
+              {/* <p>Not in list?</p> */}
+             </div>
+             
             </div>
             <div className="sm:col-span-2">
               <div className="flex flex-col">
@@ -287,15 +374,23 @@ function BasicDetails({ pressNext, pressBack, data }) {
 
                 }}
                 // handleBlur={formik.handleBlur}
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
 
                 mode={2}
               />
-             {vendor_name && <Viewdetails click={()=>{setFlag(8);setVisible(true)}}/>}
+              {!vendor_name && (
+                <VError title={'Vendor is required!'} />
+              )}
+              <div className={vendor_name?'flex justify-between':'flex justify-end'}>
+              {vendor_name && <Viewdetails click={()=>{setFlag(8);setVisible(true)}}/>}
+              <a className="my-2" onClick={()=>{setMode(1);setOpen(true)}}>
+              <Tag  color="#4FB477">
+                Not in list?
+                </Tag>
+                </a>
+              </div>
             
-              {/* {formik.errors.vendor_name && formik.touched.vendor_name && (
-                <VError title={formik.errors.vendor_name} />
-              )} */}
+              
             </div>
           </div>
           <div className="flex pt-4 justify-end">
@@ -321,6 +416,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
         data={flag==7?{info:projectInfo[0],poc:pocList}:{info:vendorInfo[0],deals:deals,poc:vendorPocList}}
         onPress={() => setVisible(false)}
       />
+      <DrawerComp open={open} flag={mode} onClose={()=>onClose()}/>
     </section>
   );
 }

@@ -24,7 +24,9 @@ import {
   IdcardOutlined,
   BankOutlined,
   MailOutlined,
-  PercentageOutlined
+  PercentageOutlined,
+  DropboxOutlined,
+  CheckCircleOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -123,6 +125,11 @@ function Menus({ theme}) {
               label: <Link to={routePaths.PURCHASEORDER+'/P'}>Vendor Orders</Link>,
               key: "purchase-order",
               icon: <SolutionOutlined />,
+            },
+            {
+              label: <Link to={routePaths.EXISTINGORDER}>Existing Purchase Orders</Link>,
+              key: "existing-order",
+              icon: <CheckCircleOutlined />,
             }
             ,
             {
@@ -136,53 +143,49 @@ function Menus({ theme}) {
     {
       label: "Stock",
       key: "sub5",
-      icon: <HddOutlined />,
-      // children: [
-      //   {
-      //     type: "group",
-      //     children: [
-      //       {
-      //         label: <Link to={routePaths.STOCKASSIGNVIEW}>Assign</Link>,
-      //         key: "stock-assign",
-      //         icon: <ReconciliationOutlined />,
-      //       },
-      //       {
-      //         label: <Link to={routePaths.STOCKINVIEW}>Stock In</Link>,
-      //         key: "stock-in",
-      //         icon: <ArrowRightOutlined />,
-      //       },
-      //       {
-      //         label: <Link to={routePaths.STOCKOUTVIEW}>Stock Out</Link>,
-      //         key: "stock-out",
-      //         icon: <ArrowLeftOutlined />,
-      //       },
-      //       {
-      //         label: "Transfer",
-      //         key: "stock-trans",
-      //         icon: <SwapOutlined />,
-      //         children: [
-      //           {
-      //             type: "group",
-      //             children: [
-      //               {
-      //                 label: <Link to={routePaths.REQUISITIONSENTVIEW}>Requisitions sent</Link>,
-      //                 key: "req-mk",
-      //                 icon: <NodeExpandOutlined />,
-      //               },
-      //               {
-      //                 label: <Link to={routePaths.REQUISITIONRCVDVIEW}>Requisitions received</Link>,
-      //                 key: "req-rec",
-      //                 icon: <NodeCollapseOutlined />,
-      //               },
-      //             ],
-      //           },
-      //         ],
-      //       },
-      //     ],
-      //   },
-      // ],
+      icon: <DropboxOutlined />,
+      children: [
+            // {
+            //   label: <Link to={routePaths.STOCKASSIGNVIEW}>Assign</Link>,
+            //   key: "stock-assign",
+            //   icon: <ReconciliationOutlined />,
+            // },
+            {
+              label: <Link to={routePaths.STOCKUPDATE}>Open/Update Stock</Link>,
+              key: "stock-update",
+              icon: <DropboxOutlined />,
+            },
+            // {
+            //   label: <Link to={routePaths.STOCKINVIEW}>Stock In</Link>,
+            //   key: "stock-in",
+            //   icon: <ArrowRightOutlined />,
+            // },
+            // {
+            //   label: <Link to={routePaths.STOCKOUTVIEW}>Stock Out</Link>,
+            //   key: "stock-out",
+            //   icon: <ArrowLeftOutlined />,
+            // },
+            // {
+            //   label: "Transfer",
+            //   key: "stock-trans",
+            //   icon: <SwapOutlined />,
+            //   children: [
+                
+            //         {
+            //           label: <Link to={routePaths.REQUISITIONSENTVIEW}>Requisitions sent</Link>,
+            //           key: "req-mk",
+            //           icon: <NodeExpandOutlined />,
+            //         },
+            //         {
+            //           label: <Link to={routePaths.REQUISITIONRCVDVIEW}>Requisitions received</Link>,
+            //           key: "req-rec",
+            //           icon: <NodeCollapseOutlined />,
+            //         },
+            //       ],
+            // }
+              ],
     },
-    ,
+         
     {
       label: "Reports",
       key: "sub6",

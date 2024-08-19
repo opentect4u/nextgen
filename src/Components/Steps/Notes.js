@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import TDInputTemplate from '../TDInputTemplate'
+import { useParams } from 'react-router-dom';
 
 function Notes({pressBack,pressNext,data}) {
+  const params = useParams();
+
 const [notes,setNotes]=useState(data.notes?data.notes:'')
   return (
     <div>
@@ -13,7 +16,7 @@ const [notes,setNotes]=useState(data.notes?data.notes:'')
                                 formControlName={notes}
                                 handleChange={(notes)=>{setNotes(notes.target.value);localStorage.setItem('notes',notes.target.value)}}
                                 mode={3}
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
 
                               />
                                          <div className="flex pt-4 justify-between w-full">

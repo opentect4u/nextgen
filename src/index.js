@@ -13,7 +13,6 @@ import Loader from "./Components/Loader";
 
 import CircularProgress from '@mui/material/CircularProgress';
 import CatchError from "./Screens/CatchError";
-import { WifiTetheringErrorRoundedOutlined } from "@mui/icons-material";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const Home = lazy(() => import("./Screens/Homescreen/Home"));
@@ -93,6 +92,9 @@ const PurchaseOrderView = lazy(() =>
 const PurchaseOrderForm = lazy(() =>
   import("./Screens/Purchase Order/PurchaseOrderForm")
 );
+
+const ExistingPoView =lazy(()=>import ("./Screens/Purchase Order/ExistingPoView"));
+
 const OrderView = lazy(() => import("./Screens/Purchase Order/OrderView"));
 const OrderForm = lazy(() => import("./Screens/Purchase Order/OrderForm"));
 
@@ -103,6 +105,11 @@ const StockOutView = lazy(() => import("./Screens/Stock/StockOutView"));
 const StockOutForm = lazy(() => import("./Screens/Stock/StockOutForm"));
 const StockAssignView = lazy(() => import("./Screens/Stock/StockAssignView"));
 const StockAssignForm = lazy(() => import("./Screens/Stock/StockAssignForm"));
+const UpdateStock = lazy(()=>import("./Screens/Stock/UpdateStock/UpdateStock"))
+const UpdateStockView = lazy(()=>import("./Screens/Stock/UpdateStock/UpdateStockView"));
+const UpdateStockForm = lazy(()=>import("./Screens/Stock/UpdateStock/UpdateStockForm"));
+
+
 const RequisitionSentView = lazy(() =>
   import("./Screens/Stock/RequisitionSentView")
 );
@@ -331,15 +338,34 @@ const router = createBrowserRouter([
                 element: <PurchaseOrderView />,
               },
               {
-                path: "purchaseorderform/:id",
+                path: "purchaseorderform/:flag/:id",
                 element: <PurchaseOrderForm />,
               },
+              {
+                path:"existingorder",
+                element:<ExistingPoView/>
+              }
             ],
           },
           {
             path: "stockComp",
             element: <StockComp />,
             children: [
+              {
+                path: "updatestock",
+                element: <UpdateStock />,
+                children:[
+                  {
+                    path:'',
+                    element:<UpdateStockView/>
+                  },
+                  {
+                    path:'stockupdateform/:id',
+                    element:<UpdateStockForm/>
+                  },
+
+                ]
+              },
               {
                 path: "stockinview",
                 element: <StockInView />,

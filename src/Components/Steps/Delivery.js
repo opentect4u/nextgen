@@ -8,13 +8,19 @@ import { Switch } from "antd";
 
 function Delivery({ pressBack, pressNext, data }) {
   console.log(data);
+  const params = useParams();
   localStorage.setItem("bill_to",'NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046')
   const [deliveryConfirm, setDelivery] = useState(false);
   const [delivery, setDeliveryAdd] = useState(
-    data.type == "G"
+    localStorage.getItem('order_type') == "G"
       ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
       : (data.delivery?data.delivery:"")
   );
+  useState(()=>{
+    setDeliveryAdd( localStorage.getItem('order_type') == "G"
+    ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
+    : (data.delivery?data.delivery:""))
+  })
   useEffect(()=>{
    setDelivery(localStorage.getItem('ware_house_flag')=='Y'?true:false)
    setDeliveryAdd(localStorage.getItem('ship_to'))
@@ -54,6 +60,7 @@ function Delivery({ pressBack, pressNext, data }) {
                 <Switch
                   size="small"
                   value={deliveryConfirm}
+                  disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
                   onClick={(e) => {
                     
                     console.log(e);
@@ -89,7 +96,7 @@ function Delivery({ pressBack, pressNext, data }) {
               onChange={(text) => {setDeliveryAdd(text.target.value); localStorage.setItem('ship_to',text.target.value)}}
               disabled={data.type == "G" || deliveryConfirm ? true : false || 
 
-                localStorage.getItem('po_status')=='A'?true:false
+                (localStorage.getItem('po_status')=='A' && params.flag=='F')?true:false
 
 
               }

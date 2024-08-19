@@ -23,7 +23,6 @@ import { Message } from "../../Components/Message";
 import DialogBox from "../../Components/DialogBox";
 import { Tag } from 'antd';
 import { Timeline } from 'antd';
-
 import TDInputTemplate from "../../Components/TDInputTemplate";
 import { CloseOutlined, SaveOutlined } from "@mui/icons-material";
 function PurchaseOrderForm() {
@@ -40,21 +39,16 @@ function PurchaseOrderForm() {
   const [proj_name, setProjectName] = useState("");
   const [vendor_name, setVendorName] = useState("");
   const [po_issue_date,setPoIssueDate]=useState("")
-
   const [order_id, setOrderId] = useState("");
   const [itemList, setItemList] = useState([]);
   const [termList, setTermList] = useState([]);
   const [notes, setNotes] = useState("");
 
   const [insp_flag, setInspFlag] = useState("N");
-  // localStorage.setItem("insp_flag", "N");
   const [insp, setInsp] = useState("");
   const [drawing_flag, setDrawingFlag] = useState("N");
-  // localStorage.setItem("drawing_flag", "N");
-
   const [drawing, setDrawing] = useState("");
   const [mdcc_flag, setMdccFlag] = useState("N");
-  // localStorage.setItem("mdcc_flag", "N");
 
   const [mdcc, setMdcc] = useState("");
   const [drawingDate, setDrawingDate] = useState("");
@@ -87,6 +81,7 @@ function PurchaseOrderForm() {
   const [manufacture_clearance_desc, setManufactureDesc] = useState("");
   const [comment,setComment] = useState("")
   const [clickFlag,setClickFlag]=useState("P")
+  const [po_no,setPoNo]=useState('')
   const navigate=useNavigate()
   const addcomment=()=>{
     setLoading(true)
@@ -134,6 +129,7 @@ function PurchaseOrderForm() {
       po_id: localStorage.getItem("order_id"),
       po_date: localStorage.getItem("order_date"),
       po_type: localStorage.getItem("order_type"),
+      po_no:localStorage.getItem('po_no'),
       project_id: localStorage.getItem("proj_name"),
       vendor_id: localStorage.getItem("vendor_name"),
       item_dtl:JSON.parse(localStorage.getItem("itemList")),
@@ -202,13 +198,15 @@ function PurchaseOrderForm() {
       draw_scope:localStorage.getItem("drawing"),
       draw_period:localStorage.getItem("dt"),
       final_save:localStorage.getItem("po_status")=='U'?1:0,
+      fresh_flag:params.flag=='F'?'Y':'N',
       user:localStorage.getItem('email')
     }).then(res=>{
+      console.log(res)
       if (res.data.suc > 0) {
         Message("success", res.data.msg);
         // if (params.id == 0) handleReset();
-      
-        setTimeout(navigate(-1),2500)
+      navigate(-1)
+        // setTimeout(navigate(-1),2500)
       } 
       else {
         Message("error", res.data.msg);
@@ -224,8 +222,9 @@ function PurchaseOrderForm() {
   },[localStorage.getItem('po_status')])
   useEffect(()=>{
 
-    setFloatShow((localStorage.getItem('po_status')=='P' || localStorage.getItem('po_status')=='U') && (localStorage.getItem('order_date') || localStorage.getItem('vendor_name'))?true:false)
+    setFloatShow((localStorage.getItem('po_status')=='P' || localStorage.getItem('po_status')=='U' || params.flag=='E') && (localStorage.getItem('order_date') || localStorage.getItem('vendor_name'))?true:false)
   },[localStorage.getItem('order_date'),localStorage.getItem('vendor_name')])
+  
   useEffect(()=>{
   if(+params.id>0){
     axios.post(url+'/api/getpo',{id:+params.id}).then(res=>{
@@ -261,7 +260,7 @@ function PurchaseOrderForm() {
             IGST:resItem?.data?.msg[i].igst_id,
             unit_price:resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount,
             delivery_date:resItem?.data?.msg[i].delivery_dt,
-            total:resItem?.data?.msg[i].cgst_id? ((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].cgst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].sgst_id/100):((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].igst_id/100)
+            total:resItem?.data?.msg[i].cgst_id? ((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].cgst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].sgst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity):((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].igst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity)
           })
         }
         setItemList(itemList)
@@ -296,7 +295,7 @@ function PurchaseOrderForm() {
           const terms_conditions={
             price_basis_flag: resTerm?.data?.msg[0]?.price_basis,
             price_basis_desc:resTerm?.data?.msg[0]?.price_basis_desc,
-            packing_forwarding:resTerm?.data?.msg[0]?.packing_fwd_val,
+            packing_forwarding_val:resTerm?.data?.msg[0]?.packing_fwd_val,
             packing_forwarding_extra:resTerm?.data?.msg[0]?.packing_fwd_extra,
             packing_forwarding_extra_val:resTerm?.data?.msg[0]?.packing_fwd_extra_val,
             freight_insurance:resTerm?.data?.msg[0]?.freight_ins,
@@ -314,15 +313,15 @@ function PurchaseOrderForm() {
             duration_val:resTerm?.data?.msg[0]?.duration_value,
             om_manual_flag:resTerm?.data?.msg[0]?.o_m_manual,
             om_manual_desc:resTerm?.data?.msg[0]?.o_m_desc,
-            oi_flag:resTerm?.data?.msg[0]?.oi_flag,
-            oi_desc:resTerm?.data?.msg[0]?.oi_desc,
+            oi_flag:resTerm?.data?.msg[0]?.operation_installation,
+            oi_desc:resTerm?.data?.msg[0]?.operation_installation_desc,
             packing_type:resTerm?.data?.msg[0]?.packing_type,
             manufacture_clearance:resTerm?.data?.msg[0]?.manufacture_clearance,
             manufacture_clearance_desc:resTerm?.data?.msg[0]?.manufacture_clearance_desc
           };
           console.log(terms_conditions)
           localStorage.setItem('terms',JSON.stringify(terms_conditions))
-        })
+        }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
       axios.post(url+'/api/getpopayterms',{id:+params.id}).then(resPay=>{
         console.log(resPay)
         for(let i=0;i<resPay?.data?.msg?.length;i++){
@@ -374,10 +373,11 @@ function PurchaseOrderForm() {
             })
           })
         })
-      })
+      }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
 
-      })
-    })
+      }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
+      
+    }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
   }
   },[])
   return (
@@ -459,7 +459,8 @@ function PurchaseOrderForm() {
                 vendor_name: localStorage.getItem('vendor_name'),
                 type: localStorage.getItem('order_type'),
                 order_id: localStorage.getItem('order_id'),
-                po_issue_date:localStorage.getItem('po_issue_date')
+                po_issue_date:localStorage.getItem('po_issue_date'),
+                po_no:localStorage.getItem('po_no')
               }}
               pressNext={(values) => {
                 console.log(values);
@@ -470,6 +471,7 @@ function PurchaseOrderForm() {
                 setProjectName(values?.proj_name);
                 setOrderId(values?.order_id);
                 setPoIssueDate(values?.po_issue_date)
+                setPoNo(values?.po_no)
                 stepperRef.current.nextCallback();
                 // }
               }}
@@ -496,7 +498,7 @@ function PurchaseOrderForm() {
               data={{
                 price_basis_flag: price_basis_flag,
                 price_basis_desc: price_basis_desc,
-                packing_forwarding: packing_forwarding,
+                packing_forwarding_val: packing_forwarding,
                 packing_forwarding_extra:packing_forwardingExtra,
                 packing_forwarding_extra_val:packing_forwardingExtraVal,
                 freight_insurance: freight_insurance,
@@ -672,7 +674,7 @@ function PurchaseOrderForm() {
       <Button
           type="submit"
           className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-500 transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
-          onClick={() => {setLoading(true); setClickFlag("U"); localStorage.setItem('po_status','U') ;submitPo()}}
+          onClick={() => {setLoading(true); setClickFlag(params.flag=='F'?"U":"A"); localStorage.setItem('po_status',params.flag=='F'?'U':'A');submitPo()}}
           tooltip={'Save Purchase Order'}
          icon={<SaveOutlined />}
        />

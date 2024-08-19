@@ -101,7 +101,7 @@ function ClientForm() {
       })
       .catch((err) => {
         console.log(err);
-        // navigate("/error" + "/" + err.code + "/" + err.message);
+        navigate("/error" + "/" + err.code + "/" + err.message);
       });
   };
   const validationSchema = Yup.object({
@@ -125,7 +125,7 @@ function ClientForm() {
         poc_ext_no: Yup.string().optional(),
         poc_ph_1: Yup.string().required('Please enter primary number').length(10,'Must be 10 digits!').matches(/^[2-9]{2}[0-9]{8}$/,'Invalid phone no.'),
         poc_ph_2: Yup.string().length(10,'Must be 10 digits!').matches(/^[2-9]{2}[0-9]{8}$/,'Invalid phone no.'),
-        poc_location: Yup.string().optional(),
+        poc_location: Yup.string().required('Location is required!'),
       })
     ),
   });
@@ -288,7 +288,7 @@ function ClientForm() {
                     ></Button>}
                     <Button
                       className="rounded-full bg-green-900 text-white"
-                      onClick={() => push({ sl_no:0, c_location: "", c_gst: "", pan: "" })}
+                      onClick={() => push({ sl_no:0, c_location: "", c_gst: "", c_pan: "" })}
                       icon={<PlusOutlined />}
                     ></Button>
                   </div>
@@ -507,6 +507,8 @@ function ClientForm() {
                                 handleBlur={handleBlur}
                                 mode={1}
                               />
+                               {errors.dynamicFields?.[index]?.poc_ph_2 && touched.dynamicFields?.[index]?.poc_ph_2 && (
+                      <VError title={errors.dynamicFields[index].poc_ph_2} />)}
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
@@ -522,9 +524,8 @@ function ClientForm() {
                                 handleBlur={handleBlur}
                                 mode={1}
                               />
-                              {/* {formik.errors.clnt_loc && formik.touched.clnt_loc ? (
-                                            <VError title={formik.errors.clnt_loc} />
-                                        ) : null} */}
+                              {errors.dynamicFields?.[index]?.poc_location && touched.dynamicFields?.[index]?.poc_location && (
+                      <VError title={errors.dynamicFields[index].poc_location} />)}
                             </div>
                             {/* <div>
                               <TDInputTemplate

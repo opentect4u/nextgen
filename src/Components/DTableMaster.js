@@ -2,14 +2,13 @@ import React, { useRef, useState,useEffect } from 'react'
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
 import nodata from '../../src/Assets/Images/nodata.png'
 import { Tag } from 'primereact/tag';
-import { SearchOutlined, PrinterOutlined,EditOutlined } from '@ant-design/icons'
+import { PrinterOutlined,EditOutlined } from '@ant-design/icons'
 import { motion } from "framer-motion"
 import PrintHeader from './PrintHeader';
 
@@ -244,6 +243,7 @@ const statusBodyTemplate = (rowData) => {
                   field={item.name}
                   header={item.value}
                   headerClassName={'text-green-900 bg-[#C4F1BE] border-b-green-900 dark:bg-gray-700 dark:text-white dark:font-bold'}
+                  // headerClassName={'text-green-900 bg-green-300 border-b-green-900 dark:bg-gray-700 dark:text-white dark:font-bold'}
 
                   style={{ width: "10%" }}
                   body={(rowData) => renderTooltip(rowData, item.name)}
