@@ -547,7 +547,6 @@ async def addexistingpo(data:PoModel):
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating"}
   
-    print(res_dt,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
     return res_dt
 
 
@@ -690,7 +689,7 @@ async def addfreshpo(data:PoModel):
 @poRouter.post('/addpo')
 async def addpo(data:PoModel):
    if data.fresh_flag=='Y':
-      await addfreshpo(data)
+      addfreshpo(data)
    else:
-      await addexistingpo(data)
+      addexistingpo(data)
        
