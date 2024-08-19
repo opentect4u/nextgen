@@ -689,7 +689,7 @@ async def addfreshpo(data:PoModel):
 @poRouter.post('/addpo')
 async def addpo(data:PoModel):
    if data.fresh_flag=='Y':
-       addfreshpo(data)
+      await addfreshpo(data)
    else:
-       addexistingpo(data)
+      await addexistingpo(data)
        
