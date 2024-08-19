@@ -319,7 +319,7 @@ async def getprojectpoc(id:GetProject):
     del_qry = await db_Delete(del_table_name, del_whr)
     return del_qry
 
-@projectRouter.post('check_proj_id')
+@projectRouter.post('/check_proj_id')
 async def check_proj_id(proj_id:GetProjectId):
     print(proj_id.id)
     res_dt = {}
