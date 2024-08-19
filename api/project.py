@@ -328,7 +328,7 @@ async def check_proj_id(proj_id:GetProjectId):
     schema = "td_project_"
     where = f"proj_id='{proj_id.id}'"
     order = ""
-    flag = 1 if id.id else 0
+    flag = 1 if proj_id.id else 0
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
