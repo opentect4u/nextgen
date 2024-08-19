@@ -82,28 +82,45 @@ function PurchaseOrderForm() {
   const [comment,setComment] = useState("")
   const [clickFlag,setClickFlag]=useState("P")
   const [po_no,setPoNo]=useState('')
+  const [count,setCount]=useState(0)
   const navigate=useNavigate()
   const addcomment=()=>{
     setLoading(true)
     axios.post(url+'/api/addpocomments',{id:+params.id,comments:localStorage.getItem('po_comments'),user:localStorage.getItem('email')}).then(res=>{
       console.log(res)
       if(res.data.suc>0){
+        setCount(prev=>prev+1)
         Message('success',res?.data?.msg)
-        axios.post(url+'/api/getpocomments',{id:+params.id}).then(resCom=>{
-          // setTimeline([])
-          console.log(resCom)
-          for(let i=0;i<resCom?.data?.msg?.length;i++){
-            timeline.push({
-              label:resCom?.data?.msg[i].created_at.toString().split('T').join(' '),
-              children:resCom?.data?.msg[i].proj_remarks+' by '+resCom?.data?.msg[i].created_by.toString()
-            })
-          }
-          setTimeline(timeline)
-      })
+      //   axios.post(url+'/api/getpocomments',{id:+params.id}).then(resCom=>{
+      //     // setTimeline([])
+      //     console.log(resCom)
+      //     for(let i=0;i<resCom?.data?.msg?.length;i++){
+      //       timeline.push({
+      //         label:resCom?.data?.msg[i].created_at.toString().split('T').join(' '),
+      //         children:resCom?.data?.msg[i].proj_remarks+' by '+resCom?.data?.msg[i].created_by.toString()
+      //       })
+      //     }
+      //     setTimeline(timeline)
+      // })
       }
     })
       setLoading(false)
   }
+  useEffect(()=>{
+    axios.post(url+'/api/getpocomments',{id:+params.id}).then(resCom=>{
+      setTimeline([])
+      console.log(resCom)
+      for(let i=0;i<resCom?.data?.msg?.length;i++){
+        timeline.push({
+          label:resCom?.data?.msg[i].created_at.toString().split('T').join(' '),
+          children:resCom?.data?.msg[i].proj_remarks+' by '+resCom?.data?.msg[i].created_by.toString()
+        })
+      }
+      setTimeline(timeline)
+      console.log(timeline)
+  })
+  
+  },[count])
   const approvepo=()=>{
     setLoading(true)
     axios.post(url+'/api/approvepo',{id:+params.id,status:localStorage.getItem('po_status'),user:localStorage.getItem('email')}).then(res=>{
@@ -197,7 +214,7 @@ function PurchaseOrderForm() {
       draw:localStorage.getItem("drawing_flag"),
       draw_scope:localStorage.getItem("drawing"),
       draw_period:localStorage.getItem("dt"),
-      final_save:localStorage.getItem("po_status")=='U'?1:0,
+      final_save:localStorage.getItem("po_status")=='U' && localStorage.getItem('po_no')=='null'?1:0,
       fresh_flag:params.flag=='F'?'Y':'N',
       user:localStorage.getItem('email')
     }).then(res=>{
@@ -237,6 +254,8 @@ function PurchaseOrderForm() {
       localStorage.setItem("vendor_name",res?.data?.msg?.vendor_id)
       localStorage.setItem("po_status",res?.data?.msg?.po_status)
       localStorage.setItem("po_issue_date",res?.data?.msg?.po_issue_date)
+      localStorage.setItem('po_no',res?.data?.msg?.po_no)
+      console.log('type   ',typeof(localStorage.getItem('po_no')))
       setClickFlag(res?.data?.msg?.po_status)
       setBOrderDt(res?.data?.msg?.po_date)
       setOrderType(res?.data?.msg?.type)
@@ -244,6 +263,7 @@ function PurchaseOrderForm() {
       setProjectName(res?.data?.msg?.project_id)
       setVendorName(res?.data?.msg?.vendor_id)
       setPoIssueDate(res?.data?.msg?.po_issue_date)
+      setPoNo(res?.data?.msg?.po_issue_date)
       axios.post(url+'/api/getpoitem',{id:+params.id}).then(resItem=>{
         
         console.log(resItem)
@@ -442,7 +462,8 @@ function PurchaseOrderForm() {
           ref={stepperRef}
           style={{ flexBasis: "100%" }}
           orientation="vertical"
-          linear={localStorage.getItem('po_status')=='U'||localStorage.getItem('po_status')=='A'?false:true}
+          // linear={localStorage.getItem('po_status')=='U'||localStorage.getItem('po_status')=='A'?false:true}
+          linear={localStorage.getItem('po_status')=='A'?false:true}
           className="-mt-11"
         >
           <StepperPanel header="Basic Details">
@@ -574,6 +595,7 @@ function PurchaseOrderForm() {
               pressNext={(values) => {
                 console.log(values);
                 setDeliveryAdd(values);
+                localStorage.setItem('ship_to',values)
                 stepperRef.current.nextCallback();
               }}
               pressBack={() => {
@@ -629,17 +651,18 @@ function PurchaseOrderForm() {
           className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-900 transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
           onClick={()=>{stepperRef.current.prevCallback()}}
           icon={<ArrowBackIcon />}
-        />
+        >Back</Button>
         </Tooltip>
           <Tooltip title='View PO'>
 
               <Button
           type="submit"
+          title="View PO"
           className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-[#eb8d00] transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
           onClick={()=>setVisible(true)}
           tooltip={'View Purchase Order'}
           icon={<EyeOutlined />}
-        />
+        >View PO</Button>
         </Tooltip>
           
         
@@ -652,10 +675,10 @@ function PurchaseOrderForm() {
           className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
           onClick={()=>{localStorage.setItem('po_status','A');approvepo()}}
           icon={<CheckOutlined />}
-        />
+        >Approve</Button>
         </Tooltip>
         
-        <Tooltip title='Reject PO'>
+        {/* <Tooltip title='Reject PO'>
        
         <Button
           type="submit"
@@ -663,7 +686,7 @@ function PurchaseOrderForm() {
           onClick={()=>{localStorage.setItem('po_status','U');approvepo()}}
           icon={<CloseOutlined />}
         />
-       </Tooltip>
+       </Tooltip> */}
        
 
       
@@ -677,7 +700,7 @@ function PurchaseOrderForm() {
           onClick={() => {setLoading(true); setClickFlag(params.flag=='F'?"U":"A"); localStorage.setItem('po_status',params.flag=='F'?'U':'A');submitPo()}}
           tooltip={'Save Purchase Order'}
          icon={<SaveOutlined />}
-       />
+       >Save PO</Button>
           </Tooltip>
         }
             </div>
@@ -701,7 +724,7 @@ function PurchaseOrderForm() {
                         mode={3}
   
                       /> 
-                     <button  className="bg-green-900 hover:duration-500 w-full hover:scale-105  text-white p-1 my-3 rounded-full" onClick={()=>{addcomment()}}> Add comment </button>
+                     <button  className="bg-green-900 hover:duration-500 w-full hover:scale-105  text-white p-1 my-3 rounded-full" onClick={()=>{setComment('');addcomment()}}> Add comment </button>
         
            </span>}
       </div>

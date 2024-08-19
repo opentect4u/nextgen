@@ -8,23 +8,26 @@ import { Switch } from "antd";
 
 function Delivery({ pressBack, pressNext, data }) {
   console.log(data);
+  // localStorage.setItem('ship_to',data.delivery)
   const params = useParams();
   localStorage.setItem("bill_to",'NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046')
-  const [deliveryConfirm, setDelivery] = useState(false);
-  const [delivery, setDeliveryAdd] = useState(
-    localStorage.getItem('order_type') == "G"
-      ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
-      : (data.delivery?data.delivery:"")
-  );
-  useState(()=>{
-    setDeliveryAdd( localStorage.getItem('order_type') == "G"
-    ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
-    : (data.delivery?data.delivery:""))
-  })
+  const [deliveryConfirm, setDelivery] = useState(localStorage.getItem('ware_house_flag')=='Y'?true:false);
+  const [delivery, setDeliveryAdd] = useState(data.delvery?data.delivery:"")
+    // localStorage.getItem('order_type') == "G"
+    //   ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
+    //   : (data.delivery?data.delivery:localStorage.getItem('ship_to'))
+  
   useEffect(()=>{
-   setDelivery(localStorage.getItem('ware_house_flag')=='Y'?true:false)
-   setDeliveryAdd(localStorage.getItem('ship_to'))
-  },[localStorage.getItem('ware_house_flag')])
+    setDeliveryAdd(localStorage.getItem('order_type') == "G"
+    ? "NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046"
+    : data.delivery)
+    localStorage.setItem('ship_to',localStorage.getItem('order_type')=='G'?"NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046":data.delivery)
+  },[])
+  // useEffect(()=>{
+  //  setDelivery(localStorage.getItem('ware_house_flag')=='Y'?true:false)
+  //  setDeliveryAdd(localStorage.getItem('ware_house_flag')=='Y'?"NextGen Automation Pvt Ltd Unit - 102, 1st Floor, PS PACE 1/1A, Mahendra Roy Lane Kolkata 700046":data.delivery)
+  // },[localStorage.getItem('ware_house_flag')])
+
   const onSubmit = () => {
     if (delivery) {
       console.log(delivery);
@@ -60,7 +63,7 @@ function Delivery({ pressBack, pressNext, data }) {
                 <Switch
                   size="small"
                   value={deliveryConfirm}
-                  disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
+                  disabled={localStorage.getItem('po_status')=='A' ?true:false}
                   onClick={(e) => {
                     
                     console.log(e);
@@ -94,9 +97,9 @@ function Delivery({ pressBack, pressNext, data }) {
               name="ship_to"
               value={delivery}
               onChange={(text) => {setDeliveryAdd(text.target.value); localStorage.setItem('ship_to',text.target.value)}}
-              disabled={data.type == "G" || deliveryConfirm ? true : false || 
+              disabled={localStorage.getItem('order_type') == "G" || deliveryConfirm ? true : false || 
 
-                (localStorage.getItem('po_status')=='A' && params.flag=='F')?true:false
+                localStorage.getItem('po_status')=='A' ?true:false
 
 
               }

@@ -241,15 +241,16 @@ useEffect(()=>{
       >
       <div className="py-2 px-4 mx-auto w-full lg:py-2">
         <h2 className="text-2xl text-green-900 font-bold my-3">Item Details</h2>
-        <a className="my-2" onClick={()=>{setMode(3);setOpen(true)}}>
+      {localStorage.getItem('po_status')!='A' &&  <a className="my-2" onClick={()=>{setMode(3);setOpen(true)}}>
               <Tag  color="#4FB477">
                 Not in list?
                 </Tag>
                 </a>
+}
             
         {itemList.map((input,index)=>
                       <React.Fragment key={index}>
-                        <div className="sm:col-span-2 flex gap-2 justify-end items-center my-3">
+                      {localStorage.getItem('po_status')!='A' && <div className="sm:col-span-2 flex gap-2 justify-end items-center my-3">
                           {itemList.length > 1 && (
                             <Button
                               className="rounded-full text-white bg-red-800 border-red-800"
@@ -294,7 +295,7 @@ useEffect(()=>{
                             <InfoOutlined/>
                           </button>}
                         </div>
-
+}
                         <div className="grid gap-4 sm:grid-cols-12 sm:gap-6">
                           <div className="sm:col-span-2 flex flex-col">
                             <TDInputTemplate
@@ -308,7 +309,7 @@ useEffect(()=>{
                               name='item_name'
                               handleChange={(event)=>{handleDtChange(index,event); console.log(event.target.value)}}
                               // handleBlur={handleBlur}
-                disabled={localStorage.getItem('po_status')=='A'  && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
 
                               mode={2}
                             />
@@ -326,7 +327,7 @@ useEffect(()=>{
                                 input.qty
                               }
                               name='qty'
-                disabled={localStorage.getItem('po_status')=='A'  && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
 
                               handleChange={(event)=>handleDtChange(index,event)}
                               // handleChange={handleChange}
@@ -346,7 +347,7 @@ useEffect(()=>{
                                 input.rate
                               }
                               name='rate'
-                disabled={localStorage.getItem('po_status')=='A'  && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
 
                               handleChange={(event)=>handleDtChange(index,event)}
 
@@ -367,7 +368,7 @@ useEffect(()=>{
                                 input.disc
                               }
                               name='disc'
-                disabled={localStorage.getItem('po_status')=='A'  && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
 
                               handleChange={(event)=>handleDtChange(index,event)}
 
@@ -389,7 +390,7 @@ useEffect(()=>{
                               formControlName={
                                input.unit
                               }
-                disabled={localStorage.getItem('po_status')=='A'  && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
 
                               name='unit'
                               handleChange={(event)=>handleDtChange(index,event)}
@@ -432,7 +433,7 @@ useEffect(()=>{
                                input.CGST
                               }
                               name='CGST'
-                disabled={(localStorage.getItem('po_status')=='A'  && params.flag=='F')||itemList[index]['IGST']>0?true:false}
+                disabled={localStorage.getItem('po_status')=='A'||itemList[index]['IGST']>0?true:false}
 
                               handleChange={(event)=>handleDtChange(index,event)}
 
@@ -450,7 +451,7 @@ useEffect(()=>{
                               placeholder="SGST"
                               type="number"
                               label="SGST"
-                disabled={(localStorage.getItem('po_status')=='A'  && params.flag=='F') || itemList[index]['IGST']>0?true:false}
+                disabled={localStorage.getItem('po_status')=='A' || itemList[index]['IGST']>0?true:false}
 
                               formControlName={
                                 input.SGST
@@ -472,7 +473,7 @@ useEffect(()=>{
                               placeholder="IGST"
                               type="number"
                               label="IGST"
-                disabled={(localStorage.getItem('po_status')=='A'  && params.flag=='F') || (itemList[index]['CGST']>0 || itemList[index]['SGST'])>0 ?true:false}
+                disabled={localStorage.getItem('po_status')=='A' || (itemList[index]['CGST']>0 || itemList[index]['SGST'])>0 ?true:false}
 
                               formControlName={
                                 input.IGST
@@ -516,7 +517,7 @@ useEffect(()=>{
                               formControlName={
                                 input.delivery_date
                               }
-                disabled={localStorage.getItem('po_status')=='A'  && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'?true:false}
 
                               name='delivery_date'
                               handleChange={(event)=>handleDtChange(index,event)}

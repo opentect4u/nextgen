@@ -126,17 +126,18 @@ function Menus({ theme}) {
               key: "purchase-order",
               icon: <SolutionOutlined />,
             },
+            
+            {
+              label: <Link to={routePaths.PURCHASEORDER+'/A'}>Approve Vendor Orders</Link>,
+              key: "approve-purchase-order",
+              icon: <CheckOutlined />,
+            },
             {
               label: <Link to={routePaths.EXISTINGORDER}>Existing Purchase Orders</Link>,
               key: "existing-order",
               icon: <CheckCircleOutlined />,
             }
-            ,
-            {
-              label: <Link to={routePaths.PURCHASEORDER+'/A'}>Approve Vendor Orders</Link>,
-              key: "approve-purchase-order",
-              icon: <CheckOutlined />,
-            }
+            
           ],
        
     },

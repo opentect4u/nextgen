@@ -215,7 +215,7 @@ if(mode==2){
                 type="date"
                 label="PO Date"
                 name="po_issue_date"
-                disabled={params.flag=='F'?true:false}
+                disabled={params.flag=='F'||localStorage.getItem('po_status')=='A'?true:false}
                 formControlName={po_issue_date}
                 handleChange={(txt) => 
                   {setPoIssueDate(txt.target.value)
@@ -245,7 +245,7 @@ if(mode==2){
                 }
                 }
                 mode={2}
-                disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A' ?true:false}
 
               />
               {!type && (
@@ -266,7 +266,7 @@ if(mode==2){
                 }
                 }
                 mode={1}
-                disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A' ?true:false}
 
               />
               { (params.flag=='E' && !po_no) && (
@@ -294,7 +294,7 @@ if(mode==2){
                     }
                 }}
                 mode={2}
-                disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A' ?true:false}
 
               />
               
@@ -309,11 +309,11 @@ if(mode==2){
              {!proj_name && type=='P' && (
             <VError title={'Project is required!'} />
           )}
-            <a className="my-1" onClick={()=>{setMode(2);setOpen(true)}}>
+          {localStorage.getItem('po_status')!='A' &&<a className="my-1" onClick={()=>{setMode(2);setOpen(true)}}>
               
               <Tag color="#4FB477">Not in list?</Tag>
               </a>
-              
+}
               {/* <p>Not in list?</p> */}
              </div>
              
@@ -374,7 +374,7 @@ if(mode==2){
 
                 }}
                 // handleBlur={formik.handleBlur}
-                disabled={localStorage.getItem('po_status')=='A' && params.flag=='F'?true:false}
+                disabled={localStorage.getItem('po_status')=='A' ?true:false}
 
                 mode={2}
               />
@@ -383,11 +383,11 @@ if(mode==2){
               )}
               <div className={vendor_name?'flex justify-between':'flex justify-end'}>
               {vendor_name && <Viewdetails click={()=>{setFlag(8);setVisible(true)}}/>}
-              <a className="my-2" onClick={()=>{setMode(1);setOpen(true)}}>
+              {localStorage.getItem('po_status')!='A' && <a className="my-2" onClick={()=>{setMode(1);setOpen(true)}}>
               <Tag  color="#4FB477">
                 Not in list?
                 </Tag>
-                </a>
+                </a>}
               </div>
             
               

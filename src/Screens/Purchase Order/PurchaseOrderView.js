@@ -47,7 +47,7 @@ function PurchaseOrderView() {
     console.log("radio checked", e.target.value);
     setValue(e.target.value);
     if(e.target.value==1){
-    setPoData(copy.filter(e=>e.po_status=='A'||e.po_status=='U' && e.fresh_flag=='Y'))
+    setPoData(copy.filter(e=>(e.po_status=='A'||e.po_status=='U') && e.fresh_flag=='Y'))
     console.log(po_data)
     }
     else{
@@ -69,10 +69,10 @@ function PurchaseOrderView() {
       if(locationpath.pathname.split("/")[
         locationpath.pathname.split("/").length - 1
       ]=='P'){
-        setPoData(res?.data?.msg.filter(e=>(e.po_status!='A'&&e.po_status!='U')&&e.fresh_flag=='Y'))
+        setPoData(res?.data?.msg.filter(e=>(e.po_status!='A'&&e.po_status!='U' &&e.fresh_flag=='Y')))
       }
       else{
-        setPoData(res?.data?.msg.filter(e=>(e.po_status=='A' || e.po_status=='U')&&e.fresh_flag=='Y'))
+        setPoData(res?.data?.msg.filter(e=>(e.po_status=='A' || e.po_status=='U' &&e.fresh_flag=='Y')))
 
       }
     }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
@@ -83,6 +83,7 @@ function PurchaseOrderView() {
     localStorage.removeItem("id");
     localStorage.removeItem("po_issue_date");
     localStorage.removeItem("po_status");
+    localStorage.removeItem("po_no")
     localStorage.removeItem("po_comments");
     localStorage.removeItem("order_id");
     localStorage.removeItem("order_date");
