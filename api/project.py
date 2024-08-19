@@ -64,6 +64,9 @@ class GetProject(BaseModel):
 class GetPoc(BaseModel):
      id:str
 
+class GetProjectId(BaseModel):
+     id:str
+
 # @projectRouter.post('/addproject')
 # async def addproject(dt:Project):
 #     print(dt)
@@ -315,3 +318,17 @@ async def getprojectpoc(id:GetProject):
     del_whr = f"sl_no = {id.id}"
     del_qry = await db_Delete(del_table_name, del_whr)
     return del_qry
+
+@projectRouter.post('check_proj_id')
+async def check_proj_id(proj_id:GetProjectId):
+    print(proj_id.id)
+    res_dt = {}
+
+    select = "count(*)"
+    schema = "td_project_"
+    where = f"proj_id='{proj_id.id}'"
+    order = ""
+    flag = 1 if id.id else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
