@@ -85,6 +85,7 @@ class PoModel(BaseModel):
     final_save:Optional[Union[int,str,None]]=None
     po_no:Optional[Union[int,str,None]]=None
     fresh_flag:Optional[Union[int,str,None]]=None
+    active_step:Optional[Union[int,str,None]]=None
     user:str
 
 class GetPo(BaseModel):
@@ -271,7 +272,7 @@ async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number,b.po_no,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no,b.fresh_flag"
+    select = "@a:=@a+1 serial_number,b.po_no,b.po_id,b.po_dated,b.active_step,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no,b.fresh_flag"
     schema = '''td_po_basic b
 left join td_project p ON p.sl_no=b.project_id
 join md_vendor v ON v.sl_no=b.vendor_id
@@ -559,8 +560,8 @@ async def addfreshpo(data:PoModel):
     payment_save=0
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_date="{data.po_date}",po_status="{data.po_status}",po_issue_date="{data.po_issue_date}",po_type="{data.po_type}",project_id="{data.project_id}",po_id="{data.po_id}",vendor_id="{data.vendor_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_date,po_type,project_id,po_id,vendor_id,po_status,po_issue_date,created_by,created_at'
-    values = f'"{data.po_date}","{data.po_type}","{data.project_id}","{data.po_id}","{data.vendor_id}","{data.po_status}","{data.po_issue_date}","{data.user}","{formatted_dt}"'
+    fields= f'po_date="{data.po_date}",po_status="{data.po_status}",po_issue_date="{data.po_issue_date}",po_type="{data.po_type}",project_id="{data.project_id}",po_id="{data.po_id}",active_step="{data.active_step}",vendor_id="{data.vendor_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_date,po_type,project_id,po_id,vendor_id,po_status,active_step,po_issue_date,created_by,created_at'
+    values = f'"{data.po_date}","{data.po_type}","{data.project_id}","{data.po_id}","{data.vendor_id}","{data.po_status}","data.active_step","{data.po_issue_date}","{data.user}","{formatted_dt}"'
     table_name = "td_po_basic"
     whr = f'sl_no="{data.sl_no}"' if data.sl_no > 0 else None
     flag = 1 if data.sl_no>0 else 0
