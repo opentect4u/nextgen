@@ -298,6 +298,20 @@ async def getprojectpoc(id:GetPoc):
     print(result, 'RESULT')
     return result
 
+@projectRouter.post('/getprojectpocinfo')
+async def getprojectpocinfo(id:GetPoc):
+    print(id.id)
+    res_dt = {}
+
+    select = "p.sl_no,p.proj_id,p.poc_name,p.poc_phone_1,p.poc_designation,p.poc_email,p.modified_by,p.created_by,p.modified_at,p.modified_by,c.poc_name as name"
+    schema = "td_project_poc p,md_client_poc c"
+    where = f"p.proj_id='{id.id}' and c.sl_no=p.poc_name"
+    order = ""
+    flag = 1 if id.id else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
 @projectRouter.post('/get_proj_files')
 async def getprojectpoc(id:GetPoc):
     print(id.id)
