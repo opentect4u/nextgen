@@ -30,7 +30,7 @@ async def db_select(select, schema, where, order, flag):
     finally:
         return res_dt
 
-async def db_Insert(table_name, fields, values, where, flag):
+async def db_Insert(table_name, fields, values, where, flag, selectInsert = False):
     res_dt = {}
     sql = ''
     whr = f"WHERE {where}" if where != '' else ''
@@ -43,8 +43,8 @@ async def db_Insert(table_name, fields, values, where, flag):
         msg = "Updated Successfully !!"
         errMsg = "Data not updated !!"
     else:
-        sql = f"INSERT INTO {table_name} ({fields}) VALUES ({values})"
-        # print(sql)
+        sql = f"INSERT INTO {table_name} ({fields}) VALUES ({values})" if(not selectInsert) else f"INSERT INTO {table_name} {fields}"
+        print(sql)
         msg = "Inserted Successfully !!"
         errMsg = "Data not inserted  !!"
 
