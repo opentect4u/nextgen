@@ -99,7 +99,8 @@ class getComments(BaseModel):
     id:int
     comments:str
     user:str
-
+class GetPoNo(BaseModel):
+    po_no:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -692,4 +693,18 @@ async def addpo(data:PoModel):
      return await addfreshpo(data)
    else:
      return await addexistingpo(data)
+   
+@poRouter.post('/check_po_no')
+async def check_proj_id(po_no:GetPoNo):
+    print(po_no.po_no)
+    res_dt = {}
+
+    select = "count(*) as count"
+    schema = "td_po_basic"
+    where = f"po_no='{po_no.po_no}'"
+    order = ""
+    flag = 1 if po_no.po_no else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
        
