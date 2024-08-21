@@ -26,7 +26,9 @@ import {
   MailOutlined,
   PercentageOutlined,
   DropboxOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
+  IssuesCloseOutlined,
+  SignatureOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -136,6 +138,11 @@ function Menus({ theme}) {
               label: <Link to={routePaths.EXISTINGORDER}>Existing Purchase Orders</Link>,
               key: "existing-order",
               icon: <CheckCircleOutlined />,
+            },
+            {
+              label: <Link to={routePaths.AMENDORDER}>Amend Purchase Orders</Link>,
+              key: "amend-order",
+              icon: <SignatureOutlined />,
             }
             
           ],

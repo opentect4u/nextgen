@@ -250,8 +250,10 @@ useEffect(()=>{
             
         {itemList.map((input,index)=>
                       <React.Fragment key={index}>
-                      {localStorage.getItem('po_status')!='A' && <div className="sm:col-span-2 flex gap-2 justify-end items-center my-3">
-                          {itemList.length > 1 && (
+                      <div className="sm:col-span-2 flex gap-2 justify-end items-center my-3">
+
+                      {localStorage.getItem('po_status')!='A' &&   <>
+                        {itemList.length > 1 && (
                             <Button
                               className="rounded-full text-white bg-red-800 border-red-800"
                               onClick={() => removeDt(index)}
@@ -282,6 +284,9 @@ useEffect(()=>{
                             }
                             icon={<PlusOutlined />}
                           ></Button>
+                        
+                        </>}
+                         
                            {itemList[index]?.item_name && itemList[index]?.item_name!='Item name' &&  <button
                             className=" inline-flex items-center justify-center text-sm font-medium text-center text-white bg-primary-700 h-8 w-8 bg-blue-700 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>
                             {  console.log(itemList[index])
@@ -295,7 +300,7 @@ useEffect(()=>{
                             <InfoOutlined/>
                           </button>}
                         </div>
-}
+
                         <div className="grid gap-4 sm:grid-cols-12 sm:gap-6">
                           <div className="sm:col-span-2 flex flex-col">
                             <TDInputTemplate
@@ -552,7 +557,7 @@ useEffect(()=>{
                     var flag=0
                     console.log(itemList)
                     for(let i of itemList){
-                      if(i.item_name!='Item name' && i.item_name!='' && i.qty>0 && i.rate>0 && i.unit!='Unit' && i.unit!='' && i.delivery_date && i.unit_price>0 
+                      if(i.item_name!='Item name' && i.item_name!='' && i.qty>0 && i.rate>0 && i.unit!='Unit' && i.unit!='' && i.delivery_date && i.unit_price>0 && (i.disc>=0 || i.disc=='')
                         && 
                         ((i.SGST!='SGST' && i.SGST!='' && i.CGST!='CGST' && i.CGST!='') || (i.IGST!='IGST' && i.IGST!=''))
                       )

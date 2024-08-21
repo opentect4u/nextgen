@@ -72,7 +72,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
 }
       <div className="grid gap-4 sm:grid-cols-10 sm:gap-6">
 
-            <div className="sm:col-span-5">
+            <div className="sm:col-span-5 hidden">
               <TDInputTemplate
                 placeholder="Stage"
                 type="text"
@@ -93,7 +93,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                       <VError title={formik.errors.price_basis_flag} />
                     )} */}
             </div>
-            <div className="sm:col-span-5">
+            <div className="sm:col-span-10">
               <TDInputTemplate
                 placeholder="Payment Terms"
                 type="text"

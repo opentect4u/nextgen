@@ -24,7 +24,7 @@ import DialogBox from "../../Components/DialogBox";
 import { Tag } from 'antd';
 import { Timeline } from 'antd';
 import TDInputTemplate from "../../Components/TDInputTemplate";
-import { CloseOutlined, SaveOutlined } from "@mui/icons-material";
+import { SaveOutlined } from "@mui/icons-material";
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const params = useParams();
@@ -91,36 +91,25 @@ function PurchaseOrderForm() {
       if(res.data.suc>0){
         setCount(prev=>prev+1)
         Message('success',res?.data?.msg)
-      //   axios.post(url+'/api/getpocomments',{id:+params.id}).then(resCom=>{
-      //     // setTimeline([])
-      //     console.log(resCom)
-      //     for(let i=0;i<resCom?.data?.msg?.length;i++){
-      //       timeline.push({
-      //         label:resCom?.data?.msg[i].created_at.toString().split('T').join(' '),
-      //         children:resCom?.data?.msg[i].proj_remarks+' by '+resCom?.data?.msg[i].created_by.toString()
-      //       })
-      //     }
-      //     setTimeline(timeline)
-      // })
+        axios.post(url+'/api/getpocomments',{id:+params.id}).then(resCom=>{
+          // setTimeline([])
+          console.log(resCom)
+          for(let i=0;i<resCom?.data?.msg?.length;i++){
+            timeline.push({
+              label:resCom?.data?.msg[i].created_at.toString().split('T').join(' '),
+              children:resCom?.data?.msg[i].proj_remarks+' by '+resCom?.data?.msg[i].created_by.toString()
+              // status:resCom?.data?.msg[i].created_at.toString().split('T').join(' '),
+              // date:resCom?.data?.msg[i].proj_remarks+' by '+resCom?.data?.msg[i].created_by.toString()
+            })
+          }
+          setTimeline(timeline)
+          console.log(timeline)
+      })
       }
     })
       setLoading(false)
   }
-  useEffect(()=>{
-    axios.post(url+'/api/getpocomments',{id:+params.id}).then(resCom=>{
-      setTimeline([])
-      console.log(resCom)
-      for(let i=0;i<resCom?.data?.msg?.length;i++){
-        timeline.push({
-          label:resCom?.data?.msg[i].created_at.toString().split('T').join(' '),
-          children:resCom?.data?.msg[i].proj_remarks+' by '+resCom?.data?.msg[i].created_by.toString()
-        })
-      }
-      setTimeline(timeline)
-      console.log(timeline)
-  })
-  
-  },[count])
+ 
   const approvepo=()=>{
     setLoading(true)
     axios.post(url+'/api/approvepo',{id:+params.id,status:localStorage.getItem('po_status'),user:localStorage.getItem('email')}).then(res=>{
@@ -239,7 +228,7 @@ function PurchaseOrderForm() {
   },[localStorage.getItem('po_status')])
   useEffect(()=>{
 
-    setFloatShow((localStorage.getItem('po_status')=='P' || localStorage.getItem('po_status')=='U' || params.flag=='E') && (localStorage.getItem('order_date') || localStorage.getItem('vendor_name'))?true:false)
+    setFloatShow((localStorage.getItem('po_status')=='P' || localStorage.getItem('po_status')=='U') && (localStorage.getItem('order_date') || localStorage.getItem('vendor_name'))?true:false)
   },[localStorage.getItem('order_date'),localStorage.getItem('vendor_name')])
   
   useEffect(()=>{
@@ -263,7 +252,7 @@ function PurchaseOrderForm() {
       setProjectName(res?.data?.msg?.project_id)
       setVendorName(res?.data?.msg?.vendor_id)
       setPoIssueDate(res?.data?.msg?.po_issue_date)
-      setPoNo(res?.data?.msg?.po_issue_date)
+      setPoNo(res?.data?.msg?.po_no)
       axios.post(url+'/api/getpoitem',{id:+params.id}).then(resItem=>{
         
         console.log(resItem)
@@ -657,7 +646,6 @@ function PurchaseOrderForm() {
 
               <Button
           type="submit"
-          title="View PO"
           className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-[#eb8d00] transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
           onClick={()=>setVisible(true)}
           tooltip={'View Purchase Order'}
@@ -704,6 +692,7 @@ function PurchaseOrderForm() {
           </Tooltip>
         }
             </div>
+            {/* <PoLogs data={timeline}/> */}
     <div className="grid grid-cols-2 gap-5 my-10">
    <div className="sm:col-span-1">
    {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='A' ) && <Timeline
@@ -724,7 +713,14 @@ function PurchaseOrderForm() {
                         mode={3}
   
                       /> 
+                       <Spin
+          indicator={<LoadingOutlined spin />}
+          size="large"
+          className="text-green-900 dark:text-gray-400"
+          spinning={loading}
+        >
                      <button  className="bg-green-900 hover:duration-500 w-full hover:scale-105  text-white p-1 my-3 rounded-full" onClick={()=>{setComment('');addcomment()}}> Add comment </button>
+                     </Spin>
         
            </span>}
       </div>

@@ -25,6 +25,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
   const [order_date, setOrderDate] = useState(data.order_date);
   const [vendor_name,setVendorName]=useState(data.vendor_name)
   const [po_issue_date,setPoIssueDate]=useState(data.po_issue_date)
+  const [bank,setBank]=useState([])
   const [visible,setVisible]=useState(false)
   const [projectInfo,setProjectInfo]=useState([])
   const [vendorInfo,setVendorInfo]=useState([])
@@ -82,16 +83,36 @@ if(mode==2){
 
     console.log(type,proj_name,order_id,order_date,vendor_name);
     if(type!='P'){
-    if(type && vendor_name){
-    setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
-    pressNext(val)
+    if(type && vendor_name ){
+      debugger
+      if(params.flag=='E'){
+        debugger
+      if(po_no){
+        setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
+        pressNext(val)
+      }
+      }
+      else{
+      setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
+      pressNext(val)
+      }
     }
   }
   else{
     if(type && vendor_name && proj_name){
-      setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
-      pressNext(val)
+      if(params.flag=='E'){
+        if(po_no){
+          setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
+          pressNext(val)
+        }
+        }
+        else{
+        setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
+        pressNext(val)
+        }
+      
       }
+      
   }
   };
   useEffect(()=>{
@@ -101,6 +122,7 @@ if(mode==2){
     setOrderId(localStorage.getItem('order_id'))
     setType(localStorage.getItem('order_type'))
     setPoIssueDate(localStorage.getItem('po_issue_date'))
+    setPoNo(localStorage.getItem('po_no'))
   },[data.type])
   useEffect(() => {
     setLoading(true);
@@ -113,6 +135,7 @@ if(mode==2){
     if(params.id==0)
     {setPoIssueDate(moment(date).format('yyyy-MM-DD'));localStorage.setItem('po_issue_date',moment(date).format('yyyy-MM-DD'))}
     axios.post(url + "/api/getproject", { id: 0 }).then((resProj) => {
+      console.log(resProj)
       setProjects(resProj?.data?.msg);
       for (let i = 0; i < resProj?.data?.msg?.length; i++) {
         projectList.push({
@@ -131,33 +154,43 @@ if(mode==2){
           });
         }
       setVendorList(vendorsList);
-
-      setLoading(false);
+      setVendorInfo(resVendor?.data?.msg?.filter(e=>e.sl_no==data.vendor_name))
+      setProjectInfo(resProj?.data?.msg.filter((e) => e.sl_no == +data.proj_name))
+      console.log(resProj?.data?.msg.filter((e) => e.sl_no == +data.proj_name),data.proj_name,'projectinfo',resProj,resVendor)
+      
       })
+     
+      setLoading(false);
+
     });
     
     console.log(data)
     // if(localStorage.getItem('proj_name')!=null){
-      setProjectInfo(projects.filter((e) => e.sl_no == data.proj_name))
-     if(data?.proj_name && data?.vendor_name){
+     console.log(localStorage.getItem('proj_name'),localStorage.getItem('vendor_name'),data.proj_name,data.vendor_name)
+    //  if(localStorage.getItem('proj_name') && localStorage.getItem('vendor_name')){
+    //   debugger
+      if(data.proj_name && data.vendor_name){
         setLoading(true)
-        axios.post(url + "/api/getprojectpoc", { id: data?.proj_name?.toString()?data?.proj_name?.toString():localStorage.getItem('proj_name')}).then((res) => {
-          console.log(res)
-          setPoc(res?.data?.msg)
-          setLoading(false)
-      })
-      setVendorInfo(vendors?.filter(e=>e.sl_no==data.vendor_name))
+      //   axios.post(url + "/api/getprojectpoc", { id: projects.filter((e) => e.sl_no == +data.proj_name)[0]?.proj_id}).then((res) => {
+      //     console.log(res)
+      //     setPoc(res?.data?.msg)
+      //     setLoading(false)
+      // })
+      
       axios.post(url+'/api/getvendorpoc',{id:+data?.vendor_name?+data?.vendor_name:+localStorage.getItem('vendor_name')}).then((resPoc)=>{
         console.log(resPoc)
         setPocList(resPoc?.data?.msg)
-        axios.post(url+'/api/getvendordeals',{id:+data?.vendor_name?+data?.vendor_name:localStorage.getItem('vendor_name')}).then(resDeals=>{
+        axios.post(url+'/api/getvendordealsinfo',{id:+data?.vendor_name?+data?.vendor_name:localStorage.getItem('vendor_name')}).then(resDeals=>{
           console.log(resDeals)
           setDeals(resDeals?.data?.msg)
+          axios.post(url+'/api/getvendorbank',{id:+data?.vendor_name?+data?.vendor_name:localStorage.getItem('vendor_name')}).then(resBank=>{
+            setBank(resBank?.data?.msg)
           setLoading(false)
         })
         
       })
-    }
+    })
+  }
     // }
   }, []);
   const onSelectProject = (event) => {
@@ -173,7 +206,7 @@ if(mode==2){
       localStorage.setItem('order_id',projects.filter((e) => e.sl_no == event.target.value)[0]
       .order_id)
         setLoading(true)
-        axios.post(url + "/api/getprojectpoc", { id: projects.filter((e) => e.sl_no == event.target.value)[0]
+        axios.post(url + "/api/getprojectpocinfo", { id: projects.filter((e) => e.sl_no == event.target.value)[0]
           .proj_id}).then((res) => {
           console.log(res)
           setPoc(res?.data?.msg)
@@ -187,10 +220,13 @@ if(mode==2){
     axios.post(url+'/api/getvendorpoc',{id:event.target.value}).then((resPoc)=>{
       console.log(resPoc)
       setPocList(resPoc?.data?.msg)
-      axios.post(url+'/api/getvendordeals',{id:event.target.value}).then(resDeals=>{
+      axios.post(url+'/api/getvendordealsinfo',{id:event.target.value}).then(resDeals=>{
         console.log(resDeals)
         setDeals(resDeals?.data?.msg)
+        axios.post(url+'/api/getvendorbank',{id:event.target.value}).then(resBank=>{
+          setBank(resBank?.data?.msg)
         setLoading(false)
+      })
       })
       
     })
@@ -276,7 +312,7 @@ if(mode==2){
            {type=='P' &&
            <>
            
-           <div className="sm:col-span-2">
+           <div className="sm:col-span-6">
               <TDInputTemplate
                 placeholder="Project name"
                 type="text"
@@ -305,7 +341,16 @@ if(mode==2){
       options={projectList}
     /> */}
              <div className={proj_name?'flex justify-between':'flex justify-end'}>
-             {proj_name && <Viewdetails click={()=>{setFlag(7);setVisible(true)}}/>}
+             {proj_name && <Viewdetails click={()=>{
+              setFlag(7);
+              console.log(proj_name);
+              setProjectInfo(projects.filter(e=>e.sl_no==proj_name))
+              axios.post(url + "/api/getprojectpocinfo", { id: projects.filter((e) => e.sl_no == +proj_name)[0]?.proj_id}).then((res) => {
+                console.log(res)
+                setPoc(res?.data?.msg)
+                setLoading(false)
+            })
+              setVisible(true)}}/>}
              {!proj_name && type=='P' && (
             <VError title={'Project is required!'} />
           )}
@@ -318,7 +363,7 @@ if(mode==2){
              </div>
              
             </div>
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-0 hidden">
               <div className="flex flex-col">
                 <TDInputTemplate
                   placeholder="Client Order date"
@@ -335,7 +380,7 @@ if(mode==2){
                 )} */}
               </div>
             </div>
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-0 hidden">
               <div className="flex flex-col">
                 <TDInputTemplate
                   placeholder="Client Order No."
@@ -382,7 +427,26 @@ if(mode==2){
                 <VError title={'Vendor is required!'} />
               )}
               <div className={vendor_name?'flex justify-between':'flex justify-end'}>
-              {vendor_name && <Viewdetails click={()=>{setFlag(8);setVisible(true)}}/>}
+              {vendor_name && <Viewdetails click={()=>{
+                setVisible(true)
+                setVendorInfo(vendors?.filter(e=>e.sl_no==vendor_name))
+                
+                axios.post(url+'/api/getvendorpoc',{id:+data?.vendor_name?+data?.vendor_name:+localStorage.getItem('vendor_name')}).then((resPoc)=>{
+                  console.log(resPoc)
+                  setPocList(resPoc?.data?.msg)
+                  axios.post(url+'/api/getvendordealsinfo',{id:+data?.vendor_name?+data?.vendor_name:localStorage.getItem('vendor_name')}).then(resDeals=>{
+                    console.log(resDeals)
+                    setDeals(resDeals?.data?.msg)
+                    axios.post(url+'/api/getvendorbank',{id:+data?.vendor_name?+data?.vendor_name:localStorage.getItem('vendor_name')}).then(resBank=>{
+                      setBank(resBank?.data?.msg)
+                    setLoading(false)
+
+                    setFlag(8);
+                  })
+                  
+                })
+              })
+                }}/>}
               {localStorage.getItem('po_status')!='A' && <a className="my-2" onClick={()=>{setMode(1);setOpen(true)}}>
               <Tag  color="#4FB477">
                 Not in list?
@@ -413,7 +477,7 @@ if(mode==2){
       <DialogBox
         visible={visible}
         flag={flag}
-        data={flag==7?{info:projectInfo[0],poc:pocList}:{info:vendorInfo[0],deals:deals,poc:vendorPocList}}
+        data={flag==7?{info:projectInfo[0],poc:pocList}:{info:vendorInfo[0],deals:deals,poc:vendorPocList,bank:bank}}
         onPress={() => setVisible(false)}
       />
       <DrawerComp open={open} flag={mode} onClose={()=>onClose()}/>

@@ -689,9 +689,9 @@ function VendorMaster({onClose}) {
                     {compositeTrue && (
                       <div className="sm:col-span-2">
                         <TDInputTemplate
-                          placeholder="Choose Tax Prayer Type"
+                          placeholder="Choose Tax Payer Type"
                           type="text"
-                          label="Tax Prayer Type"
+                          label="Tax Payer Type"
                           name="v_composite"
                           formControlName={values.v_composite}
                           handleChange={handleChange}

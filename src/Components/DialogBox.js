@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { useNavigate } from 'react-router-dom';
 import { Tabs } from 'antd';
@@ -12,8 +12,14 @@ import ProjectInfo from './ProjectInfo';
 import VendorInfo from './VendorInfo';
 import ProdInfo from './ProdInfo';
 import PoPreview from './Steps/PoPreview';
-const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
+import TDInputTemplate from './TDInputTemplate';
+import { SaveOutlined } from '@ant-design/icons';
+import AmendPreview from './AmendPreview';
+import { url } from '../Address/BaseUrl';
+const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo }) => {
   const navigate = useNavigate();
+  const [po_no,setPoNo]=useState('')
+  useEffect(()=>{setPoNo('')},[])
   console.log(data)
   const onChange = (key) => {
     console.log(key,'onChange');
@@ -30,8 +36,9 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
       children: <PasswordComp mode={2} onPress={onPress}/>
     }
   ];
+ 
   return (
-      <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2 && flag!=5  && flag!=6 && flag!=7 && flag!=8 && flag!=9 && flag!=10?'Warning!':flag!=10?'Information':'Preview'}</div>} visible={visible} maximizable style={{
+      <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2 && flag!=5  && flag!=6 && flag!=7 && flag!=8 && flag!=9 && flag!=10  && flag!=11?'Warning!':flag!=10?'Information':'Preview'}</div>} visible={visible} maximizable style={{
          width: '50vw',
          background:'black'
          }} onHide={() => {if (!visible) return; onPress() }}>
@@ -104,6 +111,33 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data }) => {
         
         <p className="m-0">
           <PoPreview data={data}/>
+        </p>
+        
+        }
+         {flag==11 && 
+        
+        <p className="m-0">
+          <TDInputTemplate 
+           placeholder="Select PO"
+           type="text"
+           label="Select PO"
+           name="po_no"
+           formControlName={po_no}
+           handleChange={(txt)=>{setPoNo(txt.target.value);console.log(txt.target.value)}}
+           mode={2} 
+          data={data}/>
+        {po_no && po_no!='Select PO' && <div className='flex justify-center items-center my-3'>
+          <AmendPreview id={po_no}/>
+        </div>}
+        <div className='flex justify-end'>
+        {po_no && po_no!='Select PO' &&  <button
+        type="submit"
+        className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+        onClick={()=>amendPo(po_no)}
+    >
+        Proceed
+    </button>} </div>
+        
         </p>
         
         }

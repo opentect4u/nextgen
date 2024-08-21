@@ -59,11 +59,14 @@ function PurchaseOrderView() {
   };
   var templateData = masterheaders[template];
   useEffect(()=>{
+    setLoading(true)
+
     setValue([locationpath.pathname.split("/")[
       locationpath.pathname.split("/").length - 1
     ]]=='P'?2:1)
     axios.post(url+'/api/getpo',{id:0}).then(res=>{
       console.log(res)
+      setLoading(false)
       setPoData(res?.data?.msg)
       setCopy(res?.data?.msg)
       if(locationpath.pathname.split("/")[
@@ -167,7 +170,9 @@ function PurchaseOrderView() {
        <Radio value={1} className="text-green-900 font-bold">Approved/Pending</Radio>
        <Radio value={2} className="text-green-900 font-bold">In Progress</Radio>
      </Radio.Group>
-     {po_data.length>0 &&
+  {loading && <SkeletonLoading/>}
+
+     {copy.length>0 && !loading &&
      <div className="flex flex-col p-1 bg-green-900 rounded-full my-3 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
               <div className="w-full">
                 <div className="flex items-center justify-between">
@@ -226,7 +231,7 @@ function PurchaseOrderView() {
             </div>
 }
 {
-  po_data.length==0 && <div className='flex-col ml-72 mx-auto justify-center items-center'>
+  copy.length==0 && loading==false && <div className='flex-col ml-72 mx-auto justify-center items-center'>
   <motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1, type:'spring'
                 }} src={nodata} className="h-96 w-96 2xl:ml-48 2xl:h-full" alt="Flowbite Logo" />
             <motion.h2 initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1, type:'spring'
@@ -234,8 +239,7 @@ function PurchaseOrderView() {
         </div> 
 }
 <div class="relative overflow-x-auto">
-  {loading?<SkeletonLoading/>:
-    <table class="w-full text-sm text-left rtl:text-right shadow-lg text-green-900dark:text-gray-400">
+  {!loading &&  <table class="w-full text-sm text-left rtl:text-right shadow-lg text-green-900dark:text-gray-400">
         <thead class=" text-md  text-gray-700 capitalize   bg-[#C4F1BE] dark:bg-gray-700 dark:text-gray-400">
             <tr >
                 <th scope="col" class="p-4">

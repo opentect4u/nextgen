@@ -25,6 +25,7 @@ export const routePaths={
     ORDERFORM:'/home/poComp/orderform/',
     PURCHASEORDER:'poComp/purchaseorder',
     EXISTINGORDER:'poComp/existingorder',
+    AMENDORDER:'poComp/amendorder',
     PURCHASEORDERFORM:'/home/poComp/purchaseorderform/',
     CATEGORIES:'mastersComp/categories',
     ADDCATEGORIES:'/home/mastersComp/categories/categoryform/',

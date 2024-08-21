@@ -8,9 +8,10 @@ import axios from "axios";
 import Tooltip from '@mui/material/Tooltip';
 import AddIcon from "@mui/icons-material/Add";
 import nodata from '../../../src/Assets/Images/nodata.png'
+import { Spin } from "antd";
 
 import { Paginator } from 'primereact/paginator';
-import { PrinterOutlined } from '@ant-design/icons'
+import { LoadingOutlined, PrinterOutlined, SignatureOutlined } from '@ant-design/icons'
 import { motion } from "framer-motion"
 import {
     CheckCircleOutlined,
@@ -20,157 +21,109 @@ import {
     SyncOutlined,
   } from '@ant-design/icons';
   import { Tag } from 'antd';
-  import SkeletonLoading from "../../Components/SkeletonLoading";
+import DialogBox from "../../Components/DialogBox";
+import SkeletonLoading from "../../Components/SkeletonLoading";
 
-function ExistingPoView() {
-    const [first, setFirst] = useState(0);
+
+
+function AmendView() {
+const [loading,setLoading]=useState(false)
+const [poList,setPoList]=useState([])
+const [visible,setVisible]=useState(false)
+const [po_data,setPoData] = useState([])
+  const [copy,setCopy]=useState([])
+  const [count,setCount]=useState(0)
+  const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
-    const [loading,setLoading]=useState(false)
-    const onPageChange = (event) => {
-        setFirst(event.first);
-        setRows(event.rows);
-    };
-    const locationpath = useLocation();
-    const [value, setValue] = useState(2);
-    const [po_data,setPoData] = useState([])
-    const [copy,setCopy]=useState([])
-    const navigate=useNavigate()
-    var template =
-      locationpath.pathname.split("/")[
-        locationpath.pathname.split("/").length - 1
-      ];
-      console.log( locationpath.pathname.split("/")[
-        locationpath.pathname.split("/").length - 1
-      ])
-    const onChange = (e) => {
-      console.log("radio checked", e.target.value);
-      setValue(e.target.value);
-    //   setPoData(copy.filter(e=>e.po_status=='A'||e.po_status=='U')e=>e.fresh_flag=='N')
-      if(e.target.value==1)
-      setPoData(copy.filter(e=>(e.po_status=='A'||e.po_status=='U') && e.fresh_flag=='N'))
-      else
-      setPoData(copy.filter(e=>e.po_status!='A' && e.po_status!='U' && e.fresh_flag=='N'))
-  
-    };
-    var templateData = masterheaders[template];
-    useEffect(()=>{
-    //   setValue([locationpath.pathname.split("/")[
-    //     locationpath.pathname.split("/").length - 1
-    //   ]]=='P'?2:1)
-    setLoading(true)
-
-      axios.post(url+'/api/getpo',{id:0}).then(res=>{
-        console.log(res)
-        setPoData(res?.data?.msg)
-        setCopy(res?.data?.msg)
-        setPoData(res?.data?.msg.filter(e=>e.po_status!='A'&&e.po_status!='U'&&e.fresh_flag=='N'))
-        setLoading(false)
-        // if(locationpath.pathname.split("/")[
-        //   locationpath.pathname.split("/").length - 1
-        // ]=='P'){
-        //   setPoData(res?.data?.msg.filter(e=>e.po_status!='A'&&e.po_status!='U'))
-        // }
-        // else{
-        //   setPoData(res?.data?.msg.filter(e=>e.po_status=='A' || e.po_status=='U'))
-  
-        // }
-      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
-    },[locationpath.pathname.split("/")[
-      locationpath.pathname.split("/").length - 1
-    ]])
-    useEffect(() => {
-      localStorage.removeItem("id");
-      localStorage.removeItem("po_issue_date");
-      localStorage.removeItem("po_status");
-      localStorage.removeItem("po_comments");
-      localStorage.removeItem("po_no")
-      localStorage.removeItem("order_id");
-      localStorage.removeItem("order_date");
-      localStorage.removeItem("order_type");
-      localStorage.removeItem("proj_name");
-      localStorage.removeItem("vendor_name");
-      localStorage.removeItem("itemList");
-      localStorage.removeItem("terms");
-      localStorage.removeItem("termList");
-      localStorage.removeItem("ship_to");
-      localStorage.removeItem("bill_to");
-      localStorage.removeItem("ware_house_flag");
-      localStorage.removeItem("notes");
-      localStorage.removeItem("mdcc_flag");
-      localStorage.removeItem("mdcc");
-      localStorage.removeItem("insp_flag");
-      localStorage.removeItem("insp");
-      localStorage.removeItem("drawing_flag");
-      localStorage.removeItem("drawing");
-      localStorage.removeItem("dt");
-    }, [
-      locationpath.pathname.split("/")[
-        locationpath.pathname.split("/").length - 1
-      ],
-    ]);
-  
-    const setSearch=(word)=>{
-      setPoData(copy?.filter(e=>(e?.po_no?.toLowerCase().includes(word?.toLowerCase()) || e?.vendor_name?.toLowerCase().includes(word?.toLowerCase())  || e?.po_issue_date?.toLowerCase().includes(word?.toLowerCase()) ||e?.created_by?.toLowerCase().includes(word?.toLowerCase()))))
-  
-    }
-    return (
-      //     locationpath.pathname.split("/")[
-      //       locationpath.pathname.split("/").length - 1
-      //     ]=='P' ?  <MasterViewTemplate
-      //     to={routePaths.PURCHASEORDERFORM}
-      //     templateData={templateData}
-      //     template={template}
-      //     _url={"/api/getpopending"}
-      //   />: <MasterViewTemplate
-      //   to={routePaths.PURCHASEORDERFORM}
-      //   templateData={templateData}
-      //   template={template}
-      //   _url={"/api/getpoapproved"}
-      // />
-      // <>
-      //   <Radio.Group onChange={onChange} className="my-4" value={value}>
-      //     <Radio value={1}>Approved/Unapproved</Radio>
-      //     <Radio value={2}>Others</Radio>
-      //   </Radio.Group>
-      //   <MasterViewTemplate
-      //     to={routePaths.PURCHASEORDERFORM}
-      //     templateData={templateData}
-      //     template={template}
-      //     _url={value == 1 ? "/api/getpoapproved" : "/api/getpopending"}
-      //   />
-      // </>
-     <>
+  const navigate=useNavigate()
+  const onPageChange = (event) => {
+    setFirst(event.first);
+    setRows(event.rows);
+};
+  const amendPo=(value)=>{
+    console.log(value)
+    axios.post(url+'/api/addpoamend',{id:+value}).then(res=>{
+       console.log(res)
+       setCount(prev=>prev+1)
+       
     
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
+  }
+
+  const getPoList=()=>{
+    setLoading(true)
+    axios.post(url+'/api/getpo',{id:0}).then(res=>{
+      console.log(res)
+      poList.length=0
+      setPoList([])
+      for(let i of res?.data?.msg){
+        if(i.po_status=='A' && i.po_no){
+          poList.push({
+            code:i.sl_no,
+            name:i.po_no
+          })
+        }
+      }
+      setPoList(poList)
+      setVisible(true)
+      setLoading(false)
+    })
+  }
+  useEffect(()=>{
+    axios.post(url+'/api/getamendproject',{id:0}).then(res=>{
+      
+      console.log(res)
+      setPoData(res?.data?.msg)
+      setCopy(res?.data?.msg)
+    
+    })
+  },[count])
+  const setSearch=(word)=>{
+    setPoData(copy?.filter(e=>(e?.po_no?.toLowerCase().includes(word?.toLowerCase()) || e?.vendor_name?.toLowerCase().includes(word?.toLowerCase())  || e?.po_issue_date?.toLowerCase().includes(word?.toLowerCase()) ||e?.created_by?.toLowerCase().includes(word?.toLowerCase())) && e.fresh_flag=='N'))
+
+  }
+  return (
+    <div>
       <div className="flex items-center  justify-end h-14 -mt-[72px] w-auto dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 rounded-lg">
-          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, type: 'just' }} className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-            <Tooltip title={'Add Existing Order'}>
-              {/* <Link to={to + 0}
-                type="submit"
-                className="flex items-center justify-center text-white bg-[#eb8d00] hover:bg-primary-800  font-semibold rounded-l-md transition ease-in-out hover:-translate-x-1 hover:scale-110 text-xs p-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2"
-              > */}
-                <Link to={routePaths.PURCHASEORDERFORM +'E/'+ 0}
-                type="submit"
-                className="flex items-center justify-center border-2 border-white border-r-0 text-white bg-green-900 hover:bg-primary-800 text-nowrap rounded-l-md transition ease-in-out  active:scale-90 text-sm p-1 px-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none shadow-lg  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2 capitalize"
-              >
-                <AddIcon className='text-sm' /> {'Add Existing Orders'}
-              </Link>
-            </Tooltip>
-          </motion.div>
-          <motion.button initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.3, type: 'just' }}  className={'bg-white border-2 border-l-0 text-green-900 font-semibold text-xl rounded-r-full p-1 shadow-lg'}>
-          <Tooltip title="Print this table" arrow>
-          <PrinterOutlined />
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, type: 'just' }} className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+          <Tooltip title={'Create Vendor Order'}>
+            {/* <Link to={to + 0}
+              type="submit"
+              className="flex items-center justify-center text-white bg-[#eb8d00] hover:bg-primary-800  font-semibold rounded-l-md transition ease-in-out hover:-translate-x-1 hover:scale-110 text-xs p-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2"
+            > */}
+              {/* <Link to={routePaths.PURCHASEORDERFORM +'F/'+ 0} */}
+              <Spin
+          indicator={<LoadingOutlined spin />}
+          size="small"
+          className="text-green-900 dark:text-gray-400"
+          spinning={loading}
+        >
+              <button
+              type="submit"
+              onClick={()=>getPoList()}
+              className="flex items-center justify-center border-2 border-white text-white bg-green-900 hover:bg-primary-800 text-nowrap rounded-md transition ease-in-out  active:scale-90 text-sm p-1 px-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none shadow-lg  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2 capitalize"
+            >
+               <SignatureOutlined className='text-sm mr-2' /> {'Amend Orders'}
+              </button>
+              </Spin>
+            {/* </Link> */}
           </Tooltip>
-          </motion.button>
-        </div>
-      <Radio.Group onChange={onChange} className="mt-7 mb-4 bg-white rounded-full p-2 shadow-lg gap-4" value={value}>
+        </motion.div>
+       
+    
+ 
+      {/* <Radio.Group onChange={onChange} className="mt-7 mb-4 bg-white rounded-full p-2 shadow-lg gap-4" value={value}>
          <Radio value={1} className="text-green-900 font-bold">Approved/Pending</Radio>
          <Radio value={2} className="text-green-900 font-bold">In Progress</Radio>
-       </Radio.Group>
-     {copy.length>0 &&  <div className="flex flex-col p-1 text-green-900 bg-green-900 rounded-full my-3 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
+       </Radio.Group> */}
+   
+      </div>
+      {copy.length>0 && 
+      <div className="flex flex-col p-1 text-green-900 bg-green-900 rounded-full my-3 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
                 <div className="w-full">
                   <div className="flex items-center justify-between">
                     <motion.h2 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, type: 'just' }} className="text-xl w-48 capitalize text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5">
-                      Existing Orders
+                      Amended Orders
                     </motion.h2>
   
                     <label for="simple-search" className="sr-only">
@@ -231,7 +184,7 @@ function ExistingPoView() {
                 }
   <div class="relative overflow-x-auto">
     {loading?<SkeletonLoading/>:copy.length>0 && <>
-      <table class="w-full text-sm text-left rtl:text-right shadow-lg text-green-900 dark:text-gray-400">
+      <table class="w-full text-sm text-left rtl:text-right shadow-lg text-blue-900 dark:text-gray-400">
           <thead class=" text-md  text-gray-700 capitalize   bg-[#C4F1BE] dark:bg-gray-700 dark:text-gray-400">
               <tr >
                   <th scope="col" class="p-4">
@@ -279,7 +232,7 @@ function ExistingPoView() {
                       {item.created_by}
                   </td>
                   <td class="px-6 py-4">
-                    <Link to={routePaths.PURCHASEORDERFORM+'E/'+item.sl_no}>
+                    <Link to={routePaths.PURCHASEORDERFORM+'F/'+item.sl_no}>
                   <EditOutlined className="text-md text-green-900" />
                   </Link>
                   </td>
@@ -296,10 +249,10 @@ function ExistingPoView() {
      
   </div>
      
-     </> 
-     
-  
-    );
+      <DialogBox visible={visible} flag={11} amendPo={(values)=>amendPo(values)} data={poList} onPress={()=>setVisible(false)}/>
+      
+    </div>
+  )
 }
 
-export default ExistingPoView
+export default AmendView

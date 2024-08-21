@@ -15,8 +15,9 @@ import {
   FileWordOutlined,
   FileImageOutlined,
   FileExcelOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
-import { Spin } from "antd";
+import { Spin, Tag } from "antd";
 import TDInputTemplate from "../../Components/TDInputTemplate";
 import axios from "axios";
 import { url } from "../../Address/BaseUrl";
@@ -73,6 +74,8 @@ function ProjectMaster({onClose}) {
     const[info,setInfo]=useState()
     const[file_paths,setFilePaths]=useState([])
     const [delId,setDelId]=useState()
+    const [count,setCount]=useState(0)
+    const [checkLoad,setCheckLoad]=useState(false)
     const [pocSet, setPocSet] = useState([
       { sl_no: 0, poc_name: "", poc_ph_1: "", poc_designation: "", poc_email: "" },
     ]);
@@ -117,7 +120,17 @@ function ProjectMaster({onClose}) {
   
     var clientList = [];
     var pocNameList = [];
-  
+    const checkid=()=>{
+      if(proj_id){
+      setCheckLoad(true)
+      axios.post(url+'/api/check_proj_id',{id:proj_id}).then(res=>{
+        console.log(res.data.msg[0].count)
+        setCheckLoad(false)
+        setCount(res.data.msg[0].count)
+      
+      })
+    }
+    }
    
     const handleChangeClient = (event) => {
       setLoading(true)
@@ -325,7 +338,7 @@ function ProjectMaster({onClose}) {
               // formData.append("docs",docs)
              
                 // arr.push(dt)
-      if(client_id && client_loc && assgn_pm && proj_id && projnm && order_id && order_dt && proj_end_delvry_dt && (!ldClsVal || (ldClsVal && ld_cls_dtl))){
+      if(count==0 && client_id && client_loc && assgn_pm && proj_id && projnm && order_id && order_dt && proj_end_delvry_dt && (!ldClsVal || (ldClsVal && ld_cls_dtl))){
         setLoading(true)
   
          axios.post(url + "/api/addproject",  {
@@ -402,7 +415,7 @@ function ProjectMaster({onClose}) {
     };
     const onSubmitProject = () => {
      console.log(docs)
-     if(proj_id && projnm && order_id && order_dt && proj_end_delvry_dt){
+     if(count==0 && proj_id && projnm && order_id && order_dt && proj_end_delvry_dt){
      if(!ldClsVal)
      stepperRef.current.nextCallback();
      else if(ldClsVal && ld_cls_dtl){
@@ -442,16 +455,19 @@ function ProjectMaster({onClose}) {
                   <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                     <div>
                       <TDInputTemplate
-                        placeholder="Type product ID..."
+                        placeholder="Type project ID..."
                         type="text"
                         label="Project ID"
                         name="proj_id"
                         formControlName={proj_id}
-                        handleChange={(txt) => setProjID(txt.target.value)}
+                        handleChange={(txt) => {setProjID(txt.target.value);setCount(0)}}
+                        handleBlur={()=>checkid()}
                         mode={1}
                         // disabled={params.id > 0}
                       />
-                      {!proj_id && <VError title={'A unique project ID is required!'} />}
+                     {checkLoad &&  <Tag icon={<SyncOutlined spin />} color="processing">Checking...</Tag>}
+                    {!proj_id && <VError title={'A unique project ID is required!'} />}
+                    {count>0 && <VError title={'Project ID already exists!'} />}
                     </div>
   
                     <div className="sm:col-span-1">

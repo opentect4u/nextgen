@@ -63,7 +63,7 @@ function ProjectInfo({ data }) {
       {
         key: "11",
         label: "Client Name",
-        children: <p>{data?.info?.client_id}</p>,
+        children: <p>{data?.info?.client_name}</p>,
       }
       ,
       {
@@ -146,14 +146,14 @@ function ProjectInfo({ data }) {
         {data.poc?.map((item)=>
             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {item.poc_name}
+                    {item.name}
                 </th>
                 
                 <td class="px-6 py-4">
                    {item.poc_designation}
                 </td>
                 <td class="px-6 py-4">
-                   {item.poc_ph_1}
+                   {item.poc_phone_1}
                 </td>
                
                 <td class="px-6 py-4">

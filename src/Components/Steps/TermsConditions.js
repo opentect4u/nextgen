@@ -80,12 +80,19 @@ function TermsConditions({pressNext,pressBack,data}) {
         then: () => Yup.string().required("Required"),
         otherwise: () => Yup.string()}),
 
-      ld_applied_on:Yup.string().required("LD applied on is required"),
+      ld_applied_on: Yup.string().when('ld_applicable_date', {
+        is: (val) => val === 'M' || val === 'D'|| val=='O' || val=='' || val=='LD applicable date',
+        then: () => Yup.string().required("LD applied on is required"),
+        otherwise: () => Yup.string()}),
       others_applied: Yup.string().when('ld_applied_on', {
         is: 'O',
         then: () => Yup.string().required("Required"),
         otherwise: () => Yup.string()}),
-      ld_value:Yup.string().required("LD values is required").min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
+        ld_value: Yup.string().when('ld_applicable_date', {
+        is: (val) => val === 'M' || val === 'D'|| val=='O' || val=='' || val=='LD applicable date',
+        then: () => Yup.string().required("LD values is required").min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
+        otherwise: () => Yup.string()}),
+      // ld_value:Yup.string().required("LD values is required").min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
       po_min_value:Yup.string().required("PO total value is required").min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
       warranty_guarantee_flag:Yup.string().required("Warranty/Guarantee is required"),
       duration:Yup.string().required("Duration is required"),
@@ -100,7 +107,7 @@ function TermsConditions({pressNext,pressBack,data}) {
       //   is: 'A',
       //   then: () => Yup.string().required("Operation/Installation description is required"),
       //   otherwise: () => Yup.string()}),
-      packing_type:Yup.string().required("Packing type is required"),
+      // packing_type:Yup.string().required("Packing type is required"),
       manufacture_clearance:Yup.string().required("Manufacture clearance is required"),
       // manufacture_clearance_desc: Yup.string().when('manufacture_clearance', {
       //   is: 'A',
@@ -121,9 +128,12 @@ function TermsConditions({pressNext,pressBack,data}) {
     });
    useEffect(()=>{
     localStorage.removeItem('terms')
-    debugger;
+    if(formik.values.ld_applicable_date=='NA'){
+      formik.values.ld_applied_on=''
+      formik.values.ld_value=''
+    }
+    console.log(formik.values.ld_applicable_date)
     localStorage.setItem('terms',JSON.stringify(formik.values))
-    debugger;
     
    },[formik.values])
   return (
@@ -316,7 +326,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="date"
                         label="LD applicable date"
                         name="ld_applicable_date"
-                        data={[{name:'MRN Date',code:'M'},{name:'Dispatch Date',code:'D'},{name:'Others',code:'O'}]}
+                        data={[{name:'MRN Date',code:'M'},{name:'Dispatch Date',code:'D'},{name:'Others',code:'O'},{name:'Not Applicable',code:'NA'}]}
                 disabled={localStorage.getItem('po_status')=='A'?true:false}
 
                         formControlName={formik.values.ld_applicable_date}
@@ -336,7 +346,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="text"
                         label="LD value applied on"
                         name="ld_applied_on"
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A' || formik.values.ld_applicable_date=='NA'?true:false}
 
                         data={[{code:'T',name:'PO Total Value(%)'},{code:'P',name:'Pending Material Value'},{name:'Others',code:'O'}]}
                         formControlName={formik.values.ld_applied_on}
@@ -355,7 +365,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="number"
                         label="LD value (%)"
                         name="ld_value"
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'|| formik.values.ld_applicable_date=='NA'?true:false}
                        
                         formControlName={formik.values.ld_value}
                         handleChange={formik.handleChange}
@@ -367,13 +377,13 @@ function TermsConditions({pressNext,pressBack,data}) {
                     )}
         </div>
         <div className="sm:col-span-10">
-        {formik.values.ld_applicable_date=='O' &&
+        {formik.values.ld_applicable_date=='O' && 
         <TDInputTemplate
                         placeholder="Others (LD Applicable Date)"
                         type="text"
                         label="Others (LD Applicable Date)"
                         name="others_ld"
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'|| formik.values.ld_applicable_date=='NA'?true:false}
                        
                         formControlName={formik.values.others_ld}
                         handleChange={formik.handleChange}
@@ -385,13 +395,13 @@ function TermsConditions({pressNext,pressBack,data}) {
                     )}
         </div>
         <div className="sm:col-span-10">
-        {formik.values.ld_applied_on=='O' &&
+        {formik.values.ld_applied_on=='O' && formik.values.ld_applicable_date!='NA' &&
         <TDInputTemplate
                         placeholder="Others (LD Value applied on)"
                         type="text"
                         label="Others (LD Value applied on)"
                         name="others_applied"
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'|| formik.values.ld_applicable_date=='NA'?true:false}
 
                         formControlName={formik.values.others_applied}
                         handleChange={formik.handleChange}

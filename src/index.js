@@ -94,6 +94,7 @@ const PurchaseOrderForm = lazy(() =>
 );
 
 const ExistingPoView =lazy(()=>import ("./Screens/Purchase Order/ExistingPoView"));
+const AmendView =lazy(()=>import( "./Screens/Purchase Order/AmendView"))
 
 const OrderView = lazy(() => import("./Screens/Purchase Order/OrderView"));
 const OrderForm = lazy(() => import("./Screens/Purchase Order/OrderForm"));
@@ -344,6 +345,10 @@ const router = createBrowserRouter([
               {
                 path:"existingorder",
                 element:<ExistingPoView/>
+              },
+              {
+                path:"amendorder",
+                element:<AmendView/>
               }
             ],
           },
