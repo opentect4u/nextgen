@@ -25,7 +25,7 @@ class prodDetails(BaseModel):
     disc:Optional[Union[float,str,None]]=None
     disc_prtg:Optional[Union[float,str,None]]=None
     unit:Optional[Union[int,str,None]]=None
-    unit_price:Optional[Union[int,str,None]]=None
+    unit_price:Optional[Union[int,str,float,None]]=None
     CGST:Optional[Union[float,str,None]]=None
     SGST:Optional[Union[float,str,None]]=None
     IGST:Optional[Union[float,str,None]]=None
