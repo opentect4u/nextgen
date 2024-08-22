@@ -23,6 +23,7 @@ class prodDetails(BaseModel):
     qty:Optional[Union[int,str,None]]=None
     rate:Optional[Union[float,str,None]]=None
     disc:Optional[Union[float,str,None]]=None
+    disc_prtg:Optional[Union[float,str,None]]=None
     unit:Optional[Union[int,str,None]]=None
     unit_price:Optional[Union[int,str,None]]=None
     CGST:Optional[Union[float,str,None]]=None
@@ -356,7 +357,7 @@ async def getprojectpoc(id:GetPo):
 async def getpreviewitems(id:GetPo):
     print(id.id)
     res_dt = {}
-    select = "p.prod_name,p.prod_make,c.catg_name,p.part_no,p.model_no,p.article_no,p.hsn_code,p.prod_desc,i.quantity,i.item_rt,i.discount,i.cgst_id,i.sgst_id,i.igst_id,u.unit_name"
+    select = "p.prod_name,p.prod_make,c.catg_name,p.part_no,p.model_no,p.article_no,p.hsn_code,p.prod_desc,i.quantity,i.item_rt,i.discount,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,u.unit_name"
     schema = "md_product p,td_po_items i,md_category c,md_unit u"
     where = f"i.po_sl_no='{id.id}' and c.sl_no=p.prod_cat and i.item_id=p.sl_no and i.unit_id=u.sl_no" if id.id>0 else ""
     order = ""
@@ -447,8 +448,8 @@ async def addexistingpo(data:PoModel):
                     print('Error while delete td_po_items')
 
             for c in data.item_dtl:
-                fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount="{c.disc}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,created_by,created_at'
-                values1 = f'"{lastID}","{c.item_name}","{c.qty}","{c.rate}","{c.disc}","{c.unit}","{c.CGST}","{c.SGST}","{c.IGST}","{c.delivery_date}","{data.user}","{formatted_dt}"'
+                fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount="{c.disc}",discount_percent="{c.disc_prtg}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,discount_percent,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,created_by,created_at'
+                values1 = f'"{lastID}","{c.item_name}","{c.qty}","{c.rate}","{c.disc}","{c.disc_prtg}","{c.unit}","{c.CGST}","{c.SGST}","{c.IGST}","{c.delivery_date}","{data.user}","{formatted_dt}"'
                 table_name1 = "td_po_items"
                 whr1=  f'sl_no="{c.sl_no}" and po_sl_no="{data.sl_no}"' if c.sl_no > 0 else None
                 flag1 = 1 if c.sl_no>0 else 0
