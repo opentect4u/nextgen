@@ -72,7 +72,7 @@ function PurchaseOrderView() {
       if(locationpath.pathname.split("/")[
         locationpath.pathname.split("/").length - 1
       ]=='P'){
-        setPoData(res?.data?.msg.filter(e=>(e.po_status!='A'&&e.po_status!='U' &&e.fresh_flag=='Y')))
+        setPoData(res?.data?.msg.filter(e=>(e.po_status!='A'&&e.po_status!='U'&&e.fresh_flag=='Y')))
       }
       else{
         setPoData(res?.data?.msg.filter(e=>(e.po_status=='A' || e.po_status=='U' &&e.fresh_flag=='Y')))

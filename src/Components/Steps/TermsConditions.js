@@ -22,6 +22,9 @@ function TermsConditions({pressNext,pressBack,data}) {
     
 
     const params = useParams();
+    useEffect(()=>{
+      
+    },[data])
     const initialValues = {
       price_basis_flag: data.price_basis_flag?data.price_basis_flag:"",
       price_basis_desc:data.price_basis_desc?data.price_basis_desc:"",

@@ -38,7 +38,9 @@ function ProductDetails({ pressBack, pressNext,data }) {
   
   const onClose = () => {
     setOpen(false);
+    if(mode==4){
     setLoading(true)
+
     prodList.length=0
     setProdList([])
     axios.post(url + "/api/getproduct", { id: 0 }).then((resProd) => {
@@ -52,6 +54,45 @@ function ProductDetails({ pressBack, pressNext,data }) {
         setProdList(prodList)
         setLoading(false)
       }})
+    }
+    if(mode==5){
+      setUnits([])
+      setLoading(true)
+      unitList.length=0
+      axios.post(url + "/api/getunit", { id: 0 }).then((resUnit) => {
+        setUnits(resUnit?.data?.msg);
+        for (let i = 0; i < resUnit?.data?.msg?.length; i++) {
+          unitList.push({
+            name: resUnit?.data?.msg[i]?.unit_name,
+            code: resUnit?.data?.msg[i]?.sl_no,
+          });
+
+       
+    }
+    setLoading(false)
+  
+  })
+  }
+  if(mode==6){
+    setLoading(true)
+    cgstList.length=0
+    sgstList.length=0
+    igstList.length=0
+    setGstList([])
+    axios.post(url+'/api/getgst',{id:0}).then(resGst=>{
+      setGstList(resGst?.data?.msg)
+      for(let i=0;i<resGst?.data?.msg?.length;i++){
+        if(resGst?.data?.msg[i].gst_type=='CGST'||resGst?.data?.msg[i].gst_type=='cgst')
+          cgstList.push({name:resGst?.data?.msg[i].gst_rate,code:resGst?.data?.msg[i].gst_rate})
+        if(resGst?.data?.msg[i].gst_type=='IGST'||resGst?.data?.msg[i].gst_type=='igst')
+          igstList.push({name:resGst?.data?.msg[i].gst_rate,code:resGst?.data?.msg[i].gst_rate})
+        if(resGst?.data?.msg[i].gst_type=='SGST'||resGst?.data?.msg[i].gst_type=='sgst')
+          sgstList.push({name:resGst?.data?.msg[i].gst_rate,code:resGst?.data?.msg[i].gst_rate})
+      }
+  setLoading(false)
+
+    })
+  }
   //   if(mode==1){
   //   setLoading(true)
   
@@ -197,11 +238,11 @@ useEffect(()=>{
         axios.post(url+'/api/getgst',{id:0}).then(resGst=>{
           setGstList(resGst?.data?.msg)
           for(let i=0;i<resGst?.data?.msg?.length;i++){
-            if(resGst?.data?.msg[i].gst_type=='CGST')
+            if(resGst?.data?.msg[i].gst_type=='CGST'||resGst?.data?.msg[i].gst_type=='cgst')
               cgstList.push({name:resGst?.data?.msg[i].gst_rate,code:resGst?.data?.msg[i].gst_rate})
-            if(resGst?.data?.msg[i].gst_type=='IGST')
+            if(resGst?.data?.msg[i].gst_type=='IGST'||resGst?.data?.msg[i].gst_type=='igst')
               igstList.push({name:resGst?.data?.msg[i].gst_rate,code:resGst?.data?.msg[i].gst_rate})
-            if(resGst?.data?.msg[i].gst_type=='SGST')
+            if(resGst?.data?.msg[i].gst_type=='SGST'||resGst?.data?.msg[i].gst_type=='sgst')
               sgstList.push({name:resGst?.data?.msg[i].gst_rate,code:resGst?.data?.msg[i].gst_rate})
           }
       setLoading(false)
@@ -241,12 +282,7 @@ useEffect(()=>{
       >
       <div className="py-2 px-4 mx-auto w-full lg:py-2">
         <h2 className="text-2xl text-green-900 font-bold my-3">Item Details</h2>
-      {localStorage.getItem('po_status')!='A' &&  <a className="my-2" onClick={()=>{setMode(3);setOpen(true)}}>
-              <Tag  color="#4FB477">
-                Not in list?
-                </Tag>
-                </a>
-}
+     
             
         {itemList.map((input,index)=>
                       <React.Fragment key={index}>
@@ -321,6 +357,12 @@ useEffect(()=>{
                             {(input.item_name=='Item name' || input.item_name=='') && (
                       <VError title={'Name is required!'} />
                     )}
+                     {localStorage.getItem('po_status')!='A' &&  <a className="my-2" onClick={()=>{setMode(3);setOpen(true)}}>
+              <Tag  color="#4FB477">
+                Not in list?
+                </Tag>
+                </a>
+}
                           </div>
 
                           <div className="sm:col-span-2 flex flex-col">
@@ -407,6 +449,11 @@ useEffect(()=>{
                             {(input.unit=='Unit' || input.unit=='') && (
                       <VError title={'Unit is required!'} />
                     )}
+                     {localStorage.getItem('po_status')!='A' &&  <a className="my-2" onClick={()=>{setMode(5);setOpen(true)}}>
+              <Tag  color="#4FB477">
+                Not in list?
+                </Tag>
+                </a>}
                           </div>
                           <div className="sm:col-span-2">
                             <TDInputTemplate
@@ -424,8 +471,8 @@ useEffect(()=>{
                               // handleBlur={handleBlur}
                               mode={1}
                             />
-                            {input.unit_price<0 && (
-                      <VError title={'Unit price should not be negative!'} />
+                            {input.unit_price<=0 && (
+                      <VError title={'Unit price should not be negative and non-zero!'} />
                     )}
                           </div>
 
@@ -447,6 +494,9 @@ useEffect(()=>{
                               data={cgstList}
                               mode={2}
                             />
+                             {(((input.CGST=='CGST' || input.CGST=='') || (input.SGST=='SGST' || input.SGST==''))) && (input.IGST=='IGST' || input.IGST=='') && (
+                      <VError title={'Either input IGST or SGST, CGST both!'} />
+                    )}
                             {/* {formik.errors.price_basis_desc && formik.touched.price_basis_desc && (
                       <VError title={formik.errors.price_basis_desc} />
                     )} */}
@@ -491,9 +541,14 @@ useEffect(()=>{
                               data={igstList}
                               mode={2}
                             />
-                            {(((input.CGST=='CGST' || input.CGST=='') || (input.SGST=='SGST' || input.SGST==''))) && (input.IGST=='IGST' || input.IGST=='') && (
+                            {/* {(((input.CGST=='CGST' || input.CGST=='') || (input.SGST=='SGST' || input.SGST==''))) && (input.IGST=='IGST' || input.IGST=='') && (
                       <VError title={'Either input IGST or SGST, CGST both!'} />
-                    )}
+                    )} */}
+                     {localStorage.getItem('po_status')!='A' &&  <a className="my-2" onClick={()=>{setMode(6);setOpen(true)}}>
+              <Tag  color="#4FB477">
+                Not in list?
+                </Tag>
+                </a>}
                           </div>
                           <div className="sm:col-span-2">
                             <TDInputTemplate

@@ -209,27 +209,36 @@ function PoPreview({ data }) {
 
 <div className="relative overflow-x-auto">
     <table className="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
-        <thead  className="text-xs text-nowrap font-bold text-blue-500 uppercase bg-white dark:bg-gray-700 dark:text-gray-400">
+        <thead  className="text-xs text-nowrap font-bold text-blue-500 captalize bg-white dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
                     Item-Description
                 </th>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
                     Quantity
                 </th>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
                     Rate
                 </th>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
                     Discount
                 </th>
-                <th scope="col" className="px-3 py-3">
-                    GST
+                <th scope="col" className="px-1 py-3">
+                   CGST
                 </th>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
+                   SGST
+                </th>
+                <th scope="col" className="px-1 py-3">
+                   IGST
+                </th>
+                <th scope="col" className="px-1 py-3">
+                   Total GST
+                </th>
+                <th scope="col" className="px-1 py-3">
                     Unit Price
                 </th>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
                     Total
                 </th>
             </tr>
@@ -238,30 +247,42 @@ function PoPreview({ data }) {
          {prodInfo?.length>0 && prodInfo?.map(item=>
          <>
          <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <td className="px-3 py-1 flex flex-col gap-1 text-nowrap font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="px-1 py-1 flex flex-col gap-1 text-nowrap text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {item.prod_name}
                 </td>
-                <td className="px-3 py-1" rowSpan={2}>
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
                     {item.quantity}
                 </td>
-                <td className="px-3 py-1" rowSpan={2}>
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
                 {item.item_rt}
                 </td>
-                <td className="px-3 py-1" rowSpan={2}>
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
                     {item.discount}
                 </td>
-                <td className="px-3 py-1" rowSpan={2}>
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
+                    {item.cgst_id}% {item.cgst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100)).toFixed(2):''}
+                </td>
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
+                    {item.sgst_id}%  {item.sgst_id>0?':'+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100).toFixed(2):''}
+                </td>
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
+                    {item.igst_id}%  {+item.igst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2):''}
+                </td>
+
+                <td className="px-1 py-1 text-xs " rowSpan={2}>
+                
                 {item.sgst_id>0?(((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100))+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)).toFixed(2):((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2)}
                 </td>
-                 <td className="px-3 py-1" rowSpan={2}>
+               
+                 <td className="px-1 py-1 text-xs" rowSpan={2}>
                     {+item.item_rt-(+item.discount)}
                 </td>
-                <td className="px-3 py-1" rowSpan={2}>
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
                     {item.sgst_id>0?(((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100))+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2):((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2)}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td className="px-3 py-1 text-xs gap-3">
+            <td className="px-1 py-1 text-xs gap-3">
                 <p>Make: {item.prod_make} </p> 
                 <p>Category: {item.catg_name} </p> 
                 <p> UOM: {item.unit_name}</p> 
@@ -278,8 +299,8 @@ function PoPreview({ data }) {
         </tbody>
         <tfoot>
             <tr class="font-semibold text-gray-900 dark:text-white">
-                <th scope="row" class="px-3 py-3 text-base font-bold" colSpan={6}>Total</th>
-                <th class="px-3 py-3 text-base font-bold">{grandTot}</th>
+                <th scope="row" class="px-1 py-3 text-base font-bold" colSpan={9}>Total</th>
+                <th class="px-1 py-3 text-base font-bold">{grandTot}</th>
             </tr>
         </tfoot>
     </table>
@@ -315,77 +336,77 @@ function PoPreview({ data }) {
        
         <tbody>
             <tr className="bg-white border-b text-nowrap dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     Price Basis
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).price_basis_flag=='F'?'FOR':'EX-WORKS'}, {JSON.parse(localStorage.getItem('terms')).price_basis_desc}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     Packing & Forwarding
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).packing_forwarding_val=='I'?'Inclusive':`Extra  ${JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra}% - ${(grandTot * JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra/100).toFixed(2)}`}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     Freight
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).freight_insurance=='I'?'Inclusive':'Extra'} - {JSON.parse(localStorage.getItem('terms')).freight_insurance_val}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     Test Certificate
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).test_certificate=='Y'?'Yes, '+JSON.parse(localStorage.getItem('terms')).test_certificate_desc:'No'}
                 </td>
             </tr>
 
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     Warranty/Guarantee
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).warranty_guarantee_flag=='W'?'Warranty':'Guarantee'} {JSON.parse(localStorage.getItem('terms')).duration_val} {JSON.parse(localStorage.getItem('terms')).duration=='M'?'Month(s)':JSON.parse(localStorage.getItem('terms')).duration=='D'?'Day(s)':'Year(s)'}
                 </td>
             </tr>
             
          
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 O & M Manual
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).om_manual_flag=='A'?'Applicable. '+ JSON.parse(localStorage.getItem('terms')).om_manual_desc:'Not Applicable.'}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Operation/Installation
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).oi_flag=='A'?'Applicable. ' +JSON.parse(localStorage.getItem('terms')).oi_desc:'Not Applicable.'}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Packing Type
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).packing_type}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Manufacture Clearance
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).manufacture_clearance=='A'?'Applicable. '+JSON.parse(localStorage.getItem('terms')).manufacture_clearance_desc:'Not Applicable.'}
                 </td>
             </tr>
@@ -405,16 +426,16 @@ function PoPreview({ data }) {
     <table className="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
         <thead className="text-xs text-nowrap font-bold text-blue-500 uppercase bg-white dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
                     LD Applicable date
                 </th>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
                     LD applied on
                 </th>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
                     Ld value(%)
                 </th>
-                <th scope="col" className="px-3 py-3">
+                <th scope="col" className="px-1 py-3">
                     Maximum (%) on PO value
                 </th>
                 
@@ -422,17 +443,17 @@ function PoPreview({ data }) {
         </thead>
         <tbody>
             <tr className="bg-white border-b text-nowrap dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='O'?`Others - ${JSON.parse(localStorage.getItem('terms')).others_ld}`:JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='M'?'MRN Date':JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='NA'?'Not applicable':'Dispatch Date'}
                 </th>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).ld_applied_on=='O'?`Others - ${JSON.parse(localStorage.getItem('terms')).others_applied}`:JSON.parse(localStorage.getItem('terms')).ld_applied_on=='P'?'Pending Material Value':JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='NA'?'':'PO Total Value(%)'}
                 </td>
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).ld_value}
                 </td>
                 
-                <td className="px-3 py-1">
+                <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).po_min_value}
                 </td>
             </tr>
@@ -445,26 +466,26 @@ function PoPreview({ data }) {
        
        <tbody>
            <tr className="bg-white border-b text-nowrap dark:bg-gray-800 dark:border-gray-700">
-               <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+               <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                    MDCC
                </th>
-               <td className="px-3 py-1">
+               <td className="px-1 py-1">
                {localStorage.getItem('mdcc_flag')=='Y'?'Yes. '+localStorage.getItem('mdcc'):'No'}
                </td>
            </tr>
            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-               <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+               <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                    Inspection
                </th>
-               <td className="px-3 py-1">
+               <td className="px-1 py-1">
                {localStorage.getItem('insp_flag')=='Y'?'Yes. ' +localStorage.getItem('insp'):'No'}
                </td>
            </tr>
            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-               <th scope="row" className="px-3 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+               <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                    Drawing/Datasheet
                </th>
-               <td className="px-3 py-1">
+               <td className="px-1 py-1">
                {localStorage.getItem('drawing_flag')=='Y'?'Yes . '+localStorage.getItem('drawing')+', '+localStorage.getItem('dt') :'No'}
                </td>
            </tr>

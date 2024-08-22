@@ -11,7 +11,7 @@ function BreadCrumbComp() {
     const paths = location.pathname.split("/");
     console.log(paths[paths.length-1])
     paths.forEach(
-      (e) => isNaN(e) && pathnames.push({ label: pathMap[e],value:e })
+      (e) => isNaN(e) && e!='purchaseorderform' && e!='purchaseorder' && pathnames.push({ label: pathMap[e],value:e })
     );
   
   return (

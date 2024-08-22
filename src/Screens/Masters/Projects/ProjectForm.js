@@ -30,11 +30,6 @@ import { Button, Form, Input } from "antd";
 import VError from "../../../Components/VError";
 import DrawerComp from "../../../Components/DrawerComp";
 import {
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
 function ProjectForm() {

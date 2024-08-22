@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { url } from "../../Address/BaseUrl";
 import axios from "axios";
 import { Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, SyncOutlined } from "@ant-design/icons";
 import Viewdetails from "../Viewdetails";
 import DialogBox from "../DialogBox";
 import moment from 'moment'
@@ -37,10 +37,22 @@ function BasicDetails({ pressNext, pressBack, data }) {
   const [po_no,setPoNo]=useState(data.po_no)
   const [open, setOpen] = useState(false);
   const [mode,setMode] = useState(0)
+  const [count,setCount]=useState(0)
+  const [checkLoad,setCheckLoad]=useState(false)
 const showDrawer = () => {
   setOpen(true);
 };
-
+const checkid=()=>{
+  if(po_no){
+  setCheckLoad(true)
+  axios.post(url+'/api/check_po_no',{po_no:po_no}).then(res=>{
+    console.log(res.data.msg[0].count)
+    setCheckLoad(false)
+    setCount(res.data.msg[0].count)
+  
+  })
+}
+}
 const onClose = () => {
   setOpen(false);
   if(mode==1){
@@ -84,10 +96,8 @@ if(mode==2){
     console.log(type,proj_name,order_id,order_date,vendor_name);
     if(type!='P'){
     if(type && vendor_name ){
-      debugger
       if(params.flag=='E'){
-        debugger
-      if(po_no){
+      if(po_no && count==0){
         setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
         pressNext(val)
       }
@@ -296,6 +306,7 @@ if(mode==2){
                 name="po_no"
                
                 formControlName={po_no}
+                handleBlur={()=>checkid()}
                 handleChange={(txt) => 
                   {setPoNo(txt.target.value)
                   localStorage.setItem('po_no',txt.target.value)
@@ -308,6 +319,8 @@ if(mode==2){
               { (params.flag=='E' && !po_no) && (
             <VError title={'Po Number is required!'} />
           )}
+           {checkLoad &&  <Tag icon={<SyncOutlined spin />} color="processing">Checking...</Tag>}
+                    {count>0 && <VError title={'PO No. already exists!'} />}
             </div>}
            {type=='P' &&
            <>

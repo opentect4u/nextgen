@@ -13,6 +13,7 @@ import { Message } from "../../../Components/Message";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import AuditTrail from "../../../Components/AuditTrail";
+import DialogBox from '../../../Components/DialogBox';
 
 function GstForm() {
   const params = useParams();
@@ -20,7 +21,8 @@ function GstForm() {
   const [data,setData]=useState()
   const [loading, setLoading] = useState(false);
   const [count,setCount]=useState(0)
-
+  const [flag,setFlag]=useState(4)
+  const [visible,setVisible]=useState(false)
   var categories = [];
   const [cat, setCat] = useState([]);
   const initialValues = {
@@ -49,6 +51,9 @@ function GstForm() {
         }
       }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;;
   };
+  const onDelete = ()=>{
+    setVisible(true)
+  }
   const validationSchema = Yup.object({
     gst_type: Yup.string().required("Type is required"),
     gst_rate:Yup.number().required("Rate is required").max(100,'Invalid value!').min(0,'Invalid Value'),
@@ -73,7 +78,7 @@ function GstForm() {
     //   }
     //   setCat(categories);
     // });
-
+  
     if (+params.id > 0) {
       setLoading(true);
 
@@ -88,6 +93,24 @@ function GstForm() {
       });
     }
   }, [count]);
+
+  const deleteItem=()=>{
+    setLoading(true)
+    console.log(params.id)
+    setVisible(false)
+    axios.post(url+'/api/deletegst',{id:params.id,user:localStorage.getItem('email')}).then(res=>{
+      console.log(res)
+      setLoading(false)
+      if(res.data.suc>0){
+        Message('success',res.data.msg)
+        navigate(-1)
+      }
+      else{
+        Message('error',res.data.msg)
+
+      }
+    }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
+  }
   return (
     <section  className="bg-transparent dark:bg-[#001529]">
           <HeadingTemplate
@@ -144,10 +167,17 @@ function GstForm() {
             <BtnComp
               mode={params.id > 0 ? "E" : "A"}
               onReset={formik.handleReset}
+              onDelete={()=>onDelete()}
             />
           </form>
         </Spin>
       </div>
+      <DialogBox
+        visible={visible}
+        flag={flag}
+        onPress={() => setVisible(false)}
+        onDelete={()=>deleteItem()}
+      />
     </section>
   )
 }

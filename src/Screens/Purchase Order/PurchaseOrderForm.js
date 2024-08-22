@@ -30,6 +30,7 @@ function PurchaseOrderForm() {
   const params = useParams();
   console.log(params, "params");
   localStorage.setItem("id", params.id);
+  var act=0
   const [floatShow,setFloatShow]=useState(false)
   const [loading,setLoading] = useState(false)
   const [visible,setVisible] = useState(false)
@@ -43,13 +44,12 @@ function PurchaseOrderForm() {
   const [itemList, setItemList] = useState([]);
   const [termList, setTermList] = useState([]);
   const [notes, setNotes] = useState("");
-
+  const [activeStep,setActiveStep]=useState(null)
   const [insp_flag, setInspFlag] = useState("N");
   const [insp, setInsp] = useState("");
   const [drawing_flag, setDrawingFlag] = useState("N");
   const [drawing, setDrawing] = useState("");
   const [mdcc_flag, setMdccFlag] = useState("N");
-
   const [mdcc, setMdcc] = useState("");
   const [drawingDate, setDrawingDate] = useState("");
   const [timeline,setTimeline]=useState([])
@@ -227,7 +227,7 @@ function PurchaseOrderForm() {
     setClickFlag(localStorage.getItem('po_status'))
   },[localStorage.getItem('po_status')])
   useEffect(()=>{
-
+    
     setFloatShow((localStorage.getItem('po_status')=='P' || localStorage.getItem('po_status')=='U') && (localStorage.getItem('order_date') || localStorage.getItem('vendor_name'))?true:false)
   },[localStorage.getItem('order_date'),localStorage.getItem('vendor_name')])
   
@@ -389,6 +389,7 @@ function PurchaseOrderForm() {
     }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
   }
   },[])
+ 
   return (
     <>
     {floatShow && <FloatButton
@@ -446,12 +447,10 @@ function PurchaseOrderForm() {
         </Tag>}
         
         </div>}
-       
         <Stepper
           ref={stepperRef}
           style={{ flexBasis: "100%" }}
           orientation="vertical"
-          // linear={localStorage.getItem('po_status')=='U'||localStorage.getItem('po_status')=='A'?false:true}
           linear={localStorage.getItem('po_status')=='A'?false:true}
           className="-mt-11"
         >
@@ -642,7 +641,7 @@ function PurchaseOrderForm() {
           icon={<ArrowBackIcon />}
         >Back</Button>
         </Tooltip>
-          <Tooltip title='View PO'>
+       <Tooltip title='View PO'>
 
               <Button
           type="submit"
@@ -652,6 +651,7 @@ function PurchaseOrderForm() {
           icon={<EyeOutlined />}
         >View PO</Button>
         </Tooltip>
+
           
         
     

@@ -45,7 +45,7 @@ const [po_data,setPoData] = useState([])
     axios.post(url+'/api/addpoamend',{id:+value}).then(res=>{
        console.log(res)
        setCount(prev=>prev+1)
-       
+       setVisible(false)
     
     }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
   }
