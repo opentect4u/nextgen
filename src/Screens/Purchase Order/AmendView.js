@@ -70,6 +70,30 @@ const [po_data,setPoData] = useState([])
     })
   }
   useEffect(()=>{
+    localStorage.removeItem("id");
+    localStorage.removeItem("po_issue_date");
+    localStorage.removeItem("po_status");
+    localStorage.removeItem("po_no")
+    localStorage.removeItem("po_comments");
+    localStorage.removeItem("order_id");
+    localStorage.removeItem("order_date");
+    localStorage.removeItem("order_type");
+    localStorage.removeItem("proj_name");
+    localStorage.removeItem("vendor_name");
+    localStorage.removeItem("itemList");
+    localStorage.removeItem("terms");
+    localStorage.removeItem("termList");
+    localStorage.removeItem("ship_to");
+    localStorage.removeItem("bill_to");
+    localStorage.removeItem("ware_house_flag");
+    localStorage.removeItem("notes");
+    localStorage.removeItem("mdcc_flag");
+    localStorage.removeItem("mdcc");
+    localStorage.removeItem("insp_flag");
+    localStorage.removeItem("insp");
+    localStorage.removeItem("drawing_flag");
+    localStorage.removeItem("drawing");
+    localStorage.removeItem("dt");
     axios.post(url+'/api/getamendproject',{id:0}).then(res=>{
       
       console.log(res)

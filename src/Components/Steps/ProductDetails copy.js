@@ -138,7 +138,6 @@ function ProductDetails({ pressBack, pressNext,data }) {
       item_name: "",
       qty: "",
       rate:"",
-      disc_prtg:"",
       disc: "",
       unit: "",
       unit_price: "",
@@ -261,7 +260,6 @@ useEffect(()=>{
         sl_no: 0,
         item_name: "",
         qty: "",
-        disc_prtg:"",
         disc: "",
         unit: "",
         unit_price: "",
@@ -308,7 +306,6 @@ useEffect(()=>{
                                 item_name: "",
                                 qty: "",
                                 rate:"",
-                                disc_prtg:"",
                                 disc: "",
                                 unit: "",
                                 unit_price: "",
@@ -411,31 +408,9 @@ useEffect(()=>{
                           </div>
                           <div className="sm:col-span-2 flex flex-col">
                             <TDInputTemplate
-                              placeholder="Discount(%)"
+                              placeholder="Discount"
                               type="number"
-                              label="Discount(%)"
-                              formControlName={
-                                input.disc_prtg
-                              }
-                              name='disc_prtg'
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
-
-                              handleChange={(event)=>handleDtChange(index,event)}
-
-                              // handleChange={handleChange}
-                              // handleBlur={handleBlur}
-                              mode={1}
-                            />
-                            {input.disc_prtg<0 && (
-                      <VError title={'Discount(%) cannot be negative!'} />
-                    )}
-                    
-                          </div>
-                          <div className="sm:col-span-2 flex flex-col">
-                            <TDInputTemplate
-                              placeholder="Discount(INR)"
-                              type="number"
-                              label="Discount(INR)"
+                              label="Discount"
                               formControlName={
                                 input.disc
                               }
@@ -618,9 +593,8 @@ useEffect(()=>{
                       <VError title={'Date is required!'} />
                     )}
                           </div>
-                       {index==itemList.length-1 &&   <div className="sm:col-span-6 font-bold flex justify-start items-end mt-4">
-                        <Tag className="text-lg" color="#014737">Grand Total: {grand_total>0?grand_total?.toFixed(2):0.00}</Tag>
-                            
+                       {index==itemList.length-1 &&   <div className="sm:col-span-2 font-bold flex flex-col justify-center items-end mt-4">
+                            Grand Total: {grand_total>0?grand_total?.toFixed(2):0.00}
                           </div>}
                         </div>
                       </React.Fragment>
