@@ -41,7 +41,7 @@ join (SELECT @a:= 0) AS a '''
 async def addpoamend(data:GetPo):
     am_po_no = await db_select(f"CONCAT((SELECT po_no FROM td_po_basic WHERE sl_no = {data.id}), '-', IF(INSTR(po_no, '-') > 0, MAX(SUBSTRING_INDEX(po_no, '-', -1))+1, 1)) am_po", "td_po_basic", f"SUBSTRING_INDEX(parent_po_no, '-', 1) = (SELECT po_no FROM td_po_basic WHERE sl_no = {data.id})", "", 0)
     
-    fields= f'''SELECT NULL sl_no, po_id, "{am_po_no['msg']['am_po']}" po_no, po_date, po_type, po_issue_date, project_id, vendor_id, 'P' po_status, 'Y' fresh_flag, po_no parent_po_no, 'Y' amend_flag, created_by, created_at, NULL modified_by, NULL modified_at FROM td_po_basic WHERE sl_no = {data.id}'''
+    fields= f'''SELECT NULL sl_no, po_id, "{am_po_no['msg']['am_po']}" po_no, po_date, po_type, po_issue_date, project_id, vendor_id, 'P' po_status, 'Y' fresh_flag, 0 active_step, po_no parent_po_no, 'Y' amend_flag, created_by, created_at, NULL modified_by, NULL modified_at FROM td_po_basic WHERE sl_no = {data.id}'''
     table_name = "td_po_basic"
     po_save = await db_Insert(table_name, fields, None, None, 0, True)
     lastID=po_save["lastId"]
