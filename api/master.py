@@ -625,11 +625,11 @@ async def addproduct(data:addProduct):
 @masterRouter.post('/getproduct')
 async def getproduct(id:getData):
     print(id.id)
-    select = "@a:=@a+1 serial_number, prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code,prod_desc,created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number, p.prod_name,p.prod_cat,p.prod_make,p.part_no,p.model_no,p.article_no,p.hsn_code,p.prod_desc,p.created_by,p.created_at,p.modified_by,p.modified_at,p.sl_no,c.catg_name"
 
-    schema = "md_product,(SELECT @a:= 0) AS a"
-    where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
-    order = "ORDER BY created_at DESC"
+    schema = "md_product p,md_category c,(SELECT @a:= 0) AS a"
+    where = f"sl_no='{id.id}' and p.prod_cat=c.sl_no" if id.id>0 else f"p.delete_flag='N' and p.prod_cat=c.sl_no"
+    order = "ORDER BY p.created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
