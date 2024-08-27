@@ -22,7 +22,7 @@ function ProdInfo({data}) {
           {
             key: '4',
             label: 'Category',
-            children: <p>{data.info.prod_cat}</p>,
+            children: <p>{data.info.catg_name}</p>,
           }
           ,
           {

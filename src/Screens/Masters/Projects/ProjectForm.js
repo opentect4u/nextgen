@@ -567,6 +567,8 @@ const onClose = () => {
                       type="date"
                       label="Project end delivery Date"
                       name="proj_end_delvry_dt"
+                      min={order_dt}
+                      disabled={!order_dt}
                       formControlName={proj_end_delvry_dt}
                       handleChange={(txt) => setEndDel(txt.target.value)}
                       mode={1}
@@ -672,10 +674,15 @@ const onClose = () => {
                   {file_paths[0] && 
                   <div className="relative">
                   <a target="_blank" href={url+'/uploads/'+file_paths[0].proj_doc}>
-                  {file_paths[0].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[0].proj_doc.split(".")[1].includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[0].proj_doc.split(".")[1]=='xls'||file_paths[0].proj_doc.split(".")[1]=='csv')? <FileExcelOutlined  className="text-6xl my-7 text-yellow-500"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                  {file_paths[0].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[0].proj_doc.split(".")[1]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[0].proj_doc.split(".")[1]?.includes('xls')||file_paths[0].proj_doc.split(".")[1]?.includes('csv'))? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
                   
                   
                   </a>
+                   {/* <a target="_blank" href={url+'/uploads/'+file_paths[0].proj_doc}>
+                  {file_paths[0].proj_doc?.split('').reverse().join('').split(".")[0]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[0].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[0].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('xls')||file_paths[0].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('csv'))? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                  
+                  
+                  </a> */}
                   <DeleteOutlined className='text-red-800 absolute top-6 '
                    onClick={()=>{setDelId(0);setFlag(4);setVisible(true)}}
                   />
@@ -686,9 +693,13 @@ const onClose = () => {
                     { file_paths[1] &&
                    <div className="relative">
                    <a target="_blank" href={url+'/uploads/'+file_paths[1].proj_doc}>
-                   {file_paths[1].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[1].proj_doc.split(".")[1].includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[1].proj_doc.split(".")[1]=='xls'||file_paths[1].proj_doc.split(".")[1]=='csv') ? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                   {file_paths[1].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[1].proj_doc.split(".")[1]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[1].proj_doc.split(".")[1]?.includes('xls')||file_paths[1].proj_doc.split(".")[1]?.includes('csv')) ? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
                    
                    </a>
+                   {/* <a target="_blank" href={url+'/uploads/'+file_paths[1].proj_doc}>
+                   {file_paths[1].proj_doc?.split('').reverse().join('').split(".")[0]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[1].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[1].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('xls')||file_paths[1].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('csv')) ? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                   
+                   </a> */}
                    <DeleteOutlined className='text-red-800 absolute top-6 '  onClick={()=>{setDelId(1);setFlag(4);setVisible(true)}}/>
                    </div>
                    
@@ -699,9 +710,14 @@ const onClose = () => {
                                        <div className="relative">
                                         <a target="_blank" href={url+'/uploads/'+file_paths[2].proj_doc}>
                                         
-                                        {file_paths[2].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[2].proj_doc.split(".")[1].includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[2].proj_doc.split(".")[1]=='xls'||file_paths[2].proj_doc.split(".")[1]=='csv')? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                                        {file_paths[2].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[2].proj_doc.split(".")[1]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[2].proj_doc.split(".")[1]?.includes('xls')||file_paths[2].proj_doc.split(".")[1]?.includes('csv'))? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
                                         
                                         </a>
+                                        {/* <a target="_blank" href={url+'/uploads/'+file_paths[2].proj_doc}>
+                                        
+                                        {file_paths[2].proj_doc?.split('').reverse().join('').split(".")[0]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[2].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[2].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('xls')||file_paths[2].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('csv'))? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                                        
+                                        </a> */}
                   <DeleteOutlined className='text-red-800 absolute top-6 ' 
                   
                    onClick={()=>{setDelId(2);setFlag(4);setVisible(true)}}

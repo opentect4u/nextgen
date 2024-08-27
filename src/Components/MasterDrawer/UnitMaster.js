@@ -72,7 +72,7 @@ function UnitMaster({onClose}) {
     })
   }
   const formik = useFormik({
-    initialValues: +params.id > 0 ? formValues : initialValues,
+    initialValues: initialValues,
     onSubmit,
     validationSchema,
     validateOnMount: true,

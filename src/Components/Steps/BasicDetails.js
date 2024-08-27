@@ -313,7 +313,7 @@ if(mode==2){
                 }
                 }
                 mode={1}
-                disabled={localStorage.getItem('po_status')=='A' ?true:false}
+                disabled={localStorage.getItem('po_status')=='A' ||(params.id>0 && po_no) ?true:false}
 
               />
               { (params.flag=='E' && !po_no) && (

@@ -540,6 +540,8 @@ function ProjectMaster({onClose}) {
                         type="date"
                         label="Project end delivery Date"
                         name="proj_end_delvry_dt"
+                        min={order_dt}
+                        disabled={!order_dt}
                         formControlName={proj_end_delvry_dt}
                         handleChange={(txt) => setEndDel(txt.target.value)}
                         mode={1}

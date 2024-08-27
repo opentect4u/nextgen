@@ -38,7 +38,7 @@ function ProductDetails({ pressBack, pressNext,data }) {
   
   const onClose = () => {
     setOpen(false);
-    if(mode==4){
+    if(mode==3){
     setLoading(true)
 
     prodList.length=0
@@ -160,12 +160,23 @@ useEffect(()=>{
 },[])
   
   const handleDtChange=(index,event)=>{
-    console.log(event.target.value)
+    console.log(event.target.value,event.target.name,typeof(event.target.value))
     
     console.log(grand_total)
     if(event.target.name=='item_name')
     setProdInfo(products.filter(e=>e.sl_no==+event.target.value))
+    
+   
     let data = [...itemList];
+
+    if(event.target.name=='disc_prtg'){
+      console.log(+(data[index]['rate']*(+event.target.value)/100))
+
+      data[index]['disc']=+(data[index]['rate']*(+event.target.value/100))
+    }
+    if(event.target.name=='disc'){
+      data[index]['disc_prtg']=0
+    }
     data[index][event.target.name] = event.target.value;
     data[index]['unit_price']=+(data[index]['rate']-data[index]['disc'])
     
@@ -327,7 +338,7 @@ useEffect(()=>{
                         </>}
                          
                            {itemList[index]?.item_name && itemList[index]?.item_name!='Item name' &&  <button
-                            className=" inline-flex items-center justify-center text-sm font-medium text-center text-white bg-primary-700 h-8 w-8 bg-blue-700 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>
+                            className=" inline-flex items-center justify-center text-sm font-medium text-center text-white bg-primary-700 h-8 w-8 bg-blue-900 hover:duration-500 hover:scale-110  rounded-full  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600 dark:focus:ring-primary-900 hover:bg-primary-800" onClick={()=>
                             {  console.log(itemList[index])
                             //  setFlag(6)
                              setProdInfo(products.filter(e=>e.sl_no==+itemList[index]?.item_name))
@@ -427,7 +438,7 @@ useEffect(()=>{
                               mode={1}
                             />
                             {input.disc_prtg<0 && (
-                      <VError title={'Discount(%) cannot be negative!'} />
+                      <VError title={'Cannot be negative!'} />
                     )}
                     
                           </div>
@@ -449,7 +460,7 @@ useEffect(()=>{
                               mode={1}
                             />
                             {input.disc<0 && (
-                      <VError title={'Discount cannot be negative!'} />
+                      <VError title={'Cannot be negative!'} />
                     )}
                     
                           </div>
@@ -472,7 +483,7 @@ useEffect(()=>{
                               mode={2}
                             />
                             {(input.unit=='Unit' || input.unit=='') && (
-                      <VError title={'Unit is required!'} />
+                      <VError title={'Required!'} />
                     )}
                      {localStorage.getItem('po_status')!='A' &&  <a className="my-2" onClick={()=>{setMode(5);setOpen(true)}}>
               <Tag  color="#4FB477">
@@ -497,7 +508,7 @@ useEffect(()=>{
                               mode={1}
                             />
                             {input.unit_price<=0 && (
-                      <VError title={'Unit price should not be negative and non-zero!'} />
+                      <VError title={'Should not be negative or non-zero!'} />
                     )}
                           </div>
 
@@ -619,7 +630,7 @@ useEffect(()=>{
                     )}
                           </div>
                        {index==itemList.length-1 &&   <div className="sm:col-span-6 font-bold flex justify-start items-end mt-4">
-                        <Tag className="text-lg" color="#014737">Grand Total: {grand_total>0?grand_total?.toFixed(2):0.00}</Tag>
+                        <Tag className="text-lg" color="#014737">Grand Total: {grand_total>0?parseFloat(grand_total)?.toFixed(2):0.00}</Tag>
                             
                           </div>}
                         </div>
@@ -638,7 +649,7 @@ useEffect(()=>{
                     var flag=0
                     console.log(itemList)
                     for(let i of itemList){
-                      if(i.item_name!='Item name' && i.item_name!='' && i.qty>0 && i.rate>0 && i.unit!='Unit' && i.unit!='' && i.delivery_date && i.unit_price>0 && (i.disc>=0 || i.disc=='')
+                      if(i.item_name!='Item name' && i.item_name!='' && i.qty>0 && i.rate>0 && i.unit!='Unit' && i.unit!='' && i.delivery_date && i.unit_price>0 && (i.disc>=0 || i.disc=='') && (i.disc_prtg>=0 || i.disc_prtg=='')
                         && 
                         ((i.SGST!='SGST' && i.SGST!='' && i.CGST!='CGST' && i.CGST!='') || (i.IGST!='IGST' && i.IGST!=''))
                       )

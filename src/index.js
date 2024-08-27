@@ -14,6 +14,8 @@ import Loader from "./Components/Loader";
 import CircularProgress from '@mui/material/CircularProgress';
 import CatchError from "./Screens/CatchError";
 
+
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const Home = lazy(() => import("./Screens/Homescreen/Home"));
 const HomeScreen = lazy(() => import("./Screens/Homescreen/HomeScreen"));
@@ -72,6 +74,11 @@ const GstComp = lazy(()=> import("./Screens/Masters/Gst/GstComp"))
 const GstView = lazy(()=>import("./Screens/Masters/Gst/GstView"))
 const GstForm = lazy(()=>import("./Screens/Masters/Gst/GstForm"))
 
+const ApproveOrders = lazy(()=>import("./Screens/Purchase Order/ApproveOrders"))
+
+const UploadTC =lazy(()=>import( "./Screens/Purchase Order/UploadTC/UploadTC"));
+const UploadTCView =lazy(()=>import( "./Screens/Purchase Order/UploadTC/UploadTCView"));
+const UploadTCForm =lazy(()=>import( "./Screens/Purchase Order/UploadTC/UploadTCForm"));
 
 const DesignationComp = lazy(() =>
   import("./Screens/Masters/Designation/DesignationComp")
@@ -110,6 +117,12 @@ const UpdateStock = lazy(()=>import("./Screens/Stock/UpdateStock/UpdateStock"))
 const UpdateStockView = lazy(()=>import("./Screens/Stock/UpdateStock/UpdateStockView"));
 const UpdateStockForm = lazy(()=>import("./Screens/Stock/UpdateStock/UpdateStockForm"));
 
+const CancelPO =lazy(()=>import( "./Screens/Purchase Order/CancelPO/CancelPO"));
+const CancelView =lazy(()=>import( "./Screens/Purchase Order/CancelPO/CancelView"));
+const CancelForm =lazy(()=>import( "./Screens/Purchase Order/CancelPO/CancelForm"));
+const MDCC =lazy(()=>import( "./Screens/Purchase Order/UploadMDCC/MDCC"));
+const MDCCView =lazy(()=>import( "./Screens/Purchase Order/UploadMDCC/MDCCView"));
+const MDCCForm =lazy(()=>import( "./Screens/Purchase Order/UploadMDCC/MDCCForm"));
 
 const RequisitionSentView = lazy(() =>
   import("./Screens/Stock/RequisitionSentView")
@@ -339,6 +352,10 @@ const router = createBrowserRouter([
                 element: <PurchaseOrderView />,
               },
               {
+                path: "approveorders",
+                element: <ApproveOrders />,
+              },
+              {
                 path: "purchaseorderform/:flag/:id",
                 element: <PurchaseOrderForm />,
               },
@@ -349,7 +366,49 @@ const router = createBrowserRouter([
               {
                 path:"amendorder",
                 element:<AmendView/>
-              }
+              },
+              {
+                path: "uploadtc",
+                element: <UploadTC />,
+                children: [
+                  {
+                    path: "",
+                    element: <UploadTCView />,
+                  },
+                      {
+                        path:'upload/:id',
+                        element:<UploadTCForm/>
+                      },
+                ]
+              },
+              {
+                path: "uploadmdcc",
+                element: <MDCC />,
+                children: [
+                  {
+                    path: "",
+                    element: <MDCCView />,
+                  },
+                      {
+                        path:'mdccupload/:id',
+                        element:<MDCCForm/>
+                      },
+                ]
+              },
+              {
+                path: "cancelorder",
+                element: <CancelPO />,
+                children: [
+                  {
+                    path: "",
+                    element: <CancelView />,
+                  },{
+                        path:'cancelorderform/:id',
+                        element:<CancelForm/>
+                      },
+                  
+                ]
+              },
             ],
           },
           {

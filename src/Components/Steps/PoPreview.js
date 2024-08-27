@@ -93,8 +93,10 @@ function PoPreview({ data }) {
     WindowObject.document.writeln('<!DOCTYPE html>');
     WindowObject.document.writeln('<html><head><title></title>');
     WindowObject.document.writeln('<style type="text/css">');
-  
-    WindowObject.document.writeln('@media print {body {-webkit-print-color-adjust: exact; overflow: hidden;} } </style>');
+    WindowObject.document.writeln('<link rel="preconnect" href="https://fonts.googleapis.com">')
+    WindowObject.document.writeln('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>')
+    WindowObject.document.writeln('<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">')
+    WindowObject.document.writeln('@media print {body {-webkit-print-color-adjust: exact; overflow: hidden;}  {font-family: "Lora", serif;font-optical-sizing: auto font-weight: <weight>;font-style: normal;}} </style>');
         // WindowObject.document.writeln('@media print { .center { text-align: center;}' +
         //     '                                         .inline { display: inline; }' +
         //     '                                         .underline { text-decoration: underline; }' +
@@ -107,7 +109,8 @@ function PoPreview({ data }) {
         //     '                                         .bottom { bottom: 5px; width: 100%; position: fixed ' +
         //     '                                       ' +
         //     '                                   } .p-paginator-bottom.p-paginator.p-component { display: none; } .heading{display: flex; flex-direction: column; justify-content: center; align-items: center;font-weight:800;margin-bottom:15px} } </style>');
-        WindowObject.document.writeln('<script src="https://cdn.tailwindcss.com"></scr'+'ipt>')
+        // WindowObject.document.writeln('@media print{body {font-family: "Lora", serif;font-optical-sizing: auto font-weight: <weight>;font-style: normal;}}')
+    WindowObject.document.writeln('<script src="https://cdn.tailwindcss.com"></scr'+'ipt>')
     WindowObject.document.writeln('</head><body onload="window.print()">');
     WindowObject.document.writeln(divToPrint.innerHTML);
     WindowObject.document.writeln('</body></html>');
@@ -143,7 +146,7 @@ function PoPreview({ data }) {
       <div className="col-span-3 flex text-xs gap-2 text-black ">
           <span className="uppercase font-extrabold">PO No.:  {po_no?po_no:''}</span>
           <span className="uppercase font-extrabold">PO Date:  {localStorage.getItem('po_issue_date')}</span>
-          {/* <span className="uppercase font-extrabold">Latest Amendement No:</span> */}
+         {po_no?.indexOf('-')!=-1 && <span className="uppercase font-extrabold">Amendement No:{po_no?.split('-')[1]}</span>}
           {/* <span className="uppercase font-extrabold">Amendment Date:</span> */}
           <span className="uppercase font-extrabold">Value:  {grandTot}</span>
           {/* <span className="uppercase font-extrabold">Status No:  {localStorage.getItem('po_status')=='P'?'In Progress':localStorage.getItem('po_status')=='U'?'Unapproved':localStorage.getItem('po_status')=='A'?'Approved':localStorage.getItem('po_status')=='D'?'Delivered':'Partial Delivery'}</span> */}
@@ -263,7 +266,7 @@ function PoPreview({ data }) {
                     {item.cgst_id}% {item.cgst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100)).toFixed(2):''}
                 </td>
                 <td className="px-1 py-1 text-xs" rowSpan={2}>
-                    {item.sgst_id}%  {item.sgst_id>0?':'+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100).toFixed(2):''}
+                    {item.sgst_id}%  {item.sgst_id>0?':'+(((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)).toFixed(2):''}
                 </td>
                 <td className="px-1 py-1 text-xs" rowSpan={2}>
                     {item.igst_id}%  {+item.igst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2):''}
@@ -372,8 +375,11 @@ function PoPreview({ data }) {
                 <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     Warranty/Guarantee
                 </th>
-                <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).warranty_guarantee_flag=='W'?'Warranty':'Guarantee'} {JSON.parse(localStorage.getItem('terms')).duration_val} {JSON.parse(localStorage.getItem('terms')).duration=='M'?'Month(s)':JSON.parse(localStorage.getItem('terms')).duration=='D'?'Day(s)':'Year(s)'}
+                <td className="px-1 py-1 text-wrap">
+                {JSON.parse(localStorage.getItem('terms')).warranty_guarantee_flag=='W'?'Warranty':'Guarantee'} {JSON.parse(localStorage.getItem('terms')).duration_val} {JSON.parse(localStorage.getItem('terms')).duration=='M'?'month(s)':JSON.parse(localStorage.getItem('terms')).duration=='D'?'day(s)':'year(s)'} 
+                {JSON.parse(localStorage.getItem('terms')).comm_dt && ' from the date of commission'}
+                {JSON.parse(localStorage.getItem('terms')).comm_dt && JSON.parse(localStorage.getItem('terms')).dispatch_dt ? ' or from the date of dispatch':!JSON.parse(localStorage.getItem('terms')).comm_dt && !JSON.parse(localStorage.getItem('terms')).dispatch_dt?'':JSON.parse(localStorage.getItem('terms')).dispatch_dt?' from the date of dispatch.':''}
+                {JSON.parse(localStorage.getItem('terms')).comm_dt && JSON.parse(localStorage.getItem('terms')).dispatch_dt && ' ,whichever is earlier.'}
                 </td>
             </tr>
             

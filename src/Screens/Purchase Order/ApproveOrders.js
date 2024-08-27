@@ -5,10 +5,8 @@ import { masterheaders } from "../../Assets/Data/ColumnData";
 import { url } from "../../Address/BaseUrl";
 import axios from "axios";
 import Tooltip from '@mui/material/Tooltip';
-import AddIcon from "@mui/icons-material/Add";
 
 import { Paginator } from 'primereact/paginator';
-import { SearchOutlined, PrinterOutlined } from '@ant-design/icons'
 import { motion } from "framer-motion"
 import nodata from '../../../src/Assets/Images/nodata.png'
 
@@ -24,7 +22,8 @@ import { Tag } from 'antd';
 import SkeletonLoading from "../../Components/SkeletonLoading";
 import CompositeSearch from "../../Components/CompositeSearch";
 import Radiobtn from "../../Components/Radiobtn";
-function PurchaseOrderView() {
+
+function ApproveOrders() {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10);
   const [loading,setLoading]=useState(false)
@@ -32,7 +31,7 @@ function PurchaseOrderView() {
       setFirst(event.first);
       setRows(event.rows);
   };
-  const rdBtn=[{label:'Approved/Pending',value:1},{label:'In Progress',value:2}]
+  const rdBtn=[{label:'Approved',value:1},{label:'Pending',value:2}]
   const locationpath = useLocation();
   const [value, setValue] = useState(0);
   const [po_data,setPoData] = useState([])
@@ -41,6 +40,7 @@ function PurchaseOrderView() {
   const [projects,setProjects]=useState([])
   const [projectList,setProjectList]=useState([])
   const [copy,setCopy]=useState([])
+  
   const navigate=useNavigate()
   var template =
     locationpath.pathname.split("/")[
@@ -54,11 +54,12 @@ function PurchaseOrderView() {
     console.log("radio checked", e);
     // setValue(e);
     if(e==1){
-    setPoData(copy.filter(e=>(e.po_status=='A'||e.po_status=='U') && e.fresh_flag=='Y'))
+    // setPoData(copy.filter(e=>(e.po_status=='A'||e.po_status=='U') && e.fresh_flag=='Y'))
+    setPoData(copy.filter(e=>(e.po_status=='A')))
     console.log(po_data)
     }
     else{
-    setPoData(copy.filter(e=>e.po_status!='A' && e.po_status!='U' && e.fresh_flag=='Y'))
+    setPoData(copy.filter(e=>e.po_status=='U'))
     console.log(po_data)
 
     }
@@ -74,17 +75,19 @@ function PurchaseOrderView() {
     axios.post(url+'/api/getpo',{id:0}).then(res=>{
       console.log(res)
       setLoading(false)
-      setPoData(res?.data?.msg.filter(e=>e.fresh_flag=='Y'))
-      setCopy(res?.data?.msg.filter(e=>e.fresh_flag=='Y'))
-      if(locationpath.pathname.split("/")[
-        locationpath.pathname.split("/").length - 1
-      ]=='P'){
-        setPoData(res?.data?.msg.filter(e=>(e.po_status!='A'&&e.po_status!='U'&&e.fresh_flag=='Y')))
-      }
-      else{
-        setPoData(res?.data?.msg.filter(e=>(e.po_status=='A' || e.po_status=='U' &&e.fresh_flag=='Y')))
+    //   setPoData(res?.data?.msg)
+      setCopy(res?.data?.msg.filter(e=>(e.po_status=='A'||e.po_status=='U')))
+    setPoData(res?.data?.msg?.filter(e=>(e.po_status=='A')))
 
-      }
+    //   if(locationpath.pathname.split("/")[
+    //     locationpath.pathname.split("/").length - 1
+    //   ]=='P'){
+    //     setPoData(res?.data?.msg.filter(e=>(e.po_status!='A'&&e.po_status!='U'&&e.fresh_flag=='Y')))
+    //   }
+    //   else{
+    //     setPoData(res?.data?.msg.filter(e=>(e.po_status=='A' || e.po_status=='U' &&e.fresh_flag=='Y')))
+
+    //   }
     }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
   },[locationpath.pathname.split("/")[
     locationpath.pathname.split("/").length - 1
@@ -115,9 +118,9 @@ function PurchaseOrderView() {
     localStorage.removeItem("drawing");
     localStorage.removeItem("dt");
   }, [
-    locationpath.pathname.split("/")[
-      locationpath.pathname.split("/").length - 1
-    ],
+    // locationpath.pathname.split("/")[
+    //   locationpath.pathname.split("/").length - 1
+    // ],
   ]);
  useState(()=>{
    axios.post(url+'/api/getvendor',{id:0}).then(res=>{
@@ -152,13 +155,13 @@ function PurchaseOrderView() {
  },[])
   const setSearch=(word)=>{
     setValue(0)
-    setPoData(copy?.filter(e=>(e?.po_no?.toLowerCase().includes(word?.toLowerCase()) || e?.vendor_name?.toLowerCase().includes(word?.toLowerCase()) || e?.proj_name?.toLowerCase().includes(word?.toLowerCase())  || e?.po_issue_date?.toLowerCase().includes(word?.toLowerCase()) ||e?.created_by?.toLowerCase().includes(word?.toLowerCase())) && e.fresh_flag=='Y'))
+    setPoData(copy?.filter(e=>(e?.po_no?.toLowerCase().includes(word?.toLowerCase()) || e?.vendor_name?.toLowerCase().includes(word?.toLowerCase()) || e?.proj_name?.toLowerCase().includes(word?.toLowerCase())  || e?.po_issue_date?.toLowerCase().includes(word?.toLowerCase()) ||e?.created_by?.toLowerCase().includes(word?.toLowerCase()))))
 
   }
   const onAdvSearch=(val1,val2)=>{
     console.log(val1,val2)
     setValue(0)
-    setPoData(copy?.filter(e=>(e?.vendor_name?.toLowerCase().includes(val1?.toLowerCase()) &&  e?.proj_name?.toLowerCase().includes(val2?.toLowerCase())) && e.fresh_flag=='Y'))
+    setPoData(copy?.filter(e=>(e?.vendor_name?.toLowerCase().includes(val1?.toLowerCase()) &&  e?.proj_name?.toLowerCase().includes(val2?.toLowerCase()))))
   }
   return (
     //     locationpath.pathname.split("/")[
@@ -189,25 +192,12 @@ function PurchaseOrderView() {
    <>
   
     <div className="flex items-center  justify-end h-14 -mt-[72px] w-auto dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 rounded-lg">
-        <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3, type: 'just' }} className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-          <Tooltip title={'Create Vendor Order'}>
-            {/* <Link to={to + 0}
-              type="submit"
-              className="flex items-center justify-center text-white bg-[#eb8d00] hover:bg-primary-800  font-semibold rounded-l-md transition ease-in-out hover:-translate-x-1 hover:scale-110 text-xs p-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2"
-            > */}
-              <Link to={routePaths.PURCHASEORDERFORM +'F/'+ 0}
-              type="submit"
-              className="flex items-center justify-center border-2 border-white border-r-0 text-white bg-green-900 hover:bg-primary-800 text-nowrap rounded-l-md transition ease-in-out  active:scale-90 text-sm p-1 px-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none shadow-lg  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2 capitalize"
-            >
-              <AddIcon className='text-sm' /> {'Create Vendor Orders'}
-            </Link>
-          </Tooltip>
-        </motion.div>
-        <motion.button initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.3, type: 'just' }}  className={'bg-white border-2 border-l-0 text-green-900 font-semibold text-lg rounded-r-full p-0.5 shadow-lg'}>
+     
+        {/* <motion.button initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.3, type: 'just' }}  className={'bg-white border-2 border-l-0 text-green-900 font-semibold text-lg rounded-full p-1 shadow-lg'}>
         <Tooltip title="Print this table" arrow>
         <PrinterOutlined />
         </Tooltip>
-        </motion.button>
+        </motion.button> */}
       </div>
     <div className="flex justify-between items-center">
     {/* <Radio.Group onChange={onChange} className="mt-7 mb-4 bg-white rounded-full p-2 shadow-lg gap-4" value={value}>
@@ -226,7 +216,7 @@ function PurchaseOrderView() {
               <div className="w-full">
                 <div className="flex items-center justify-between">
                   <motion.h2 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, type: 'just' }} className="text-xl w-48 capitalize text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5">
-                    Vendor Orders
+                    Approve Orders
                   </motion.h2>
 
                   <label for="simple-search" className="sr-only">
@@ -325,7 +315,7 @@ function PurchaseOrderView() {
            {po_data && po_data?.slice(first,rows+first).map(item=> 
            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <th scope="row" class="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {item.serial_number}
+                    {item.serial_number} 
                 </th>
                 <td class="px-6 py-4">
                     {item.po_no}
@@ -337,7 +327,7 @@ function PurchaseOrderView() {
                     {item.vendor_name}
                 </td>
                 <td class="px-6 py-4">
-                    {item.proj_name}
+                    {item.proj_name} 
                     {/* {item.fresh_flag} */}
                 </td>
                 <td class="px-6 py-4">
@@ -347,7 +337,7 @@ function PurchaseOrderView() {
                     {item.created_by}
                 </td>
                 <td class="px-6 py-4">
-                  <Link to={routePaths.PURCHASEORDERFORM+'F/'+item.sl_no}>
+                  <Link to={item.fresh_flag=='Y'?routePaths.PURCHASEORDERFORM+'F/'+item.sl_no:routePaths.PURCHASEORDERFORM+'E/'+item.sl_no}>
                 <EditOutlined className="text-md text-green-900" />
                 </Link>
                 </td>
@@ -369,4 +359,4 @@ function PurchaseOrderView() {
   );
 }
 
-export default PurchaseOrderView;
+export default ApproveOrders

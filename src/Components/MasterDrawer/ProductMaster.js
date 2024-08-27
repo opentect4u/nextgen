@@ -73,7 +73,7 @@ function ProductMaster({onClose}) {
   });
 
   const formik = useFormik({
-    initialValues: +params.id > 0 ? formValues : initialValues,
+    initialValues: initialValues,
     onSubmit,
     validationSchema,
     validateOnMount: true,
@@ -156,7 +156,6 @@ function ProductMaster({onClose}) {
                   handleBlur={formik.handleBlur}
                   data={cat}
                   mode={2}
-                  disabled={params.id > 0}
                 />
                 {formik.errors.cat_id && formik.touched.cat_id ? (
                   <VError title={formik.errors.cat_id} />
@@ -188,7 +187,6 @@ function ProductMaster({onClose}) {
                   handleChange={formik.handleChange}
                   handleBlur={formik.handleBlur}
                   mode={1}
-                  disabled={params.id > 0}
                 />
 
                 {formik.errors.prod_make && formik.touched.prod_make ? (

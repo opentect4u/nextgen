@@ -10,7 +10,7 @@ import { Divider } from 'antd';
         
 function AmendPreview({id}) {
     const navigate=useNavigate()
-    
+    const [vendors,setVendors]=useState([])
     const [floatShow,setFloatShow]=useState(false)
     const [loading,setLoading] = useState(false)
     const [visible,setVisible] = useState(false)
@@ -74,20 +74,23 @@ function AmendPreview({id}) {
  const [v_pan,setVPAN]=useState('')
  const [prodInfo,setProdInfo]=useState()
  const [grandTot,setGrandTot]=useState(0)
+ const [dispatch_dt,setdispatchdt]=useState(false)
+ const [comm_dt,setcommdt]=useState(false)
 //  const [po_no,setPoNo]=useState('')
  const [totVal,setTotVal]=useState(0)
 var tot=0
 useEffect(()=>{
     setLoading(true)
-    axios.post(url+'/api/getvendor',{id:+localStorage.getItem('vendor_name')}).then(res=>{
+    axios.post(url+'/api/getvendor',{id:0}).then(resvendor=>{
         setLoading(true)
-        console.log(res)
-        setVName(res?.data?.msg?.vendor_name)
-        setVAddress(res?.data?.msg?.vendor_address)
-        setVEmail(res?.data?.msg?.vendor_email)
-        setVPhone(res?.data?.msg?.vendor_phone)
-        setVGST(res?.data?.msg?.vendor_gst)
-        setVPAN(res?.data?.msg?.vendor_pan)
+        console.log(resvendor)
+        setVendors(resvendor?.data?.msg)
+        // setVName(res?.data?.msg?.vendor_name)
+        // setVAddress(res?.data?.msg?.vendor_address)
+        // setVEmail(res?.data?.msg?.vendor_email)
+        // setVPhone(res?.data?.msg?.vendor_phone)
+        // setVGST(res?.data?.msg?.vendor_gst)
+        // setVPAN(res?.data?.msg?.vendor_pan)
         axios.post(url+'/api/getpreviewitems',{id:id}).then(resItems=>{
             console.log(resItems)
             tot=0
@@ -132,9 +135,9 @@ useEffect(()=>{
             //     setPoNo(res?.data?.msg?.po_no)
             // setLoading(false)
 
-            })
+            }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
         
-        })
+       
     // })
         axios.post(url+'/api/getpo',{id:id}).then(res=>{
           console.log(res)
@@ -156,6 +159,14 @@ useEffect(()=>{
           setVendorName(res?.data?.msg?.vendor_id)
           setPoIssueDate(res?.data?.msg?.po_issue_date)
           setPoNo(res?.data?.msg?.po_no)
+          console.log(resvendor?.data?.msg)
+
+        setVName(resvendor?.data?.msg?.filter(e=>e.sl_no==res?.data?.msg?.vendor_id)[0].vendor_name)
+        setVAddress(resvendor?.data?.msg?.filter(e=>e.sl_no==res?.data?.msg?.vendor_id)[0].vendor_address)
+        setVEmail(resvendor?.data?.msg?.filter(e=>e.sl_no==res?.data?.msg?.vendor_id)[0].vendor_email)
+        setVPhone(resvendor?.data?.msg?.filter(e=>e.sl_no==res?.data?.msg?.vendor_id)[0].vendor_phone)
+        setVGST(resvendor?.data?.msg?.filter(e=>e.sl_no==res?.data?.msg?.vendor_id)[0].vendor_gst)
+        setVPAN(resvendor?.data?.msg?.filter(e=>e.sl_no==res?.data?.msg?.vendor_id)[0].vendor_pan)
           axios.post(url+'/api/getpoitem',{id:id}).then(resItem=>{
             
             console.log(resItem)
@@ -204,6 +215,8 @@ useEffect(()=>{
               setPackingType(resTerm?.data?.msg[0]?.packing_type)
               setManufactureClearance(resTerm?.data?.msg[0]?.manufacture_clearance)
               setManufactureDesc(resTerm?.data?.msg[0]?.manufacture_clearance_desc)
+              setdispatchdt(resTerm?.data?.msg[0]?.dispatch_dt=='Y'?true:false)
+          setcommdt(resTerm?.data?.msg[0]?.comm_dt=='Y'?true:false)
               const terms_conditions={
                 price_basis_flag: resTerm?.data?.msg[0]?.price_basis,
                 price_basis_desc:resTerm?.data?.msg[0]?.price_basis_desc,
@@ -290,7 +303,7 @@ useEffect(()=>{
           }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
           
         }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
-      
+    }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
 },[id])
     
   return (
@@ -307,9 +320,10 @@ useEffect(()=>{
 
     </div>}
 
-{!loading && <div className="h-full  border-2 p-3 border-blue-300">
+{!loading && 
+<div className="h-full  border-2  mx-auto w-8/12 px-5 border-blue-300">
    
-      <div id='divtoprint'> 
+  
 
       <div className="flex justify-center items-center">
         <span className="text-xl text-blue-500 font-extrabold  my-3 uppercase">
@@ -320,6 +334,7 @@ useEffect(()=>{
       <div className="col-span-3 flex text-xs gap-2 text-black ">
           <span className="uppercase font-extrabold">PO No.:  {po_no?po_no:''}</span>
           <span className="uppercase font-extrabold">PO Date:  {po_issue_date}</span>
+          {po_no?.indexOf('-')!=-1 && <span className="uppercase font-extrabold">Amendement No:{po_no?.split('-')[1]}</span>}
           {/* <span className="uppercase font-extrabold">Latest Amendement No:</span> */}
           {/* <span className="uppercase font-extrabold">Amendment Date:</span> */}
           <span className="uppercase font-extrabold">Value:  {grandTot}</span>
@@ -400,8 +415,17 @@ useEffect(()=>{
                 <th scope="col" className="px-6 py-3">
                     Discount
                 </th>
+                <th scope="col" className="px-1 py-3">
+                   CGST
+                </th>
+                <th scope="col" className="px-1 py-3">
+                   SGST
+                </th>
+                <th scope="col" className="px-1 py-3">
+                   IGST
+                </th>
                 <th scope="col" className="px-6 py-3">
-                    GST
+                  Total  GST
                 </th>
                 <th scope="col" className="px-6 py-3">
                     Unit Price
@@ -427,8 +451,19 @@ useEffect(()=>{
                 <td className="px-6 py-4" rowSpan={2}>
                     {item.discount}
                 </td>
-                <td className="px-6 py-4" rowSpan={2}>
-                {item.sgst_id>0?((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100))+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100):((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2)}
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
+                    {item.cgst_id}% {item.cgst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100)).toFixed(2):''}
+                </td>
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
+                    {item.sgst_id}%  {item.sgst_id>0?':'+(((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)).toFixed(2):''}
+                </td>
+                <td className="px-1 py-1 text-xs" rowSpan={2}>
+                    {item.igst_id}%  {+item.igst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2):''}
+                </td>
+
+                <td className="px-1 py-1 text-xs " rowSpan={2}>
+                
+                {item.sgst_id>0?(((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.cgst_id/100))+((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)).toFixed(2):((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2)}
                 </td>
                  <td className="px-6 py-4" rowSpan={2}>
                     {+item.item_rt-(+item.discount)}
@@ -455,7 +490,7 @@ useEffect(()=>{
         </tbody>
         <tfoot>
             <tr class="font-semibold text-gray-900 dark:text-white">
-                <th scope="row" class="px-6 py-3 text-base font-bold" colSpan={6}>Total</th>
+                <th scope="row" class="px-6 py-3 text-base font-bold" colSpan={9}>Total</th>
                 <th class="px-6 py-3 text-base font-bold">{grandTot}</th>
             </tr>
         </tfoot>
@@ -504,7 +539,7 @@ useEffect(()=>{
                     Packing & Forwarding
                 </th>
                 <td className="px-6 py-4">
-                {/* {packing_forwarding_val=='I'?'Inclusive':`Extra  ${packing_forwarding_extra}% - ${(grandTot * packing_forwarding_extra/100).toFixed(2)}`} */}
+                {packing_forwarding=='I'?'Inclusive':`Extra  ${packing_forwardingExtra}% - ${(grandTot * packing_forwardingExtra/100).toFixed(2)}`}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -529,7 +564,10 @@ useEffect(()=>{
                     Warranty/Guarantee
                 </th>
                 <td className="px-6 py-4">
-                {warranty_guarantee_flag=='W'?'Warranty':'Guarantee'} {duration_val} {duration=='M'?'Month(s)':duration=='D'?'Day(s)':'Year(s)'}
+                {warranty_guarantee_flag=='W'?'Warranty':'Guarantee'} {duration_val} {duration=='M'?'month(s)':duration=='D'?'day(s)':'year(s)'}
+                {comm_dt && ' from the date of commission'}
+                {comm_dt && dispatch_dt ? ' or from the date of dispatch':!comm_dt && !dispatch_dt?'':dispatch_dt?'from the date of dispatch.':''}
+                {comm_dt && dispatch_dt && ' ,whichever is earlier.'}
                 </td>
             </tr>
             
@@ -662,7 +700,6 @@ useEffect(()=>{
         </p>
     
     
-      </div>
 
     </div>}
       

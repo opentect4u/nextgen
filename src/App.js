@@ -66,6 +66,11 @@ function App() {
          colorPrimary:'#014737',
         colorPrimaryHover:'#014737'
       },
+      Checkbox:{
+        colorPrimary:'#014737',
+        colorText:'#014737',
+        colorPrimaryHover:'#014737'
+      },
       Descriptions:{
         titleColor:'#014737',
         colorTextLabel:'#014737',

@@ -135,7 +135,8 @@ const statusBodyTemplate = (rowData) => {
             </Link>
           </Tooltip>
         </motion.div>}
-        <motion.button initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.3, type: 'just' }} onClick={() => print()} className={btnText?'bg-white border-2 border-l-0 text-green-900 font-semibold text-xl rounded-r-full p-1 shadow-lg':'bg-white border-2 border-l-0 text-green-900 font-semibold text-xl rounded-full h-10 w-10 p-1 shadow-lg'}>
+        <motion.button initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ 
+          delay: 1.3, type: 'just' }} onClick={() => print()} className={btnText?'bg-white border-2 border-l-0 text-green-900 font-semibold text-lg rounded-r-full p-0.5 shadow-lg':'bg-white border-2 border-l-0 text-green-900 font-semibold text-lg rounded-full h-10 w-10 p-0.5 shadow-lg'}>
         <Tooltip title="Print this table" arrow>
         <PrinterOutlined />
         </Tooltip>
@@ -143,7 +144,7 @@ const statusBodyTemplate = (rowData) => {
       </div>
     </motion.section>
     </div>
-      <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1}} transition={{ delay: 0.5, type: 'spring', stiffness: 100 }} className="bg-transparent dark:bg-[#001529] py-3 sm:py-5 w-full -mt-5">
+      <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1}} transition={{ delay: 0.5, type: 'spring', stiffness: 30 }} className="bg-transparent dark:bg-[#001529] py-3 sm:py-5 w-full -mt-5">
         {title && data &&
           <div className="bg-transparent dark:bg-gray-800 relative shadow-md rounded-full overflow-hidden">
             <div className="flex flex-col p-1 bg-green-900 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">

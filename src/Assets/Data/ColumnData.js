@@ -139,5 +139,13 @@ export const masterheaders={
       { name: "created_by", value: "Created by" },
     ],
   },
-
+    // 'uploadtc': {
+    //     title: "Test Certificate",
+    //     // btnText:'Add product categories',
+    //     headers: [
+    //       { name: "serial_number", value: "#" },
+    //       { name: "catg_name", value: "Product category" },
+    //     ]
+    
+    //   },
 }

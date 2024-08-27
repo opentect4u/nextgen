@@ -28,12 +28,13 @@ import {
   DropboxOutlined,
   CheckCircleOutlined,
   IssuesCloseOutlined,
-  SignatureOutlined
+  SignatureOutlined,
+  CloseCircleOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import { routePaths } from "../Assets/Data/Routes";
-import { CheckOutlined } from "@mui/icons-material";
+import { CheckOutlined, UploadFileOutlined } from "@mui/icons-material";
 
 function Menus({ theme}) {
   const [current, setCurrent] = React.useState('sub1');
@@ -110,6 +111,7 @@ function Menus({ theme}) {
           ],
        
     },
+   
     {
       label: "Orders",
       key: "sub4",
@@ -129,11 +131,7 @@ function Menus({ theme}) {
               icon: <SolutionOutlined />,
             },
             
-            {
-              label: <Link to={routePaths.PURCHASEORDER+'/A'}>Approve Vendor Orders</Link>,
-              key: "approve-purchase-order",
-              icon: <CheckOutlined />,
-            },
+            
             {
               label: <Link to={routePaths.EXISTINGORDER}>Existing Purchase Orders</Link>,
               key: "existing-order",
@@ -143,54 +141,77 @@ function Menus({ theme}) {
               label: <Link to={routePaths.AMENDORDER}>Amend Purchase Orders</Link>,
               key: "amend-order",
               icon: <SignatureOutlined />,
-            }
+            },
+            {
+              // label: <Link to={routePaths.PURCHASEORDER+'/A'}>Approve Vendor Orders</Link>,
+              label: <Link to={routePaths.APPROVEORDER}>Approve Vendor Orders</Link>,
+              key: "approve-purchase-order",
+              icon: <CheckOutlined />,
+            },
+            
+            // {
+            //   label: <Link to={routePaths.CANCELHOME}>Cancel Purchase Orders</Link>,
+            //   key: "cancel-purchase-order",
+            //   icon: <CloseCircleOutlined />,
+            // }
             
           ],
        
+    },
+    {
+      label: <Link to={routePaths.TESTCERTHOME}>Upload Test Certificate</Link>,
+      key: "uploadtc-purchase-order",
+      icon: <UploadFileOutlined />,
+    },
+    {
+      label: <Link to={routePaths.MDCCHOME}>Upload MDCC</Link>,
+      key: "mdcc-purchase-order",
+      icon: <UploadFileOutlined />,
     },
     {
       label: "Stock",
       key: "sub5",
       icon: <DropboxOutlined />,
       children: [
-            // {
-            //   label: <Link to={routePaths.STOCKASSIGNVIEW}>Assign</Link>,
-            //   key: "stock-assign",
-            //   icon: <ReconciliationOutlined />,
-            // },
+           
             {
               label: <Link to={routePaths.STOCKUPDATE}>Open/Update Stock</Link>,
               key: "stock-update",
               icon: <DropboxOutlined />,
             },
-            // {
-            //   label: <Link to={routePaths.STOCKINVIEW}>Stock In</Link>,
-            //   key: "stock-in",
-            //   icon: <ArrowRightOutlined />,
-            // },
-            // {
-            //   label: <Link to={routePaths.STOCKOUTVIEW}>Stock Out</Link>,
-            //   key: "stock-out",
-            //   icon: <ArrowLeftOutlined />,
-            // },
-            // {
-            //   label: "Transfer",
-            //   key: "stock-trans",
-            //   icon: <SwapOutlined />,
-            //   children: [
+            {
+              label: <Link to={routePaths.STOCKASSIGNVIEW}>Assign</Link>,
+              key: "stock-assign",
+              icon: <ReconciliationOutlined />,
+            },
+            {
+              label: <Link to={routePaths.STOCKINVIEW}>Stock In</Link>,
+              key: "stock-in",
+              icon: <ArrowRightOutlined />,
+            },
+            {
+              label: <Link to={routePaths.STOCKOUTVIEW}>Stock Out</Link>,
+              key: "stock-out",
+              icon: <ArrowLeftOutlined />,
+            },
+            {
+              label: "Transfer",
+              key: "stock-trans",
+              icon: <SwapOutlined />,
+              children: [
                 
-            //         {
-            //           label: <Link to={routePaths.REQUISITIONSENTVIEW}>Requisitions sent</Link>,
-            //           key: "req-mk",
-            //           icon: <NodeExpandOutlined />,
-            //         },
-            //         {
-            //           label: <Link to={routePaths.REQUISITIONRCVDVIEW}>Requisitions received</Link>,
-            //           key: "req-rec",
-            //           icon: <NodeCollapseOutlined />,
-            //         },
-            //       ],
-            // }
+                    {
+                      label: <Link to={routePaths.REQUISITIONSENTVIEW}>Requisitions sent</Link>,
+                      key: "req-mk",
+                      icon: <NodeExpandOutlined />,
+                    },
+                    {
+                      label: <Link to={routePaths.REQUISITIONRCVDVIEW}>Requisitions received</Link>,
+                      key: "req-rec",
+                      icon: <NodeCollapseOutlined />,
+                    },
+                  ],
+            }
               ],
     },
          

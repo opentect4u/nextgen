@@ -55,7 +55,7 @@ function GSTMaster({onClose}) {
     gst_rate:Yup.number().required("Rate is required").max(100,'Invalid value!').min(0,'Invalid Value'),
   });
   const formik = useFormik({
-    initialValues: +params.id > 0 ? formValues : initialValues,
+    initialValues: initialValues,
     onSubmit,
     validationSchema,
     validateOnMount: true,

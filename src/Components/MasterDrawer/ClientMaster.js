@@ -228,7 +228,7 @@ function ClientMaster({onClose}) {
             spinning={loading}
           >
             <Formik
-              initialValues={+params.id > 0 ? formValues : initialValues}
+              initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={onSubmit}
               validateOnMount={true}

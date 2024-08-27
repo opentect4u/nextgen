@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { Result, Typography } from 'antd';
 const { Paragraph, Text } = Typography;
 function Error({error}) {
+  const [loading,setLoading] = useState(false)
   return (
     <div>
  
@@ -28,7 +29,15 @@ function Error({error}) {
   <CloseCircleOutlined className="site-result-demo-error-icon text-red-700" /> {error.message}
 
   </span>
-  <button className='rounded-full my-5 mx-auto bg-red-700 text-white p-2 w-24' onClick={()=>window.location.reload()}> Reload</button>
+  <button 
+  loading={loading} 
+  className='rounded-full my-5 mx-auto hover:bg-red-700 hover:text-white bg-red-700 text-white p-2 w-24'
+  onClick={()=>{window.location.reload();setLoading(true)}}> 
+  
+ {!loading && <span>Reload </span>} 
+ {loading && <span>Loading... </span>}
+  
+  </button>
       </Paragraph>}
     
     </div>

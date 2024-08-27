@@ -13,7 +13,7 @@ import Notes from "../../Components/Steps/Notes";
 import Tooltip from '@mui/material/Tooltip';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { CheckOutlined, EyeOutlined, FileTextOutlined, LoadingOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, EyeOutlined, FileTextOutlined, LoadingOutlined, SyncOutlined } from "@ant-design/icons";
 import { Button, FloatButton } from "antd";
 import PaymentTerms from "../../Components/Steps/PaymentTerms";
 import axios from "axios";
@@ -53,6 +53,8 @@ function PurchaseOrderForm() {
   const [mdcc, setMdcc] = useState("");
   const [drawingDate, setDrawingDate] = useState("");
   const [timeline,setTimeline]=useState([])
+  const [dispatch_dt,setdispatchdt]=useState(false)
+  const [comm_dt,setcommdt]=useState(false)
   const [price_basis_flag, setPriceBasisFlag] = useState("");
   const [price_basis_desc, setPriceBasisDesc] = useState("");
   const [packing_forwarding, setPackingForwarding] = useState("");
@@ -85,6 +87,7 @@ function PurchaseOrderForm() {
   const [count,setCount]=useState(0)
   const navigate=useNavigate()
   const addcomment=()=>{
+    if(localStorage.getItem('po_comments')){
     setLoading(true)
     axios.post(url+'/api/addpocomments',{id:+params.id,comments:localStorage.getItem('po_comments'),user:localStorage.getItem('email')}).then(res=>{
       console.log(res)
@@ -109,6 +112,7 @@ function PurchaseOrderForm() {
     })
       setLoading(false)
   }
+  }
  
   const approvepo=()=>{
     setLoading(true)
@@ -117,6 +121,7 @@ function PurchaseOrderForm() {
       setLoading(false)
       if(res?.data?.suc>0){
         Message('success',res?.data?.msg)
+        navigate(-1)
       }
     
       else{
@@ -124,7 +129,7 @@ function PurchaseOrderForm() {
 
       }
     
-    }).catch(err=> Message('error',err)
+    }).catch(err=> {Message('error',err);navigate("/error" + "/" + err.code + "/" + err.message)}
   )
   }
   const submitPo=()=>{
@@ -165,10 +170,14 @@ function PurchaseOrderForm() {
       ld_val: JSON.parse(localStorage.getItem("terms"))?JSON.parse(localStorage.getItem("terms")).ld_applied_on:"",
       ld_val_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .others_applied:"",
-      ld_val_per: JSON.parse(localStorage.getItem("terms"))?parseFloat(JSON.parse(localStorage.getItem("terms")).ld_value):0.0,
-      min_per:JSON.parse(localStorage.getItem("terms"))?  parseFloat(JSON.parse(localStorage.getItem("terms")).po_min_value):0.0,
+      ld_val_per: JSON.parse(localStorage.getItem("terms"))?parseFloat(JSON.parse(localStorage.getItem("terms")).ld_value)?parseFloat(JSON.parse(localStorage.getItem("terms")).ld_value):0.0:0.0,
+      min_per:JSON.parse(localStorage.getItem("terms"))?parseFloat(JSON.parse(localStorage.getItem("terms")).po_min_value)?parseFloat(JSON.parse(localStorage.getItem("terms")).po_min_value):0.0:0.0,
       warranty_guaranty:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .warranty_guarantee_flag:"",
+        dispatch_dt:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .dispatch_dt==true?'Y':"N":'N',
+        comm_dt:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .comm_dt==true?'Y':"N":'N',
       duration:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms")).duration:"",
       duration_value:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .duration_val:"",
@@ -264,6 +273,7 @@ function PurchaseOrderForm() {
             rate:resItem?.data?.msg[i].item_rt,
             unit:resItem?.data?.msg[i].unit_id,
             disc:resItem?.data?.msg[i].discount,
+            disc_prtg:resItem?.data?.msg[i].discount_percent,
             SGST:resItem?.data?.msg[i].sgst_id,
             CGST:resItem?.data?.msg[i].cgst_id,
             IGST:resItem?.data?.msg[i].igst_id,
@@ -301,6 +311,8 @@ function PurchaseOrderForm() {
           setPackingType(resTerm?.data?.msg[0]?.packing_type)
           setManufactureClearance(resTerm?.data?.msg[0]?.manufacture_clearance)
           setManufactureDesc(resTerm?.data?.msg[0]?.manufacture_clearance_desc)
+          setdispatchdt(resTerm?.data?.msg[0]?.dispatch_dt=='Y'?true:false)
+          setcommdt(resTerm?.data?.msg[0]?.comm_dt=='Y'?true:false)
           const terms_conditions={
             price_basis_flag: resTerm?.data?.msg[0]?.price_basis,
             price_basis_desc:resTerm?.data?.msg[0]?.price_basis_desc,
@@ -326,7 +338,9 @@ function PurchaseOrderForm() {
             oi_desc:resTerm?.data?.msg[0]?.operation_installation_desc,
             packing_type:resTerm?.data?.msg[0]?.packing_type,
             manufacture_clearance:resTerm?.data?.msg[0]?.manufacture_clearance,
-            manufacture_clearance_desc:resTerm?.data?.msg[0]?.manufacture_clearance_desc
+            manufacture_clearance_desc:resTerm?.data?.msg[0]?.manufacture_clearance_desc,
+            dispatch_dt:resTerm?.data?.msg[0]?.dispatch_dt=='Y'?true:false,
+            comm_dt:resTerm?.data?.msg[0]?.comm_dt=='Y'?true:false
           };
           console.log(terms_conditions)
           localStorage.setItem('terms',JSON.stringify(terms_conditions))
@@ -435,13 +449,13 @@ function PurchaseOrderForm() {
        Delivered
         
         </Tag>} */}
-         {clickFlag=='P'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="processing">
+         {clickFlag=='P'?<Tag bordered={false} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="processing" icon={<SyncOutlined spin />}>
         In Progress
-      </Tag>:clickFlag=='U'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="gold">
+      </Tag>:clickFlag=='U'?<Tag bordered={false}  icon={<ClockCircleOutlined className="animate-pulse"/>} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="error">
         Approval Pending
-      </Tag>:clickFlag=='A'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="green">
+      </Tag>:clickFlag=='A'?<Tag bordered={false}  icon={<CheckCircleOutlined />} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="green">
        Approved
-      </Tag>:<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="green">
+      </Tag>:<Tag bordered={false} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="green">
        Delivered
         
         </Tag>}
@@ -530,6 +544,8 @@ function PurchaseOrderForm() {
                 packing_type: packing_type,
                 manufacture_clearance: manufacture_clearance,
                 manufacture_clearance_desc: manufacture_clearance_desc,
+                dispatch_dt:dispatch_dt,
+                comm_dt:comm_dt
               }}
               pressNext={(values) => {
                 console.log(values);
@@ -558,6 +574,8 @@ function PurchaseOrderForm() {
                 setPackingType(values.packing_type);
                 setManufactureClearance(values.manufacture_clearance);
                 setManufactureDesc(values.manufacture_clearance_desc);
+                setdispatchdt(values.dispatch_dt)
+                setcommdt(values.comm_dt)
                 stepperRef.current.nextCallback();
               }}
               pressBack={() => {
@@ -641,6 +659,7 @@ function PurchaseOrderForm() {
           icon={<ArrowBackIcon />}
         >Back</Button>
         </Tooltip>
+        {params.id>0 &&
        <Tooltip title='View PO'>
 
               <Button
@@ -652,7 +671,7 @@ function PurchaseOrderForm() {
         >View PO</Button>
         </Tooltip>
 
-          
+        }
         
     
     {localStorage.getItem('po_status')=='U' && <>  

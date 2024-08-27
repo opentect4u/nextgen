@@ -4,8 +4,28 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import VError from "../../Components/VError";
 import { useParams } from "react-router-dom";
+import { Button, Checkbox } from 'antd';
+import { CheckboxProps } from 'antd';
+import { Divider, Flex, Tag } from 'antd';
+import { motion } from "framer-motion"
+
 function TermsConditions({pressNext,pressBack,data}) {
   const [grand_total,setGrand]=useState(0)
+  const [checked, setChecked] = useState(true);
+  const [disabled, setDisabled] = useState(false);
+
+  const toggleChecked = () => {
+    setChecked(!checked);
+  };
+
+  const toggleDisable = () => {
+    setDisabled(!disabled);
+  };
+
+  const onChange=(e) => {
+    console.log('checked = ', e.target.checked);
+    setChecked(e.target.checked);
+  };
     console.log(data)
     console.log(JSON.parse(localStorage.getItem('itemList')))
     var tot=0
@@ -42,6 +62,8 @@ function TermsConditions({pressNext,pressBack,data}) {
       po_min_value:data.po_min_value?data.po_min_value:"",
       others_ld:data.others_ld?data.others_ld:"",
       others_applied:data.others_applied?data.others_applied:"",
+      dispatch_dt:data.dispatch_dt,
+      comm_dt:data.comm_dt,
       // warranty_guarantee_flag:JSON.parse(localStorage.getItem('terms'))?.warranty_guarantee_flag?JSON.parse(localStorage.getItem('terms'))?.warranty_guarantee_flag:"",
       warranty_guarantee_flag:data.warranty_guarantee_flag?data.warranty_guarantee_flag:"",
       duration:data.duration?data.duration:"",
@@ -93,14 +115,15 @@ function TermsConditions({pressNext,pressBack,data}) {
         otherwise: () => Yup.string()}),
         ld_value: Yup.string().when('ld_applicable_date', {
         is: (val) => val === 'M' || val === 'D'|| val=='O' || val=='' || val=='LD applicable date',
-        then: () => Yup.string().required("LD values is required").min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
+        then: () => Yup.string().min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
         otherwise: () => Yup.string()}),
       // ld_value:Yup.string().required("LD values is required").min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
-      po_min_value:Yup.string().required("PO total value is required").min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
+      po_min_value:Yup.string().min(0,'Invalid value').matches(/^[0-9.]+$/,'Invalid value'),
       warranty_guarantee_flag:Yup.string().required("Warranty/Guarantee is required"),
       duration:Yup.string().required("Duration is required"),
       duration_val:Yup.string().required("Duration value is required").min(0,'Invalid value').matches(/^[0-9]+$/,'Only whole numbers allowed'),
       om_manual_flag:Yup.string().required("O&M Manual is required"),
+      
       // om_manual_desc: Yup.string().when('om_manual_flag', {
       //   is: 'A',
       //   then: () => Yup.string().required("O&M Manual description is required"),
@@ -134,8 +157,9 @@ function TermsConditions({pressNext,pressBack,data}) {
     if(formik.values.ld_applicable_date=='NA'){
       formik.values.ld_applied_on=''
       formik.values.ld_value=''
+      formik.values.po_min_value=''
     }
-    console.log(formik.values.ld_applicable_date)
+    console.log(formik.values)
     localStorage.setItem('terms',JSON.stringify(formik.values))
     
    },[formik.values])
@@ -421,7 +445,7 @@ function TermsConditions({pressNext,pressBack,data}) {
                         type="number"
                         label="Maximum % on PO value"
                         name="po_min_value"
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'|| formik.values.ld_applicable_date=='NA'?true:false}
                        
                         formControlName={formik.values.po_min_value}
                         handleChange={formik.handleChange}
@@ -434,7 +458,7 @@ function TermsConditions({pressNext,pressBack,data}) {
         </div>
        
        
-        <div className="sm:col-span-10">
+        <div className="sm:col-span-5">
         <TDInputTemplate
                         placeholder="Warranty/Guarantee"
                         type="text"
@@ -454,6 +478,29 @@ function TermsConditions({pressNext,pressBack,data}) {
                       {formik.errors.warranty_guarantee_flag && formik.touched.warranty_guarantee_flag && (
                       <VError title={formik.errors.warranty_guarantee_flag} />
                     )}
+        </div>
+        
+        <div className="sm:col-span-5 flex justify-start gap-2 mt-7">
+        {formik.values.warranty_guarantee_flag=='W' &&
+        <>
+        <p >
+        <Checkbox checked={formik.values.dispatch_dt} name="dispatch_dt" disabled={localStorage.getItem('po_status')=='A'} onChange={formik.handleChange}>
+          Date of dispatch
+        </Checkbox>
+        </p>
+        <p>
+        <Checkbox  checked={formik.values.comm_dt} name="comm_dt" disabled={localStorage.getItem('po_status')=='A'}  onChange={formik.handleChange}>
+          Date of commission
+        </Checkbox>
+       {formik.values.dispatch_dt && formik.values.comm_dt &&<motion.span initial={{ opacity: 0}} animate={{ opacity: 1}} transition={{ delay: 0.5, type: 'spring', stiffness: 60 }} >
+        <Tag className='ml-3'
+        color="#b71c1c">Whichever is earlier.</Tag>
+       </motion.span>}
+        </p>
+        
+        
+        </>
+        }
         </div>
         <div className="sm:col-span-5">
         <TDInputTemplate
