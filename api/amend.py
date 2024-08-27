@@ -48,7 +48,7 @@ async def addpoamend(data:GetPo):
 
     try:
         if(lastID > 0):
-            fields1= f'SELECT NULL sl_no, "{lastID}" po_sl_no,bill_to,ship_to,ware_house_flag,po_notes,created_by,created_at, NULL modified_by, NULL modified_at FROM td_po_delivery WHERE po_sl_no = "{data.id}"'
+            fields1= f'SELECT NULL sl_no, "{lastID}" po_sl_no,bill_to,ware_house_flag,ship_to,po_notes,created_by,created_at, NULL modified_by, NULL modified_at FROM td_po_delivery WHERE po_sl_no = "{data.id}"'
             table_name1 = "td_po_delivery"
             result1 = await db_Insert(table_name1, fields1, None, None, 0, True)
 
