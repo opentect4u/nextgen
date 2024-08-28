@@ -748,7 +748,7 @@ async def addtc(dt:GetTc):
     print(dt)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_no,test_dt,test_place,test_person,item,quantity,comments,created_by,created_at'
+    fields= f'po_no,test_dt,test_place,test_person,item,qty,comments,created_by,created_at'
     values = f'"{dt.po_no}","{dt.test_dt}","{dt.test_place}","{dt.test_person}","{dt.item}","{dt.quantity}","{dt.comments}","{dt.user}","{formatted_dt}"'
     table_name = "td_test_cert"
     whr =  None
