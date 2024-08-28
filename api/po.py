@@ -570,7 +570,8 @@ async def addexistingpo(data:PoModel):
 
 async def addfreshpo(data:PoModel):
     res_dt = {}
-    # print(data)
+    print('---------------------------------------------------------------------')
+    print(data)
     item_save=0
     payment_save=0
     current_datetime = datetime.now()
@@ -694,6 +695,7 @@ async def addfreshpo(data:PoModel):
         print('Error While saving PO Number')
     ''' END '''
 
+    print('---------------------------------------------------------------------')
     if(result['suc']>0 and item_save>0 and result2['suc']>0 and payment_save>0 and result4['suc']>0 and result5['suc']>0):
         res_dt = {"suc": 1, "msg": f"Saved successfully!" if data.sl_no==0 else f"Updated successfully!"}
     else:
