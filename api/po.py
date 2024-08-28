@@ -16,9 +16,11 @@ import os
 import logging
 
 UPLOAD_FOLDER = "upload_tc"
+UPLOAD_FOLDER2 = "upload_mdcc"
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(UPLOAD_FOLDER2, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 poRouter = APIRouter()
@@ -119,6 +121,16 @@ class GetTc(BaseModel):
     quantity:int
     status:str
     test_person:str
+    comments:str
+    user:str
+
+class GetMdcc(BaseModel):
+    id:int
+    po_no:str
+    test_dt:str
+    item:int
+    quantity:int
+    status:str
     comments:str
     user:str
 # @poRouter.post('/addpo')
@@ -772,7 +784,7 @@ async def addtc(dt:GetTc):
 
 
 @poRouter.post('/add_tc_files')
-async def add_proj_files(test_cert_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
+async def add_proj_files(item_id:str = Form(...),test_cert_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
     fileName = ''
     res_dt = {}
     files = []
@@ -793,8 +805,8 @@ async def add_proj_files(test_cert_no:str = Form(...), user:str = Form(...),docs
             for f in files:
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal(f)
-                fields3= f'test_cert_no,doc1,created_by,created_at'
-                values3 = f'"{test_cert_no}","{fileName}","{user}","{formatted_dt}"' 
+                fields3= f'test_cert_no,doc1,item_id,created_by,created_at'
+                values3 = f'"{test_cert_no}","{fileName}","{item_id}","{user}","{formatted_dt}"' 
                 table_name3 = "test_cert_doc"
                 whr3 =  ""
                 flag3 = 0
@@ -829,6 +841,112 @@ async def add_proj_files(test_cert_no:str = Form(...), user:str = Form(...),docs
         # return res_dt
 
 async def uploadfileToLocal(file):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(UPLOAD_FOLDER, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
+    
+
+@poRouter.post('/addmdcc')
+async def addtc(dt:GetMdcc):
+    print(dt)
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    fields= f'po_no,test_dt,item,qty,comments,created_by,created_at'
+    values = f'"{dt.po_no}","{dt.test_dt}","{dt.item}","{dt.quantity}","{dt.comments}","{dt.user}","{formatted_dt}"'
+    table_name = "td_mdcc"
+    whr =  None
+    flag = 1 if dt.id>0 else 0
+    if(dt.id==0):
+        result = await db_Insert(table_name, fields, values, whr, flag)
+        if(result['suc']>0):
+            res_dt = {"suc": 1, "msg": "Saved successfully!","lastID":result['lastId']}
+        else:
+            res_dt = {"suc": 0, "msg": "Error while saving!"}
+    # else:
+    #     print(flag)
+    #     fields=f'catg_name="{dt.name}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+    #     whr=f'sl_no="{dt.id}"'
+    #     result = await db_Insert(table_name, fields, values, whr, flag)
+    #     if(result['suc']>0):
+    #         res_dt = {"suc": 1, "msg": "Category updated successfully!"}
+    #     else:
+    #         res_dt = {"suc": 0, "msg": "Error while updating!"}
+    return res_dt
+
+
+@poRouter.post('/add_mdcc_files')
+async def add_proj_files(item_id:str = Form(...),test_cert_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
+    fileName = ''
+    res_dt = {}
+    files = []
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    if not docs1 and not docs2:
+        return {"suc": 1, "msg": "No file sent"}
+    else:
+        if docs1:
+            files.append(docs1)
+        if docs2:
+            files.append(docs2)
+
+        logging.info(f"Number of files received: {len(files)}")
+        logging.info(f"Type of files received: {type(files)}")
+
+        if(len(files) > 0):
+            for f in files:
+                fileName = ''
+                fileName = None if not f else await uploadfileToLocal1(f)
+                fields3= f'mdcc_no,doc1,item_id,created_by,created_at'
+                values3 = f'"{test_cert_no}","{fileName}","{item_id}","{user}","{formatted_dt}"' 
+                table_name3 = "td_mdcc_doc"
+                whr3 =  ""
+                flag3 = 0
+                # if(id==0):
+                result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+                res_dt = result3
+        return res_dt
+
+        # if(type(files) != list):
+        #     fileName = None if not files else await uploadfileToLocal(files)
+        #     fields3= f'proj_id,proj_doc,created_by,created_at'
+        #     values3 = f'"{proj_id}","{fileName}","{user}","{formatted_dt}"' 
+        #     table_name3 = "td_project_doc"
+        #     whr3 =  ""
+        #     flag3 = 0
+        #     # if(id==0):
+        #     result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+        #     res_dt = result3
+        # else:
+        #     # print(docs)
+        #     for f in files:
+        #         fileName = ''
+        #         fileName = None if not f else await uploadfileToLocal(f)
+        #         fields3= f'proj_id,proj_doc,created_by,created_at'
+        #         values3 = f'"{proj_id}","{fileName}","{user}","{formatted_dt}"' 
+        #         table_name3 = "td_project_doc"
+        #         whr3 =  ""
+        #         flag3 = 0
+        #         # if(id==0):
+        #         result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+        #         res_dt = result3
+        # return res_dt
+
+async def uploadfileToLocal1(file):
     current_datetime = datetime.now()
     receipt = int(round(current_datetime.timestamp()))
     modified_filename = f"{receipt}_{file.filename}"
