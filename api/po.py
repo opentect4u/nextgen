@@ -754,7 +754,7 @@ async def addtc(dt:GetTc):
     if(dt.id==0):
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": "Category saved successfully!"}
+            res_dt = {"suc": 1, "msg": "Saved successfully!"}
         else:
             res_dt = {"suc": 0, "msg": "Error while saving!"}
     # else:
