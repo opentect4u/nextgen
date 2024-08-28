@@ -888,7 +888,7 @@ async def addtc(dt:GetMdcc):
 
 
 @poRouter.post('/add_mdcc_files')
-async def add_proj_files(item_id:str = Form(...),test_cert_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
+async def add_proj_files(item_id:str = Form(...),mdcc_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
     fileName = ''
     res_dt = {}
     files = []
@@ -910,7 +910,7 @@ async def add_proj_files(item_id:str = Form(...),test_cert_no:str = Form(...), u
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal1(f)
                 fields3= f'mdcc_no,doc1,item_id,created_by,created_at'
-                values3 = f'"{test_cert_no}","{fileName}","{item_id}","{user}","{formatted_dt}"' 
+                values3 = f'"{mdcc_no}","{fileName}","{item_id}","{user}","{formatted_dt}"' 
                 table_name3 = "td_mdcc_doc"
                 whr3 =  ""
                 flag3 = 0
