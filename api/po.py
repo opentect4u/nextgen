@@ -144,6 +144,10 @@ class srcGetByItem(BaseModel):
 class getDoc(BaseModel):
     id:int
     item:str
+
+class deleteDoc(BaseModel):
+    id:int
+    user:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -984,7 +988,7 @@ async def gettcbypo(po:srcMdccbyPO):
     res_dt = {}
     select = "*"
     schema = "td_test_cert"
-    where = f"po_no like '%{po.po}%'"
+    where = f"po_no like '%{po.po}%' and delete_flag='N'"
     order = ""
     flag = 1
     result = await db_select(select, schema, where, order, flag)
@@ -997,7 +1001,7 @@ async def gettcbypo(po:srcMdccbyPO):
     res_dt = {}
     select = "*"
     schema = "td_mdcc"
-    where = f"po_no like '%{po.po}%'"
+    where = f"po_no like '%{po.po}%' and delete_flag='N'"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
@@ -1085,3 +1089,60 @@ async def gettcbypo(id:srcGetByItem):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+@poRouter.post('/deletetc')
+async def deletetc(id:deleteDoc):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "td_test_cert"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+
+
+   fields1=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name1 = "test_cert_doc"
+   flag1 = 1 
+   values1=''
+   whr1=f'test_cert_no="{id.id}"'
+   result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+   if(result['suc']>0 and result1['suc']>0):
+        res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+       
+   return res_dt
+
+
+@poRouter.post('/deletemdcc')
+async def deletetc(id:deleteDoc):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "td_mdcc"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+
+
+   fields1=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name1 = "td_mdcc_doc"
+   flag1 = 1 
+   values1=''
+   whr1=f'mdcc_no="{id.id}"'
+   result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+   if(result['suc']>0 and result1['suc']>0):
+        res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+       
+   return res_dt
+
