@@ -1003,7 +1003,7 @@ async def gettcbypo(id:GetPo):
     schema = "td_test_cert,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f""
     order = "ORDER BY created_at DESC"
-    flag = 0 if id.id>0 else 1
+    flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
@@ -1017,7 +1017,7 @@ async def gettcbypo(id:GetPo):
     schema = "td_mdcc,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f""
     order = "ORDER BY created_at DESC"
-    flag = 0 if id.id>0 else 1
+    flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
