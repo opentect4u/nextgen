@@ -1070,7 +1070,6 @@ async def gettcbypo(id:srcGetByItem):
 @poRouter.post('/getmdccbyitem')  
 async def gettcbypo(id:srcGetByItem):
     print('I am logging in!')
-    print(id.id)
     res_dt = {}
     select = "item,qty,status"
     schema = "td_mdcc"
