@@ -140,6 +140,10 @@ class srcMdccbyPO(BaseModel):
 class srcGetByItem(BaseModel):
     po:str
     item:str
+
+class getDoc(BaseModel):
+    id:str
+    item:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -1029,13 +1033,13 @@ async def gettcbypo(id:GetPo):
     return result
 
 @poRouter.post('/gettcdoc')  
-async def gettcbypo(id:GetPo):
+async def gettcbypo(id:getDoc):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
     select = "*"
-    schema = "test_cert_doc,(SELECT @a:= 0) AS a"
-    where = f"test_cert_no='{id.id}'" if id.id>0 else f""
+    schema = "test_cert_doc"
+    where = f"test_cert_no='{id.id}' and item='{id.item}'" if id.id>0 else f""
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -1043,13 +1047,13 @@ async def gettcbypo(id:GetPo):
     return result
 
 @poRouter.post('/getmdccdoc')  
-async def gettcbypo(id:GetPo):
+async def gettcbypo(id:getDoc):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
     select = "*"
-    schema = "td_mdcc_doc,(SELECT @a:= 0) AS a"
-    where = f"mdcc_no='{id.id}'" if id.id>0 else f""
+    schema = "td_mdcc_doc"
+    where = f"mdcc_no='{id.id}'and item='{id.item}'" if id.id>0 else f""
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
