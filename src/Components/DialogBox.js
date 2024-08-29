@@ -16,7 +16,7 @@ import TDInputTemplate from './TDInputTemplate';
 import { SaveOutlined } from '@ant-design/icons';
 import AmendPreview from './AmendPreview';
 import { url } from '../Address/BaseUrl';
-const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo }) => {
+const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id }) => {
   const navigate = useNavigate();
   const [po_no,setPoNo]=useState('')
   useEffect(()=>{setPoNo('')},[])
@@ -165,6 +165,7 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo }) => {
           </div>
           </p>
         }
+        {flag==14 && <AmendPreview id={id}/>}
       </Dialog>
   );
 };

@@ -216,7 +216,7 @@ function VendorMaster({onClose}) {
         Yup.string()
           .required("TCS percentage is required")
           .max(100, "Invalid value!")
-          .min(0, "Invalid Value")
+          .min(0.0000001, "Invalid Value")
           .matches(/^[0-9.]+$/, "Invalid value"),
       otherwise: () => Yup.string(),
     }),

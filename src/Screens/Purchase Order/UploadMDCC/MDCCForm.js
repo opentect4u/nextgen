@@ -1,245 +1,88 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import BtnComp from "../../../Components/BtnComp";
-import HeadingTemplate from "../../../Components/HeadingTemplate";
-import VError from "../../../Components/VError";
-import TDInputTemplate from "../../../Components/TDInputTemplate";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import axios from "axios";
 import { Message } from "../../../Components/Message";
 import { url } from "../../../Address/BaseUrl";
-import { Spin} from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import DialogBox from "../../../Components/DialogBox";
-import PrintComp from "../../../Components/PrintComp";
-import AuditTrail from "../../../Components/AuditTrail";
-import { ListBox } from 'primereact/listbox';
+import { Spin, Tag } from "antd";
+import { LoadingOutlined, SyncOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import UploadTemplate from "../../../Components/UploadTemplate";
 
 function MDCCForm() {
-    const params = useParams();
-    const [loading,setLoading]=useState(false)
-    const [visible,setVisible]=useState(false)
-    const [data,setData]=useState()
-    const [products,setProducts]=useState([])
-    const [count,setCount]=useState(0)
-  
-    const navigate=useNavigate()
-    const [flag,setFlag]=useState(4)
-    const initialValues = {
-      mdcc_dt: "",
-      comments:"",
-      doc1:"",
-      doc2:"",
-      doc3:""
-    };
-    const [formValues,setValues] = useState(initialValues)
-    var result;
-     useEffect(()=>{
-    //   if(+params.id>0){
-    //     setLoading(true)
-    //       axios.post(url+'/api/getcategory',{id:params.id}).then(res=>{
-    //     console.log(res.data.msg.catg_name)
-    //     setData(res.data?.msg)
-    //     // setLoading(false)
-    //     // setValues({catnm:res.data.msg.catg_name})
-    //   }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
-    //   axios.post(url+'/api/getCatWithProd',{id:params.id}).then(res=>{
-    //     console.log(res)
-    //     // console.log(res.data.msg.catg_name)
-    //     setProducts(res.data?.msg)
-    //     setLoading(false)
-    //     products.length=0
-    //     for(let i=0;i<res?.data?.msg.length;i++){
-    //       products.push({name:res?.data?.msg[i]?.prod_name,code:res?.data?.msg[i]?.sl_no})
-    //     }
-    //     setProducts(products)
-  
-    //     console.log(products)
-    //     // setValues({catnm:res.data.msg.catg_name})
-    //   }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
-    // }
-      },[count])
-    const onSubmit = (values) => {
-      console.log(values);
-      // setLoading(true)
-      // axios.post(url+'/api/addcategory',{id:+params.id,name:values.catnm,user:localStorage.getItem('email')}).then(res=>{
-      //   setLoading(false)
-      //   if(res.data.suc>0){
-      //     Message('success',res.data.msg)
-      //     if(params.id==0)
-      //       formik.handleReset()
-      //       setCount(prev=>prev+1)
-      //   }
-      //   else{
-      //     Message('error',res.data.msg)
-  
-      //   }
-      // }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
-      
-      console.log(result)
-    };
-    const onDelete=()=>{
-      console.log(params.id)
-      setVisible(true)
+  const params = useParams();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  var result;
+
+  const onSubmit = (values) => {
+    if (
+      (values.doc1 || values.doc2) &&
+      values.test_dt &&
+      values.item_no &&
+      values.qty &&
+      values.status &&
+      values.po_no
+    ) {
+      const formData = new FormData();
+      setLoading(true);
+      axios
+        .post(url + "/api/addmdcc", {
+          user: localStorage.getItem("email"),
+          id: +params.id,
+          test_dt: values.test_dt,
+          item_id: values.item_no,
+          item: values.item_no,
+          comments: values.comments,
+          quantity: values.qty,
+          status: values.status,
+          po_no: values.po_no,
+        })
+        .then((res) => {
+          console.log(res);
+
+          formData.append("mdcc_no", res.data.lastID);
+          formData.append("user", localStorage.getItem("email"));
+          formData.append("item_id", values.item_no);
+          formData.append("po_no", values.po_no);
+
+          if (values.doc1) formData.append("docs1", values.doc1);
+          if (values.doc2) formData.append("docs2", values.doc2);
+
+          axios
+            .post(url + "/api/add_mdcc_files", formData)
+            .then((resProjFile) => {
+              setLoading(false);
+
+              if (resProjFile.data.suc > 0) {
+                Message("success", res.data.msg);
+                if (+params.id == 0) navigate(-1);
+              } else {
+                Message("error", res.data.msg);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              navigate("/error" + "/" + err.code + "/" + err.message);
+            });
+        });
     }
-    const deleteItem=()=>{
-      setLoading(true)
-      console.log(params.id)
-      setVisible(false)
-      axios.post(url+'/api/deletecategory',{id:params.id,user:localStorage.getItem('email')}).then(res=>{
-        console.log(res)
-        setLoading(false)
-        if(res.data.suc>0){
-          Message('success',res.data.msg)
-          navigate(-1)
-        }
-        else{
-          Message('error',res.data.msg)
-  
-        }
-      }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
-    }
-    const validationSchema = Yup.object({
-      mdcc_dt: Yup.string().required("Date is required"),
-      
-    });
-    const formik = useFormik({
-      initialValues:(+params.id>0?formValues:initialValues),
-      onSubmit,
-      validationSchema,
-      validateOnMount: true,
-      enableReinitialize:true
-    });
-    return (
-     
-      <section  className="bg-transparent dark:bg-[#001529]">
-            {/* {params.id>0 && data && <PrintComp toPrint={data} title={'Department'}/>} */}
-            <HeadingTemplate
-                text={"Upload MDCC"}
-                mode={params.id>0?1:0}
-                title={'Category'}
-                data={''}
-              />
-              <div className="grid grid-cols-6 gap-2">
-              <div className={products.length>0?'w-full col-span-4 bg-white p-6 rounded-2xl':'w-full col-span-6 bg-white p-6 rounded-2xl'}>
-            <Spin indicator={<LoadingOutlined spin />} size="large" className="text-green-900 dark:text-gray-400" spinning={loading}>
-          <form onSubmit={formik.handleSubmit}>
-            <div className="grid gap-4 sm:grid-cols-6 sm:gap-6">
-              <div className="sm:col-span-6">
-                
-                <TDInputTemplate
-                  placeholder="Date"
-                  type="date"
-                  label="Date"
-                  name="mdcc_dt"
-                  formControlName={formik.values.mdcc_dt}
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  mode={1}
-                />
-  
-  
-                {formik.errors.mdcc_dt && formik.touched.mdcc_dt ? (
-                  <VError title={formik.errors.mdcc_dt} />
-                ) : null}
-              </div>
-             
-              
-              <div className="sm:col-span-6">
-                
-                <TDInputTemplate
-                  placeholder="Comments"
-                  type="text"
-                  label="Comments"
-                  name="comments"
-                  formControlName={formik.values.comments}
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  mode={3}
-                />
-                
-  
-                {formik.errors.comments && formik.touched.comments ? (
-                  <VError title={formik.errors.comments} />
-                ) : null}
-              </div>
-              <div className="sm:col-span-2">
-                
-                <TDInputTemplate
-                  placeholder="Comments"
-                  type="file"
-                  label="Document 1"
-                  name="doc1"
-                  formControlName={formik.values.doc1}
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  mode={1}
-                />
-                
-  
-                {formik.errors.doc1 && formik.touched.doc1 ? (
-                  <VError title={formik.errors.doc1} />
-                ) : null}
-              </div>
-              <div className="sm:col-span-2">
-                
-                <TDInputTemplate
-                  placeholder="Comments"
-                  type="file"
-                  label="Document 2"
-                  name="doc2"
-                  formControlName={formik.values.doc2}
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  mode={1}
-                />
-                
-  
-                {formik.errors.doc2 && formik.touched.doc2 ? (
-                  <VError title={formik.errors.doc2} />
-                ) : null}
-              </div>
-              <div className="sm:col-span-2 mb-6">
-                
-                <TDInputTemplate
-                  placeholder="Comments"
-                  type="file"
-                  label="Document 3"
-                  name="doc3"
-                  formControlName={formik.values.doc3}
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  mode={1}
-                />
-                
-  
-                {formik.errors.doc3 && formik.touched.doc3 ? (
-                  <VError title={formik.errors.doc3} />
-                ) : null}
-              </div>
-              {/* { params.id>0 &&  <AuditTrail data={data}/>} */}
-              
-            </div>
-  
-      
-            <BtnComp  mode={'A'} onDelete={()=>onDelete()} onReset={formik.handleReset}/>
-           
-          </form>
-          </Spin>
-        </div>
-   
-              </div>
-           
-        <DialogBox
-          visible={visible}
-          flag={flag}
-          onPress={() => setVisible(false)}
-          onDelete={()=>deleteItem()}
-        />
-      </section>
-    )
+    console.log(result);
+  };
+
+  return (
+    <Spin
+      indicator={<LoadingOutlined spin />}
+      size="large"
+      className="text-green-900 dark:text-gray-400"
+      spinning={loading}
+    >
+      <UploadTemplate
+        flag={"M"}
+        title={"Upload MDCC"}
+        onSubmit={(values) => onSubmit(values)}
+      />
+    </Spin>
+  );
 }
 
-export default MDCCForm
+export default MDCCForm;

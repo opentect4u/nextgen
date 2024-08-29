@@ -233,8 +233,12 @@ function PurchaseOrderForm() {
   useEffect(()=>{
    if(+params.id==0)
     localStorage.setItem('po_status','P')
+    if(params.flag=='F'){
+    localStorage.setItem('po_no','null')
+    setPoNo(null)}
     setClickFlag(localStorage.getItem('po_status'))
-  },[localStorage.getItem('po_status')])
+  // },[localStorage.getItem('po_status')])
+},[])
   useEffect(()=>{
     
     setFloatShow((localStorage.getItem('po_status')=='P' || localStorage.getItem('po_status')=='U') && (localStorage.getItem('order_date') || localStorage.getItem('vendor_name'))?true:false)
