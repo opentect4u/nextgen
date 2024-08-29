@@ -977,7 +977,7 @@ async def gettcbypo(po:srcMdccbyPO):
     select = "@a:=@a+1 serial_number,po_no,test_dt,test_place,test_person, comments, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_test_cert,(SELECT @a:= 0) AS a"
-    where = f"po_no like '{po.po}'"
+    where = f"po_no like '%{po.po}%'"
     order = "ORDER BY created_at DESC"
     flag = 0 
     result = await db_select(select, schema, where, order, flag)
@@ -993,7 +993,7 @@ async def gettcbypo(po:srcMdccbyPO):
     select = "@a:=@a+1 serial_number,po_no,test_dt comments, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_mdcc,(SELECT @a:= 0) AS a"
-    where = f"po_no like '{po.po}'"
+    where = f"po_no like '%{po.po}%'"
     order = "ORDER BY created_at DESC"
     flag = 0 
     result = await db_select(select, schema, where, order, flag)
