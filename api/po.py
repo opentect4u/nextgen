@@ -1037,7 +1037,7 @@ async def gettcbypo(id:getDoc):
     res_dt = {}
     select = "*"
     schema = "test_cert_doc"
-    where = f"test_cert_no='{id.id}' and item='{id.item}'" if id.id>0 else f""
+    where = f"test_cert_no='{id.id}' and item_id='{id.item}'" if id.id>0 else f""
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -1051,7 +1051,7 @@ async def gettcbypo(id:getDoc):
     res_dt = {}
     select = "*"
     schema = "td_mdcc_doc"
-    where = f"mdcc_no='{id.id}'and item='{id.item}'" if id.id>0 else f""
+    where = f"mdcc_no='{id.id}'and item_id='{id.item}'" if id.id>0 else f""
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
