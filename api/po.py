@@ -994,7 +994,7 @@ async def gettcbypo(po:srcMdccbyPO):
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
     select = "@a:=@a+1 serial_number,po_no,test_dt, comments, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
-    schema = "(SELECT @a:= 0) AS a,td_mdcc,"
+    schema = "(SELECT @a:= 0) AS a,td_mdcc"
     where = f"po_no like '%{po.po}%'"
     order = "ORDER BY created_at DESC"
     flag = 0 
