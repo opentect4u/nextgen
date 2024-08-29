@@ -819,7 +819,7 @@ async def add_proj_files(item_id:str = Form(...),po_no:str = Form(...),test_cert
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal(f)
                 fields3= f'test_cert_no,doc1,po_no,item_id,created_by,created_at'
-                values3 = f'"{test_cert_no}","{fileName}","{po_no}""{item_id}","{user}","{formatted_dt}"' 
+                values3 = f'"{test_cert_no}","{fileName}","{po_no}","{item_id}","{user}","{formatted_dt}"' 
                 table_name3 = "test_cert_doc"
                 whr3 =  ""
                 flag3 = 0
