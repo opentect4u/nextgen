@@ -992,7 +992,7 @@ async def gettcbypo(po:srcMdccbyPO):
     schema = "td_mdcc"
     where = f"po_no like '%{po.po}%'"
     order = ""
-    flag = 1 
+    flag = 0 
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result     
