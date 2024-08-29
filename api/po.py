@@ -1023,3 +1023,31 @@ async def gettcbypo(id:GetPo):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@poRouter.post('/gettcdoc')  
+async def gettcbypo(id:GetPo):
+    print('I am logging in!')
+    print(id.id)
+    res_dt = {}
+    select = "*"
+    schema = "test_cert_doc,(SELECT @a:= 0) AS a"
+    where = f"test_cert_no='{id.id}'" if id.id>0 else f""
+    order = "ORDER BY created_at DESC"
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+@poRouter.post('/getmdccdoc')  
+async def gettcbypo(id:GetPo):
+    print('I am logging in!')
+    print(id.id)
+    res_dt = {}
+    select = "*"
+    schema = "td_mdcc_doc,(SELECT @a:= 0) AS a"
+    where = f"mdcc_no='{id.id}'" if id.id>0 else f""
+    order = "ORDER BY created_at DESC"
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
