@@ -1057,7 +1057,6 @@ async def gettcbypo(id:GetPo):
 @poRouter.post('/gettcbyitem')  
 async def gettcbypo(id:srcGetByItem):
     print('I am logging in!')
-    print(id.id)
     res_dt = {}
     select = "test.item,test.qty,test.comment,doc.doc1"
     schema = "td_test_cert test,test_cert_doc doc"
