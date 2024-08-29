@@ -799,7 +799,7 @@ async def addtc(dt:GetTc):
 
 
 @poRouter.post('/add_tc_files')
-async def add_proj_files(item_id:str = Form(...),test_cert_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
+async def add_proj_files(item_id:str = Form(...),po_no:str = Form(...),test_cert_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
     fileName = ''
     res_dt = {}
     files = []
@@ -820,8 +820,8 @@ async def add_proj_files(item_id:str = Form(...),test_cert_no:str = Form(...), u
             for f in files:
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal(f)
-                fields3= f'test_cert_no,doc1,item_id,created_by,created_at'
-                values3 = f'"{test_cert_no}","{fileName}","{item_id}","{user}","{formatted_dt}"' 
+                fields3= f'test_cert_no,doc1,po_no,item_id,created_by,created_at'
+                values3 = f'"{test_cert_no}","{fileName}","{po_no}""{item_id}","{user}","{formatted_dt}"' 
                 table_name3 = "test_cert_doc"
                 whr3 =  ""
                 flag3 = 0
@@ -905,7 +905,7 @@ async def addtc(dt:GetMdcc):
 
 
 @poRouter.post('/add_mdcc_files')
-async def add_proj_files(item_id:str = Form(...),mdcc_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
+async def add_proj_files(item_id:str = Form(...),po_no:str = Form(...),mdcc_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
     fileName = ''
     res_dt = {}
     files = []
@@ -926,8 +926,8 @@ async def add_proj_files(item_id:str = Form(...),mdcc_no:str = Form(...), user:s
             for f in files:
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal1(f)
-                fields3= f'mdcc_no,doc1,item_id,created_by,created_at'
-                values3 = f'"{mdcc_no}","{fileName}","{item_id}","{user}","{formatted_dt}"' 
+                fields3= f'mdcc_no,doc1,po_no,item_id,created_by,created_at'
+                values3 = f'"{mdcc_no}","{fileName}","{po_no}","{item_id}","{user}","{formatted_dt}"' 
                 table_name3 = "td_mdcc_doc"
                 whr3 =  ""
                 flag3 = 0
