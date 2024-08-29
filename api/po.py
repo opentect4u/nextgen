@@ -1158,3 +1158,31 @@ async def check_proj_id(po_no:GetPoNo):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@poRouter.post('/getitemdoctc')
+async def check_proj_id(po_no:GetPoNo):
+    print(po_no.po_no)
+    res_dt = {}
+
+    select = "po_no,item_id"
+    schema = "test_cert_doc"
+    where = f"po_no='{po_no.po_no}'"
+    order = ""
+    flag = 1 if po_no.po_no else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+@poRouter.post('/getitemdocmdcc')
+async def check_proj_id(po_no:GetPoNo):
+    print(po_no.po_no)
+    res_dt = {}
+
+    select = "po_no,item_id"
+    schema = "td_mdcc_doc"
+    where = f"po_no='{po_no.po_no}'"
+    order = ""
+    flag = 1 if po_no.po_no else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
