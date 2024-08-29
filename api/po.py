@@ -1144,3 +1144,17 @@ async def deletetc(id:deleteDoc):
        
    return res_dt
 
+
+@poRouter.post('/check_po_no_for_doc')
+async def check_proj_id(po_no:GetPoNo):
+    print(po_no.po_no)
+    res_dt = {}
+
+    select = "count(*) as count"
+    schema = "td_po_basic"
+    where = f"po_no='{po_no.po_no}' and po_status='A'"
+    order = ""
+    flag = 1 if po_no.po_no else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
