@@ -1060,9 +1060,9 @@ async def gettcbypo(id:GetPo):
 async def gettcbypo(id:srcGetByItem):
     print('I am logging in!')
     res_dt = {}
-    select = "test.item,test.qty,test.comments,doc.doc1"
-    schema = "td_test_cert test,test_cert_doc doc"
-    where = f"test.po_no='{id.po}' and test.item={id.item}"
+    select = "item,qty,status"
+    schema = "td_test_cert"
+    where = f"po_no='{id.po}' and item={id.item}"
     order = "ORDER BY test.created_at DESC"
     flag = 1
     result = await db_select(select, schema, where, order, flag)
@@ -1070,7 +1070,7 @@ async def gettcbypo(id:srcGetByItem):
     return result
 
 @poRouter.post('/getmdccbyitem')  
-async def gettcbypo(id:GetPo):
+async def gettcbypo(id:srcGetByItem):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
