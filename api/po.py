@@ -142,7 +142,7 @@ class srcGetByItem(BaseModel):
     item:str
 
 class getDoc(BaseModel):
-    id:str
+    id:int
     item:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
