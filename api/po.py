@@ -1075,7 +1075,7 @@ async def gettcbypo(id:srcGetByItem):
     schema = "td_mdcc"
     where = f"po_no='{id.po}' and item='{id.item}'"
     order = "ORDER BY created_at DESC"
-    flag = 0 if id.id>0 else 1
+    flag = 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
