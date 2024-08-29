@@ -988,13 +988,12 @@ async def gettcbypo(po:srcMdccbyPO):
 
 @poRouter.post('/getmdccbypo')
 async def gettcbypo(po:srcMdccbyPO):
-    print('I am logging in!')
     print(po.po)
     res_dt = {}
     select = "*"
     schema = "td_mdcc"
-    where = f"po_no like '%{po.po}%'"
-    order = "ORDER BY created_at DESC"
+    where = f"po_no = '{po.po}'"
+    order = ""
     flag = 0 
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
