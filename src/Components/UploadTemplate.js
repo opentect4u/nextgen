@@ -20,6 +20,7 @@ import AuditTrail from "../Components/AuditTrail";
 import Viewdetails from "../Components/Viewdetails";
 import { Spin, Tag } from "antd";
 import { Message } from "./Message";
+import moment from 'moment'
 
 function UploadTemplate({ onSubmit, flag, title }) {
   const [visible, setVisible] = useState(false);
@@ -287,7 +288,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
                   Checking...
                 </Tag>
               )}
-              {count == 0 && !po_no && (
+              {count == 0 && po_no && (
                 <VError title={"PO No. either does not exist or has not been approved!"} />
               )}
 
@@ -307,6 +308,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
                 type="date"
                 label="Test Date"
                 disabled={params.id > 0}
+                max={moment(new Date()).format('yyyy-MM-DD')}
                 name="test_dt"
                 formControlName={test_dt}
                 handleChange={(txt) => setTestDt(txt.target.value)}
@@ -348,7 +350,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
                 mode={2}
                 data={itemList}
               />
-
+{params.id==0 && po_no && <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">Item under this PO not having a certificate appears here. </p>}
               {!item_no && params.id == 0 ? (
                 <VError title={"Item is required"} />
               ) : null}
@@ -368,6 +370,9 @@ function UploadTemplate({ onSubmit, flag, title }) {
 
               {!qty && params.id == 0 ? (
                 <VError title={"Quantity is required"} />
+              ) : null}
+               {qty<0  ? (
+                <VError title={"Quantity should be non-zero positive"} />
               ) : null}
             </div>
             <div className="sm:col-span-4">
@@ -396,16 +401,24 @@ function UploadTemplate({ onSubmit, flag, title }) {
                 placeholder="Comments"
                 type="file"
                 label="Document 1"
+                accept={'application/pdf'}
                 disabled={params.id > 0}
                 name="doc1"
-                handleChange={(txt) => setDoc1(txt.target.files[0])}
+                handleChange={(txt) =>{ 
+                  if(txt.target.files[0].size/1000000<=1){
+                  setDoc1(txt.target.files[0])
+                  }
+                  else{
+                    setDoc1(null)
+                    Message('warning','File size exceeds 1MB')
+                  }
+                }}
                 mode={1}
               />
-
+<p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">Accepts PDF only.  (Max 1MB) </p>
               {!doc1 && !doc2 && params.id == 0 ? (
-                <VError title={"Must upload a file"} />
+                <VError title={"Must upload a file (max 1MB)"} />
               ) : null}
-
               {fileList?.map((item) => (
                 <a target="_blank" href={url + "/uploads/" + item}>
                   {item.toString().split(".")[1] == "pdf" ? (
@@ -428,9 +441,18 @@ function UploadTemplate({ onSubmit, flag, title }) {
                 label="Document 2"
                 disabled={params.id > 0}
                 name="doc2"
-                handleChange={(txt) => setDoc2(txt.target.files[0])}
+                accept={'application/pdf'}
+                handleChange={(txt) =>{ 
+                  if(txt.target.files[0].size/1000000<=1)
+                  setDoc2(txt.target.files[0])
+                 else{
+                  setDoc2(null)
+                    Message('warning','File size exceeds 1MB')
+                 }
+                }}
                 mode={1}
               />
+              <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">Accepts PDF only. (Max 1MB) </p>
             </div>
             {flag == "T" && (
               <div className="sm:col-span-6">
@@ -440,6 +462,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
                   label="Test Persons"
                   name="test_person"
                   disabled={params.id > 0}
+                  
                   formControlName={test_person}
                   handleChange={(txt) => setPerson(txt.target.value)}
                   mode={3}
@@ -467,6 +490,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
             {params.id == 0 && (
               <button
                 onClick={() => onsubmit()}
+                disabled={count==0 || qty<0}
                 className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
               >
                 Submit

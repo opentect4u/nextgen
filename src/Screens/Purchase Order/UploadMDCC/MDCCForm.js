@@ -19,7 +19,7 @@ function MDCCForm() {
       (values.doc1 || values.doc2) &&
       values.test_dt &&
       values.item_no &&
-      values.qty &&
+      values.qty && values.qty>0 &&
       values.status &&
       values.po_no
     ) {

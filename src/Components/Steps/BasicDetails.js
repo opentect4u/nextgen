@@ -263,6 +263,7 @@ if(mode==2){
                 name="po_issue_date"
                 disabled={params.flag=='F'||localStorage.getItem('po_status')=='A'?true:false}
                 formControlName={po_issue_date}
+                max={moment(new Date()).format('yyyy-MM-DD')} //may need to change
                 handleChange={(txt) => 
                   {setPoIssueDate(txt.target.value)
                   localStorage.setItem('po_issue_date',txt.target.value)
