@@ -15,8 +15,8 @@ import os
 
 import logging
 
-UPLOAD_FOLDER = "upload_tc"
-UPLOAD_FOLDER2 = "upload_mdcc"
+UPLOAD_FOLDER = "upload_file/upload_tc"
+UPLOAD_FOLDER2 = "upload_file/upload_mdcc"
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -821,7 +821,7 @@ async def add_proj_files(item_id:str = Form(...),po_no:str = Form(...),test_cert
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal(f)
                 fields3= f'test_cert_no,doc1,po_no,item_id,created_by,created_at'
-                values3 = f'"{test_cert_no}","{fileName}","{po_no}","{item_id}","{user}","{formatted_dt}"' 
+                values3 = f'"{test_cert_no}","upload_tc/{fileName}","{po_no}","{item_id}","{user}","{formatted_dt}"' 
                 table_name3 = "test_cert_doc"
                 whr3 =  ""
                 flag3 = 0
@@ -927,7 +927,7 @@ async def add_proj_files(item_id:str = Form(...),po_no:str = Form(...),mdcc_no:s
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal1(f)
                 fields3= f'mdcc_no,doc1,po_no,item_id,created_by,created_at'
-                values3 = f'"{mdcc_no}","{fileName}","{po_no}","{item_id}","{user}","{formatted_dt}"' 
+                values3 = f'"{mdcc_no}","upload_mdcc/{fileName}","{po_no}","{item_id}","{user}","{formatted_dt}"' 
                 table_name3 = "td_mdcc_doc"
                 whr3 =  ""
                 flag3 = 0
