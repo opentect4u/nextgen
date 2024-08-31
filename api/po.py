@@ -1185,8 +1185,8 @@ async def adddelivery(data:getDelivery):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_no="{data.po_no}",comments="{data.comments}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'comments,created_by,created_at'
-    values = f'"{data.comments}","{data.user}","{formatted_dt}"'
+    fields= f'po_no="{data.po_no}",comments="{data.comments}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'po_no,comments,created_by,created_at'
+    values = f'"{data.po_no}","{data.comments}","{data.user}","{formatted_dt}"'
     table_name = "td_item_delivery"
     whr = f'sl_no="{data.id}"' if data.id > 0 else None
     flag = 1 if data.id>0 else 0
