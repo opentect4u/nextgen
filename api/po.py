@@ -1216,7 +1216,7 @@ async def adddelivery(data:getDelivery):
     return res_dt
 
 @poRouter.post('/add_delivery_files')
-async def add_proj_files(po_no:str = Form(...),docs1:str = Form(...), user:str = Form(...),docs2:Optional[Union[UploadFile, None]] = None):
+async def add_proj_files(po_no:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, user:str = Form(...),docs2:Optional[Union[UploadFile, None]] = None):
     fileName = ''
     res_dt = {}
     files = []
