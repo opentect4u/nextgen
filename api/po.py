@@ -17,10 +17,12 @@ import logging
 
 UPLOAD_FOLDER = "upload_file/upload_tc"
 UPLOAD_FOLDER2 = "upload_file/upload_mdcc"
+UPLOAD_FOLDER3 = "upload_file/upload_delivery"
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER2, exist_ok=True)
+os.makedirs(UPLOAD_FOLDER3, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 poRouter = APIRouter()
@@ -147,6 +149,18 @@ class getDoc(BaseModel):
 
 class deleteDoc(BaseModel):
     id:int
+    user:str
+
+class addItems(BaseModel):
+    sl_no:int
+    item_id:int
+    quantity:str
+    status:str
+class getDelivery(BaseModel):
+    id:int
+    po_no:str
+    comments:str
+    itemForm:list[addItems]
     user:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
@@ -936,31 +950,6 @@ async def add_proj_files(item_id:str = Form(...),po_no:str = Form(...),mdcc_no:s
                 res_dt = result3
         return res_dt
 
-        # if(type(files) != list):
-        #     fileName = None if not files else await uploadfileToLocal(files)
-        #     fields3= f'proj_id,proj_doc,created_by,created_at'
-        #     values3 = f'"{proj_id}","{fileName}","{user}","{formatted_dt}"' 
-        #     table_name3 = "td_project_doc"
-        #     whr3 =  ""
-        #     flag3 = 0
-        #     # if(id==0):
-        #     result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
-        #     res_dt = result3
-        # else:
-        #     # print(docs)
-        #     for f in files:
-        #         fileName = ''
-        #         fileName = None if not f else await uploadfileToLocal(f)
-        #         fields3= f'proj_id,proj_doc,created_by,created_at'
-        #         values3 = f'"{proj_id}","{fileName}","{user}","{formatted_dt}"' 
-        #         table_name3 = "td_project_doc"
-        #         whr3 =  ""
-        #         flag3 = 0
-        #         # if(id==0):
-        #         result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
-        #         res_dt = result3
-        # return res_dt
-
 async def uploadfileToLocal1(file):
     current_datetime = datetime.now()
     receipt = int(round(current_datetime.timestamp()))
@@ -1188,3 +1177,95 @@ async def check_proj_id(po_no:GetPoNo):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+
+@poRouter.post('/adddelivery')
+async def adddelivery(data:getDelivery):
+    res_dt = {}
+    print(data)
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    fields= f'po_no="{data.po_no}",comments="{data.comments}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'comments,created_by,created_at'
+    values = f'"{data.comments}","{data.user}","{formatted_dt}"'
+    table_name = "td_item_delivery"
+    whr = f'sl_no="{data.id}"' if data.id > 0 else None
+    flag = 1 if data.id>0 else 0
+
+    result = await db_Insert(table_name, fields, values, whr, flag)
+
+    lastID=data.id if data.id>0 else result["lastId"]
+
+    # del_table_name = 'md_client_poc'
+    # del_whr = f"sl_no not in()"
+    # del_qry = await db_Delete(del_table_name, del_whr)
+
+    # 
+
+    for v in data.itemForm:
+        fields= f'item_id="{v.item_id}",quantity="{v.quantity}",status="{v.status}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'del_no,po_no,item_id,quantity,status,created_by,created_at'
+        values = f'"{lastID}","{data.po_no}","{v.item_id}","{v.quantity}","{v.status}","{data.user}","{formatted_dt}"'
+        table_name = "td_item_delivery_details"
+        whr =  f'po_no="{data.po_no}"' if v.sl_no > 0 else None
+        flag1 = 1 if v.sl_no>0 else 0
+        result = await db_Insert(table_name, fields, values, whr, flag1)
+        
+        if(result['suc']>0):
+            res_dt = {"suc": 1, "msg": f"Saved successfully!" if v.sl_no==0 else f"Updated successfully!"}
+        else:
+            res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
+
+
+    return res_dt
+
+@poRouter.post('/add_delivery_files')
+async def add_proj_files(item_id:str = Form(...),po_no:str = Form(...),doc:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
+    fileName = ''
+    res_dt = {}
+    files = []
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    if not docs1 and not docs2:
+        return {"suc": 1, "msg": "No file sent"}
+    else:
+        if docs1:
+            files.append(docs1)
+        if docs2:
+            files.append(docs2)
+
+        logging.info(f"Number of files received: {len(files)}")
+        logging.info(f"Type of files received: {type(files)}")
+
+        if(len(files) > 0):
+            for f in files:
+                fileName = ''
+                fileName = None if not f else await uploadfileToLocal2(f)
+                fields3= f'doc,po_no,created_by,created_at'
+                values3 = f'"upload_delivery/{fileName}","{po_no}","{user}","{formatted_dt}"' 
+                table_name3 = "td_item_delivery_doc"
+                whr3 =  ""
+                flag3 = 0
+                # if(id==0):
+                result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+                res_dt = result3
+        return res_dt
+
+async def uploadfileToLocal2(file):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(UPLOAD_FOLDER, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
