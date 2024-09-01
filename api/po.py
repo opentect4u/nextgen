@@ -1200,10 +1200,10 @@ async def adddelivery(data:getDelivery):
     # 
 
     for v in data.itemForm:
-        fields= f'item_id="{v.sl_no}",quantity="{v.quantity}",status="{v.status}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'del_no,po_no,item_id,quantity,status,created_by,created_at'
+        fields= f'quantity="{v.quantity}",status="{v.status}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'del_no,po_no,item_id,quantity,status,created_by,created_at'
         values = f'"{lastID}","{data.po_no}","{v.sl_no}","{v.quantity}","{v.status}","{data.user}","{formatted_dt}"'
         table_name = "td_item_delivery_details"
-        whr =  f'item_id="{v.sl_no}"' if data.id > 0 else None
+        whr =  f'item_id="{v.sl_no}" and del_no="{data.id}"' if data.id > 0 else None
         flag1 = 1 if data.id>0 else 0
 
         result = await db_Insert(table_name, fields, values, whr, flag1)
