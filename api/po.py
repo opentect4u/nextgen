@@ -1290,7 +1290,6 @@ async def gettcbypo(id:GetPo):
     res_dt = {}
     select = "*"
     schema = "td_item_delivery"
-    # where = f"po_no like '%{po.po}%' and delete_flag='N'"
     where = f"sl_no = '{id.id}'"
     order = ""
     flag = 1
