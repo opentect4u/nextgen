@@ -29,7 +29,8 @@ import {
   CheckCircleOutlined,
   IssuesCloseOutlined,
   SignatureOutlined,
-  CloseCircleOutlined
+  CloseCircleOutlined,
+  TruckOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -169,6 +170,26 @@ function Menus({ theme}) {
       icon: <UploadFileOutlined />,
     },
     {
+      label: "Delivery",
+      key: "material-delivery",
+      icon: <TruckOutlined />,
+      children: [
+           
+        {
+          label: <Link to={routePaths.DELIVERYCUSTOMERVIEW}>To Client</Link>,
+          key: "to-cus",
+          icon: <UserOutlined />,
+        },
+       
+        {
+          label: <Link to={routePaths.STOCKASSIGNVIEW}>To Warehouse</Link>,
+          key: "to-ware",
+          icon: <ShopOutlined />,
+        },
+       
+          ],
+    },
+    {
       label: "Stock",
       key: "sub5",
       icon: <DropboxOutlined />,
@@ -179,6 +200,7 @@ function Menus({ theme}) {
               key: "stock-update",
               icon: <DropboxOutlined />,
             },
+           
             {
               label: <Link to={routePaths.STOCKASSIGNVIEW}>Assign</Link>,
               key: "stock-assign",

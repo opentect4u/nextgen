@@ -1,6 +1,6 @@
 import React from 'react'
 import {motion} from 'framer-motion'
-import { Divider, Flex, Tag } from 'antd';
+import { Tag } from 'antd';
 function VError({title}) {
   return (
     // <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}}  transition={{delay:0.1,type:'tween',stiffness:500}} className='text-red-700 font-semibold text-sm  py-2 px-2'>{title}!</motion.div>

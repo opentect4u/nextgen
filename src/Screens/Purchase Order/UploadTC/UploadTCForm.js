@@ -21,7 +21,7 @@ function UploadTCForm() {
       values.test_place &&
       values.test_person &&
       values.item_no &&
-      values.qty &&
+      values.qty && values.qty>0 &&
       values.status
     ) {
       const formData = new FormData();

@@ -277,7 +277,7 @@ function UploadViewTemplate({ flag, title }) {
             transition={{ delay: 1, type: "spring" }}
             className="h-12 text-green-900 -mt-16  2xl:ml-48 2xl:h-24 font-bold"
           >
-            Uh-Oh!!There are no data! You can either create or search!
+             You can either create or search to view any record here!
           </motion.h2>
         </div>
       )}

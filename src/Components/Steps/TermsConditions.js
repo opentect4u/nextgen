@@ -4,9 +4,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import VError from "../../Components/VError";
 import { useParams } from "react-router-dom";
-import { Button, Checkbox } from 'antd';
-import { CheckboxProps } from 'antd';
-import { Divider, Flex, Tag } from 'antd';
+import { Checkbox } from 'antd';
+import { Tag } from 'antd';
 import { motion } from "framer-motion"
 
 function TermsConditions({pressNext,pressBack,data}) {

@@ -36,6 +36,8 @@ export const routePaths={
     PURCHASEORDERFORM:'/home/poComp/purchaseorderform/',
     CATEGORIES:'mastersComp/categories',
     ADDCATEGORIES:'/home/mastersComp/categories/categoryform/',
+    DELIVERYCUSTOMERVIEW:'/home/deliveryComp/deliverycustomerview',
+    DELIVERYCUSTOMERFORM:'/home/deliveryComp/deliverycustomerform/',
     STOCKINVIEW:'stockComp/stockinview',
     STOCKOUTVIEW:'stockComp/stockoutview',
     STOCKASSIGNVIEW:'stockComp/stockassignview',

@@ -16,6 +16,7 @@ import CatchError from "./Screens/CatchError";
 
 
 
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const Home = lazy(() => import("./Screens/Homescreen/Home"));
 const HomeScreen = lazy(() => import("./Screens/Homescreen/HomeScreen"));
@@ -132,6 +133,10 @@ const RequisitionRcvdView = lazy(() =>
 );
 const ReqSendForm = lazy(() => import("./Screens/Stock/ReqSendForm"));
 const ReqRcvdForm = lazy(() => import("./Screens/Stock/ReqRcvdForm"));
+
+const ToCustomer =lazy(()=>import( "./Screens/Delivery/ToCustomer/ToCustomer"))
+const ToCustomerView =lazy(()=>import( "./Screens/Delivery/ToCustomer/ToCustomerView"))
+const ToCustomerForm =lazy(()=>import( "./Screens/Delivery/ToCustomer/ToCustomerForm"))
 
 const router = createBrowserRouter([
   {
@@ -410,6 +415,20 @@ const router = createBrowserRouter([
                 ]
               },
             ],
+          },
+          {
+            path: "deliveryComp",
+            element: <ToCustomer />,
+            children: [
+              {
+                path: "deliverycustomerview",
+                element: <ToCustomerView />,
+              },
+              {
+                path: "deliverycustomerform/:id",
+                element: <ToCustomerForm />,
+              },
+            ]
           },
           {
             path: "stockComp",

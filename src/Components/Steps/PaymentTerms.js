@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import TDInputTemplate from "../TDInputTemplate";
-import { Button, Form, Input } from "antd";
-import { Spin } from "antd";
-import { LoadingOutlined,PlusOutlined,MinusOutlined } from "@ant-design/icons";
+import { Button,  } from "antd";
+import { PlusOutlined,MinusOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 function PaymentTerms({ pressBack, pressNext, data }) {
   const params=useParams()

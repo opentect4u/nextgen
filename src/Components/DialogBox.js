@@ -13,9 +13,7 @@ import VendorInfo from './VendorInfo';
 import ProdInfo from './ProdInfo';
 import PoPreview from './Steps/PoPreview';
 import TDInputTemplate from './TDInputTemplate';
-import { SaveOutlined } from '@ant-design/icons';
 import AmendPreview from './AmendPreview';
-import { url } from '../Address/BaseUrl';
 const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id }) => {
   const navigate = useNavigate();
   const [po_no,setPoNo]=useState('')

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import SkeletonLoading from './SkeletonLoading'
 import IMG from "../Assets/Images/Logo.png";
 
 import { Skeleton } from 'primereact/skeleton';

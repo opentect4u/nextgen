@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TDInputTemplate from "../TDInputTemplate";
-import { Formik, FieldArray, useFormik } from "formik";
-import * as Yup from "yup";
 import { PlusOutlined, MinusOutlined,InfoOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Tag } from "antd";
+import { Button,  Tag } from "antd";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
@@ -11,7 +9,6 @@ import VError from "../../Components/VError";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../Address/BaseUrl";
-import Viewdetails from "../Viewdetails";
 import DialogBox from "../DialogBox";
 import DrawerComp from "../DrawerComp";
 function ProductDetails({ pressBack, pressNext,data }) {
