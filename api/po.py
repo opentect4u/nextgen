@@ -1281,3 +1281,17 @@ async def gettcbypo(po:srcMdccbyPO):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result   
+
+@poRouter.post('/getdelbyid')
+async def gettcbypo(id:GetPo):
+    print(id.id)
+    res_dt = {}
+    select = "*"
+    schema = "td_item_delivery"
+    # where = f"po_no like '%{po.po}%' and delete_flag='N'"
+    where = f"sl_no = '{id.id}'"
+    order = ""
+    flag = 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result   
