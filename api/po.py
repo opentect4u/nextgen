@@ -1297,13 +1297,14 @@ async def gettcbypo(id:GetPo):
 
 
 @poRouter.post('/getpoitemforedit')
-async def getprojectpoc(id:GetPo):
+async def getitemforedit(id:GetPo):
+
     # print(id.id)
     res_dt = {}
 
-    select = "i.sl_no,i.item_id,i.quantity,i.status,p.prod_name"
-    schema = "td_item_delivery_details i,md_product p"
-    where = f"i.del_no='{id.id}' and i.item_id=p.sl_no" if id.id>0 else ""
+    select = "i.sl_no,i.po_sl_no,i.item_id,d.quantity,p.prod_name"
+    schema = "td_po_items i,md_product p,td_item_delivery_details d"
+    where = f"d.del_no='{id.id}' and i.item_id=p.sl_no" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
