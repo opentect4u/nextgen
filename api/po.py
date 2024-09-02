@@ -1397,8 +1397,8 @@ async def getprojectpoc(id:GetPo):
     res_dt = {}
 
     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,p.prod_name,d.cust_qty,d.wh_qty"
-    schema = "td_po_items i,md_product p,td_item_delivery_details d"
-    where = f"i.po_sl_no='{id.id}' and i.item_id=p.sl_no and d.item_id=p.sl_no" if id.id>0 else ""
+    schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=p.sl_no"
+    where = f"i.po_sl_no='{id.id}'" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
