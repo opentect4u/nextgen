@@ -1299,7 +1299,7 @@ async def gettcbypo(id:GetPo):
     print(id.id)
     res_dt = {}
     select = "*"
-    schema = "td_item_delivery"
+    schema = "td_po_delivery_status"
     where = f"sl_no = '{id.id}'"
     order = ""
     flag = 1
