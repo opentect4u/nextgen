@@ -1285,7 +1285,7 @@ async def gettcbypo(po:srcMdccbyPO):
     print(po.po)
     res_dt = {}
     select = "*"
-    schema = "td_item_delivery"
+    schema = "td_po_delivery_status"
     where = f"po_no like '%{po.po}%' and delete_flag='N'"
     # where = f"po_no like '%{po.po}%'"
     order = ""
