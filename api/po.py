@@ -1358,7 +1358,7 @@ async def check_proj_id(po_no:GetPoNo):
     print(po_no.po_no)
     res_dt = {}
 
-    select = "po_no,sl_no"
+    select = "po_no,sl_no,doc"
     schema = "td_item_delivery_doc"
     where = f"po_no='{po_no.po_no}' and delete_flag='N'"
     order = ""
