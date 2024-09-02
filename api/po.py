@@ -1209,8 +1209,8 @@ async def adddelivery(data:getDelivery):
     # 
 
     for v in data.itemForm:
-        fields= f'cust_qty="{v.cust_qty}",wh_qty="{v.wh_qty}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'del_no,po_no,item_id,cust_qty,wh_qty,created_by,created_at'
-        values = f'"{lastID}","{data.po_no}","{v.sl_no}","{v.cust_qty}","{v.wh_qty}","{data.user}","{formatted_dt}"'
+        fields= f'cust_qty="{v.cust_qty}",wh_qty="{v.wh_qty}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'po_no,item_id,cust_qty,wh_qty,created_by,created_at'
+        values = f'"{data.po_no}","{v.sl_no}","{v.cust_qty}","{v.wh_qty}","{data.user}","{formatted_dt}"'
         table_name = "td_item_delivery_details"
         whr =  f'item_id="{v.sl_no}"' if data.id > 0 else None
         flag1 = 1 if data.id>0 else 0
