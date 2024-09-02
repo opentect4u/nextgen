@@ -1202,6 +1202,13 @@ async def adddelivery(data:getDelivery):
 
     lastID=data.id if data.id>0 else result["lastId"]
 
+    fields3= f'po_status="{data.status}",modified_at="{formatted_dt}"' if data.id > 0 else f''
+    values3 = f''
+    table_name3 = "td_po_basic"
+    whr3 = f'po_no="{data.po_no}"'
+    flag3 = 1 if data.id>0 else 0
+    result3 = await db_Insert(table_name, fields, values, whr, flag)
+
     # del_table_name = 'md_client_poc'
     # del_whr = f"sl_no not in()"
     # del_qry = await db_Delete(del_table_name, del_whr)
@@ -1223,7 +1230,7 @@ async def adddelivery(data:getDelivery):
         values1=''
         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
         
-        if(result['suc']>0 and result1['suc']>0):
+        if(result['suc']>0 and result1['suc']>0 and result3['suc']>0):
             res_dt = {"suc": 1, "msg": f"Saved successfully!" if v.sl_no==0 else f"Updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
