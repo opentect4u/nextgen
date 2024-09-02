@@ -154,6 +154,8 @@ class deleteDoc(BaseModel):
 class addItems(BaseModel):
     sl_no:int
     quantity:Union[str,int]
+    quantity_del:Union[str,int]
+
 class getDelivery(BaseModel):
     id:int
     po_no:str
@@ -1206,8 +1208,8 @@ async def adddelivery(data:getDelivery):
     # 
 
     for v in data.itemForm:
-        fields= f'quantity="{v.quantity}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'del_no,po_no,item_id,quantity,created_by,created_at'
-        values = f'"{lastID}","{data.po_no}","{v.sl_no}","{v.quantity}","{data.user}","{formatted_dt}"'
+        fields= f'quantity="{v.quantity_del}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'del_no,po_no,item_id,quantity,created_by,created_at'
+        values = f'"{lastID}","{data.po_no}","{v.sl_no}","{v.quantity_del}","{data.user}","{formatted_dt}"'
         table_name = "td_item_delivery_details"
         whr =  f'item_id="{v.sl_no}" and del_no="{data.id}"' if data.id > 0 else None
         flag1 = 1 if data.id>0 else 0
