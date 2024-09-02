@@ -161,6 +161,10 @@ class getDelivery(BaseModel):
     comments:str
     itemForm:list[addItems]
     user:str
+
+class DeleteDelivery(BaseModel):
+    po_no:str
+    user:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -1310,3 +1314,37 @@ async def getitemforedit(id:GetPo):
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
     return result
+
+@poRouter.post('/deletecustomerdel')
+async def deletecustomerdel(po_no:DeleteDelivery):
+        current_datetime = datetime.now()
+        res_dt={}
+        formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+        fields=f'delete_flag="Y",deleted_by="{po_no.user}",deleted_at="{formatted_dt}"'
+        table_name = "td_item_delivery"
+        flag = 1 
+        values=''
+        whr=f'po_no="{po_no.po_no}"'
+        result = await db_Insert(table_name, fields, values, whr, flag)
+
+
+        fields1=f'delete_flag="Y",deleted_by="{po_no.user}",deleted_at="{formatted_dt}"'
+        table_name1 = "td_item_delivery_doc"
+        flag1 = 1 
+        values1=''
+        whr1=f'po_no="{po_no.po_no}"'
+        result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+
+        fields2=f'delete_flag="Y",deleted_by="{po_no.user}",deleted_at="{formatted_dt}"'
+        table_name2 = "td_item_delivery_details"
+        flag2 = 1 
+        values2=''
+        whr2=f'po_no="{po_no.po_no}"'
+        result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
+        if(result['suc']>0 and result1['suc']>0 and result2['suc']>0):
+                res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+        else:
+                res_dt = {"suc": 0, "msg": "Error while deleting!"}
+            
+        return res_dt
