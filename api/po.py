@@ -160,6 +160,7 @@ class getDelivery(BaseModel):
     po_no:str
     comments:str
     itemForm:list[addItems]
+    delivery_date:str
     user:str
 
 class DeleteDelivery(BaseModel):
@@ -1189,8 +1190,8 @@ async def adddelivery(data:getDelivery):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_no="{data.po_no}",comments="{data.comments}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'po_no,comments,created_by,created_at'
-    values = f'"{data.po_no}","{data.comments}","{data.user}","{formatted_dt}"'
+    fields= f'po_no="{data.po_no}",delivery_date="{data.delivery_date}",comments="{data.comments}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'po_no,comments,delivery_date,created_by,created_at'
+    values = f'"{data.po_no}","{data.comments}","{data.delivery_date}","{data.user}","{formatted_dt}"'
     table_name = "td_item_delivery"
     whr = f'sl_no="{data.id}"' if data.id > 0 else None
     flag = 1 if data.id>0 else 0
@@ -1213,8 +1214,14 @@ async def adddelivery(data:getDelivery):
         flag1 = 1 if data.id>0 else 0
 
         result = await db_Insert(table_name, fields, values, whr, flag1)
+        fields1=f'quantity_del="{v.quantity}",modified_by="{data.user}",modified_at="{formatted_dt}"'
+        table_name1 = "td_po_items"
+        whr1 =  f'sl_no="{v.sl_no}"' if data.id > 0 else None
+        flag2=1
+        values1=''
+        result1 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
         
-        if(result['suc']>0):
+        if(result['suc']>0 and result1['suc']>0):
             res_dt = {"suc": 1, "msg": f"Saved successfully!" if v.sl_no==0 else f"Updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
