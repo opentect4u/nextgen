@@ -1314,7 +1314,7 @@ async def getitemforedit(id:GetPo):
     # print(id.id)
     res_dt = {}
 
-    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.quantity_del,i.po_status,p.prod_name"
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.quantity_del,p.prod_name"
     schema = "td_po_items i,md_product p"
     where = f"i.item_id=p.sl_no" if id.id>0 else ""
     order = ""
