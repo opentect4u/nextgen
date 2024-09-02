@@ -1202,12 +1202,12 @@ async def adddelivery(data:getDelivery):
 
     lastID=data.id if data.id>0 else result["lastId"]
 
-    fields3= f'po_status="{data.status}",modified_at="{formatted_dt}"' if data.id > 0 else f''
+    fields3= f'po_status="{data.status}",modified_at="{formatted_dt}",modified_by="{data.user}"'
     values3 = f''
     table_name3 = "td_po_basic"
     whr3 = f'po_no="{data.po_no}"'
-    flag3 = 1 if data.id>0 else 0
-    result3 = await db_Insert(table_name, fields, values, whr, flag)
+    flag3 = 1 
+    result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
 
     # del_table_name = 'md_client_poc'
     # del_whr = f"sl_no not in()"
