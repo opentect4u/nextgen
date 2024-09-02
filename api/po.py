@@ -1350,3 +1350,19 @@ async def deletecustomerdel(po_no:DeleteDelivery):
                 res_dt = {"suc": 0, "msg": "Error while deleting!"}
             
         return res_dt
+
+
+
+@poRouter.post('/getdeliverydoc')
+async def check_proj_id(po_no:GetPoNo):
+    print(po_no.po_no)
+    res_dt = {}
+
+    select = "po_no,sl_no"
+    schema = "td_item_delivery_doc"
+    where = f"po_no='{po_no.po_no}' and delete_flag='N'"
+    order = ""
+    flag = 1 if po_no.po_no else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
