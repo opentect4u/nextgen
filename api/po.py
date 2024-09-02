@@ -1215,7 +1215,7 @@ async def adddelivery(data:getDelivery):
         flag1 = 1 if data.id>0 else 0
 
         result = await db_Insert(table_name, fields, values, whr, flag1)
-        fields1=f'quantity_del="{v.quantity}",modified_by="{data.user}",modified_at="{formatted_dt}"'
+        fields1=f'quantity_del="{v.quantity_del}",modified_by="{data.user}",modified_at="{formatted_dt}"'
         table_name1 = "td_po_items"
         whr1 =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else ''
         flag2=1
