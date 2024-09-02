@@ -153,8 +153,8 @@ class deleteDoc(BaseModel):
 
 class addItems(BaseModel):
     sl_no:int
-    quantity:Union[str,int]
-    quantity_del:Union[str,int]
+    cust_qty:Union[str,int]
+    wh_qty:Union[str,int]
 
 class getDelivery(BaseModel):
     id:int
@@ -162,6 +162,7 @@ class getDelivery(BaseModel):
     comments:str
     itemForm:list[addItems]
     delivery_date:str
+    status:str
     user:str
 
 class DeleteDelivery(BaseModel):
@@ -1189,9 +1190,9 @@ async def adddelivery(data:getDelivery):
     print(data)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_no="{data.po_no}",delivery_date="{data.delivery_date}",comments="{data.comments}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'po_no,comments,delivery_date,created_by,created_at'
-    values = f'"{data.po_no}","{data.comments}","{data.delivery_date}","{data.user}","{formatted_dt}"'
-    table_name = "td_item_delivery"
+    fields= f'po_no="{data.po_no}",delivery_date="{data.delivery_date}",comments="{data.comments}",modified_by="{data.user}",del_status="{data.status}",modified_at="{formatted_dt}"' if data.id > 0 else f'po_no,comments,delivery_date,del_status,created_by,created_at'
+    values = f'"{data.po_no}","{data.comments}","{data.delivery_date}","{data.status}","{data.user}","{formatted_dt}"'
+    table_name = "td_po_delivery_status"
     whr = f'sl_no="{data.id}"' if data.id > 0 else None
     flag = 1 if data.id>0 else 0
 
@@ -1206,14 +1207,14 @@ async def adddelivery(data:getDelivery):
     # 
 
     for v in data.itemForm:
-        fields= f'quantity="{v.quantity_del}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'del_no,po_no,item_id,quantity,created_by,created_at'
-        values = f'"{lastID}","{data.po_no}","{v.sl_no}","{v.quantity_del}","{data.user}","{formatted_dt}"'
+        fields= f'cust_qty="{v.cust_qty}",wh_qty="{v.wh_qty}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'del_no,po_no,item_id,cust_qty,wh_qty,created_by,created_at'
+        values = f'"{lastID}","{data.po_no}","{v.sl_no}","{v.cust_qty}","{v.wh_qty}","{data.user}","{formatted_dt}"'
         table_name = "td_item_delivery_details"
         whr =  f'item_id="{v.sl_no}" and del_no="{data.id}"' if data.id > 0 else None
         flag1 = 1 if data.id>0 else 0
 
         result = await db_Insert(table_name, fields, values, whr, flag1)
-        fields1=f'quantity_del="{v.quantity_del}",modified_by="{data.user}",modified_at="{formatted_dt}"'
+        fields1=f'modified_by="{data.user}",modified_at="{formatted_dt}"'
         table_name1 = "td_po_items"
         whr1 =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else ''
         flag2=1
