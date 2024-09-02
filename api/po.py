@@ -1380,3 +1380,4 @@ async def deletetc(id:deleteDoc):
    values=''
    whr=f'sl_no="{id.id}"'
    result = await db_Insert(table_name, fields, values, whr, flag)
+   return result
