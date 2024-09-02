@@ -1147,7 +1147,7 @@ async def check_proj_id(po_no:GetPoNo):
 
     select = "count(*) as count"
     schema = "td_po_basic"
-    where = f"po_no='{po_no.po_no}' and po_status='A'"
+    where = f"po_no='{po_no.po_no}' and po_status in ('A','D','L')"
     order = ""
     flag = 1 if po_no.po_no else 0
     result = await db_select(select, schema, where, order, flag)
