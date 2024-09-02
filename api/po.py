@@ -1200,7 +1200,7 @@ async def adddelivery(data:getDelivery):
 
     lastID=data.id if data.id>0 else result["lastId"]
 
-    fields3= f'po_status="{data.status}",modified_at="{formatted_dt}"' if data.id > 0 else f''
+    fields3= f'po_status="{data.status}",modified_at="{formatted_dt}",modified_by="{data.user}"'
     values3 = f''
     table_name3 = "td_po_basic"
     whr3 = f'po_no="{data.po_no}"'
