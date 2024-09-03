@@ -962,7 +962,7 @@ async def uploadfileToLocal1(file):
     modified_filename = f"{receipt}_{file.filename}"
     res = ""
     try:
-        file_location = os.path.join(UPLOAD_FOLDER, modified_filename)
+        file_location = os.path.join(UPLOAD_FOLDER2, modified_filename)
         print(file_location)
         
         with open(file_location, "wb") as f:
@@ -1276,7 +1276,7 @@ async def uploadfileToLocal2(file):
     modified_filename = f"{receipt}_{file.filename}"
     res = ""
     try:
-        file_location = os.path.join(UPLOAD_FOLDER, modified_filename)
+        file_location = os.path.join(UPLOAD_FOLDER3, modified_filename)
         print(file_location)
         
         with open(file_location, "wb") as f:
