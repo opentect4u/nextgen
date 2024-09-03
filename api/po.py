@@ -981,9 +981,9 @@ async def uploadfileToLocal1(file):
 async def gettcbypo(po:srcMdccbyPO):
     print(po.po)
     res_dt = {}
-    select = "*"
-    schema = "td_test_cert"
-    where = f"po_no like '%{po.po}%' and delete_flag='N'"
+    select = "m.sl_no,m.po_no,m.test_dt,m.test_place,m.test_person,m.item,m.qty,m.status,m.comments,m.created_by,m.created_at,m.modified_by,m.modified_at,p.prod_name"
+    schema = "td_test_cert m, td_po_items i, md_product p"
+    where = f"m.po_no like '%{po.po}%' and m.item=i.sl_no and i.item_id=p.sl_no and m.delete_flag='N'"
     order = ""
     flag = 1
     result = await db_select(select, schema, where, order, flag)
