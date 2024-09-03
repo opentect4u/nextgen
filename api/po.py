@@ -1215,12 +1215,12 @@ async def adddelivery(data:getDelivery):
 
     lastID=data.id if data.id>0 else result["lastId"]
 
-    fields3= f'po_status="{data.status}",modified_at="{formatted_dt}",modified_by="{data.user}"'
-    values3 = f''
-    table_name3 = "td_po_basic"
-    whr3 = f'po_no="{data.po_no}"'
-    flag3 = 1 
-    result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+    # fields3= f'po_status="{data.status}",modified_at="{formatted_dt}",modified_by="{data.user}"'
+    # values3 = f''
+    # table_name3 = "td_po_basic"
+    # whr3 = f'po_no="{data.po_no}"'
+    # flag3 = 1 
+    # result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
 
     # del_table_name = 'md_client_poc'
     # del_whr = f"sl_no not in()"
@@ -1243,7 +1243,7 @@ async def adddelivery(data:getDelivery):
         values1=''
         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
         
-        if(result['suc']>0 and result1['suc']>0 and result3['suc']>0):
+        if(result['suc']>0 and result1['suc']>0):
             res_dt = {"suc": 1, "msg": f"Saved successfully!" if v.sl_no==0 else f"Updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
@@ -1419,7 +1419,7 @@ async def getprojectpoc(id:GetPo):
 
     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,p.prod_name,d.cust_qty,d.wh_qty"
     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no"
-    where = f"i.po_sl_no='{id.id}'" if id.id>0 else ""
+    where = f"i.po_sl_no='{id.id}' d.delete_flag='N'" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
