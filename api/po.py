@@ -1371,7 +1371,14 @@ async def deletecustomerdel(po_no:DeleteDelivery):
         values2=''
         whr2=f'po_no="{po_no.po_no}"'
         result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
-        if(result['suc']>0 and result1['suc']>0 and result2['suc']>0):
+
+        fields3= f'po_status="A",modified_at="{formatted_dt}",modified_by="{po_no.user}"'
+        values3 = f''
+        table_name3 = "td_po_basic"
+        whr3 = f'po_no="{po_no.po_no}"'
+        flag3 = 1 
+        result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+        if(result['suc']>0 and result1['suc']>0 and result2['suc']>0 and result3['suc']):
                 res_dt = {"suc": 1, "msg": "Deleted successfully!"}
         else:
                 res_dt = {"suc": 0, "msg": "Error while deleting!"}
@@ -1422,4 +1429,18 @@ async def getprojectpoc(id:GetPo):
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
+    return result
+
+@poRouter.post('/check_po_no_for_del')
+async def check_proj_id(po_no:GetPoNo):
+    print(po_no.po_no)
+    res_dt = {}
+
+    select = "count(*) as count"
+    schema = "td_po_basic"
+    where = f"po_no='{po_no.po_no}' and po_status ='A'"
+    order = ""
+    flag = 1 if po_no.po_no else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
     return result
