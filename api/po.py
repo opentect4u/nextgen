@@ -39,6 +39,7 @@ class prodDetails(BaseModel):
     SGST:Optional[Union[float,str,None]]=None
     IGST:Optional[Union[float,str,None]]=None
     delivery_date:Optional[Union[str,None]]=None
+    delivery_to:Optional[Union[str,None]]=None
      
 class payTerms(BaseModel):
     sl_no:Optional[int]=None
@@ -527,8 +528,8 @@ async def addexistingpo(data:PoModel):
                     print('Error while delete td_po_items')
 
             for c in data.item_dtl:
-                fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount="{c.disc}",discount_percent="{c.disc_prtg}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,discount_percent,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,created_by,created_at'
-                values1 = f'"{lastID}","{c.item_name}","{c.qty}","{c.rate}","{c.disc}","{c.disc_prtg}","{c.unit}","{c.CGST}","{c.SGST}","{c.IGST}","{c.delivery_date}","{data.user}","{formatted_dt}"'
+                fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount="{c.disc}",discount_percent="{c.disc_prtg}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",delivery_to="{c.delivery_to}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,discount_percent,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,delivery_to,created_by,created_at'
+                values1 = f'"{lastID}","{c.item_name}","{c.qty}","{c.rate}","{c.disc}","{c.disc_prtg}","{c.unit}","{c.CGST}","{c.SGST}","{c.IGST}","{c.delivery_date}","{c.delivery_to}","{data.user}","{formatted_dt}"'
                 table_name1 = "td_po_items"
                 whr1=  f'sl_no="{c.sl_no}" and po_sl_no="{data.sl_no}"' if c.sl_no > 0 else None
                 flag1 = 1 if c.sl_no>0 else 0
@@ -662,8 +663,8 @@ async def addfreshpo(data:PoModel):
                     print('Error while delete td_po_items')
 
             for c in data.item_dtl:
-                fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount_percent="{c.disc_prtg}",discount="{c.disc}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,discount_percent,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,created_by,created_at'
-                values1 = f'"{lastID}","{c.item_name}","{c.qty}","{c.rate}","{c.disc}","{c.disc_prtg}","{c.unit}","{c.CGST}","{c.SGST}","{c.IGST}","{c.delivery_date}","{data.user}","{formatted_dt}"'
+                fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount_percent="{c.disc_prtg}",discount="{c.disc}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",delivery_to="{c.delivery_to}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,discount_percent,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,delivery_to,created_by,created_at'
+                values1 = f'"{lastID}","{c.item_name}","{c.qty}","{c.rate}","{c.disc}","{c.disc_prtg}","{c.unit}","{c.CGST}","{c.SGST}","{c.IGST}","{c.delivery_date}","{c.delivery_to}","{data.user}","{formatted_dt}"'
                 table_name1 = "td_po_items"
                 whr1=  f'sl_no="{c.sl_no}" and po_sl_no="{data.sl_no}"' if c.sl_no > 0 else None
                 flag1 = 1 if c.sl_no>0 else 0
