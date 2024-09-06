@@ -1505,7 +1505,7 @@ async def uploadfileToLocal4(file):
 
 
 @poRouter.post('/getlogdoc')  
-async def gettcbypo(id:getDoc):
+async def gettcbypo(id:GetPo):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
