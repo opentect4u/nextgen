@@ -24,6 +24,7 @@ UPLOAD_FOLDER4 = "upload_file/upload_log"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER2, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER3, exist_ok=True)
+os.makedirs(UPLOAD_FOLDER4, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 poRouter = APIRouter()
