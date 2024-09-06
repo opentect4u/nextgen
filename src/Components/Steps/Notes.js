@@ -16,7 +16,7 @@ const [notes,setNotes]=useState(data.notes?data.notes:'')
                                 formControlName={notes}
                                 handleChange={(notes)=>{setNotes(notes.target.value);localStorage.setItem('notes',notes.target.value)}}
                                 mode={3}
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
                               />
                                          <div className="flex pt-4 justify-between w-full">

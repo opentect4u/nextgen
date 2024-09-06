@@ -32,6 +32,7 @@ function AmendView() {
   const rdBtn = [
     { label: "Approved/Pending", value: 1 },
     { label: "In Progress", value: 2 },
+    // { label: "Others", value: 3 },
   ];
 
   const navigate = useNavigate();
@@ -41,9 +42,13 @@ function AmendView() {
     if (e == 1) {
       setPoData(copy.filter((e) => e.po_status == "A" || e.po_status == "U"));
       console.log(po_data);
-    } else {
+    } else if(e==2) {
       setPoData(copy.filter((e) => e.po_status == "P"));
       console.log(po_data);
+    }
+    else{
+      setPoData(copy.filter((e) => e.po_status == "D"||e.po_status=='L'));
+
     }
   };
   useState(() => {

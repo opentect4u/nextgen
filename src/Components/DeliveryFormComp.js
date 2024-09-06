@@ -6,6 +6,7 @@ import TDInputTemplate from "../Components/TDInputTemplate";
 import axios from "axios";
 import { url } from "../Address/BaseUrl";
 import {
+  DeleteOutlined,
   FileExcelOutlined,
   FileImageOutlined,
   FilePdfOutlined,
@@ -20,259 +21,214 @@ import AuditTrail from "../Components/AuditTrail";
 import Viewdetails from "../Components/Viewdetails";
 import { Spin, Tag } from "antd";
 import { Message } from "./Message";
-import moment from 'moment'
 
-
-function DeliveryFormComp({flag,title,onSubmit}) {
-    const [visible, setVisible] = useState(false);
-    const [loading,setLoading]=useState(false)
-    const [count, setCount] = useState(0);
-    const [checkLoad, setCheckLoad] = useState(false);
-    const [itemList, setItemList] = useState([]);
-    const [itemForm,setItemForm]=useState([])
-    const navigate = useNavigate();
-    const [flag1, setFlag] = useState(4);
-    const [id, setId] = useState();
-    const [itemInfo, setItemInfo] = useState();
-    const [items, setItems] = useState([]);
-    const [qty, setQty] = useState();
-    const [po_no, setPoNo] = useState("");
-    const [test_dt, setTestDt] = useState("");
-    const [test_place, setTestPlace] = useState("");
-    const [item_no, setItemNo] = useState("");
-    const [status, setStatus] = useState("");
-    const [comments, setComments] = useState("");
-    const [test_person, setPerson] = useState("");
-    const [doc1, setDoc1] = useState();
-    const [doc2, setDoc2] = useState();
-    const [fileList, setFileList] = useState([]);
-    const params = useParams();
-    useEffect(() => {
-      if (params.id > 0) {
-          setLoading(true)
-        setCount(1);
-        if (flag == "T") {
-          axios
-            .post(url + "/api/gettc", { id: params.id })
-            .then((res) => {
-              setLoading(false)
-              console.log(res);
-              setTestDt(res?.data?.msg?.test_dt);
-              setTestPlace(res?.data?.msg?.test_place);
-              setPerson(res?.data?.msg?.test_person);
-              setPoNo(res?.data?.msg?.po_no);
-              setComments(res?.data?.msg?.comments);
-              getItemInfo(res?.data?.msg?.po_no);
-              setItemNo(res?.data?.msg?.item)
-              setQty(res?.data?.msg?.qty)
-              setStatus(res?.data?.msg?.status)
-              axios
-              .post(url + "/api/gettcdoc", { id: params.id, item: res?.data?.msg?.item.toString() })
-              .then((res) => {
-                console.log(res);
-                for (let i of res?.data?.msg) {
-                  fileList.push(i.doc1);
-                  console.log(i.doc1);
-                }
-                setFileList(fileList);
-    
-                // setQty(res?.data?.msg[0]?.qty)
-                // setStatus(res?.data?.msg[0]?.status)
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-              navigate("/error" + "/" + err.code + "/" + err.message);
-            });
-        } else {
-          axios
-            .post(url + "/api/getmdcc", { id: params.id })
-            .then((res) => {
-              setLoading(false)
-              console.log(res);
-              setTestDt(res?.data?.msg?.test_dt);
-              setPoNo(res?.data?.msg?.po_no);
-              setComments(res?.data?.msg?.comments);
-              getItemInfo(res?.data?.msg?.po_no);
-              setItemNo(res?.data?.msg?.item)
-              setQty(res?.data?.msg?.qty)
-              setStatus(res?.data?.msg?.status)
-              axios
-              .post(url + "/api/getmdccdoc", { id: params.id, item: res?.data?.msg?.item.toString()})
-              .then((res) => {
-                console.log(res);
-                for (let i of res?.data?.msg) {
-                  fileList.push(i.doc1);
-                  console.log(i.doc1);
-                }
-                setFileList(fileList);
-              });
-  
-            })
-            .catch((err) => {
-              console.log(err);
-              navigate("/error" + "/" + err.code + "/" + err.message);
-            });
-        }
-  
-       
-      }
-    }, []);
-
-    const handleDtChange=(event,index)=>{
-        console.log(event.target.value,event.target.name)
-        let data=[...itemForm]
-        data[index][event.target.name]=event.target.value
-        console.log(data)
-        setItemForm(data)
-    }
-    const deleteItem=()=>{
-      setLoading(true)
-      let u=flag=='M'?'/api/deletemdcc':'/api/deletetc'
-          axios.post(url+u,{id:params.id,user:localStorage.getItem('email')}).then(res=>{
-              setLoading(false)
-              if(res?.data?.suc>0){
-                  
-                  Message('success',res?.data?.msg)
-                  navigate(-1)
-              }
-              else{
-                  Message('success',res?.data?.msg)
-  
-              }
-          })
-    }
-    const getItemInfo = (po_no) => {
-      setLoading(true)
+function DeliveryFormComp({ flag, title, onSubmit }) {
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [count, setCount] = useState(0);
+  const [checkLoad, setCheckLoad] = useState(false);
+  const [itemList, setItemList] = useState([]);
+  const [itemForm, setItemForm] = useState([]);
+  const [delivery_date,setDelivery]=useState()
+  const navigate = useNavigate();
+  const [flag1, setFlag] = useState(4);
+  const [id, setId] = useState();
+  const [items, setItems] = useState([]);
+  const [po_no, setPoNo] = useState("");
+  const [comments, setComments] = useState("");
+  const [doc1, setDoc1] = useState();
+  const [doc2, setDoc2] = useState();
+  const [fileList, setFileList] = useState([]);
+  const params = useParams();
+  const [delFlag, setDelFlag] = useState();
+  const [slno, setSl] = useState();
+  const [index, setIndex] = useState();
+  const [po_status, setStatus] = useState('A');
+  const [errorFlag,setErrorFlag]=useState(0)
+  useEffect(() => {
+    if (params.id > 0) {
+      setLoading(true);
+      setCount(1);
       axios
-        .post(url + "/api/getpo", { id: 0 })
-        .then((resPO) => {
-          setId(resPO?.data?.msg?.filter((e) => e.po_no == po_no)[0]?.sl_no);
-  
+        .post(url + "/api/getdelbyid", { id: +params.id })
+        .then((res) => {
+          console.log(res);
+          setComments(res?.data?.msg[0]?.comments);
+          setPoNo(res?.data?.msg[0]?.po_no);
+          getItemInfo(res?.data?.msg[0]?.po_no);
+          setDelivery(res?.data?.msg[0]?.delivery_date)
+
+          setLoading(false);
           axios
-            .post(url + "/api/getpoitemfortc", {
-              id: resPO?.data?.msg?.filter((e) => e.po_no == po_no)[0]?.sl_no,
+            .post(url + "/api/getdeliverydoc", {
+              po_no: res?.data?.msg[0]?.po_no.toString(),
             })
-            .then((resItems) => {
-                setLoading(false)
-                setItems(resItems?.data?.msg);
-                for(let i of resItems?.data?.msg){
-                    itemForm.push({
-                        sl_no:i.sl_no,
-                        item:i.prod_name,
-                        quantity:i.quantity,
-                        status:'D'
-                    })
-                }
-            //   if(flag=='T'){
-            //     axios.post(url+'/api/getitemdoctc',{po_no:po_no}).then(restc=>{
-            //       console.log(restc)
-            //       setLoading(false)
-            //       console.log(resItems);
-            //       setItems(resItems?.data?.msg);
-            //       if(params.id==0){
-            //       for (let i of resItems?.data?.msg) {
-            //         let f=0
-            //         for(let j of restc?.data?.msg){
-            //           if(+j.item_id==+i.sl_no)
-            //             f=1
-            //         }
-            //         if(f==0)
-            //         itemList.push({ code: i.sl_no, name: i.prod_name });
-            //       }}
-            //       else{
-            //         for (let i of resItems?.data?.msg) {
-            //         itemList.push({ code: i.sl_no, name: i.prod_name });
-  
-            //         }
-            //       }
-            //       setItemList(itemList);
-            //     })
-            //   }
-            //   else{
-            //     axios.post(url+'/api/getitemdocmdcc',{po_no:po_no}).then(resmdcc=>{
-            //       console.log(resmdcc)
-            //       setLoading(false)
-            //   console.log(resItems);
-            //   setItems(resItems?.data?.msg);
-            //   if(params.id==0){
-            //   for (let i of resItems?.data?.msg) {
-            //     let f=0
-            //     for(let j of resmdcc?.data?.msg){
-            //       if(+j.item_id==+i.sl_no)
-            //         f=1
-            //     }
-            //     if(f==0)
-            //     itemList.push({ code: i.sl_no, name: i.prod_name });
-            //   }}
-            //   else{
-            //     for (let i of resItems?.data?.msg) {
-            //     itemList.push({ code: i.sl_no, name: i.prod_name });
-  
-            //     }
-            //   }
-            //   setItemList(itemList);
-                
-            //     })
-  
-            //   }
-              
-            })
-            .catch((err) => {
-              console.log(err);
-              navigate("/error" + "/" + err.code + "/" + err.message);
+            .then((res) => {
+              console.log(po_no);
+              console.log(res);
+              for (let i of res?.data?.msg) {
+                fileList.push({ sl_no: i.sl_no, doc: i.doc });
+                console.log(i.doc);
+              }
+              setFileList(fileList);
             });
         })
         .catch((err) => {
           console.log(err);
           navigate("/error" + "/" + err.code + "/" + err.message);
         });
-    };
-    const onsubmit = () => {
-        console.log(po_no,itemForm,doc1,doc2,comments)
-        onSubmit({po_no:po_no,itemForm:itemForm,doc1:doc1,doc2:doc2,comments:comments})
-    
-    };
-    const onChangeItem = (value) => {
-      setFileList([]);
-      fileList.length = 0;
-      if (params.id == 0) {
-        console.log(value);
-        console.log(items.filter((e) => e.sl_no == value)[0]);
-        setQty(items.filter((e) => e.sl_no == value)[0].quantity);
-        console.log(items);
-      } 
-    };
-    const checkid = () => {
-      if (po_no) {
-        setCheckLoad(true);
-        axios
-          .post(url + "/api/check_po_no_for_doc", { po_no: po_no })
-          .then((res) => {
-            console.log(res.data.msg[0].count);
-            setCheckLoad(false);
-            setCount(res.data.msg[0].count);
-            itemList.length = 0;
-            setItemList([]);
-            if (res.data.msg[0].count > 0) {
-              getItemInfo(po_no);
+    }
+  }, []);
+
+  const handleDtChange = (event, index) => {
+    setErrorFlag(0)
+    console.log(event.target.value, event.target.name);
+    let data = [...itemForm];
+    data[index][event.target.name] = event.target.value;
+    if(((+data[index]['cust_qty'])+(+data[index]['wh_qty']))>data[index]['quantity']){
+      console.log((data[index]['cust_qty']+data[index]['wh_qty']))
+      console.log(data[index]['cust_qty'],data[index]['wh_qty'])
+      // debugger
+      setErrorFlag(1)
+    }
+    else if(data[index]['cust_qty']<0 || data[index]['wh_qty']<0){
+      setErrorFlag(1)
+    }
+    else{
+      setErrorFlag(0)
+    }
+    console.log(data);
+    setItemForm(data);
+    console.log(errorFlag)
+  };
+  const deleteItem = () => {
+    setLoading(true);
+    if (delFlag == 1) {
+      let u = flag == "C" ? "/api/deletecustomerdel" : "/api/deletetc";
+      axios
+        .post(url + u, {
+          po_no: po_no.toString(),
+          user: localStorage.getItem("email"),
+        })
+        .then((res) => {
+          setLoading(false);
+          setVisible(false)
+          if (res?.data?.suc > 0) {
+            Message("success", res?.data?.msg);
+            navigate(-1);
+          } else {
+            Message("error", res?.data?.msg);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          navigate("/error" + "/" + err.code + "/" + err.message);
+        });
+    } else {
+      let u = flag == "C" ? "/api/deletedeliverydoc" : "/api/deletetc";
+      axios
+        .post(url + u, { id: slno, user: localStorage.getItem("email") })
+        .then((res) => {
+          setLoading(false);
+          setVisible(false);
+          if (res?.data?.suc > 0) {
+            Message("success", res?.data?.msg);
+            fileList.splice(index, 1);
+          } else {
+            Message("error", res?.data?.msg);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          navigate("/error" + "/" + err.code + "/" + err.message);
+        });
+    }
+  };
+  const getItemInfo = (po_no) => {
+    setLoading(true);
+    axios
+      .post(url + "/api/getpo", { id: 0 })
+      .then((resPO) => {
+        setId(resPO?.data?.msg?.filter((e) => e.po_no == po_no)[0]?.sl_no);
+        console.log(po_no,resPO)
+        console.log(resPO?.data?.msg?.filter((e) => e.po_no == po_no))
+        setStatus(
+          resPO?.data?.msg?.filter((e) => e.po_no == po_no)[0]?.po_status
+        );
+        // if (params.id == 0) {
+          axios
+            .post(url + "/api/getpoitemfordel", {
+              id: resPO?.data?.msg?.filter((e) => e.po_no == po_no)[0]?.sl_no,
+            })
+            .then((resItems) => {
+              console.log(resItems)
+              setLoading(false);
+              setItems(resItems?.data?.msg);
+              for (let i of resItems?.data?.msg) {
+                itemForm.push({
+                  sl_no: i.sl_no,
+                  item: i.prod_name,
+                  quantity: i.quantity,
+                  cust_qty:i.cust_qty,
+                  wh_qty:i.wh_qty
+                });
+              }
              
-            }
-          })
-          .catch((err) =>
-            navigate("/error" + "/" + err.code + "/" + err.message)
-          );
-      }
-    };
-    return (
-      <section className="bg-transparent dark:bg-[#001529]">
-        <HeadingTemplate
-          text={title}
-          mode={params.id > 0 ? 1 : 0}
-          title={"Category"}
-          data={""}
-        />
-         <Spin
+            })
+            .catch((err) => {
+              console.log(err);
+              navigate("/error" + "/" + err.code + "/" + err.message);
+            });
+       
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/error" + "/" + err.code + "/" + err.message);
+      });
+  };
+  const onsubmit = () => {
+    console.log(po_no, itemForm, doc1, doc2, comments);
+    if(delivery_date && po_status && (po_status=='D'||po_status=='L'))
+    onSubmit({
+      po_no: po_no,
+      itemForm: itemForm,
+      doc1: doc1,
+      doc2: doc2,
+      comments: comments,
+      delivery_date:delivery_date,
+      status:po_status
+    });
+  };
+
+  const checkid = () => {
+    if (po_no) {
+      setCheckLoad(true);
+      axios
+        .post(url + "/api/check_po_no_for_del", { po_no: po_no })
+        .then((res) => {
+          console.log(res.data.msg[0].count);
+          setCheckLoad(false);
+          setCount(res.data.msg[0].count);
+          itemList.length = 0;
+          setItemList([]);
+          if (res.data.msg[0].count > 0) {
+            getItemInfo(po_no);
+          }
+        })
+        .catch((err) =>
+          navigate("/error" + "/" + err.code + "/" + err.message)
+        );
+    }
+  };
+  return (
+    <section className="bg-transparent dark:bg-[#001529]">
+      <HeadingTemplate
+        text={title}
+        mode={params.id > 0 ? 1 : 0}
+        title={"Category"}
+        data={""}
+      />
+      <Spin
         indicator={<LoadingOutlined spin />}
         size="large"
         className="text-green-900 dark:text-gray-400"
@@ -281,7 +237,7 @@ function DeliveryFormComp({flag,title,onSubmit}) {
         <div className="grid grid-cols-12 gap-2">
           <div className={"w-full col-span-12 bg-white p-6 rounded-2xl"}>
             <div className="grid gap-4 sm:grid-cols-12 sm:gap-6">
-              <div className="sm:col-span-12">
+              <div className="sm:col-span-6">
                 <TDInputTemplate
                   placeholder="PO No."
                   type="text"
@@ -293,292 +249,294 @@ function DeliveryFormComp({flag,title,onSubmit}) {
                   disabled={params.id > 0}
                   mode={1}
                 />
-  
+
                 {checkLoad && (
                   <Tag icon={<SyncOutlined spin />} color="processing">
                     Checking...
                   </Tag>
                 )}
                 {count == 0 && po_no && (
-                  <VError title={"PO No. either does not exist or has not been approved!"} />
+                  <VError
+                    title={
+                      "This PO seems to be either non-existent, or unapproved or has been delivered"
+                    }
+                  />
                 )}
-  
+
                 {!po_no ? <VError title={"PO No. is required"} /> : null}
-                {count > 0 && po_no && (
+                {count > 0 && po_no && (<div className="flex justify-between">
+
                   <Viewdetails
                     click={() => {
                       setFlag(14);
                       setVisible(true);
-                    }}
-                  />
+                    }}/>
+
+<a className="my-2" onClick={()=>{setFlag(15);setVisible(true)}} >
+              <Tag  color="#4FB477">
+                View Previous Delivery
+                </Tag>
+                </a>
+                </div>
+                
+                
                 )}
               </div>
-             <>
-             
-             
-
-<div className="relative overflow-x-auto sm:col-span-12">
-  {itemForm.length>0 && po_no &&  <table className="w-full text-sm text-left rtl:text-right shadow-lg text-gray-500 dark:text-gray-400">
-        <thead className="text-xs bg-[#C4F1BE] font-bold uppercase text-green-900 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" className="px-6 py-3 font-bold">
-                   Item
-                </th>
-               
-                <th scope="col" className="px-6 py-3 font-bold">
-                    Quantity 
-                </th>
-                <th scope="col" className="px-6 py-3 font-bold">
-                    Status
-                </th>
-             
-            </tr>
-        </thead>
-        <tbody>
-          {itemForm.map((item,index)=>  <tr className="bg-[#DDEAE0] border-b-2 border-white my-3 font-bold dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-6 w-6/12 py-4  text-gray-900 whitespace-nowrap dark:text-white">
-                    {item.item} 
-                </th>
-               
-                <td className="px-6 py-4 w-2/12">
-                    <TDInputTemplate
-                  placeholder="Quantity"
-                  type="number"
-                //   label="Quantity"
-                  disabled={params.id > 0}
-                  name="quantity"
-                  formControlName={item.quantity}
-                //   handleChange={(txt) => setQty(txt.target.value)}
-                  handleChange={(txt) => handleDtChange(txt,index)}
-                  mode={1}
-                />
-                
-                </td>
-                <td className="px-6 py-4 w-2/12">
-                <TDInputTemplate
-                  placeholder="Status"
-                  type="text"
-                //   label="Status"
-                  disabled={params.id > 0}
-                  name="status"
-                  formControlName={item?.status||item[index]?.status}
-                //   handleChange={(txt) => setStatus(txt.target.value)}
-                  handleChange={(txt) =>handleDtChange(txt,index)}
-                  mode={2}
-                  data={[
-                    { code: "D", name: "Delivered" },
-                    { code: "L", name: "Partial Delivery" },
-                  ]}
-                />
-                </td>
-                
-            </tr>)}
-         
-        </tbody>
-    </table>
-                }
-</div>
-             </>
-              {flag == "T" && (
-                <div className="sm:col-span-6">
-                  <TDInputTemplate
-                    placeholder="Test Place"
-                    type="text"
-                    label="Test Place"
-                    disabled={params.id > 0}
-                    name="test_place"
-                    formControlName={test_place}
-                    handleChange={(txt) => setTestPlace(txt.target.value)}
-                    mode={1}
-                  />
-  
-                  {!test_place ? <VError title={"Place is required"} /> : null}
-                </div>
-              )}
-              {/* <div className="sm:col-span-4">
-                <TDInputTemplate
-                  placeholder="Items"
-                  type="text"
-                  label="Items"
-                  name="item"
-                  disabled={params.id>0}
-                  formControlName={item_no}
-                  handleChange={(e) => {
-                    {
-                      setItemNo(e.target.value);
-                      onChangeItem(e.target.value);
-                    }
-                  }}
-                  mode={2}
-                  data={itemList}
-                />
-  {params.id==0 && po_no && <p id="helper-text-explanation" className="mt-2 text-xs text-gray-500 dark:text-gray-400">Item under this PO not having a certificate appears here. </p>}
-                {!item_no && params.id == 0 ? (
-                  <VError title={"Item is required"} />
-                ) : null}
-              </div>
-  
-              <div className="sm:col-span-4">
-                <TDInputTemplate
-                  placeholder="Quantity"
-                  type="number"
-                  label="Quantity"
-                  disabled={params.id > 0}
-                  name="qty"
-                  formControlName={qty}
-                  handleChange={(txt) => setQty(txt.target.value)}
-                  mode={1}
-                />
-  
-                {!qty && params.id == 0 ? (
-                  <VError title={"Quantity is required"} />
-                ) : null}
-                 {qty<0  ? (
-                  <VError title={"Quantity should be non-zero positive"} />
-                ) : null}
-              </div>
-              <div className="sm:col-span-4">
+              <div className="sm:col-span-3">
                 <TDInputTemplate
                   placeholder="Status"
                   type="text"
                   label="Status"
-                  disabled={params.id > 0}
                   name="status"
-                  formControlName={status}
+                  formControlName={po_status}
                   handleChange={(txt) => setStatus(txt.target.value)}
-                  mode={2}
+                  // disabled={params.id > 0}
                   data={[
-                    { code: "O", name: "Tested OK" },
-                    { code: "D", name: "Defective" },
+                    { name: "Approved", code: "A" },
+                    { name: "Delivered", code: "D" },
+                    { name: "Partially Delivered", code: "L" },
                   ]}
+                  mode={2}
                 />
-  
-                {!status && params.id == 0 ? (
-                  <VError title={"Status is required"} />
-                ) : null}
-              </div> */}
-  
-              <div className="sm:col-span-6">
+                {po_status!='D'&&po_status!='L' &&  <VError title={"Please update status before saving"} />}
+              </div>
+              <div className="sm:col-span-3">
                 <TDInputTemplate
-                  placeholder="Comments"
-                  type="file"
-                  label="Document 1"
-                  accept={'application/pdf'}
-                  disabled={params.id > 0}
-                  name="doc1"
-                  handleChange={(txt) =>{ 
-                    if(txt.target.files[0].size/1000000<=1){
-                    setDoc1(txt.target.files[0])
-                    }
-                    else{
-                      setDoc1(null)
-                      Message('warning','File size exceeds 1MB')
-                    }
-                  }}
+                  placeholder="Delivery Date"
+                  type="date"
+                  label="Delivery Date"
+                  name="delivery_date"
+                  formControlName={delivery_date}
+                  handleChange={(txt) => setDelivery(txt.target.value)}
+                  // handleBlur={() => checkid()}
+                  // disabled={params.id > 0}
                   mode={1}
                 />
-  <p id="helper-text-explanation" className="mt-2 text-xs text-gray-500 dark:text-gray-400">Accepts PDF only.  (Max 1MB) </p>
-                {!doc1 && !doc2 && params.id == 0 ? (
-                  <VError title={"Must upload a file (max 1MB)"} />
-                ) : null}
-                {fileList?.map((item) => (
-                  <a target="_blank" href={url + "/uploads/" + item}>
-                    {item.toString().split(".")[1] == "pdf" ? (
-                      <FilePdfOutlined className="text-6xl my-7 text-red-600" />
-                    ) : item.toString().split(".")[1]?.includes("doc") ? (
-                      <FileWordOutlined className="text-6xl my-7 text-blue-900" />
-                    ) : item.toString().split(".")[1]?.includes("xls") ||
-                      item.toString().split(".")[1]?.includes("csv") ? (
-                      <FileExcelOutlined className="text-6xl my-7 text-green-800" />
-                    ) : (
-                      <FileImageOutlined className="text-6xl my-7 text-yellow-500" />
-                    )}
-                  </a>
-                ))}
+                 {!delivery_date &&  <VError title={"Please enter date"} />}
               </div>
-              <div className="sm:col-span-6">
+              <>
+                <div className="relative overflow-x-auto sm:col-span-12">
+                  {itemForm.length > 0 && po_no && (
+                    <table className="w-full text-sm text-left rtl:text-right shadow-lg text-gray-500 dark:text-gray-400">
+                      <thead className="text-xs bg-[#C4F1BE] font-bold uppercase text-green-900 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 font-bold">
+                            Item
+                          </th>
+
+                          <th scope="col" className="px-6 py-3 font-bold">
+                            Quantity To be delivered
+                          </th>
+                          <th scope="col" className="px-6 py-3 font-bold">
+                            Quantity to Client
+                          </th>
+                          <th scope="col" className="px-6 py-3 font-bold">
+                            Quantity to Warehouse
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {itemForm.map((item, index) => (
+                        <tr className="bg-[#DDEAE0] border-b-2 border-white my-3 font-bold dark:bg-gray-800 dark:border-gray-700">
+                            <th
+                              scope="row"
+                              className="px-6 w-3/12 py-4  text-gray-900 whitespace-nowrap dark:text-white"
+                            >
+                              {item.item}
+                            </th>
+
+                            <td className="px-6 py-4 w-3/12">
+                              <TDInputTemplate
+                                placeholder="Quantity"
+                                type="number"
+                                name="quantity"
+                                disabled={true}
+                                formControlName={item.quantity}
+                                handleChange={(txt) =>
+                                  handleDtChange(txt, index)
+                                }
+                                mode={1}
+                              />
+                            </td>
+                            <td className="px-6 py-4 w-3/12">
+                              <TDInputTemplate
+                                placeholder="Quantity"
+                                type="number"
+                                name="cust_qty"
+                                formControlName={item.cust_qty}
+                                handleChange={(txt) =>
+                                  handleDtChange(txt, index)
+                                }
+                                mode={1}
+                              />
+                              {item.cust_qty<0 ? (
+                <VError title={"Quantity should be >=0"} />
+              ) : null }
+                            </td>
+                            <td className="px-6 py-4 w-3/12">
+                              <TDInputTemplate
+                                placeholder="Quantity"
+                                type="number"
+                                name="wh_qty"
+                                formControlName={item.wh_qty}
+                                handleChange={(txt) =>
+                                  handleDtChange(txt, index)
+                                }
+                                mode={1}
+                              />
+                               {item.wh_qty<0 ? (
+                <VError title={"Quantity should be >=0"} />
+              ) : null }
+
+{(+item.cust_qty)+(+item.wh_qty)>item.quantity ? (
+                <VError title={"Quantity Mismatch"} />
+              ) : null }
+                            </td>
+                           
+                          </tr>
+                          
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              </>
+             
+              {/* <div className="sm:col-span-6">
                 <TDInputTemplate
                   placeholder="Comments"
                   type="file"
                   label="Document 2"
-                  disabled={params.id > 0}
+                  // disabled={params.id > 0}
                   name="doc2"
-                  accept={'application/pdf'}
-                  handleChange={(txt) =>{ 
-                    if(txt.target.files[0].size/1000000<=1)
-                    setDoc2(txt.target.files[0])
-                   else{
-                    setDoc2(null)
-                      Message('warning','File size exceeds 1MB')
-                   }
+                  accept={"application/pdf"}
+                  handleChange={(txt) => {
+                    if (txt.target.files[0].size / 1000000 <= 1)
+                      setDoc2(txt.target.files[0]);
+                    else {
+                      setDoc2(null);
+                      Message("warning", "File size exceeds 1MB");
+                    }
                   }}
                   mode={1}
                 />
-                <p id="helper-text-explanation" className="mt-2 text-xs text-gray-500 dark:text-gray-400">Accepts PDF only. (Max 1MB) </p>
-              </div>
-              {flag == "T" && (
-                <div className="sm:col-span-6">
-                  <TDInputTemplate
-                    placeholder="Test Persons"
-                    type="text"
-                    label="Test Persons"
-                    name="test_person"
-                    disabled={params.id > 0}
-                    
-                    formControlName={test_person}
-                    handleChange={(txt) => setPerson(txt.target.value)}
-                    mode={3}
-                  />
-  
-                  {!test_person ? (
-                    <VError title={"Please enter the persons involved"} />
-                  ) : null}
-                </div>
-              )}
-              <div className={flag == "T" ? "sm:col-span-6" : "sm:col-span-12"}>
+                <p
+                  id="helper-text-explanation"
+                  className="mt-2 text-xs text-gray-500 dark:text-gray-400"
+                >
+                  Accepts PDF only. (Max 1MB){" "}
+                </p>
+              </div> */}
+             
+              <div className={"sm:col-span-12"}>
                 <TDInputTemplate
                   placeholder="Comments"
                   type="text"
                   label="Comments"
                   name="comments"
-                  disabled={params.id > 0}
                   formControlName={comments}
                   handleChange={(txt) => setComments(txt.target.value)}
                   mode={3}
                 />
               </div>
-            </div>
-            <div className="flex justify-center">
-              {params.id == 0 && (
-                <button
-                  onClick={() => onsubmit()}
-                  disabled={count==0 }
-                  className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+              <div className="sm:col-span-12 border-2 border-gray-300 rounded-lg p-4">
+                <TDInputTemplate
+                  placeholder="Comments"
+                  type="file"
+                  label="Document"
+                  accept={"application/pdf"}
+                  name="doc1"
+                  handleChange={(txt) => {
+                    if (txt.target.files[0].size / 1000000 <= 1) {
+                      setDoc1(txt.target.files[0]);
+                    } else {
+                      setDoc1(null);
+                      Message("warning", "File size exceeds 1MB");
+                    }
+
+                    if(txt.target.files[0].name?.split('.')[1].toLowerCase()!='pdf'){
+                      setDoc1(null)
+                      Message('warning','Unsupported file!')
+                      
+                    }
+                  }}
+                  mode={1}
+                />
+                <p
+                  id="helper-text-explanation"
+                  className="mt-2 text-xs text-gray-500 dark:text-gray-400"
                 >
-                  Submit
-                </button>
-              )}
+                  Accepts PDF only. (Max 1MB){" "}
+                </p>
+               
+                {fileList?.map((item, index) => (
+                  <div className="relative">
+                    <a target="_blank" href={url + "/uploads/" + item.doc}>
+                      {item?.doc?.toString().split(".")[1] == "pdf" ? (
+                        <FilePdfOutlined className="text-6xl my-7 text-red-600" />
+                      ) : item?.doc
+                          ?.toString()
+                          .split(".")[1]
+                          ?.includes("doc") ? (
+                        <FileWordOutlined className="text-6xl my-7 text-blue-900" />
+                      ) : item?.doc
+                          ?.toString()
+                          .split(".")[1]
+                          ?.includes("xls") ||
+                        item?.doc?.toString().split(".")[1]?.includes("csv") ? (
+                        <FileExcelOutlined className="text-6xl my-7 text-green-800" />
+                      ) : (
+                        <FileImageOutlined className="text-6xl my-7 text-yellow-500" />
+                      )}
+                    </a>
+                    <DeleteOutlined
+                      className="text-red-800 absolute top-6 "
+                      onClick={() => {
+                        {
+                          setSl(item.sl_no);
+                          setDelFlag(2);
+                          setIndex(index);
+                          setVisible(true);
+                        }
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-center gap-4">
               {params.id > 0 && (
                 <button
-                  onClick={() => setVisible(true)}
+                  onClick={() => {
+                    setDelFlag(1);
+                    setVisible(true);
+                  }}
                   className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
                 >
                   Delete
                 </button>
               )}
+              <button
+                onClick={() => onsubmit()}
+                disabled={count==0 ||errorFlag==1||checkLoad}
+                className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+              >
+                Submit
+              </button>
             </div>
           </div>
         </div>
-        </Spin>
-        <DialogBox
-          visible={visible}
-          flag={flag1}
-          id={id}
-          onPress={() => setVisible(false)}
-          onDelete={() => deleteItem()}
-        />
-      </section>
-    );
+      </Spin>
+      <DialogBox
+        visible={visible}
+        flag={flag1}
+        id={id}
+        data={itemForm}
+        onPress={() => setVisible(false)}
+        onDelete={() => deleteItem()}
+      />
+    </section>
+  );
 }
 
-export default DeliveryFormComp
+export default DeliveryFormComp;

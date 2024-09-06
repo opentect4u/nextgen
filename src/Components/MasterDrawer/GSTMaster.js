@@ -2,7 +2,6 @@ import React,{ useEffect, useState }from 'react'
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import BtnComp from "../../Components/BtnComp";
-import HeadingTemplate from "../../Components/HeadingTemplate";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import TDInputTemplate from "../../Components/TDInputTemplate";

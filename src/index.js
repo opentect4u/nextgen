@@ -514,11 +514,6 @@ root.render(
     <Suspense
       fallback={
         <div className="bg-gray-200 h-screen flex justify-center items-center">
-          {/* <Spin
-            indicator={<LoadingOutlined spin />}
-            size="large"
-            style={{ color: "#052d27" }}
-          /> */}
           <CircularProgress disableShrink color='success'  />
         </div>
       }

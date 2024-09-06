@@ -482,9 +482,9 @@ const onClose = () => {
                 <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                   <div>
                     <TDInputTemplate
-                      placeholder="Type project ID..."
+                      placeholder="Type NGAPL project ID..."
                       type="text"
-                      label="Project ID"
+                      label="NGAPL Project ID"
                       name="proj_id"
                       formControlName={proj_id}
                       handleChange={(txt) => {setProjID(txt.target.value);setCount(0)}}
@@ -674,7 +674,7 @@ const onClose = () => {
                   {file_paths[0] && 
                   <div className="relative">
                   <a target="_blank" href={url+'/uploads/'+file_paths[0].proj_doc}>
-                  {file_paths[0].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[0].proj_doc.split(".")[1]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[0].proj_doc.split(".")[1]?.includes('xls')||file_paths[0].proj_doc.split(".")[1]?.includes('csv'))? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                  {file_paths[0].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[0].proj_doc.split(".")[1]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[0].proj_doc.split(".")[1]?.includes('xls')||file_paths[0].proj_doc.split(".")[1]?.includes('csv'))? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:(file_paths[0].proj_doc.split(".")[1]?.includes('png')||file_paths[0].proj_doc.split(".")[1]?.includes('jpg')||file_paths[0].proj_doc.split(".")[1]?.includes('jpeg'))?<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>:<FileTextOutlined  className="text-6xl my-7 text-gray-600"/>}
                   
                   
                   </a>
@@ -693,7 +693,7 @@ const onClose = () => {
                     { file_paths[1] &&
                    <div className="relative">
                    <a target="_blank" href={url+'/uploads/'+file_paths[1].proj_doc}>
-                   {file_paths[1].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[1].proj_doc.split(".")[1]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[1].proj_doc.split(".")[1]?.includes('xls')||file_paths[1].proj_doc.split(".")[1]?.includes('csv')) ? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                   {file_paths[1].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[1].proj_doc.split(".")[1]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[1].proj_doc.split(".")[1]?.includes('xls')||file_paths[1].proj_doc.split(".")[1]?.includes('csv')) ? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:(file_paths[1].proj_doc.split(".")[1]?.includes('png')||file_paths[1].proj_doc.split(".")[1]?.includes('jpg')||file_paths[1].proj_doc.split(".")[1]?.includes('jpeg'))?<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>:<FileTextOutlined  className="text-6xl my-7 text-gray-600"/>}
                    
                    </a>
                    {/* <a target="_blank" href={url+'/uploads/'+file_paths[1].proj_doc}>
@@ -710,7 +710,7 @@ const onClose = () => {
                                        <div className="relative">
                                         <a target="_blank" href={url+'/uploads/'+file_paths[2].proj_doc}>
                                         
-                                        {file_paths[2].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[2].proj_doc.split(".")[1]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[2].proj_doc.split(".")[1]?.includes('xls')||file_paths[2].proj_doc.split(".")[1]?.includes('csv'))? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
+                                        {file_paths[2].proj_doc.split(".")[1]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[2].proj_doc.split(".")[1]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[2].proj_doc.split(".")[1]?.includes('xls')||file_paths[2].proj_doc.split(".")[1]?.includes('csv'))? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:(file_paths[2].proj_doc.split(".")[1]?.includes('png')||file_paths[2].proj_doc.split(".")[1]?.includes('jpg')||file_paths[2].proj_doc.split(".")[1]?.includes('jpeg'))?<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>:<FileTextOutlined  className="text-6xl my-7 text-gray-600"/>}
                                         
                                         </a>
                                         {/* <a target="_blank" href={url+'/uploads/'+file_paths[2].proj_doc}>

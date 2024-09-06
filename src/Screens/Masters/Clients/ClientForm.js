@@ -114,7 +114,7 @@ function ClientForm() {
     c_pan: Yup.string().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,'Incorrect format!'),
        
     })),   
-    c_vendor_code: Yup.string().required("Vendor code is required"),
+    // c_vendor_code: Yup.string().required("Vendor code is required"),
     dynamicFields: Yup.array().of(
       Yup.object().shape({
         poc_name: Yup.string().required('Please enter name'),
@@ -400,9 +400,9 @@ function ClientForm() {
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
-                                placeholder="Type POC Designation..."
+                                placeholder="Type Designation..."
                                 type="text"
-                                label="POC Designation"
+                                label="Designation"
                                 name={`dynamicFields[${index}].poc_designation`}
                                 formControlName={
                                   values.dynamicFields[index]
@@ -418,9 +418,9 @@ function ClientForm() {
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
-                                placeholder="Type POC department..."
+                                placeholder="Type department..."
                                 type="text"
-                                label="POC Department"
+                                label="Department"
                                 name={`dynamicFields[${index}].poc_department`}
                                 formControlName={
                                   values.dynamicFields[index]?.poc_department ||
@@ -433,9 +433,9 @@ function ClientForm() {
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
-                                placeholder="Type POC Email..."
+                                placeholder="Type Email..."
                                 type="text"
-                                label="POC Email"
+                                label="Email"
                                 name={`dynamicFields[${index}].poc_email`}
                                 formControlName={
                                   values.dynamicFields[index]?.poc_email || ""
@@ -450,9 +450,9 @@ function ClientForm() {
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
-                                placeholder="Type POC Direct No."
+                                placeholder="Type Direct No."
                                 type="text"
-                                label="POC Direct No"
+                                label="Direct No"
                                 name={`dynamicFields[${index}].poc_direct_no`}
                                 formControlName={
                                   values.dynamicFields[index]?.poc_direct_no ||
@@ -465,9 +465,9 @@ function ClientForm() {
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
-                                placeholder="Type POC Extension No."
+                                placeholder="Type Extension No."
                                 type="text"
-                                label="POC Extension No"
+                                label="Extension No"
                                 name={`dynamicFields[${index}].poc_ext_no`}
                                 formControlName={
                                   values.dynamicFields[index]?.poc_ext_no || ""
@@ -479,9 +479,9 @@ function ClientForm() {
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
-                                placeholder="Type POC Primary Phone No."
+                                placeholder="Type Primary Phone No."
                                 type="text"
-                                label="POC Primary Phone No."
+                                label="Primary Phone No."
                                 name={`dynamicFields[${index}].poc_ph_1`}
                                 formControlName={
                                   values.dynamicFields[index]?.poc_ph_1 || ""
@@ -496,9 +496,9 @@ function ClientForm() {
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
-                                placeholder="Type POC Secondary Phone No."
+                                placeholder="Type Secondary Phone No."
                                 type="text"
-                                label="POC Secondary Phone No."
+                                label="Secondary Phone No."
                                 name={`dynamicFields[${index}].poc_ph_2`}
                                 formControlName={
                                   values.dynamicFields[index]?.poc_ph_2 || ""
@@ -512,9 +512,9 @@ function ClientForm() {
                             </div>
                             <div  className="sm:col-span-2">
                               <TDInputTemplate
-                                placeholder="Type POC Location..."
+                                placeholder="Type Location..."
                                 type="text"
-                                label="POC Location"
+                                label="Location"
                                 name={`dynamicFields[${index}].poc_location`}
                                 formControlName={
                                   values.dynamicFields[index]?.poc_location ||

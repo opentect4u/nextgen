@@ -34,6 +34,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
   const [itemInfo, setItemInfo] = useState();
   const [items, setItems] = useState([]);
   const [qty, setQty] = useState();
+  const [qty1, setQty1] = useState();
   const [po_no, setPoNo] = useState("");
   const [test_dt, setTestDt] = useState("");
   const [test_place, setTestPlace] = useState("");
@@ -121,6 +122,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
     let u=flag=='M'?'/api/deletemdcc':'/api/deletetc'
         axios.post(url+u,{id:params.id,user:localStorage.getItem('email')}).then(res=>{
             setLoading(false)
+            setVisible(false)
             if(res?.data?.suc>0){
                 
                 Message('success',res?.data?.msg)
@@ -229,6 +231,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
       console.log(value);
       console.log(items.filter((e) => e.sl_no == value)[0]);
       setQty(items.filter((e) => e.sl_no == value)[0].quantity);
+      setQty1(items.filter((e) => e.sl_no == value)[0].quantity);
       console.log(items);
     } 
   };
@@ -374,6 +377,9 @@ function UploadTemplate({ onSubmit, flag, title }) {
                {qty<0  ? (
                 <VError title={"Quantity should be non-zero positive"} />
               ) : null}
+              {qty>qty1 ? (
+                <VError title={"Invalid quantity (should be <= "+qty1+')'} />
+              ) : null }
             </div>
             <div className="sm:col-span-4">
               <TDInputTemplate
@@ -412,6 +418,12 @@ function UploadTemplate({ onSubmit, flag, title }) {
                     setDoc1(null)
                     Message('warning','File size exceeds 1MB')
                   }
+
+                  if(txt.target.files[0].name?.split('.')[1].toLowerCase()!='pdf'){
+                    setDoc1(null)
+                    Message('warning','Unsupported file!')
+                    
+                  }
                 }}
                 mode={1}
               />
@@ -419,6 +431,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
               {!doc1 && !doc2 && params.id == 0 ? (
                 <VError title={"Must upload a file (max 1MB)"} />
               ) : null}
+              {/* {url} */}
               {fileList?.map((item) => (
                 <a target="_blank" href={url + "/uploads/" + item}>
                   {item.toString().split(".")[1] == "pdf" ? (
@@ -445,10 +458,16 @@ function UploadTemplate({ onSubmit, flag, title }) {
                 handleChange={(txt) =>{ 
                   if(txt.target.files[0].size/1000000<=1)
                   setDoc2(txt.target.files[0])
-                 else{
+                 
+                  else{
                   setDoc2(null)
                     Message('warning','File size exceeds 1MB')
                  }
+                 if(txt.target.files[0].name?.split('.')[1].toLowerCase()!='pdf'){
+                  setDoc2(null)
+                  Message('warning','Unsupported file!')
+                  
+                }
                 }}
                 mode={1}
               />
@@ -490,7 +509,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
             {params.id == 0 && (
               <button
                 onClick={() => onsubmit()}
-                disabled={count==0 || qty<0}
+                disabled={count==0 || qty<=0||qty>qty1 || checkLoad}
                 className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
               >
                 Submit
@@ -498,7 +517,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
             )}
             {params.id > 0 && (
               <button
-                onClick={() => setVisible(true)}
+                onClick={() =>setVisible(true)}
                 className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
               >
                 Delete

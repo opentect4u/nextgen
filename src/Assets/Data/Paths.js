@@ -38,7 +38,7 @@ export const pathMap={
     'E':'Add/Update Vendor Orders',
     'categoryform':'Add/Update Product categories',
     'deliveryComp':'Delivery',
-    'deliverycustomerview':'Delivery To Customer',
+    'deliverycustomerview':'Delivery Details',
     'deliverycustomerform':'Add/Update Delivery',
     'stockinview':'Stock-In',
     'updatestock':'Update Stock',

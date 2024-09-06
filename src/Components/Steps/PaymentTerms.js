@@ -45,7 +45,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
       <h2 className="text-2xl text-green-900 font-bold my-3">Payment Terms</h2>
         {termList.map((input, index) => (
           <React.Fragment key={index}>
-           {localStorage.getItem('po_status')!='A' &&
+           {localStorage.getItem('po_status')!='A' &&localStorage.getItem('po_status')!='D' && localStorage.getItem('po_status')!='L' &&
            <div className=" flex justify-end items-center my-3 gap-2">
               {termList.length > 1 && (
                 <Button
@@ -82,7 +82,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                     handleDtChange(index,event)
                 
                 }}
-                disabled={localStorage.getItem('po_status')=='A'  ?true:false}
+                disabled={localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ?true:false}
 
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
@@ -103,7 +103,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
                 mode={3}
-                disabled={localStorage.getItem('po_status')=='A'  ?true:false}
+                disabled={localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ?true:false}
 
               />
               {/* {formik.errors.price_basis_desc && formik.touched.price_basis_desc && (

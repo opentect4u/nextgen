@@ -142,7 +142,7 @@ if(mode==2){
     setProjectList([])
     const date = new Date();
     console.log(date); 
-    if(params.id==0)
+    if(params.id==0 && (localStorage.getItem('po_issue_date')=='null' || !localStorage.getItem('po_issue_date')))
     {setPoIssueDate(moment(date).format('yyyy-MM-DD'));localStorage.setItem('po_issue_date',moment(date).format('yyyy-MM-DD'))}
     axios.post(url + "/api/getproject", { id: 0 }).then((resProj) => {
       console.log(resProj)
@@ -261,8 +261,9 @@ if(mode==2){
                 type="date"
                 label="PO Date"
                 name="po_issue_date"
-                disabled={params.flag=='F'||localStorage.getItem('po_status')=='A'?true:false}
-                formControlName={po_issue_date}
+                min={'2019-01-01'}
+                disabled={params.flag=='F'||localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
+                formControlName={localStorage.getItem('po_issue_date')}
                 max={moment(new Date()).format('yyyy-MM-DD')} //may need to change
                 handleChange={(txt) => 
                   {setPoIssueDate(txt.target.value)
@@ -292,7 +293,7 @@ if(mode==2){
                 }
                 }
                 mode={2}
-                disabled={localStorage.getItem('po_status')=='A' ?true:false}
+                disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ?true:false}
 
               />
               {!type && (
@@ -314,7 +315,7 @@ if(mode==2){
                 }
                 }
                 mode={1}
-                disabled={localStorage.getItem('po_status')=='A' ||(params.id>0 && po_no) ?true:false}
+                disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ||(params.id>0 && po_no) ?true:false}
 
               />
               { (params.flag=='E' && !po_no) && (
@@ -344,7 +345,7 @@ if(mode==2){
                     }
                 }}
                 mode={2}
-                disabled={localStorage.getItem('po_status')=='A' ?true:false}
+                disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ?true:false}
 
               />
               
@@ -368,7 +369,7 @@ if(mode==2){
              {!proj_name && type=='P' && (
             <VError title={'Project is required!'} />
           )}
-          {localStorage.getItem('po_status')!='A' &&<a className="my-1" onClick={()=>{setMode(2);setOpen(true)}}>
+          {localStorage.getItem('po_status')!='A' && localStorage.getItem('po_status')!='D' && localStorage.getItem('po_status')!='L' && <a className="my-1" onClick={()=>{setMode(2);setOpen(true)}}>
               
               <Tag color="#4FB477">Not in list?</Tag>
               </a>
@@ -433,7 +434,7 @@ if(mode==2){
 
                 }}
                 // handleBlur={formik.handleBlur}
-                disabled={localStorage.getItem('po_status')=='A' ?true:false}
+                disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ?true:false}
 
                 mode={2}
               />
@@ -461,7 +462,7 @@ if(mode==2){
                 })
               })
                 }}/>}
-              {localStorage.getItem('po_status')!='A' && <a className="my-2" onClick={()=>{setMode(1);setOpen(true)}}>
+              {localStorage.getItem('po_status')!='A' && localStorage.getItem('po_status')!='D'&&localStorage.getItem('po_status')!='L' &&<a className="my-2" onClick={()=>{setMode(1);setOpen(true)}}>
               <Tag  color="#4FB477">
                 Not in list?
                 </Tag>
@@ -480,6 +481,7 @@ if(mode==2){
             </button> */}
             <button
               type="submit"
+              disabled={checkLoad}
               className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
               onClick={()=>onSubmit()}
             >

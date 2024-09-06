@@ -56,7 +56,7 @@ function More({ pressNext, pressBack, type,data }) {
               localStorage.setItem('mdcc_flag',e.target.value);
             }}
             mode={2}
-            disabled={localStorage.getItem('po_status')=='A'?true:false}
+            disabled={localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
           />
           {mdcc_flag == "MDCC" && <VError title={"MDCC is required"} />}
@@ -79,7 +79,7 @@ function More({ pressNext, pressBack, type,data }) {
               { name: "No", code: "N" },
             ]}
             mode={2}
-            disabled={localStorage.getItem('po_status')=='A'?true:false}
+            disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
           />
           {insp_flag == "Inspection required?" && (
@@ -98,7 +98,7 @@ function More({ pressNext, pressBack, type,data }) {
               { name: "No", code: "N" },
             ]}
             mode={2}
-            disabled={localStorage.getItem('po_status')=='A'?true:false}
+            disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
             handleChange={(e) => {
               setDrawingFlag(e.target.value);
@@ -121,7 +121,7 @@ function More({ pressNext, pressBack, type,data }) {
               name="mdcc"
               formControlName={mdcc}
               handleChange={(text) => {setMdcc(text.target.value); localStorage.setItem('mdcc',text.target.value)}}
-              disabled={localStorage.getItem('po_status')=='A'?true:false}
+              disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
               mode={3}
             />
@@ -136,7 +136,7 @@ function More({ pressNext, pressBack, type,data }) {
               formControlName={insp}
               handleChange={(text) => {setInsp(text.target.value);localStorage.setItem('insp',text.target.value)}}
               label="Inspection Scope"
-              disabled={localStorage.getItem('po_status')=='A'?true:false}
+              disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
               name="insp"
               mode={3}
@@ -153,7 +153,7 @@ function More({ pressNext, pressBack, type,data }) {
                 formControlName={drawing}
                 handleChange={(e) => {setDrawing(e.target.value);localStorage.setItem('drawing',e.target.value)}}
                 label="Drawing/Datasheet Scope"
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
                 name="drawing"
                 mode={3}
@@ -172,7 +172,7 @@ function More({ pressNext, pressBack, type,data }) {
                       formControlName={drawingDate}
                       handleChange={(event) => {setDrawingDate(event.target.value);localStorage.setItem('dt',event.target.value)}}
                       // handleChange={e=>setDrawing(e.target.value)}
-                disabled={localStorage.getItem('po_status')=='A'?true:false}
+                disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
                       label="Drawing submission date"
                       name="dt"

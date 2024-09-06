@@ -13,7 +13,7 @@ import Notes from "../../Components/Steps/Notes";
 import Tooltip from '@mui/material/Tooltip';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, EyeOutlined, FileTextOutlined, LoadingOutlined, SyncOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, EyeOutlined, FileTextOutlined, LoadingOutlined, SyncOutlined, TruckOutlined } from "@ant-design/icons";
 import { Button, FloatButton } from "antd";
 import PaymentTerms from "../../Components/Steps/PaymentTerms";
 import axios from "axios";
@@ -62,6 +62,8 @@ function PurchaseOrderForm() {
   const [packing_forwardingExtraVal, setPackingForwardingExtraVal] = useState("");
   const [freight_insurance, setFreightInsurance] = useState("");
   const [freight_insurance_val, setFreightInsuranceVal] = useState("");
+  const [insurance, setInsurance] = useState("");
+  const [insurance_val, setInsuranceVal] = useState("");
   const [test_certificate, setTestCertificate] = useState("");
   const [test_certificate_desc, setTestCertificateDesc] = useState("");
   const [ld_applicable_date, setLDApplicableDate] = useState("");
@@ -79,6 +81,7 @@ function PurchaseOrderForm() {
   const [oi_desc, setOIDesc] = useState("");
   const [ware_house_flag,setWareHouse]=useState("")
   const [packing_type, setPackingType] = useState("");
+  const [packing_val, setPackingVal] = useState("");
   const [manufacture_clearance, setManufactureClearance] = useState("");
   const [manufacture_clearance_desc, setManufactureDesc] = useState("");
   const [comment,setComment] = useState("")
@@ -160,6 +163,12 @@ function PurchaseOrderForm() {
         .freight_insurance:"",
         freight_ins_val: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .freight_insurance_val:"",
+        // 
+        ins: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .insurance:"",
+        ins_val: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .insurance_val:"",
+        // 
       test_certificate:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .test_certificate:"",
       test_certificate_desc:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
@@ -193,6 +202,8 @@ function PurchaseOrderForm() {
       ).oi_desc:"",
       packing_type: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .packing_type:"",
+        packing_val: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
+        .packing_val:"",
       manufacture_clearance:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .manufacture_clearance:"",
       manufacture_clearance_desc:JSON.parse(
@@ -282,7 +293,8 @@ function PurchaseOrderForm() {
             CGST:resItem?.data?.msg[i].cgst_id,
             IGST:resItem?.data?.msg[i].igst_id,
             unit_price:resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount,
-            delivery_date:resItem?.data?.msg[i].delivery_dt,
+            delivery_date:resItem?.data?.msg[i].delivery_dt, //
+            delivery_to:resItem?.data?.msg[i].delivery_to, //
             total:resItem?.data?.msg[i].cgst_id? ((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].cgst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].sgst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity):((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].igst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity)
           })
         }
@@ -297,6 +309,8 @@ function PurchaseOrderForm() {
           setPackingForwardingExtraVal(resTerm?.data?.msg[0]?.packing_fwd_extra_val)
           setFreightInsurance(resTerm?.data?.msg[0]?.freight_ins)
           setFreightInsuranceVal(resTerm?.data?.msg[0]?.freight_ins_val)
+          setInsurance(resTerm?.data?.msg[0]?.ins)
+          setInsuranceVal(resTerm?.data?.msg[0]?.ins_val)
           setTestCertificate(resTerm?.data?.msg[0]?.test_certificate)
           setTestCertificateDesc(resTerm?.data?.msg[0]?.test_certificate_desc)
           setLDApplicableDate(resTerm?.data?.msg[0]?.ld_date)
@@ -313,6 +327,7 @@ function PurchaseOrderForm() {
           setOIFlag(resTerm?.data?.msg[0]?.operation_installation)
           setOIDesc(resTerm?.data?.msg[0]?.operation_installation_desc)
           setPackingType(resTerm?.data?.msg[0]?.packing_type)
+          setPackingVal(resTerm?.data?.msg[0]?.packing_val)
           setManufactureClearance(resTerm?.data?.msg[0]?.manufacture_clearance)
           setManufactureDesc(resTerm?.data?.msg[0]?.manufacture_clearance_desc)
           setdispatchdt(resTerm?.data?.msg[0]?.dispatch_dt=='Y'?true:false)
@@ -459,17 +474,17 @@ function PurchaseOrderForm() {
         Approval Pending
       </Tag>:clickFlag=='A'?<Tag bordered={false}  icon={<CheckCircleOutlined />} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="green">
        Approved
-      </Tag>:<Tag bordered={false} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="green">
+      </Tag>:clickFlag=='D'?<Tag icon={<TruckOutlined/>} bordered={false} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="lime">
        Delivered
         
-        </Tag>}
+        </Tag>:<Tag bordered={false} icon={<TruckOutlined/>} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="purple">Partially Delivered</Tag>}
         
         </div>}
         <Stepper
           ref={stepperRef}
           style={{ flexBasis: "100%" }}
           orientation="vertical"
-          linear={localStorage.getItem('po_status')=='A'?false:true}
+          linear={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?false:true}
           className="-mt-11"
         >
           <StepperPanel header="Basic Details">
@@ -546,10 +561,13 @@ function PurchaseOrderForm() {
                 oi_flag: oi_flag,
                 oi_desc: oi_desc,
                 packing_type: packing_type,
+                packing_val: packing_val,
                 manufacture_clearance: manufacture_clearance,
                 manufacture_clearance_desc: manufacture_clearance_desc,
                 dispatch_dt:dispatch_dt,
-                comm_dt:comm_dt
+                comm_dt:comm_dt,
+                insurance:insurance,
+                insurance_val:insurance_val
               }}
               pressNext={(values) => {
                 console.log(values);
@@ -560,6 +578,8 @@ function PurchaseOrderForm() {
                 setPackingForwardingExtraVal(values.packing_forwarding_extra_val);
                 setFreightInsurance(values.freight_insurance);
                 setFreightInsuranceVal(values.freight_insurance_val);
+                setInsurance(values.insurance);
+                setInsuranceVal(values.insurance_val);
                 setTestCertificate(values.test_certificate);
                 setTestCertificateDesc(values.test_certificate_desc);
                 setLDApplicableDate(values.ld_applicable_date);
@@ -576,6 +596,7 @@ function PurchaseOrderForm() {
                 setOIFlag(values.oi_flag);
                 setOIDesc(values.oi_desc);
                 setPackingType(values.packing_type);
+                setPackingVal(values.packing_val);
                 setManufactureClearance(values.manufacture_clearance);
                 setManufactureDesc(values.manufacture_clearance_desc);
                 setdispatchdt(values.dispatch_dt)

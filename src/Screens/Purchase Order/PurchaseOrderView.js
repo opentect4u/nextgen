@@ -18,6 +18,7 @@ function PurchaseOrderView() {
   const rdBtn = [
     { label: "Approved/Pending", value: 1 },
     { label: "In Progress", value: 2 },
+    // { label: "Others", value: 3 },
   ];
   const locationpath = useLocation();
   const [value, setValue] = useState(0);
@@ -48,13 +49,21 @@ function PurchaseOrderView() {
         )
       );
       console.log(po_data);
-    } else {
+    } else if(e==2) {
       setPoData(
         copy.filter(
-          (e) => e.po_status != "A" && e.po_status != "U" && e.fresh_flag == "Y"
+          (e) => e.po_status =='P' && e.fresh_flag == "Y"
         )
       );
       console.log(po_data);
+    }
+    else{
+      setPoData(
+        copy.filter(
+          (e) =>
+            (e.po_status == "D" || e.po_status == "L") && e.fresh_flag == "Y"
+        )
+      );
     }
   };
   var templateData = masterheaders[template];

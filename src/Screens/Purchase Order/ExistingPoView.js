@@ -23,6 +23,7 @@ function ExistingPoView() {
   const rdBtn = [
     { label: "Approved", value: 1 },
     { label: "In Progress", value: 2 },
+    // { label: "Others", value: 3 },
   ];
   const locationpath = useLocation();
   const [value, setValue] = useState(2);
@@ -40,12 +41,19 @@ function ExistingPoView() {
             (e.po_status == "A" || e.po_status == "U") && e.fresh_flag == "N"
         )
       );
-    else
+    else if(e==2)
       setPoData(
         copy.filter(
-          (e) => e.po_status != "A" && e.po_status != "U" && e.fresh_flag == "N"
+          (e) => e.po_status =='P' && e.fresh_flag == "N"
         )
       );
+    else{
+      setPoData(
+        copy.filter(
+          (e) => (e.po_status =='D' || e.po_status=='L') && e.fresh_flag == "N"
+        )
+      );
+    }
   };
   useState(() => {
     axios

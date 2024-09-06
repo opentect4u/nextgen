@@ -90,76 +90,76 @@ function HomeScreen() {
     <main class="px-4 h-auto ">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <Link to={routePaths.PROJECTS} class="relative cursor-pointer  border-dashed transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 2xl:h-32 flex  items-center">
-          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#92140C]">
-            <ProjectOutlined className="text-white text-5xl" />
+          <div class="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#92140C]">
+            <ProjectOutlined class="text-white text-5xl" />
           </div>
-          <div className="text-gray-800 text-sm 2xl:text-2xl  absolute right-3 top-3 font-bold">
+          <div class="text-gray-800 text-sm 2xl:text-2xl  absolute right-3 top-3 font-bold">
             Projects Opened
           </div>
-          <div className="text-[#92140C] text-4xl ml-14 mt-9 font-bold">89</div>
+          <div class="text-[#92140C] text-4xl ml-14 mt-9 font-bold">89</div>
         </Link>
         <Link to={routePaths.USERS} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
-          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-green-700">
-            <UserAddOutlined className="text-white text-5xl" />
+          <div class="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-green-700">
+            <UserAddOutlined class="text-white text-5xl" />
           </div>
-          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+          <div class="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
             Users
           </div>
-          <div className="text-green-700 text-4xl ml-14 mt-9 font-bold">153</div>
+          <div class="text-green-700 text-4xl ml-14 mt-9 font-bold">153</div>
         </Link>
         <Link to={routePaths.VENDORS} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
-          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-yellow-500">
-            <InboxOutlined className="text-white text-5xl" />
+          <div class="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-yellow-500">
+            <InboxOutlined class="text-white text-5xl" />
           </div>
-          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+          <div class="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
             Vendors
           </div>
-          <div className="text-yellow-500 text-4xl ml-14 mt-9 font-bold">25</div>
+          <div class="text-yellow-500 text-4xl ml-14 mt-9 font-bold">25</div>
         </Link>
         <Link to={routePaths.CLIENTS} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
-          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#6564DB]">
-            <UserSwitchOutlined className="text-white text-5xl" />
+          <div class="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#6564DB]">
+            <UserSwitchOutlined class="text-white text-5xl" />
           </div>
-          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+          <div class="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
             Clients
           </div>
-          <div className="text-[#6564DB] text-4xl ml-14 mt-9 font-bold">52</div>
+          <div class="text-[#6564DB] text-4xl ml-14 mt-9 font-bold">52</div>
         </Link>
         <Link to={routePaths.PURCHASEORDER} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
-          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-green-700">
-            <FileSearchOutlined className="text-white text-5xl" />
+          <div class="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-green-700">
+            <FileSearchOutlined class="text-white text-5xl" />
           </div>
-          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+          <div class="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
             Inspections
           </div>
-          <div className="text-green-700 text-4xl ml-14 mt-9 font-bold">12</div>
+          <div class="text-green-700 text-4xl ml-14 mt-9 font-bold">12</div>
         </Link>
         <Link to={routePaths.STOCKASSIGNVIEW} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
-          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#6564DB]">
-            <BarChartOutlined className="text-white text-5xl" />
+          <div class="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#6564DB]">
+            <BarChartOutlined class="text-white text-5xl" />
           </div>
-          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+          <div class="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
             Stock Levels
           </div>
-          <div className="text-[#6564DB] text-4xl ml-14 mt-9 font-bold">2352</div>
+          <div class="text-[#6564DB] text-4xl ml-14 mt-9 font-bold">2352</div>
         </Link>
         <Link to={routePaths.PROJECTS} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
-          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#92140C]">
-            <ProjectOutlined className="text-white text-5xl" />
+          <div class="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-[#92140C]">
+            <ProjectOutlined class="text-white text-5xl" />
           </div>
-          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+          <div class="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
             Projects Running
           </div>
-          <div className="text-[#92140C] text-4xl ml-14 mt-9 font-bold">63</div>
+          <div class="text-[#92140C] text-4xl ml-14 mt-9 font-bold">63</div>
         </Link>
         <Link to={routePaths.PURCHASEORDER} class="relative cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 border-dashed bg-white rounded-lg shadow-lg border-gray-800 text-white text-5xl dark:border-gray-600 h-24 md:h-24 flex 2xl:h-32 items-center">
-          <div className="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-yellow-500">
-            <ExceptionOutlined className="text-white text-5xl" />
+          <div class="h-full rounded-l-lg w-1/3 flex justify-center items-center bg-yellow-500">
+            <ExceptionOutlined class="text-white text-5xl" />
           </div>
-          <div className="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
+          <div class="text-gray-800 text-sm 2xl:text-2xl absolute right-3 top-3 font-bold">
             Pending POs
           </div>
-          <div className="text-yellow-500 text-4xl ml-14 mt-9 font-bold">15</div>
+          <div class="text-yellow-500 text-4xl ml-14 mt-9 font-bold">15</div>
         </Link>
       </div>
 
@@ -175,13 +175,13 @@ function HomeScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, type: "tween", duration: 1.5 }}
-            className="text-emerald-100 font-sans text-lg font-thin"
+            class="text-emerald-100 font-sans text-lg font-thin"
           >
             Welcome {localStorage.getItem("user_name")}
           </motion.h2>
 
           <img
-            className="absolute bottom-0 p-2 h-52 w-full"
+            class="absolute bottom-0 p-2 h-52 w-full"
             src={`${HELLO}`}
             alt=""
           />
@@ -202,41 +202,41 @@ function HomeScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, type: "spring", stiffness: 10 }}
-            className="card flex-col text-xs flex-wrap items-center justify-evenly space-y-2 gap-4  max-h-full -mt-3"
+            class="card flex-col text-xs flex-wrap items-center justify-evenly space-y-2 gap-4  max-h-full -mt-3"
           >
-            <div className="px-5 bg-white text-emerald-800 font-thin text-sm h-14 w-full rounded-lg flex justify-start items-center shadow-xl">
-              <SettingOutlined className="mr-4 bg-emerald-700 text-white rounded-full text-normal p-2" />{" "}
+            <div class="px-5 bg-white text-emerald-800 font-thin text-sm h-14 w-full rounded-lg flex justify-start items-center shadow-xl">
+              <SettingOutlined class="mr-4 bg-emerald-700 text-white rounded-full text-normal p-2" />{" "}
               Materials delivered
             </div>
-            <div className="px-5 bg-white text-emerald-800 h-14 w-full rounded-lg text-sm flex justify-start items-center shadow-xl">
-              <CloseOutlined className="mr-4 bg-purple-950 text-white rounded-full text-normal p-2" />{" "}
+            <div class="px-5 bg-white text-emerald-800 h-14 w-full rounded-lg text-sm flex justify-start items-center shadow-xl">
+              <CloseOutlined class="mr-4 bg-purple-950 text-white rounded-full text-normal p-2" />{" "}
               Date nearing
             </div>
-            <div className="px-5 bg-white text-emerald-800 h-14 w-full rounded-lg flex justify-start items-center shadow-xl ">
-              <InfoCircleOutlined className="mr-4 bg-emerald-300 text-white rounded-full text-normal p-2" />{" "}
+            <div class="px-5 bg-white text-emerald-800 h-14 w-full rounded-lg flex justify-start items-center shadow-xl ">
+              <InfoCircleOutlined class="mr-4 bg-emerald-300 text-white rounded-full text-normal p-2" />{" "}
               New project opened
             </div>
-            <div className="px-5 bg-white text-emerald-800 font-thin h-14 w-full rounded-lg flex justify-start items-center shadow-xl text-sm">
-              <SettingOutlined className="mr-4 bg-[#F4EF88] text-emerald-700 rounded-full text-normal p-2" />{" "}
+            <div class="px-5 bg-white text-emerald-800 font-thin h-14 w-full rounded-lg flex justify-start items-center shadow-xl text-sm">
+              <SettingOutlined class="mr-4 bg-[#F4EF88] text-emerald-700 rounded-full text-normal p-2" />{" "}
               Nut bolts delivered
             </div>
           </div>
         </div>
         {/* <div class=" flex rounded-lg col-span-2 bg-transparent dark:border-gray-600  h-32 md:h-64">
-          <div className="flex flex-col">
+          <div class="flex flex-col">
             <div
               whileHover={{ scale: 1.1, backgroundColor: "#C05746" }}
               initial={{ y: -600 }}
               animate={{ y: 0 }}
               transition={{ delay: 0.5, type: "spring", stiffness: 20 }}
-              className="hover:-translate-y-1 hover:scale-110 bg-gradient-to-tr from-white to-gray-100 h-40 sm:w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer"
+              class="hover:-translate-y-1 hover:scale-110 bg-gradient-to-tr from-white to-gray-100 h-40 sm:w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center cursor-pointer"
             >
-              <span className="text-5xl mb-2 text-emerald-700">32</span>
+              <span class="text-5xl mb-2 text-emerald-700">32</span>
               <motion.h2
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5, type: "tween" }}
-                className="text-emerald-700 font-sans "
+                class="text-emerald-700 font-sans "
               >
                 Clients
               </motion.h2>
@@ -245,33 +245,33 @@ function HomeScreen() {
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, type: "spring", stiffness: 20 }}
-              className="bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-800 h-20 mt-3 w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center"
+              class="bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-800 h-20 mt-3 w-32 2xl:w-56 rounded-lg shadow-lg flex flex-col items-center justify-center"
             >
-              <span className="text-2xl mb-2 text-white">78</span>
+              <span class="text-2xl mb-2 text-white">78</span>
               <motion.h2
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5, type: "tween" }}
-                className="text-gray-300 text-sm "
+                class="text-gray-300 text-sm "
               >
                 Vendors
               </motion.h2>
             </div>
           </div>
-          <div className="ml-3 flex flex-col">
+          <div class="ml-3 flex flex-col">
             <div
               initial={{ opacity: 0, x: 200 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1, type: "spring", stiffness: 20 }}
-              className="bg-[#F3DE8A] h-20 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col items-center justify-center"
+              class="bg-[#F3DE8A] h-20 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col items-center justify-center"
             >
-              <span className="text-3xl mb-1 text-emerald-700">12</span>
+              <span class="text-3xl mb-1 text-emerald-700">12</span>
 
               <motion.h2
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5, type: "tween" }}
-                className="text-emerald-700 text-sm "
+                class="text-emerald-700 text-sm "
               >
                 Running projects
               </motion.h2>
@@ -281,52 +281,52 @@ function HomeScreen() {
               initial={{ opacity: 0, x: -200 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1, type: "spring", stiffness: 20 }}
-              className="bg-gradient-to-b from-emerald-600 via-emerald-700 to-emerald-800  h-40 mt-3 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col justify-center items-center"
+              class="bg-gradient-to-b from-emerald-600 via-emerald-700 to-emerald-800  h-40 mt-3 w-32 2xl:w-56 shadow-lg rounded-lg flex flex-col justify-center items-center"
             >
-              <span className="text-5xl  text-gray-300">8</span>
+              <span class="text-5xl  text-gray-300">8</span>
 
               <motion.h2
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5, type: "tween" }}
-                className="text-gray-300 text-sm "
+                class="text-gray-300 text-sm "
               >
                 Pending POs
               </motion.h2>
             </div>
           </div>
-          <div className="ml-3 flex flex-col">
+          <div class="ml-3 flex flex-col">
             <div
               initial={{ opacity: 0, scale: 1.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1, type: "spring", stiffness: 20 }}
-              className="bg-gradient-to-t from-emerald-600 via-emerald-700 to-emerald-800 h-32 w-56 2xl:w-60 rounded-lg shadow-lg flex flex-col items-center justify-center"
+              class="bg-gradient-to-t from-emerald-600 via-emerald-700 to-emerald-800 h-32 w-56 2xl:w-60 rounded-lg shadow-lg flex flex-col items-center justify-center"
             >
-              <span className="text-5xl  text-gray-300">2393</span>
+              <span class="text-5xl  text-gray-300">2393</span>
 
               <motion.h2
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5, type: "tween" }}
-                className="text-gray-300 text-sm "
+                class="text-gray-300 text-sm "
               >
                 Stock Levels
               </motion.h2>
             </div>
-            <div className="flex mt-3">
+            <div class="flex mt-3">
               <div
                 initial={{ opacity: 0, y: -100 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, type: "spring", stiffness: 20 }}
-                className="bg-gradient-to-tr from-white to-gray-100 mr-3 h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col items-center justify-center"
+                class="bg-gradient-to-tr from-white to-gray-100 mr-3 h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col items-center justify-center"
               >
-                <span className="text-2xl mb-2 text-emerald-700">5</span>
+                <span class="text-2xl mb-2 text-emerald-700">5</span>
 
                 <motion.h2
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.5, type: "tween" }}
-                  className="text-emerald-700 text-xs "
+                  class="text-emerald-700 text-xs "
                 >
                   Pending Deliveries
                 </motion.h2>
@@ -335,15 +335,15 @@ function HomeScreen() {
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, type: "spring", stiffness: 20 }}
-                className="bg-[#F3DE8A] h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col justify-center items-center"
+                class="bg-[#F3DE8A] h-28 w-1/2 2xl:w-3/4 shadow-lg rounded-lg flex flex-col justify-center items-center"
               >
-                <span className="text-2xl mb-2 text-emerald-700">5</span>
+                <span class="text-2xl mb-2 text-emerald-700">5</span>
 
                 <motion.h2
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.5, type: "tween" }}
-                  className="text-emerald-700 text-xs "
+                  class="text-emerald-700 text-xs "
                 >
                   Inspections
                 </motion.h2>
@@ -352,7 +352,7 @@ function HomeScreen() {
           </div>
         </div> */}
 
-        <div className="col-span-4 space-y-2">
+        <div class="col-span-4 space-y-2">
           <Segmented
             itemActiveBg="#08453c"
             options={["Daily", "Weekly", "Monthly", "Quarterly", "Yearly"]}
@@ -369,7 +369,7 @@ function HomeScreen() {
         >
           <Chart
             type="line"
-            className="h-64"
+            class="h-64"
             data={chartData}
             options={chartOptions}
           />
@@ -456,7 +456,7 @@ function HomeScreen() {
         <div class="col-span-2 overflow-x-auto bg-white shadow-md sm:rounded-lg">
           <Chart
             type="line"
-            className="h-64"
+            class="h-64"
             data={chartData}
             options={chartOptions}
           />
@@ -464,7 +464,7 @@ function HomeScreen() {
         <div class="col-span-2 overflow-x-auto bg-white shadow-md sm:rounded-lg">
           <Chart
             type="bar"
-            className="h-64"
+            class="h-64"
             data={chartData}
             options={chartOptions}
           />

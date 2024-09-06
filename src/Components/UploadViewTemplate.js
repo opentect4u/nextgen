@@ -105,40 +105,7 @@ function UploadViewTemplate({ flag, title }) {
       console.log(po_data);
     }
   };
-  useState(() => {
-    axios
-      .post(url + "/api/getvendor", { id: 0 })
-      .then((res) => {
-        console.log(res);
-        setVendors(res?.data.msg);
-        vendorList.length = 0;
-        setVendorList([]);
-        for (let i of res?.data?.msg) {
-          vendorList.push({
-            name: i.vendor_name,
-            code: i.sl_no,
-          });
-        }
-        setVendorList(vendorList);
-      })
-      .catch((err) => {
-        console.log(err);
-        navigate("/error" + "/" + err.code + "/" + err.message);
-      });
-    axios.post(url + "/api/getproject", { id: 0 }).then((res) => {
-      console.log(res);
-      setProjects(res?.data.msg);
-      setProjectList([]);
-      projectList.length = 0;
-      for (let i of res?.data?.msg) {
-        projectList.push({
-          name: i.proj_name,
-          code: i.sl_no,
-        });
-      }
-      setProjectList(projectList);
-    });
-  }, []);
+
   const onAdvSearch = (val1, val2) => {
     console.log(val1, val2);
     setValue(0);
@@ -159,7 +126,7 @@ function UploadViewTemplate({ flag, title }) {
           transition={{ delay: 1.3, type: "just" }}
           className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0"
         >
-          <Tooltip title={`Upload new ${title}`}>
+          <Tooltip title={`Upload New ${title}`}>
             <Link
               to={
                 flag == "M"
@@ -303,7 +270,9 @@ function UploadViewTemplate({ flag, title }) {
                   <th scope="col" class="p-4">
                     Date
                   </th>
-
+                  <th scope="col" class="p-4">
+                    Item
+                  </th>
                   <th scope="col" class="p-4">
                     Created By
                   </th>
@@ -324,6 +293,7 @@ function UploadViewTemplate({ flag, title }) {
                       </th>
                       <td class="px-6 py-4">{item.po_no}</td>
                       <td class="px-6 py-4">{item.test_dt}</td>
+                      <td class="px-6 py-4">{item.prod_name}</td>
 
                       <td class="px-6 py-4">{item.created_by}</td>
                       <td class="px-3 py-4 flex gap-3">

@@ -269,7 +269,7 @@ function PoPreview({ data }) {
                     {item.sgst_id}%  {item.sgst_id>0?':'+(((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)).toFixed(2):''}
                 </td>
                 <td className="px-1 py-1 text-xs" rowSpan={2}>
-                    {item.igst_id}%  {+item.igst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2):''}
+                    {item.igst_id}%  {+item.igst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)).toFixed(2):''}
                 </td>
 
                 <td className="px-1 py-1 text-xs " rowSpan={2}>
@@ -364,6 +364,14 @@ function PoPreview({ data }) {
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Insurance
+                </th>
+                <td className="px-1 py-1">
+                {JSON.parse(localStorage.getItem('terms')).insurance=='Y'? JSON.parse(localStorage.getItem('terms')).insurance_val:'No'} 
+                </td>
+            </tr>
+            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" className="px-1 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     Test Certificate
                 </th>
                 <td className="px-1 py-1">
@@ -405,7 +413,7 @@ function PoPreview({ data }) {
                 Packing Type
                 </th>
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).packing_type}
+                {JSON.parse(localStorage.getItem('terms')).packing_type=='W'?'Wooden':JSON.parse(localStorage.getItem('terms')).packing_type=='C'?'Crate Packing':JSON.parse(localStorage.getItem('terms')).packing_type=='P'?'Plastic Wrap':JSON.parse(localStorage.getItem('terms')).packing_type=='S'?'Steel-worthy':JSON.parse(localStorage.getItem('terms')).packing_type=='O'?JSON.parse(localStorage.getItem('terms')).packing_val:''}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -455,12 +463,12 @@ function PoPreview({ data }) {
                 <td className="px-1 py-1">
                 {JSON.parse(localStorage.getItem('terms')).ld_applied_on=='O'?`Others - ${JSON.parse(localStorage.getItem('terms')).others_applied}`:JSON.parse(localStorage.getItem('terms')).ld_applied_on=='P'?'Pending Material Value':JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='NA'?'':'PO Total Value(%)'}
                 </td>
-                <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).ld_value}
+                <td className="px-1 py-1 text-wrap">
+                {JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='NA'?'':'LD @'+JSON.parse(localStorage.getItem('terms')).ld_value+'% per week to a maximum of' +JSON.parse(localStorage.getItem('terms')).po_min_value+'% of the order value would be applicable for any delay beyond the stipulated delivery period.'}
                 </td>
                 
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).po_min_value}
+                {JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='NA'?'':JSON.parse(localStorage.getItem('terms')).po_min_value}
                 </td>
             </tr>
            

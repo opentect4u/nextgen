@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import BtnComp from "../../Components/BtnComp";
-import HeadingTemplate from "../../Components/HeadingTemplate";
 import VError from "../../Components/VError";
 import TDInputTemplate from "../../Components/TDInputTemplate";
 import { useFormik } from "formik";

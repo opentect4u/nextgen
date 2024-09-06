@@ -263,7 +263,7 @@ function DTableMaster({
                 rowsPerPageOptions={[5, 10, 25, 50, 100, data?.length]}
                 // rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-green-700 hover:text-white  duration-500 space-y-2 dark:hover:bg-[#1e4834]'
                 // rowClassName='bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-[#C4F1BE] hover:text-green-700 hover:font-extrabold  duration-500 space-y-2 dark:hover:text-[#1e4834]'
-                rowClassName="bg-white text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-gray-200 hover:text-green-700 duration-500 space-y-2 dark:hover:text-[#1e4834] 
+                rowClassName="bg-white text-nowrap text-gray-800 border border-b-gray-300 border-r-white border-l-white active:border-0 hover:bg-gray-200 hover:text-green-700 duration-500 space-y-2 dark:hover:text-[#1e4834] 
               text-ellipsis overflow-hidden truncate w-2"
                 tableStyle={{ minWidth: "100%", fontSize: "14px" }}
                 paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"

@@ -40,6 +40,8 @@ function AmendPreview({id}) {
     const [packing_forwardingExtraVal, setPackingForwardingExtraVal] = useState("");
     const [freight_insurance, setFreightInsurance] = useState("");
     const [freight_insurance_val, setFreightInsuranceVal] = useState("");
+    const [insurance, setInsurance] = useState("");
+    const [insurance_val, setInsuranceVal] = useState("");
     const [test_certificate, setTestCertificate] = useState("");
     const [test_certificate_desc, setTestCertificateDesc] = useState("");
     const [ld_applicable_date, setLDApplicableDate] = useState("");
@@ -57,6 +59,7 @@ function AmendPreview({id}) {
     const [oi_desc, setOIDesc] = useState("");
     const [ware_house_flag,setWareHouse]=useState("")
     const [packing_type, setPackingType] = useState("");
+    const [packing_val, setPackingVal] = useState("");
     const [manufacture_clearance, setManufactureClearance] = useState("");
     const [manufacture_clearance_desc, setManufactureDesc] = useState("");
     const [comment,setComment] = useState("")
@@ -196,6 +199,8 @@ useEffect(()=>{
               setPackingForwardingExtraVal(resTerm?.data?.msg[0]?.packing_fwd_extra_val)
               setFreightInsurance(resTerm?.data?.msg[0]?.freight_ins)
               setFreightInsuranceVal(resTerm?.data?.msg[0]?.freight_ins_val)
+              setInsurance(resTerm?.data?.msg[0]?.ins)
+              setInsuranceVal(resTerm?.data?.msg[0]?.ins_val)
               setTestCertificate(resTerm?.data?.msg[0]?.test_certificate)
               setTestCertificateDesc(resTerm?.data?.msg[0]?.test_certificate_desc)
               setLDApplicableDate(resTerm?.data?.msg[0]?.ld_date)
@@ -212,6 +217,7 @@ useEffect(()=>{
               setOIFlag(resTerm?.data?.msg[0]?.operation_installation)
               setOIDesc(resTerm?.data?.msg[0]?.operation_installation_desc)
               setPackingType(resTerm?.data?.msg[0]?.packing_type)
+              setPackingVal(resTerm?.data?.msg[0]?.packing_val)
               setManufactureClearance(resTerm?.data?.msg[0]?.manufacture_clearance)
               setManufactureDesc(resTerm?.data?.msg[0]?.manufacture_clearance_desc)
               setdispatchdt(resTerm?.data?.msg[0]?.dispatch_dt=='Y'?true:false)
@@ -224,6 +230,8 @@ useEffect(()=>{
                 packing_forwarding_extra_val:resTerm?.data?.msg[0]?.packing_fwd_extra_val,
                 freight_insurance:resTerm?.data?.msg[0]?.freight_ins,
                 freight_insurance_val:resTerm?.data?.msg[0]?.freight_ins_val,
+                insurance:resTerm?.data?.msg[0]?.ins,
+                insurance_val:resTerm?.data?.msg[0]?.ins_val,
                 test_certificate:resTerm?.data?.msg[0]?.test_certificate,
                 test_certificate_desc:resTerm?.data?.msg[0]?.test_certificate_desc,
                 ld_applicable_date:resTerm?.data?.msg[0]?.ld_date,
@@ -240,6 +248,7 @@ useEffect(()=>{
                 oi_flag:resTerm?.data?.msg[0]?.operation_installation,
                 oi_desc:resTerm?.data?.msg[0]?.operation_installation_desc,
                 packing_type:resTerm?.data?.msg[0]?.packing_type,
+                packing_val:resTerm?.data?.msg[0]?.packing_val,
                 manufacture_clearance:resTerm?.data?.msg[0]?.manufacture_clearance,
                 manufacture_clearance_desc:resTerm?.data?.msg[0]?.manufacture_clearance_desc
               };
@@ -457,7 +466,7 @@ useEffect(()=>{
                     {item.sgst_id}%  {item.sgst_id>0?':'+(((+item.item_rt)-(+item.discount))*(+item.quantity)*(+item.sgst_id/100)).toFixed(2):''}
                 </td>
                 <td className="px-1 py-1 text-xs" rowSpan={2}>
-                    {item.igst_id}%  {+item.igst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)).toFixed(2):''}
+                    {item.igst_id}%  {+item.igst_id>0?':'+((+item.item_rt-(+item.discount))*(+item.quantity)*(+item.igst_id/100)).toFixed(2):''}
                 </td>
 
                 <td className="px-1 py-1 text-xs " rowSpan={2}>
@@ -551,6 +560,14 @@ useEffect(()=>{
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Insurance
+                </th>
+                <td className="px-6 py-4">
+                {insurance=='Y'?insurance_val:'No'} 
+                </td>
+            </tr>
+            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     Test Certificate
                 </th>
                 <td className="px-6 py-4">
@@ -592,7 +609,7 @@ useEffect(()=>{
                 Packing Type
                 </th>
                 <td className="px-6 py-4">
-                {packing_type}
+                {packing_type=='W'?'Wooden':packing_type=='C'?'Crate Packing':packing_type=='S'?'Steel-worthy':packing_type=='P'?'Plastic Wrap':packing_type=='O'?packing_val:''}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -642,12 +659,12 @@ useEffect(()=>{
                 <td className="px-6 py-4">
                 {ld_applied_on=='O'?`Others - ${others_applied}`:ld_applicable_date=='P'?'Pending Material Value':ld_applicable_date=='NA'?'':'PO Total Value(%)'}
                 </td>
-                <td className="px-6 py-4">
-                {ld_value}
+                <td className="px-6 py-4 text-wrap">
+                {ld_applicable_date=='NA'?'':'LD @'+ld_value+'% per week to a maximum of'+po_min_value+'% of the order value would be applicable for any delay beyond the stipulated delivery period.'}
                 </td>
                 
                 <td className="px-6 py-4">
-                {po_min_value}
+                {ld_applicable_date=='NA'?'':po_min_value}
                 </td>
             </tr>
            

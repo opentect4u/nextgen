@@ -164,6 +164,57 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id }) => {
           </p>
         }
         {flag==14 && <AmendPreview id={id}/>}
+        {flag==15 && 
+        
+        <>
+          {data.length > 0 && (
+                    <table className="w-full text-sm text-left rtl:text-right shadow-lg text-gray-500 dark:text-gray-400">
+                      <thead className="text-xs bg-[#C4F1BE] font-bold uppercase text-green-900 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 font-bold">
+                            Item
+                          </th>
+
+                          <th scope="col" className="px-6 py-3 font-bold">
+                            Quantity To be delivered
+                          </th>
+                          <th scope="col" className="px-6 py-3 font-bold">
+                            Quantity to Client
+                          </th>
+                          <th scope="col" className="px-6 py-3 font-bold">
+                            Quantity to Warehouse
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.map((item, index) => (
+                        <tr className="bg-[#DDEAE0] border-b-2 border-white my-3 font-bold dark:bg-gray-800 dark:border-gray-700">
+                            <th
+                              scope="row"
+                              className="px-6 w-3/12 py-4  text-gray-900 whitespace-nowrap dark:text-white"
+                            >
+                              {item.item}
+                            </th>
+
+                            <td className="px-6 py-4 w-3/12">
+                            {item.quantity}
+                            </td>
+                            <td className="px-6 py-4 w-3/12">
+                             {item.cust_qty}
+                            </td>
+                            <td className="px-6 py-4 w-3/12">
+                             {item.wh_qty}
+                            </td>
+                           
+                          </tr>
+                          
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+        
+        
+        </>}
       </Dialog>
   );
 };

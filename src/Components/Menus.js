@@ -170,24 +170,24 @@ function Menus({ theme}) {
       icon: <UploadFileOutlined />,
     },
     {
-      label: "Delivery",
+      label:  <Link to={routePaths.DELIVERYCUSTOMERVIEW}> Delivery </Link>,
       key: "material-delivery",
       icon: <TruckOutlined />,
-      children: [
+      // children: [
            
-        {
-          label: <Link to={routePaths.DELIVERYCUSTOMERVIEW}>To Client</Link>,
-          key: "to-cus",
-          icon: <UserOutlined />,
-        },
+      //   {
+      //     label: <Link to={routePaths.DELIVERYCUSTOMERVIEW}>To Client</Link>,
+      //     key: "to-cus",
+      //     icon: <UserOutlined />,
+      //   },
        
-        {
-          label: <Link to={routePaths.STOCKASSIGNVIEW}>To Warehouse</Link>,
-          key: "to-ware",
-          icon: <ShopOutlined />,
-        },
+      //   {
+      //     label: <Link to={routePaths.STOCKASSIGNVIEW}>To Warehouse</Link>,
+      //     key: "to-ware",
+      //     icon: <ShopOutlined />,
+      //   },
        
-          ],
+      //     ],
     },
     {
       label: "Stock",
