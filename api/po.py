@@ -18,6 +18,7 @@ import logging
 UPLOAD_FOLDER = "upload_file/upload_tc"
 UPLOAD_FOLDER2 = "upload_file/upload_mdcc"
 UPLOAD_FOLDER3 = "upload_file/upload_delivery"
+UPLOAD_FOLDER4 = "upload_file/upload_log"
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -1450,3 +1451,55 @@ async def check_proj_id(po_no:GetPoNo):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+@poRouter.post('/add_log_files')
+async def add_proj_files(po_sl_no:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, user:str = Form(...)):
+    fileName = ''
+    res_dt = {}
+    files = []
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    if not docs1 :
+        return {"suc": 1, "msg": "No file sent"}
+    else:
+        if docs1:
+            files.append(docs1)
+       
+
+        logging.info(f"Number of files received: {len(files)}")
+        logging.info(f"Type of files received: {type(files)}")
+
+        if(len(files) > 0):
+            for f in files:
+                fileName = ''
+                fileName = None if not f else await uploadfileToLocal4(f)
+                fields3= f'doc,po_sl_no,created_by,created_at'
+                values3 = f'"upload_log/{fileName}","{po_sl_no}","{user}","{formatted_dt}"' 
+                table_name3 = "td_po_log_doc"
+                whr3 =  ""
+                flag3 = 0
+                # if(id==0):
+                result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+                res_dt = result3
+        return res_dt
+
+async def uploadfileToLocal4(file):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(UPLOAD_FOLDER4, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
