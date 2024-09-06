@@ -9,7 +9,7 @@ import Notfound from "./Screens/Notfound/Notfound";
 import Details from "./Screens/Homescreen/Details";
 import { Democontext } from "./Context/Democontext";
 import Loader from "./Components/Loader";
-
+import {LOADER} from "../src/Assets/Images/loader.gif"
 
 import CircularProgress from '@mui/material/CircularProgress';
 import CatchError from "./Screens/CatchError";

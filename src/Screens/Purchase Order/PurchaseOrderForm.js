@@ -25,6 +25,7 @@ import { Tag } from 'antd';
 import { Timeline } from 'antd';
 import TDInputTemplate from "../../Components/TDInputTemplate";
 import { SaveOutlined } from "@mui/icons-material";
+import PoLogs from "../../Components/Steps/PoLogs";
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const params = useParams();
@@ -736,8 +737,8 @@ function PurchaseOrderForm() {
           </Tooltip>
         }
             </div>
-            {/* <PoLogs data={timeline}/> */}
-    <div className="grid grid-cols-2 gap-5 my-10">
+            <PoLogs data={timeline}/>
+    {/* <div className="grid grid-cols-2 gap-5 my-10">
    <div className="sm:col-span-1">
    {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='A' ) && <Timeline
             mode={'left'}
@@ -770,7 +771,7 @@ function PurchaseOrderForm() {
       </div>
        
 
-    </div>
+    </div> */}
             
           </StepperPanel>
         
