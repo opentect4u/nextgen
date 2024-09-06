@@ -174,6 +174,11 @@ class getDelivery(BaseModel):
 class DeleteDelivery(BaseModel):
     po_no:str
     user:str
+
+class delLog(BaseModel):
+    po_no:str
+    user:str
+    id:int
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -1519,3 +1524,23 @@ async def gettcbypo(id:GetPo):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+@poRouter.post('/del_log_files')
+async def getprojectpoc(id:delLog):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "td_po_log_doc"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}" and po_sl_no={id.po_no}'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0):
+        res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+       
+   return res_dt
