@@ -205,8 +205,9 @@ function VendorForm() {
       .email("Incorrect format!"),
     v_pan: Yup.string().matches(
       /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
-      "Incorrect format!"
+      "Incorrect format"
     ),
+    v_tan:Yup.string().matches(/^[A-Za-z]{4}[0-9]{5}[A-Za-z]{1}$/,'Incorrect format'),
     v_msme: Yup.string().required("MSME is required"),
     v_msmeno: Yup.string().when("v_msme", {
       is: "Y",

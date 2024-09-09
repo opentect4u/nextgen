@@ -19,8 +19,8 @@ function Home() {
     <div>
       <Header />
       <Sidebar />
-      {/* <div className="px-6 w-auto sm:ml-60 bg-[#DDEAE0] dark:bg-gray-800 min-h-screen "> */}
-      <div className="px-6 w-auto sm:ml-60 bg-hello bg-no-repeat bg-cover bg-fixed bg-blend-darken dark:bg-gray-800 min-h-screen ">
+      <div className="px-6 w-auto sm:ml-60 bg-[#DDEAE0] dark:bg-gray-800 min-h-screen ">
+      {/* <div className="px-6 w-auto sm:ml-60 bg-hello bg-no-repeat bg-cover bg-fixed bg-blend-darken dark:bg-gray-800 min-h-screen "> */}
       
 
         <div

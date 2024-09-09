@@ -261,7 +261,8 @@ if(mode==2){
                 type="date"
                 label="PO Date"
                 name="po_issue_date"
-                min={'2019-01-01'}
+                min={moment(new Date(new Date().setFullYear(new Date().getFullYear() - 3))).format('yyyy-MM-DD')} //may need to change
+
                 disabled={params.flag=='F'||localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
                 formControlName={localStorage.getItem('po_issue_date')}
                 max={moment(new Date()).format('yyyy-MM-DD')} //may need to change

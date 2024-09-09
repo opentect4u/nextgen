@@ -11,6 +11,7 @@ import axios from "axios";
 import { url } from "../../Address/BaseUrl";
 import DialogBox from "../DialogBox";
 import DrawerComp from "../DrawerComp";
+import moment from "moment";
 
 // import { DatePicker, Space } from 'antd';
 
@@ -763,6 +764,8 @@ function ProductDetails({ pressBack, pressNext, data }) {
                         : false
                     }
                     name="delivery_date"
+                    max={moment(new Date(new Date().setFullYear(new Date().getFullYear() + 3))).format('yyyy-MM-DD')} //may need to change
+
                     handleChange={(event) => handleDtChange(index, event)}
                     // handleChange={handleChange}
                     // handleBlur={handleBlur}
@@ -774,7 +777,10 @@ function ProductDetails({ pressBack, pressNext, data }) {
                   {!input.delivery_date && (
                     <VError title={"Date is required!"} />
                   )}
-
+                  
+                  {input.delivery_date<localStorage.getItem('po_issue_date') && (
+                    <VError title={"Delivery date must be>PO Date"} />
+                  )}
                   {/* <RangePicker onChange={(e)=>console.log(e)}/> */}
                 </div>
                 <div className="sm:col-span-2 flex flex-col">
@@ -783,6 +789,8 @@ function ProductDetails({ pressBack, pressNext, data }) {
                     type="date"
                     label="Delivery To"
                     min={input.delivery_date}
+                    max={moment(new Date(new Date().setFullYear(new Date().getFullYear() + 3))).format('yyyy-MM-DD')} //may need to change
+
                     formControlName={input.delivery_to}
                     disabled={
                       !input.delivery_date||
@@ -803,6 +811,9 @@ function ProductDetails({ pressBack, pressNext, data }) {
                   />
                   {!input.delivery_to && (
                     <VError title={"Date is required!"} />
+                  )}
+                   {input.delivery_to<input.delivery_date && (
+                    <VError title={"Invalid date range!"} />
                   )}
 
                   {/* <RangePicker onChange={(e)=>console.log(e)}/> */}
@@ -849,6 +860,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                     i.qty > 0 &&
                     i.rate > 0 &&
                     i.unit != "Unit" &&
+                    i.delivery_date<i.delivery_to && i.delivery_date>localStorage.getItem('po_issue_date') &&
                     i.unit != "" &&
                     i.delivery_date &&
                     i.delivery_to &&

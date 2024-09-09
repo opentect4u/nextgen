@@ -48,6 +48,7 @@ function ClientForm() {
         poc_ph_1: "",
         poc_ph_2: "",
         poc_location: "",
+        poc_doc:""
       },
     ],
   });
@@ -527,20 +528,21 @@ function ClientForm() {
                               {errors.dynamicFields?.[index]?.poc_location && touched.dynamicFields?.[index]?.poc_location && (
                       <VError title={errors.dynamicFields[index].poc_location} />)}
                             </div>
-                            {/* <div>
+                            <div className="sm:col-span-6 border-2 border-gray-300 p-3 rounded-lg">
                               <TDInputTemplate
-                                placeholder="Type Delivery Address..."
-                                type="text"
-                                label="Delivery Address"
-                                name={`dynamicFields[${index}].poc_address`}
+                                placeholder="Client picture"
+                                type="file"
+                                label="Client Picture"
+                                accept={"image/*"}
+                                name={`dynamicFields[${index}].poc_doc`}
                                 formControlName={
-                                  values.dynamicFields[index]?.poc_address || ""
+                                  values.dynamicFields[index]?.poc_doc || ""
                                 }
                                 handleChange={handleChange}
                                 handleBlur={handleBlur}
-                                mode={3}
+                                mode={1}
                               />
-                            </div> */}
+                            </div>
                             
                            
                           </React.Fragment>

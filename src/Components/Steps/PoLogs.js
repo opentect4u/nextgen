@@ -48,9 +48,10 @@ function PoLogs({ data }) {
             Message("success", res?.data?.msg);
             timeline.push({
               label:(new Date()).toString(),
-              children:comment +' by '+localStorage.getItem('email')
+              children:localStorage.getItem("po_comments") +' by '+localStorage.getItem('email')
             })
-            
+            setTimeline(timeline)
+            // console.log
           }
         });
       setLoading(false);
@@ -78,7 +79,7 @@ function PoLogs({ data }) {
     setTimeline(timeline);
   }, [count]);
   useEffect(() => {
-    setTimeline(data);
+    setTimeline(data)
   }, []);
   const uploadLogFile = () => {
     const formData = new FormData();
@@ -92,8 +93,19 @@ function PoLogs({ data }) {
         setLoading(false);
 
         if (resProjFile.data.suc > 0) {
+          setCount(prev=>prev+1)
           Message("success", resProjFile.data.msg);
-        
+          // axios.post(url + "/api/getlogdoc", { id: +params.id }).then((res) => {
+          //   console.log(res);
+          //   // setFileList([]);
+          //   for (let i of res.data.msg) {
+          //     fileList.push({
+          //       sl_no: i.sl_no,
+          //       doc: i.doc,
+          //     });
+          //   }
+          //   setFileList(fileList);
+          // });
           // onClose()
           // axios.post(url + "/api/getlogdoc", { id: +params.id }).then((res) => {
           //   console.log(res);
@@ -119,6 +131,7 @@ function PoLogs({ data }) {
     axios.post(url + "/api/getlogdoc", { id: +params.id }).then((res) => {
       console.log(res);
       setFileList([]);
+      fileList.length=0
       for (let i of res.data.msg) {
         fileList.push({
           sl_no: i.sl_no,
@@ -127,13 +140,14 @@ function PoLogs({ data }) {
       }
       setFileList(fileList);
     });
-  }, []);
+  }, [count]);
   useEffect(() => {
     setLoading(true);
     axios
       .post(url + "/api/getpocomments", { id: +params.id })
       .then((resCom) => {
         setTimeline([]);
+        timeline.length=0
         setLoading(false);
         console.log(resCom);
         for (let i = 0; i < resCom?.data?.msg?.length; i++) {
@@ -151,7 +165,7 @@ function PoLogs({ data }) {
         setTimeline(timeline);
       });
     console.log(count);
-  }, []);
+  }, [count]);
   return (
     <div className="grid grid-cols-2 gap-10 -ml-20 my-10">
       <div className="sm:col-span-1 rounded-lg shadow-lg -ml-4 bg-[#DDEAE0] p-5">

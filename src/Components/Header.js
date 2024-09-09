@@ -185,8 +185,7 @@ function Header() {
   return (
     <div className="sticky top-0 z-10 ">
 
-      {/* <nav className={`bg-[#DDEAE0] px-5 dark:bg-gray-800`}> */}
-      <nav className={`bg-hello bg-cover bg-no-repeat px-5 pb-2 dark:bg-gray-800`}>
+      <nav className={`bg-[#DDEAE0] px-5 dark:bg-gray-800`}>
 
         <div className="flex  justify-between items-center mx-auto min-w-screen-xl p-4">
           <div

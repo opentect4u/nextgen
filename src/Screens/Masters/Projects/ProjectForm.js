@@ -32,6 +32,7 @@ import DrawerComp from "../../../Components/DrawerComp";
 import {
   SyncOutlined,
 } from '@ant-design/icons';
+import moment from "moment";
 function ProjectForm() {
   const navigate = useNavigate();
   const [client, setClient] = useState([]);
@@ -532,6 +533,7 @@ const onClose = () => {
                       label="Order Date"
                       name="order_dt"
                       formControlName={order_dt}
+                      max={moment(new Date()).format('yyyy-MM-DD')} //may need to change
                       handleChange={(txt) => setOrderDt(txt.target.value)}
                       mode={1}
                     />
@@ -571,6 +573,8 @@ const onClose = () => {
                       disabled={!order_dt}
                       formControlName={proj_end_delvry_dt}
                       handleChange={(txt) => setEndDel(txt.target.value)}
+                      max={moment(new Date(new Date().setFullYear(new Date().getFullYear() + 3))).format('yyyy-MM-DD')} //may need to change
+
                       mode={1}
                     />
                     {!proj_end_delvry_dt && <VError title={'Delivery is required!'} />}
