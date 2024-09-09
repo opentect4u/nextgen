@@ -1597,3 +1597,18 @@ async def uploadfileToLocal5(file):
     finally:
         return res
     
+
+@poRouter.post('/getreceiptdoc')  
+async def getreceiptdoc(id:getDoc):
+    print('I am logging in!')
+    print(id.id)
+    res_dt = {}
+    select = "*"
+    schema = "td_receipt_doc"
+    where = f"po_sl_no='{id.id}' and delete_flag='N'" if id.id>0 else f""
+    order = "ORDER BY created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+    
