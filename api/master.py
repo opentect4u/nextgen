@@ -928,7 +928,7 @@ async def addvendor(data:addVendor):
         fields1= f'bank_name="{b.v_banknm}",branch_name="{b.v_brnnm}",ac_no="{b.v_ac}",ifsc="{b.v_ifsc}",micr_code="{b.v_micr}",modified_by="{data.user}",modified_at="{formatted_dt}"' if b.sl_no > 0 else f'vendor_id,bank_name,branch_name,ac_no,ifsc,micr_code,created_by,created_at'
         values1 = f'"{lastID}","{b.v_banknm}","{b.v_brnnm}","{b.v_ac}","{b.v_ifsc}","{b.v_micr}","{data.user}","{formatted_dt}"'
         table_name1 = "md_vendor_bank"
-        whr1 = f'vendor_id="{b.sl_no}"' if b.sl_no > 0 else None
+        whr1 = f'sl_no="{b.sl_no}"' if b.sl_no > 0 else None
         flag2 = 1 if b.sl_no>0 else 0
 
         result = await db_Insert(table_name1, fields1, values1, whr1, flag2)
