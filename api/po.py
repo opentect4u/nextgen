@@ -1599,7 +1599,7 @@ async def uploadfileToLocal5(file):
     
 
 @poRouter.post('/getreceiptdoc')  
-async def getreceiptdoc(id:getDoc):
+async def getreceiptdoc(id:GetPo):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
