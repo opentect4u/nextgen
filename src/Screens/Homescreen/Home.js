@@ -6,7 +6,6 @@ import BreadCrumbComp from "../../Components/BreadCrumbComp";
 import { ScrollTop } from "primereact/scrolltop";
 import { ErrorBoundary } from "react-error-boundary";
 import Error from "../../Components/Error";
-
 function Home() {
   const location = useLocation();
   const paths = location.pathname.split("/");
@@ -20,7 +19,9 @@ function Home() {
     <div>
       <Header />
       <Sidebar />
-      <div className="px-6 w-auto sm:ml-60 bg-[#DDEAE0] dark:bg-gray-800 min-h-screen ">
+      {/* <div className="px-6 w-auto sm:ml-60 bg-[#DDEAE0] dark:bg-gray-800 min-h-screen "> */}
+      <div className="px-6 w-auto sm:ml-60 bg-hello bg-no-repeat bg-cover bg-fixed bg-blend-darken dark:bg-gray-800 min-h-screen ">
+      
 
         <div
           className={
@@ -38,6 +39,7 @@ function Home() {
          
           <Outlet />
           </ErrorBoundary>
+         
         </div>
       </div>
     </div>

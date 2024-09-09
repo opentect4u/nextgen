@@ -1,18 +1,17 @@
 import { Timeline } from "antd";
 import React, { useEffect, useState } from "react";
 import TIME from "../../../src/Assets/Images/time.svg";
-import TDInputTemplate from "../TDInputTemplate";
 
 function TimeLine({ data }) {
   const [timeline, setTimeline] = useState([]);
   const [timeline2, setTimeline2] = useState([]);
-  const [search, setSearch] =useState("");
+  const [search, setSearch] = useState("");
   useEffect(() => {
     setTimeline(
       timeline2.filter(
         (e) =>
-          e.label.toLowerCase().includes(search) ||
-          e.children.toLowerCase().includes(search)
+          e.label.toLowerCase().includes(search.toLowerCase()) ||
+          e.children.toLowerCase().includes(search.toLowerCase())
       )
     );
   }, [search]);
@@ -24,14 +23,13 @@ function TimeLine({ data }) {
   return (
     <div className="mx-auto px-10 my-3">
       <input
-                  type="text"
-                  id="simple-search"
-                 
-                  class="bg-white absoulte sticky border-white focus:ring-white active:ring-white top-0 z-10 rounded-full text-gray-800 text-sm  block w-full dark:bg-gray-800 mx-auto duration-300 dark:placeholder-gray-400 dark:text-white "
-                  placeholder="Search"
-                  value={search}
-                  onChange={(text) => setSearch(text.target.value)}
-                />
+        type="text"
+        id="simple-search"
+        class="bg-white absoulte shadow-lg sticky border-white focus:ring-white active:ring-white top-0 z-10 rounded-full text-gray-800 text-sm  block w-full dark:bg-gray-800 mx-auto duration-300 dark:placeholder-gray-400 dark:text-white "
+        placeholder="Search"
+        value={search}
+        onChange={(text) => setSearch(text.target.value)}
+      />
       {data.length > 0 ? (
         <Timeline className="my-4 mx-auto" mode={"left"} items={timeline} />
       ) : (

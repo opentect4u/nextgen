@@ -183,19 +183,20 @@ function Header() {
   };
   var col = "#C2EFB3";
   return (
-    <div className="sticky top-0 z-10">
+    <div className="sticky top-0 z-10 ">
 
-      <nav className={`bg-[#DDEAE0] px-5 pb-2 dark:bg-gray-800`}>
+      {/* <nav className={`bg-[#DDEAE0] px-5 dark:bg-gray-800`}> */}
+      <nav className={`bg-hello bg-cover bg-no-repeat px-5 pb-2 dark:bg-gray-800`}>
 
         <div className="flex  justify-between items-center mx-auto min-w-screen-xl p-4">
           <div
             className="flex justify-between items-center space-x-3 w-4/5"
           >
-            <img
+            {/* <img
               src={!dark ? IMG : IMGINV}
-              className="sm:h-9 h-9"
+              className="sm:h-9 h-9 "
               alt="Flowbite Logo"
-            />
+            /> */}
             <div className="h-5 w-12 rounded-full ml-72"></div>
 
           </div>

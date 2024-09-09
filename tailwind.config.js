@@ -8,8 +8,9 @@ module.exports = {
   theme: {
       extend: {
         backgroundImage: {
-          'hello': "url('Assets/Images/hello.png')",
-          'hellooffice': "url('Assets/Images/hellooffice.png')",
+          // 'hello': "url('Assets/Images/hello.png')",
+          // 'hellooffice': "url('Assets/Images/hellooffice.png')",
+          'hello': "url('Assets/Images/body.png')",
         },
         backgroundColor:{
           emerald:{

@@ -46,6 +46,10 @@ function PoLogs({ data }) {
           if (res.data.suc > 0) {
             setCount((prev) => prev + 1);
             Message("success", res?.data?.msg);
+            timeline.push({
+              label:(new Date()).toString(),
+              children:comment +' by '+localStorage.getItem('email')
+            })
             
           }
         });
@@ -89,6 +93,7 @@ function PoLogs({ data }) {
 
         if (resProjFile.data.suc > 0) {
           Message("success", resProjFile.data.msg);
+        
           // onClose()
           // axios.post(url + "/api/getlogdoc", { id: +params.id }).then((res) => {
           //   console.log(res);
@@ -252,7 +257,7 @@ function PoLogs({ data }) {
       <div className="sm:col-span-1 resize-y -ml-7">
         <ScrollPanel
           className="rounded-lg shadow-lg bg-[#DDEAE0]"
-          style={{ width: "100%", height: "300px", padding: "5% 0%" }}
+          style={{ width: "100%", height: "500px", padding: "5% 0%" }}
         >
           <Spin
             indicator={<LoadingOutlined spin />}
