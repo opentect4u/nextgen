@@ -19,12 +19,14 @@ UPLOAD_FOLDER = "upload_file/upload_tc"
 UPLOAD_FOLDER2 = "upload_file/upload_mdcc"
 UPLOAD_FOLDER3 = "upload_file/upload_delivery"
 UPLOAD_FOLDER4 = "upload_file/upload_log"
+UPLOAD_FOLDER5 = "upload_file/upload_receipt"
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER2, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER3, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER4, exist_ok=True)
+os.makedirs(UPLOAD_FOLDER5, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 poRouter = APIRouter()
@@ -1544,3 +1546,56 @@ async def getprojectpoc(id:delLog):
         res_dt = {"suc": 0, "msg": "Error while deleting!"}
        
    return res_dt
+
+
+@poRouter.post('/add_vendor_receipt')
+async def add_vendor_receipt(po_sl_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None):
+    fileName = ''
+    res_dt = {}
+    files = []
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    if not docs1:
+        return {"suc": 1, "msg": "No file sent"}
+    else:
+        if docs1:
+            files.append(docs1)
+       
+
+        logging.info(f"Number of files received: {len(files)}")
+        logging.info(f"Type of files received: {type(files)}")
+
+        if(len(files) > 0):
+            for f in files:
+                fileName = ''
+                fileName = None if not f else await uploadfileToLocal5(f)
+                fields3= f'doc1,po_sl_no,created_by,created_at'
+                values3 = f'"upload_receipt/{fileName}","{po_sl_no}","{user}","{formatted_dt}"' 
+                table_name3 = "td_receipt_doc"
+                whr3 =  ""
+                flag3 = 0
+                # if(id==0):
+                result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+                res_dt = result3
+        return res_dt
+
+async def uploadfileToLocal5(file):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(UPLOAD_FOLDER5, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
+    
