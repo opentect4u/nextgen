@@ -90,6 +90,13 @@ class addVPoc(BaseModel):
 class addDeals(BaseModel):
       sl_no:int
       category_id:int
+class addBank(BaseModel):
+      sl_no:int
+      v_banknm:str
+      v_brnnm:str
+      v_ifsc:str
+      v_micr:str
+      v_ac:str
 class addVendor(BaseModel):
       v_id:int
       v_name: str
@@ -102,11 +109,8 @@ class addVendor(BaseModel):
       v_deals:list[addDeals]
       msme_flag:str 
       msme_no:Optional[str] = None
-      v_banknm:str
-      v_brnnm:str
-      v_ifsc:str
-      v_micr:str
-      v_ac:str
+      
+      v_bank:list[addBank]
       tan_no:str 
       tds_flag:str 
       tcs_flag:str 
@@ -911,16 +915,23 @@ async def addvendor(data:addVendor):
     # del_qry = await db_Delete(del_table_name, del_whr)
 
     # 
+    if(data.v_id > 0):
+        catg_ids = ",".join(str(dt.sl_no) for dt in data.v_bank)
+        try:
+            del_table_name = 'md_vendor_bank'
+            del_whr = f"vendor_id = {lastID} AND sl_no not in({catg_ids})"
+            del_qry = await db_Delete(del_table_name, del_whr)
+        except:
+            print('Error while delete md_vendor_deals')
 
+    for b in data.v_bank:
+        fields1= f'bank_name="{b.v_banknm}",branch_name="{b.v_brnnm}",ac_no="{b.v_ac}",ifsc="{b.v_ifsc}",micr_code="{b.v_micr}",modified_by="{b.user}",modified_at="{formatted_dt}"' if b.sl_no > 0 else f'vendor_id,bank_name,branch_name,ac_no,ifsc,micr_code,created_by,created_at'
+        values1 = f'"{lastID}","{b.v_banknm}","{b.v_brnnm}","{b.v_ac}","{b.v_ifsc}","{b.v_micr}","{b.user}","{formatted_dt}"'
+        table_name1 = "md_vendor_bank"
+        whr1 = f'vendor_id="{b.sl_no}"' if b.sl_no > 0 else None
+        flag2 = 1 if b.sl_no>0 else 0
 
-
-    fields1= f'bank_name="{data.v_banknm}",branch_name="{data.v_brnnm}",ac_no="{data.v_ac}",ifsc="{data.v_ifsc}",micr_code="{data.v_micr}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.v_id > 0 else f'vendor_id,bank_name,branch_name,ac_no,ifsc,micr_code,created_by,created_at'
-    values1 = f'"{lastID}","{data.v_banknm}","{data.v_brnnm}","{data.v_ac}","{data.v_ifsc}","{data.v_micr}","{data.user}","{formatted_dt}"'
-    table_name1 = "md_vendor_bank"
-    whr1 = f'vendor_id="{data.v_id}"' if data.v_id > 0 else None
-    flag2 = 1 if data.v_id>0 else 0
-
-    result = await db_Insert(table_name1, fields1, values1, whr1, flag2)
+        result = await db_Insert(table_name1, fields1, values1, whr1, flag2)
 
     # 
     select_u = "*"
