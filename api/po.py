@@ -1627,4 +1627,10 @@ async def deletetc(id:deleteDoc):
    values=''
    whr=f'sl_no="{id.id}"'
    result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0 ):
+        res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+       
+   return res_dt
     
