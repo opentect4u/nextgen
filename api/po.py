@@ -1613,4 +1613,18 @@ async def getreceiptdoc(id:GetPo):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+@poRouter.post('/deletevendorreceipt')
+async def deletetc(id:deleteDoc):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "td_receipt_doc"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
     
