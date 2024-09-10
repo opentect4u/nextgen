@@ -1621,7 +1621,7 @@ async def deletetc(id:deleteDoc):
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
-   fields=f'delete_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   fields=f'deleted_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
    table_name = "td_receipt_doc"
    flag = 1 
    values=''
