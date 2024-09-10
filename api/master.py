@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-from typing import Optional
+from fastapi import APIRouter, File, UploadFile, Form
+from typing import Optional, Union
 from enum import Enum
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,7 +9,13 @@ from datetime import datetime
 import datetime as dt
 import random
 from models.utils import get_hashed_password, verify_password
+import json
+import os
+
 masterRouter = APIRouter()
+
+UPLOAD_POC_FOLDER = "upload_file/upload_poc"
+os.makedirs(UPLOAD_POC_FOLDER, exist_ok=True)
 
 class getMaster(BaseModel):
     id:int
@@ -63,6 +69,7 @@ class addPoc(BaseModel):
       poc_ext_no:str
       poc_ph_1:str
       poc_ph_2:str
+    #   poc_doc:Optional[Union[UploadFile, None]] = None
     #   poc_address:str
       poc_location:str
 
@@ -721,27 +728,32 @@ async def deleteuser(id:deleteData):
    return res_dt
 
 @masterRouter.post('/addclient')
-async def addclient(data:addClient):
+async def addclient(client_data:str = Form(...), poc_doc:list[Union[UploadFile, None]] = File(...)):
     res_dt = {}
-    print(data)
+    data = json.loads(client_data)
+    # print(data['c_name'])
+    # print(poc_doc)
+    # return len(poc_doc)
+
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'client_name="{data.c_name}",vendor_code="{data.c_vendor_code}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.c_id > 0 else f'client_name,vendor_code,created_by,created_at'
-    values = f'"{data.c_name}","{data.c_vendor_code}","{data.user}","{formatted_dt}"'
+    fields= f'client_name="{data['c_name']}",vendor_code="{data['c_vendor_code']}",modified_by="{data['user']}",modified_at="{formatted_dt}"' if data['c_id'] > 0 else f'client_name,vendor_code,created_by,created_at'
+    values = f'"{data['c_name']}","{data['c_vendor_code']}","{data['user']}","{formatted_dt}"'
     table_name = "md_client"
-    whr = f'sl_no="{data.c_id}"' if data.c_id > 0 else None
-    flag = 1 if data.c_id>0 else 0
+    whr = f'sl_no="{data['c_id']}"' if data['c_id'] > 0 else None
+    flag = 1 if data['c_id']>0 else 0
 
     result = await db_Insert(table_name, fields, values, whr, flag)
 
-    lastID=data.c_id if data.c_id>0 else result["lastId"]
+    lastID=data['c_id'] if data['c_id']>0 else result["lastId"]
 
     # del_table_name = 'md_client_poc'
     # del_whr = f"sl_no not in()"
     # del_qry = await db_Delete(del_table_name, del_whr)
+    # return data['c_loc']
 
-    if(data.c_id > 0):
-        loc_ids = ",".join(str(dt.sl_no) for dt in data.c_loc)
+    if(data['c_id'] > 0):
+        loc_ids = ",".join(str(dt['sl_no']) for dt in data['c_loc'])
         try:
             del_table_name = 'md_client_loc'
             del_whr = f"client_id = {lastID} AND sl_no not in({loc_ids})"
@@ -749,12 +761,12 @@ async def addclient(data:addClient):
         except:
             print('Error while delete md_client_loc')
 
-    for c in data.c_loc:
-        fields= f'c_loc="{c.c_location}",c_gst="{c.c_gst}",c_pan="{c.c_pan}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,c_loc,c_gst,c_pan,created_by,created_at'
-        values = f'"{lastID}","{c.c_location}","{c.c_gst}","{c.c_pan}","{data.user}","{formatted_dt}"'
+    for c in data['c_loc']:
+        fields= f'c_loc="{c['c_location']}",c_gst="{c['c_gst']}",c_pan="{c['c_pan']}",modified_by="{data['user']}",modified_at="{formatted_dt}"' if c['sl_no'] > 0 else f'client_id,c_loc,c_gst,c_pan,created_by,created_at'
+        values = f'"{lastID}","{c['c_location']}","{c['c_gst']}","{c['c_pan']}","{data['user']}","{formatted_dt}"'
         table_name = "md_client_loc"
-        whr =  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
-        flag1 = 1 if c.sl_no>0 else 0
+        whr =  f'sl_no="{c['sl_no']}"' if c['sl_no'] > 0 else None
+        flag1 = 1 if c['sl_no']>0 else 0
         result = await db_Insert(table_name, fields, values, whr, flag1)
 
         # if(result['suc']>0):
@@ -762,27 +774,37 @@ async def addclient(data:addClient):
         # else:
         #     res_dt = {"suc": 0, "msg": f"Error while saving!" if c.sl_no==0 else f"Error while updating"}
 
-    if(data.c_id > 0):
-        poc_ids = ",".join(str(dt.sl_no) for dt in data.c_poc)
+    if(data['c_id'] > 0):
+        poc_ids = ",".join(str(dt['sl_no']) for dt in data['c_poc'])
         try:
             del_table_name = 'md_client_poc'
             del_whr = f"client_id = {lastID} AND sl_no not in({poc_ids})"
             del_qry = await db_Delete(del_table_name, del_whr)
         except:
             print('Error while delete md_client_poc')
+    index = 0
+    for c in data['c_poc']:
+        fileName = ''
+        try:
+            fileName = None if not poc_doc[index] else await uploadfileToLocal(poc_doc[index], UPLOAD_POC_FOLDER)
+        except Exception as e:
+            # res = e.args
+            fileName = ""
+        finally:
+            fileName = f"upload_poc/{fileName}"
 
-    for c in data.c_poc:
-        fields= f'poc_name="{c.poc_name}",poc_email="{c.poc_email}",poc_designation="{c.poc_designation}",poc_department="{c.poc_department}",poc_direct_no="{c.poc_direct_no}",poc_ext_no="{c.poc_ext_no}", poc_ph_1="{c.poc_ph_1}",poc_ph_2="{c.poc_ph_2}",poc_location="{c.poc_location}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_location,created_by,created_at'
-        values = f'"{lastID}","{c.poc_name}","{c.poc_email}","{c.poc_designation}","{c.poc_department}","{c.poc_direct_no}","{c.poc_ext_no}","{c.poc_ph_1}","{c.poc_ph_2}","{c.poc_location}","{data.user}","{formatted_dt}"'
+        fields= f'poc_name="{c['poc_name']}",poc_email="{c['poc_email']}",poc_designation="{c['poc_designation']}",poc_department="{c['poc_department']}",poc_direct_no="{c['poc_direct_no']}",poc_ext_no="{c['poc_ext_no']}", poc_ph_1="{c['poc_ph_1']}",poc_ph_2="{c['poc_ph_2']}",poc_location="{c['poc_location']}" {f", poc_file = '{fileName}'" if fileName != '' else ''},modified_by="{data['user']}",modified_at="{formatted_dt}"' if c['sl_no'] > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_location {f", poc_file" if fileName != '' else ''},created_by,created_at'
+        values = f'"{lastID}","{c['poc_name']}","{c['poc_email']}","{c['poc_designation']}","{c['poc_department']}","{c['poc_direct_no']}","{c['poc_ext_no']}","{c['poc_ph_1']}","{c['poc_ph_2']}","{c['poc_location']}" {f", '{fileName}'" if fileName != '' else ''},"{data['user']}","{formatted_dt}"'
         table_name = "md_client_poc"
-        whr =  f'sl_no="{c.sl_no}"' if c.sl_no > 0 else None
-        flag1 = 1 if c.sl_no>0 else 0
+        whr =  f'sl_no="{c['sl_no']}"' if c['sl_no'] > 0 else None
+        flag1 = 1 if c['sl_no']>0 else 0
         result = await db_Insert(table_name, fields, values, whr, flag1)
-
+        # return result
         if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": f"Client saved successfully!" if c.sl_no==0 else f"Client updated successfully!"}
+            res_dt = {"suc": 1, "msg": f"Client saved successfully!" if c['sl_no']==0 else f"Client updated successfully!"}
         else:
-            res_dt = {"suc": 0, "msg": f"Error while saving!" if c.sl_no==0 else f"Error while updating"}
+            res_dt = {"suc": 0, "msg": f"Error while saving!" if c['sl_no']==0 else f"Error while updating"}
+        index += 1
 
     return res_dt
 
@@ -819,6 +841,26 @@ async def addclient(data:addClient):
     #     else:
     #         res_dt = {"suc": 0, "msg": "Error while updating!"}
     # return res_dt
+
+async def uploadfileToLocal(file, upPath):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(upPath, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
 
 
 @masterRouter.post('/getclient')
