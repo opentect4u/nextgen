@@ -1566,12 +1566,18 @@ async def add_vendor_receipt(po_sl_no:str = Form(...), user:str = Form(...),docs
 
         logging.info(f"Number of files received: {len(files)}")
         logging.info(f"Type of files received: {type(files)}")
-
+        select = "count(*) as cnt"
+        schema = "td_receipt_doc"
+        where = f"po_sl_no='{po_sl_no}'"
+        order = ""
+        flag =  1
+        result = await db_select(select, schema, where, order, flag)
+        # print(result['msg']['cnt'])
         if(len(files) > 0):
             for f in files:
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal5(f)
-                fields3= f'doc1,po_sl_no,created_by,created_at'
+                fields3= f'doc1,po_sl_no,created_by,created_at' if result['msg']['cnt']==0 else f'doc1="{"upload_receipt/{fileName}"}",created_by="{user}",created_at="{formatted_dt}"'
                 values3 = f'"upload_receipt/{fileName}","{po_sl_no}","{user}","{formatted_dt}"' 
                 table_name3 = "td_receipt_doc"
                 whr3 =  ""
@@ -1620,10 +1626,18 @@ async def add_vendor_mdcc(po_sl_no:str = Form(...), user:str = Form(...),docs1:O
         logging.info(f"Type of files received: {type(files)}")
 
         if(len(files) > 0):
-            for f in files:
+             select = "count(*) as cnt"
+             schema = "td_receipt_doc"
+             where = f"po_sl_no='{po_sl_no}'"
+             order = ""
+             flag =  1
+             result = await db_select(select, schema, where, order, flag)
+             print(result['msg']['cnt'])
+            #  if result['msg']['cnt']==0:
+             for f in files:
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal6(f)
-                fields3= f'mdcc_doc,po_sl_no,mdcc_created_by,mdcc_created_at'
+                fields3=  f'mdcc_doc,po_sl_no,mdcc_created_by,mdcc_created_at' if result['msg']['cnt']==0 else f'mdcc_doc="{"upload_vendor_mdcc/{fileName}"}",mdcc_created_by="{user}",mdcc_created_at="{formatted_dt}"'
                 values3 = f'"upload_vendor_mdcc/{fileName}","{po_sl_no}","{user}","{formatted_dt}"' 
                 table_name3 = "td_receipt_doc"
                 whr3 =  ""
