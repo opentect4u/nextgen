@@ -1568,7 +1568,7 @@ async def add_vendor_receipt(po_sl_no:str = Form(...), user:str = Form(...),docs
         logging.info(f"Type of files received: {type(files)}")
         select = "count(*) as cnt"
         schema = "td_receipt_doc"
-        where = f"po_sl_no='{po_sl_no}'"
+        where = f"po_sl_no='{po_sl_no}' and deleted_flag='N'"
         order = ""
         flag =  0
         result = await db_select(select, schema, where, order, flag)
@@ -1630,7 +1630,7 @@ async def add_vendor_mdcc(po_sl_no:str = Form(...), user:str = Form(...),docs1:O
         if(len(files) > 0):
              select = "count(*) as cnt"
              schema = "td_receipt_doc"
-             where = f"po_sl_no='{po_sl_no}'"
+             where = f"po_sl_no='{po_sl_no}' and mdcc_delete_flag='N'"
              order = ""
              flag =  0
              result = await db_select(select, schema, where, order, flag)
