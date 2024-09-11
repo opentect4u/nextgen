@@ -1632,7 +1632,7 @@ async def add_vendor_mdcc(po_sl_no:str = Form(...), user:str = Form(...),docs1:O
              order = ""
              flag =  1
              result = await db_select(select, schema, where, order, flag)
-             print(result['msg']['cnt'])
+            #  print(result['msg']['cnt'])
             #  if result['msg']['cnt']==0:
              for f in files:
                 fileName = ''
