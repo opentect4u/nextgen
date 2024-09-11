@@ -1656,7 +1656,7 @@ async def uploadfileToLocal6(file):
     modified_filename = f"{receipt}_{file.filename}"
     res = ""
     try:
-        file_location = os.path.join(UPLOAD_FOLDER5, modified_filename)
+        file_location = os.path.join(UPLOAD_FOLDER6, modified_filename)
         print(file_location)
         
         with open(file_location, "wb") as f:
