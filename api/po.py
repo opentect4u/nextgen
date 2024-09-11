@@ -20,6 +20,7 @@ UPLOAD_FOLDER2 = "upload_file/upload_mdcc"
 UPLOAD_FOLDER3 = "upload_file/upload_delivery"
 UPLOAD_FOLDER4 = "upload_file/upload_log"
 UPLOAD_FOLDER5 = "upload_file/upload_receipt"
+UPLOAD_FOLDER6 = "upload_file/upload_vendor_mdcc"
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -27,6 +28,7 @@ os.makedirs(UPLOAD_FOLDER2, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER3, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER4, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER5, exist_ok=True)
+os.makedirs(UPLOAD_FOLDER6, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 poRouter = APIRouter()
@@ -1600,6 +1602,58 @@ async def uploadfileToLocal5(file):
         return res
     
 
+@poRouter.post('/add_vendor_mdcc')
+async def add_vendor_mdcc(po_sl_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None):
+    fileName = ''
+    res_dt = {}
+    files = []
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    if not docs1:
+        return {"suc": 1, "msg": "No file sent"}
+    else:
+        if docs1:
+            files.append(docs1)
+       
+
+        logging.info(f"Number of files received: {len(files)}")
+        logging.info(f"Type of files received: {type(files)}")
+
+        if(len(files) > 0):
+            for f in files:
+                fileName = ''
+                fileName = None if not f else await uploadfileToLocal6(f)
+                fields3= f'mdcc_doc,po_sl_no,mdcc_created_by,mdcc_created_at'
+                values3 = f'"upload_vendor_mdcc/{fileName}","{po_sl_no}","{user}","{formatted_dt}"' 
+                table_name3 = "td_receipt_doc"
+                whr3 =  ""
+                flag3 = 0
+                # if(id==0):
+                result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
+                res_dt = result3
+        return res_dt
+
+async def uploadfileToLocal6(file):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(UPLOAD_FOLDER5, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
+    
+
 @poRouter.post('/getreceiptdoc')  
 async def getreceiptdoc(id:GetPo):
     print('I am logging in!')
@@ -1614,6 +1668,20 @@ async def getreceiptdoc(id:GetPo):
     print(result, 'RESULT')
     return result
 
+@poRouter.post('/getvendormdcc')  
+async def getreceiptdoc(id:GetPo):
+    print('I am logging in!')
+    print(id.id)
+    res_dt = {}
+    select = "*"
+    schema = "td_receipt_doc"
+    where = f"po_sl_no='{id.id}' and mdcc_delete_flag='N'" if id.id>0 else f""
+    order = "ORDER BY created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
 
 @poRouter.post('/deletevendorreceipt')
 async def deletetc(id:deleteDoc):
@@ -1622,6 +1690,26 @@ async def deletetc(id:deleteDoc):
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
    fields=f'deleted_flag="Y",deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+   table_name = "td_receipt_doc"
+   flag = 1 
+   values=''
+   whr=f'sl_no="{id.id}"'
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   if(result['suc']>0 ):
+        res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+       
+   return res_dt
+
+
+@poRouter.post('/deletevendormdcc')
+async def deletetc(id:deleteDoc):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+   fields=f'mdcc_delete_flag="Y",mdcc_deleted_by="{id.user}",mdcc_deleted_at="{formatted_dt}"'
    table_name = "td_receipt_doc"
    flag = 1 
    values=''
