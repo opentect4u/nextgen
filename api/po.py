@@ -1583,7 +1583,7 @@ async def add_vendor_receipt(po_sl_no:str = Form(...), user:str = Form(...),docs
                 values3 = f'"upload_receipt/{fileName}","{po_sl_no}","{user}","{formatted_dt}"' 
                 table_name3 = "td_receipt_doc"
                 whr3 =  ""
-                flag3 = 0
+                flag3 = 0 if result['msg']['cnt']==0 else 1
                 # if(id==0):
                 result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
                 res_dt = result3
@@ -1643,7 +1643,7 @@ async def add_vendor_mdcc(po_sl_no:str = Form(...), user:str = Form(...),docs1:O
                 values3 = f'"upload_vendor_mdcc/{fileName}","{po_sl_no}","{user}","{formatted_dt}"' 
                 table_name3 = "td_receipt_doc"
                 whr3 =  ""
-                flag3 = 0
+                flag3 =  0 if result['msg']['cnt']==0 else 1
                 # if(id==0):
                 result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
                 res_dt = result3
