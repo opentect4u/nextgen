@@ -1579,7 +1579,7 @@ async def add_vendor_receipt(po_sl_no:str = Form(...), user:str = Form(...),docs
             for f in files:
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal5(f)
-                fields3= f'doc1,po_sl_no,created_by,created_at' if result['msg']['cnt']==0 else f'doc1="{f'upload_receipt/{fileName}'}",created_by="{user}",created_at="{formatted_dt}",deleted_flag="Y"'
+                fields3= f'doc1,po_sl_no,created_by,created_at' if result['msg']['cnt']==0 else f'doc1="{f'upload_receipt/{fileName}'}",created_by="{user}",created_at="{formatted_dt}",deleted_flag="N"'
                 values3 = f'"upload_receipt/{fileName}","{po_sl_no}","{user}","{formatted_dt}"' 
                 table_name3 = "td_receipt_doc"
                 whr3 =  "" if result['msg']['cnt']==0 else f"po_sl_no='{po_sl_no}'"
