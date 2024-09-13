@@ -1844,5 +1844,20 @@ async def getreceiptdoc(wrd:GetPhrase):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+@poRouter.post('/get_term_dtls')  
+async def getreceiptdoc(wrd:GetPhrase):
+    print('I am logging in!')
+    # print(id.id)
+    res_dt = {}
+    select = "distinct term_dtls"
+    schema = "td_po_payment_dtls"
+    where = f"term_dtls like '%{wrd.wrd}%'"
+    order = "ORDER BY modified_by,created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
     
     
