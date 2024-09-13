@@ -1851,9 +1851,9 @@ async def getreceiptdoc(wrd:GetPhrase):
     print('I am logging in!')
     # print(id.id)
     res_dt = {}
-    select = "distinct term_dtls"
+    select = "distinct terms_dtls"
     schema = "td_po_payment_dtls"
-    where = f"term_dtls like '%{wrd.wrd}%'"
+    where = f"terms_dtls like '%{wrd.wrd}%'"
     order = "ORDER BY modified_by,created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
