@@ -187,6 +187,9 @@ class delLog(BaseModel):
     po_no:str
     user:str
     id:int
+
+class GetPhrase(BaseModel):
+    wrd:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -1742,4 +1745,19 @@ async def deletetc(id:deleteDoc):
         res_dt = {"suc": 0, "msg": "Error while deleting!"}
        
    return res_dt
+
+
+@poRouter.post('/getrecentpricebasis')  
+async def getreceiptdoc(wrd:GetPhrase):
+    print('I am logging in!')
+    # print(id.id)
+    res_dt = {}
+    select = "*"
+    schema = "td_po_terms"
+    where = f"price_basis_desc like '{wrd.wrd}'"
+    order = "ORDER BY modified_by,created_at DESC"
+    flag =  0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
     
