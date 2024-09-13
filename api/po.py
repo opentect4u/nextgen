@@ -1747,7 +1747,7 @@ async def deletetc(id:deleteDoc):
    return res_dt
 
 
-@poRouter.post('/getrecentpricebasis')  
+@poRouter.post('/get_price_basis_desc')  
 async def getreceiptdoc(wrd:GetPhrase):
     print('I am logging in!')
     # print(id.id)
