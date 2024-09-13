@@ -1752,7 +1752,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     print('I am logging in!')
     # print(id.id)
     res_dt = {}
-    select = "select DISTINCT price_basis_desc"
+    select = "distinct price_basis_desc"
     schema = "td_po_terms_condition"
     where = f"price_basis_desc like '%{wrd.wrd}%'"
     order = "ORDER BY modified_by,created_at DESC"
