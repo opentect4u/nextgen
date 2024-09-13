@@ -1831,7 +1831,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     print(result, 'RESULT')
     return result
 
-@poRouter.post('/get_manufacture_clearance')  
+@poRouter.post('/get_manufacture_clearance_desc')  
 async def getreceiptdoc(wrd:GetPhrase):
     print('I am logging in!')
     # print(id.id)
