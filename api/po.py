@@ -1754,7 +1754,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     res_dt = {}
     select = "*"
     schema = "td_po_terms_condition"
-    where = f"price_basis_desc like '{wrd.wrd}'"
+    where = f"price_basis_desc like '%{wrd.wrd}%'"
     order = "ORDER BY modified_by,created_at DESC"
     flag =  0
     result = await db_select(select, schema, where, order, flag)
