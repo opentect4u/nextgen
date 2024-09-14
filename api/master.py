@@ -140,6 +140,8 @@ pass_alphabets=[
     '9','0','/','*','+','~','@','#','%','^','&','//'
     ]
 
+class getPhrase(BaseModel):
+    wrd:str
 
 @masterRouter.post('/addcategory')
 async def addcategory(dt:getMaster):
@@ -1057,3 +1059,31 @@ async def addvendor(data:addVendor):
 #     result = await db_select(select, schema, where, order, flag)
 #     print(result, 'RESULT')
 #     return result
+
+@masterRouter.post('/get_warranty')  
+async def getreceiptdoc(wrd:getPhrase):
+    print('I am logging in!')
+    # print(id.id)
+    res_dt = {}
+    select = "distinct warranty"
+    schema = "td_project"
+    where = f"warranty like '%{wrd.wrd}%'"
+    order = "ORDER BY modified_at,created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+@masterRouter.post('/get_ld_clause')  
+async def getreceiptdoc(wrd:getPhrase):
+    print('I am logging in!')
+    # print(id.id)
+    res_dt = {}
+    select = "distinct ld_clause"
+    schema = "td_project"
+    where = f"ld_clause like '%{wrd.wrd}%'"
+    order = "ORDER BY modified_at,created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result

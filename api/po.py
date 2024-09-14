@@ -1755,7 +1755,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     select = "distinct price_basis_desc"
     schema = "td_po_terms_condition"
     where = f"price_basis_desc like '%{wrd.wrd}%'"
-    order = "ORDER BY modified_by,created_at DESC"
+    order = "ORDER BY modified_at,created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -1769,7 +1769,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     select = "distinct freight_ins_val"
     schema = "td_po_terms_condition"
     where = f"freight_ins_val like '%{wrd.wrd}%'"
-    order = "ORDER BY modified_by,created_at DESC"
+    order = "ORDER BY modified_at,created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -1783,7 +1783,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     select = "distinct ins_val"
     schema = "td_po_terms_condition"
     where = f"ins_val like '%{wrd.wrd}%'"
-    order = "ORDER BY modified_by,created_at DESC"
+    order = "ORDER BY modified_at,created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -1797,7 +1797,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     select = "distinct test_certificate_desc"
     schema = "td_po_terms_condition"
     where = f"test_certificate_desc like '%{wrd.wrd}%'"
-    order = "ORDER BY modified_by,created_at DESC"
+    order = "ORDER BY modified_at,created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -1811,7 +1811,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     select = "distinct o_m_desc"
     schema = "td_po_terms_condition"
     where = f"o_m_desc like '%{wrd.wrd}%'"
-    order = "ORDER BY modified_by,created_at DESC"
+    order = "ORDER BY modified_at,created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -1825,7 +1825,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     select = "distinct operation_installation_desc"
     schema = "td_po_terms_condition"
     where = f"operation_installation_desc like '%{wrd.wrd}%'"
-    order = "ORDER BY modified_by,created_at DESC"
+    order = "ORDER BY modified_at,created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -1839,7 +1839,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     select = "distinct manufacture_clearance_desc"
     schema = "td_po_terms_condition"
     where = f"manufacture_clearance_desc like '%{wrd.wrd}%'"
-    order = "ORDER BY modified_by,created_at DESC"
+    order = "ORDER BY modified_at,created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
@@ -1854,7 +1854,7 @@ async def getreceiptdoc(wrd:GetPhrase):
     select = "distinct terms_dtls"
     schema = "td_po_payment_dtls"
     where = f"terms_dtls like '%{wrd.wrd}%'"
-    order = "ORDER BY modified_by,created_at DESC"
+    order = "ORDER BY modified_at,created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
