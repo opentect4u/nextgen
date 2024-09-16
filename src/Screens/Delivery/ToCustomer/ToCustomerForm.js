@@ -65,7 +65,7 @@ function ToCustomerForm() {
     >
       <DeliveryFormComp
         flag={"C"}
-        title={"Delivery Details"}
+        title={"MRN Details"}
         onSubmit={(values) => {
           onSubmit(values);
         }}

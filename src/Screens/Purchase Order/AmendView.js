@@ -157,6 +157,8 @@ function AmendView() {
     localStorage.removeItem("drawing_flag");
     localStorage.removeItem("drawing");
     localStorage.removeItem("dt");
+    localStorage.removeItem('amend_flag')
+    localStorage.removeItem('amend_note')
     axios.post(url + "/api/getamendproject", { id: 0 }).then((res) => {
       console.log(res);
       setPoData(res?.data?.msg.filter((e) => e.po_status == "P"));

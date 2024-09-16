@@ -141,6 +141,8 @@ function PurchaseOrderView() {
     localStorage.removeItem("drawing_flag");
     localStorage.removeItem("drawing");
     localStorage.removeItem("dt");
+    localStorage.removeItem('amend_flag')
+    localStorage.removeItem('amend_note')
   }, [
     locationpath.pathname.split("/")[
       locationpath.pathname.split("/").length - 1

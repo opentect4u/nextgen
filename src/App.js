@@ -79,6 +79,11 @@ function App() {
         labelBg:'#F1F5F9'
         
       },
+      Popover:{
+        colorBgElevated:'#014737',
+        colorText:'white',
+        colorTextHeading:'white'
+      },
       Tabs:{
         inkBarColor:'#014737',
         itemColor:'#014737',

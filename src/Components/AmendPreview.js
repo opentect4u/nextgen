@@ -571,7 +571,7 @@ useEffect(()=>{
                     Test Certificate
                 </th>
                 <td className="px-6 py-4">
-                {test_certificate=='Y'?'Yes, '+test_certificate_desc:'No'}
+                {test_certificate=='Y'?'Yes, '+test_certificate_desc:'N/A'}
                 </td>
             </tr>
 
@@ -593,7 +593,7 @@ useEffect(()=>{
                 O & M Manual
                 </th>
                 <td className="px-6 py-4">
-                {om_manual_flag=='A'?'Applicable. '+ om_manual_desc:'Not Applicable.'}
+                {om_manual_flag=='A'?'Applicable. '+ om_manual_desc:'N/A'}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -601,7 +601,7 @@ useEffect(()=>{
                 Operation/Installation
                 </th>
                 <td className="px-6 py-4">
-                {oi_flag=='A'?'Applicable. ' +oi_desc:'Not Applicable.'}
+                {oi_flag=='A'?'Applicable. ' +oi_desc:'N/A'}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -617,7 +617,7 @@ useEffect(()=>{
                 Manufacture Clearance
                 </th>
                 <td className="px-6 py-4">
-                {manufacture_clearance=='A'?'Applicable. '+manufacture_clearance_desc:'Not Applicable.'}
+                {manufacture_clearance=='A'?'Applicable. '+manufacture_clearance_desc:'N/A'}
                 </td>
             </tr>
         </tbody>
@@ -654,7 +654,7 @@ useEffect(()=>{
         <tbody>
             <tr className="bg-white border-b text-nowrap dark:bg-gray-800 dark:border-gray-700">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {ld_applicable_date=='O'?`Others - ${others_ld}`:ld_applicable_date=='M'?'MRN Date':ld_applicable_date=='NA'?'Not Applicable':'Dispatch Date'}
+                    {ld_applicable_date=='O'?`Others - ${others_ld}`:ld_applicable_date=='M'?'MRN Date':ld_applicable_date=='NA'?'N/A':'Dispatch Date'}
                 </th>
                 <td className="px-6 py-4">
                 {ld_applied_on=='O'?`Others - ${others_applied}`:ld_applicable_date=='P'?'Pending Material Value':ld_applicable_date=='NA'?'':'PO Total Value(%)'}
@@ -680,7 +680,7 @@ useEffect(()=>{
                    MDCC
                </th>
                <td className="px-6 py-4">
-               {localStorage.getItem('mdcc_flag')=='Y'?'Yes. '+localStorage.getItem('mdcc'):'No'}
+               {localStorage.getItem('mdcc_flag')=='Y'?'Yes. '+localStorage.getItem('mdcc'):'N/A'}
                </td>
            </tr>
            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -688,7 +688,7 @@ useEffect(()=>{
                    Inspection
                </th>
                <td className="px-6 py-4">
-               {localStorage.getItem('insp_flag')=='Y'?'Yes. ' +localStorage.getItem('insp'):'No'}
+               {localStorage.getItem('insp_flag')=='Y'?'Yes. ' +localStorage.getItem('insp'):'N/A'}
                </td>
            </tr>
            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -696,7 +696,7 @@ useEffect(()=>{
                    Drawing/Datasheet
                </th>
                <td className="px-6 py-4">
-               {localStorage.getItem('drawing_flag')=='Y'?'Yes . '+localStorage.getItem('drawing')+', '+localStorage.getItem('dt') :'No'}
+               {localStorage.getItem('drawing_flag')=='Y'?'Yes . '+localStorage.getItem('drawing')+', '+localStorage.getItem('dt') :'N/A'}
                </td>
            </tr>
           

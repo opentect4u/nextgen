@@ -2,14 +2,12 @@
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    "./node_modules/flowbite/**/*.js"
+    "./node_modules/flowbite/**/*.js",
   ],
   darkMode: "class",
   theme: {
       extend: {
         backgroundImage: {
-          // 'hello': "url('Assets/Images/hello.png')",
-          // 'hellooffice': "url('Assets/Images/hellooffice.png')",
           'hello': "url('Assets/Images/body.png')",
         },
         backgroundColor:{
@@ -43,8 +41,10 @@ module.exports = {
        
       },
   },
-  plugins: [require('flowbite/plugin')({
-    charts: true,
-}),],
+  darkMode: "class",
+  plugins: [require("./node_modules/flowbite/plugin"),{
+    tailwindcss: {},
+    autoprefixer: {},
+  },],
 }
 

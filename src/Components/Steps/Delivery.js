@@ -63,7 +63,9 @@ function Delivery({ pressBack, pressNext, data }) {
                 <Switch
                   size="small"
                   value={deliveryConfirm}
-                  disabled={localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
+                  disabled={
+                localStorage.getItem('amend_flag') =='Y' ||
+                    localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
                   onClick={(e) => {
                     
                     console.log(e);
@@ -98,7 +100,7 @@ function Delivery({ pressBack, pressNext, data }) {
               value={delivery}
               onChange={(text) => {setDeliveryAdd(text.target.value); localStorage.setItem('ship_to',text.target.value)}}
               disabled={localStorage.getItem('order_type') == "G" || deliveryConfirm ? true : false || 
-
+                localStorage.getItem('amend_flag') =='Y' ||
                 localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false
 
 

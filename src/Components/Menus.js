@@ -30,7 +30,9 @@ import {
   IssuesCloseOutlined,
   SignatureOutlined,
   CloseCircleOutlined,
-  TruckOutlined
+  TruckOutlined,
+  DockerOutlined,
+  AccountBookOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -117,60 +119,129 @@ function Menus({ theme}) {
       label: "Orders",
       key: "sub4",
       icon: <AuditOutlined />,
-          children: [
+          children:[
             {
-              // key: "client-order",
+             // key: "client-order",
               // icon: <UserOutlined />,
               // label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
               key: "master:projects",
-              icon: <UserSwitchOutlined />,
-              label: <Link to={routePaths.PROJECTS}>Client Orders</Link>,
-            },
-            {
-              label: <Link to={routePaths.PURCHASEORDER+'/P'}>Vendor Orders</Link>,
-              key: "purchase-order",
-              icon: <SolutionOutlined />,
-            },
+              icon: <DockerOutlined />,
+              label: 'Projects',
+
+              children:[
+                
+                {
+                  // key: "client-order",
+                  // icon: <UserOutlined />,
+                  // label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
+                  key: "master:client-orders",
+                  icon: <UserSwitchOutlined />,
+                  label: <Link to={routePaths.PROJECTS}>Client Orders</Link>,
+              }
             
             
-            {
-              label: <Link to={routePaths.EXISTINGORDER}>Existing Purchase Orders</Link>,
-              key: "existing-order",
-              icon: <CheckCircleOutlined />,
-            },
-            {
-              label: <Link to={routePaths.AMENDORDER}>Amend Purchase Orders</Link>,
-              key: "amend-order",
-              icon: <SignatureOutlined />,
-            },
-            {
-              // label: <Link to={routePaths.PURCHASEORDER+'/A'}>Approve Vendor Orders</Link>,
-              label: <Link to={routePaths.APPROVEORDER}>Approve Vendor Orders</Link>,
-              key: "approve-purchase-order",
-              icon: <CheckOutlined />,
-            },
             
-            // {
-            //   label: <Link to={routePaths.CANCELHOME}>Cancel Purchase Orders</Link>,
-            //   key: "cancel-purchase-order",
-            //   icon: <CloseCircleOutlined />,
-            // }
+            ]
+          },
+          {
+            // key: "client-order",
+             // icon: <UserOutlined />,
+             // label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
+             key: "master:purchase",
+             icon: <AccountBookOutlined />,
+             label: 'Purchase',
+
+             children:[
+              {
+                    label: <Link to={routePaths.PURCHASEORDER+'/P'}>Vendor Orders</Link>,
+                    key: "purchase-order",
+                    icon: <SolutionOutlined />,
+                  },
+                  
+                  
+                  {
+                    label: <Link to={routePaths.EXISTINGORDER}>Existing Purchase Orders</Link>,
+                    key: "existing-order",
+                    icon: <CheckCircleOutlined />,
+                  },
+                  {
+                    label: <Link to={routePaths.AMENDORDER}>Amend Purchase Orders</Link>,
+                    key: "amend-order",
+                    icon: <SignatureOutlined />,
+                  },
+                  {
+                    // label: <Link to={routePaths.PURCHASEORDER+'/A'}>Approve Vendor Orders</Link>,
+                    label: <Link to={routePaths.APPROVEORDER}>Approve Vendor Orders</Link>,
+                    key: "approve-purchase-order",
+                    icon: <CheckOutlined />,
+                  },
+                  {
+                    label: <Link to={routePaths.TESTCERTHOME}>Upload Test Certificate</Link>,
+                    key: "uploadtc-purchase-order",
+                    icon: <UploadFileOutlined />,
+                  },
+                  
+                  // {
+                  //   label: <Link to={routePaths.CANCELHOME}>Cancel Purchase Orders</Link>,
+                  //   key: "cancel-purchase-order",
+                  //   icon: <CloseCircleOutlined />,
+                  
+            ]
+          }
+          
+        
+        
+        ],
+          // children: [
+          //   {
+          //     // key: "client-order",
+          //     // icon: <UserOutlined />,
+          //     // label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
+          //     key: "master:projects",
+          //     icon: <UserSwitchOutlined />,
+          //     label: <Link to={routePaths.PROJECTS}>Client Orders</Link>,
+          //   },
+          //   {
+          //     label: <Link to={routePaths.PURCHASEORDER+'/P'}>Vendor Orders</Link>,
+          //     key: "purchase-order",
+          //     icon: <SolutionOutlined />,
+          //   },
             
-          ],
+            
+          //   {
+          //     label: <Link to={routePaths.EXISTINGORDER}>Existing Purchase Orders</Link>,
+          //     key: "existing-order",
+          //     icon: <CheckCircleOutlined />,
+          //   },
+          //   {
+          //     label: <Link to={routePaths.AMENDORDER}>Amend Purchase Orders</Link>,
+          //     key: "amend-order",
+          //     icon: <SignatureOutlined />,
+          //   },
+          //   {
+          //     // label: <Link to={routePaths.PURCHASEORDER+'/A'}>Approve Vendor Orders</Link>,
+          //     label: <Link to={routePaths.APPROVEORDER}>Approve Vendor Orders</Link>,
+          //     key: "approve-purchase-order",
+          //     icon: <CheckOutlined />,
+          //   },
+            
+          //   // {
+          //   //   label: <Link to={routePaths.CANCELHOME}>Cancel Purchase Orders</Link>,
+          //   //   key: "cancel-purchase-order",
+          //   //   icon: <CloseCircleOutlined />,
+          //   // }
+            
+          // ],
        
     },
+    
+    // {
+    //   label: <Link to={routePaths.MDCCHOME}>Upload MDCC</Link>,
+    //   key: "mdcc-purchase-order",
+    //   icon: <UploadFileOutlined />,
+    // },
     {
-      label: <Link to={routePaths.TESTCERTHOME}>Upload Test Certificate</Link>,
-      key: "uploadtc-purchase-order",
-      icon: <UploadFileOutlined />,
-    },
-    {
-      label: <Link to={routePaths.MDCCHOME}>Upload MDCC</Link>,
-      key: "mdcc-purchase-order",
-      icon: <UploadFileOutlined />,
-    },
-    {
-      label:  <Link to={routePaths.DELIVERYCUSTOMERVIEW}> Delivery </Link>,
+      label:  <Link to={routePaths.DELIVERYCUSTOMERVIEW}> MRN </Link>,
       key: "material-delivery",
       icon: <TruckOutlined />,
       // children: [

@@ -13,9 +13,6 @@ import DialogBox from "../DialogBox";
 import DrawerComp from "../DrawerComp";
 import moment from "moment";
 
-// import { DatePicker, Space } from 'antd';
-
-// const { RangePicker } = DatePicker;
 function ProductDetails({ pressBack, pressNext, data }) {
   console.log(data);
   const params = useParams();
@@ -126,6 +123,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
             item_name: "",
             qty: "",
             rate: "",
+            currency:"",
             disc_prtg: "",
             disc: "",
             unit: "",
@@ -160,13 +158,20 @@ function ProductDetails({ pressBack, pressNext, data }) {
       event.target.name,
       typeof event.target.value
     );
-
+    
+    
     console.log(grand_total);
     if (event.target.name == "item_name")
       setProdInfo(products.filter((e) => e.sl_no == +event.target.value));
 
     let data = [...itemList];
-
+    if(event.target.name=='currency'){
+    if(event.target.value!='I'){
+      data[index]["IGST"]=''
+      data[index]["CGST"]=''
+      data[index]["SGST"]=''
+    }
+  }
     if (event.target.name == "disc_prtg") {
       console.log(+((data[index]["rate"] * +event.target.value) / 100));
 
@@ -314,6 +319,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
         item_name: "",
         qty: "",
         disc_prtg: "",
+        currency:"",
         disc: "",
         unit: "",
         unit_price: "",
@@ -363,6 +369,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                             item_name: "",
                             qty: "",
                             rate: "",
+                            currency:"",
                             disc_prtg: "",
                             disc: "",
                             unit: "",
@@ -490,6 +497,30 @@ function ProductDetails({ pressBack, pressNext, data }) {
                   )}
                 </div>
                 <div className="sm:col-span-2 flex flex-col">
+                  {/* {input.currency} */}
+                  <TDInputTemplate
+                    placeholder="Currency"
+                    type="number"
+                    label="Currency"
+                    formControlName={input.currency}
+                    name="currency"
+                    disabled={
+                      localStorage.getItem("po_status") == "A" ||
+                      localStorage.getItem("po_status") == "D" ||
+                      localStorage.getItem("po_status") == "L"
+                        ? true
+                        : false
+                    }
+                    handleChange={(event) => handleDtChange(index, event)}
+                   
+                    data={[{code:'I',name:'INR'},{code:'U',name:'USD'},{code:'E',name:'Euro'}]}
+                    mode={2}
+                  />
+                  {(!input.currency || input.currency=='Currency')  && (
+                    <VError title={"Required"} />
+                  )}
+                </div>
+                <div className="sm:col-span-2 flex flex-col">
                   <TDInputTemplate
                     placeholder="Discount(%)"
                     type="number"
@@ -514,9 +545,9 @@ function ProductDetails({ pressBack, pressNext, data }) {
                 </div>
                 <div className="sm:col-span-2 flex flex-col">
                   <TDInputTemplate
-                    placeholder="Discount(INR)"
+                    placeholder={input.currency=='I'?'Discount (INR)':input.currency=='U'?'Discount (USD)':input.currency=='E'?'Discount (Euro)':'Discount'}
                     type="number"
-                    label="Discount(INR)"
+                    label={input.currency=='I'?'Discount (INR)':input.currency=='U'?'Discount (USD)':input.currency=='E'?'Discount (Euro)':'Discount'}
                     formControlName={input.disc}
                     name="disc"
                     disabled={
@@ -601,7 +632,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                       localStorage.getItem("po_status") == "A" ||
                       localStorage.getItem("po_status") == "D" ||
                       localStorage.getItem("po_status") == "L" ||
-                      itemList[index]["IGST"] > 0
+                      itemList[index]["IGST"] > 0 || itemList[index]['currency']!='I'
                         ? true
                         : false
                     }
@@ -636,7 +667,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                     input.CGST == "" ||
                     input.SGST == "SGST" ||
                     input.SGST == "") &&
-                    (input.IGST == "IGST" || input.IGST == "") && (
+                    (input.IGST == "IGST" || input.IGST == "") && (input.currency=='I') && (
                       <VError title={"Either input IGST or SGST, CGST both!"} />
                     )}
                   {/* {formik.errors.price_basis_desc && formik.touched.price_basis_desc && (
@@ -653,7 +684,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                       localStorage.getItem("po_status") == "A" ||
                       localStorage.getItem("po_status") == "D" ||
                       localStorage.getItem("po_status") == "L" ||
-                      itemList[index]["IGST"] > 0
+                      itemList[index]["IGST"] > 0 || itemList[index]['currency']!='I'
                         ? true
                         : false
                     }
@@ -697,6 +728,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                       localStorage.getItem("po_status") == "A" ||
                       localStorage.getItem("po_status") == "D" ||
                       localStorage.getItem("po_status") == "L" ||
+                      itemList[index]['currency']!='I' ||
                       (itemList[index]["CGST"] > 0 || itemList[index]["SGST"]) >
                         0
                         ? true
@@ -779,7 +811,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                   )}
                   
                   {input.delivery_date<localStorage.getItem('po_issue_date') && (
-                    <VError title={"Delivery date must be>PO Date"} />
+                    <VError title={"Delivery date must be>=PO Date"} />
                   )}
                   {/* <RangePicker onChange={(e)=>console.log(e)}/> */}
                 </div>
@@ -860,18 +892,18 @@ function ProductDetails({ pressBack, pressNext, data }) {
                     i.qty > 0 &&
                     i.rate > 0 &&
                     i.unit != "Unit" &&
-                    i.delivery_date<i.delivery_to && i.delivery_date>localStorage.getItem('po_issue_date') &&
+                    i.delivery_date<=i.delivery_to && i.delivery_date>=localStorage.getItem('po_issue_date') &&
                     i.unit != "" &&
                     i.delivery_date &&
                     i.delivery_to &&
                     i.unit_price > 0 &&
                     (i.disc >= 0 || i.disc == "") &&
                     (i.disc_prtg >= 0 || i.disc_prtg == "") &&
-                    ((i.SGST != "SGST" &&
+                    (((i.SGST != "SGST" &&
                       i.SGST != "" &&
                       i.CGST != "CGST" &&
                       i.CGST != "") ||
-                      (i.IGST != "IGST" && i.IGST != ""))
+                      (i.IGST != "IGST" && i.IGST != "") && i.currency=='I') || (i.currency=='U'||i.currency=='E')) && i.currency!='Currency' && i.currency!=''
                   )
                     flag = 0;
                   else {

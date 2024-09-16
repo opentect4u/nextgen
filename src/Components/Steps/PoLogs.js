@@ -240,7 +240,10 @@ function PoLogs({ data }) {
            
 
 <a target="_blank" href={url + "/uploads/" + item.doc}>
+<p className="text-xs text-green-900 -mb-4 mt-6">{item.doc.split('_')[2]}</p>
+
                   {item.doc.split(".")[1] == "pdf" ? (
+                    
                     <FilePdfOutlined className="text-6xl my-7 text-red-600" />
                   ) : item.doc.split(".")[1]?.includes("doc") ? (
                     <FileWordOutlined className="text-6xl my-7 text-blue-900" />

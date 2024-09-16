@@ -98,7 +98,7 @@ function DeliveryViewTemplate({flag}) {
             transition={{ delay: 1.3, type: "just" }}
             className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0"
           >
-            <Tooltip title={`Enter Delivery Details`}>
+            <Tooltip title={`Enter MRN Details`}>
               <Link
                 to={
                   flag == "C"
@@ -108,7 +108,7 @@ function DeliveryViewTemplate({flag}) {
                 type="submit"
                 className="flex items-center justify-center border-2 border-white border-r-0 text-white bg-green-900 hover:bg-primary-800 text-nowrap rounded-l-md transition ease-in-out  active:scale-90 text-sm p-1 px-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none shadow-lg  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2 capitalize"
               >
-                <TruckOutlined className="text-sm mx-1" /> {`Enter delivery details`}
+                <TruckOutlined className="text-sm mx-1" /> {`Enter MRN details`}
               </Link>
             </Tooltip>
           </motion.div>
@@ -145,7 +145,7 @@ function DeliveryViewTemplate({flag}) {
                   transition={{ delay: 1, type: "just" }}
                   class="text-xl w-48 capitalize text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5"
                 >
-                  {flag=='C'?'Delivery Details':'DeliveryDetails'}
+                  {flag=='C'?'MRN Details':'DeliveryDetails'}
                 </motion.h2>
   
                 <label for="simple-search" class="sr-only">

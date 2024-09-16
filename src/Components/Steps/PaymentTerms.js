@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import TDInputTemplate from "../TDInputTemplate";
-import { Button,  } from "antd";
+import { Button, Popover, Tag,  } from "antd";
 import { PlusOutlined,MinusOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import { url } from "../../Address/BaseUrl";
 function PaymentTerms({ pressBack, pressNext, data }) {
   const params=useParams()
+  const [termdtls,setDtls]=useState([])
+  const [popOpen, setPopOpen] = useState(false);
+  const hide = () => {
+    setPopOpen(false);
+  };
+
+  const handleOpenChange = (newOpen) => {
+    setPopOpen(newOpen);
+  };
   const [termList, setTermList] = useState(
     data?.termList?.length
       ? data?.termList
@@ -18,12 +29,20 @@ function PaymentTerms({ pressBack, pressNext, data }) {
   );
   const handleDtChange = (index, event) => {
     console.log(event.target.value);
+    setDtls([])
+    handleOpenChange(false)
     let data = [...termList];
     data[index][event.target.name] = event.target.value;
     setTermList(data)
     console.log(termList)
     localStorage.removeItem('termList')
     localStorage.setItem('termList',JSON.stringify(data))
+    axios.post(url+'/api/get_term_dtls',{wrd:event.target.value}).then(res=>{
+      if(res.data.msg.length>0){
+        setDtls(res.data.msg)
+        handleOpenChange(true)
+      }
+    })
   };
   const addDt = (dt) => {
     setTermList([...termList, dt]);
@@ -45,7 +64,9 @@ function PaymentTerms({ pressBack, pressNext, data }) {
       <h2 className="text-2xl text-green-900 font-bold my-3">Payment Terms</h2>
         {termList.map((input, index) => (
           <React.Fragment key={index}>
-           {localStorage.getItem('po_status')!='A' &&localStorage.getItem('po_status')!='D' && localStorage.getItem('po_status')!='L' &&
+                {localStorage.getItem('po_status')!='A' &&localStorage.getItem('po_status')!='D' && localStorage.getItem('po_status')!='L' &&  
+                localStorage.getItem('amend_flag') !='Y' &&
+
            <div className=" flex justify-end items-center my-3 gap-2">
               {termList.length > 1 && (
                 <Button
@@ -58,7 +79,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
               <Button
                 className="rounded-full bg-green-900 text-white"
                 onClick={() => {
-                  console.log(termList[index]);
+                  console.log(termList[index],'iiii');
                   addDt({
                     sl_no: 0,
                     stage: "",
@@ -82,7 +103,9 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                     handleDtChange(index,event)
                 
                 }}
-                disabled={localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ?true:false}
+                disabled={
+                localStorage.getItem('amend_flag') =='Y' ||
+                  localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ?true:false}
 
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
@@ -92,6 +115,28 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                       <VError title={formik.errors.price_basis_flag} />
                     )} */}
             </div>
+            <Popover
+      content={<>
+      <ul>
+      {termdtls?.map(price=><li className="my-2">
+        <Tag className="cursor-pointer" onClick={(index)=>{
+          termList[index+1]['term']=price.terms_dtls;
+          // console.log()
+          handleOpenChange(false)
+          }} >
+        {price.terms_dtls}
+          
+          </Tag>  
+        </li>)}
+
+      </ul>
+     <a onClick={hide}>Close</a>  
+      </>}
+      title="Do you mean?"
+      trigger="click"
+      open={popOpen}
+      onOpenChange={handleOpenChange}
+    >
             <div className="sm:col-span-10">
               <TDInputTemplate
                 placeholder="Payment Terms"
@@ -103,7 +148,9 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                 // handleChange={formik.handleChange}
                 // handleBlur={formik.handleBlur}
                 mode={3}
-                disabled={localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ?true:false}
+                disabled={
+                localStorage.getItem('amend_flag') =='Y' ||
+                  localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L' ?true:false}
 
               />
               {/* {formik.errors.price_basis_desc && formik.touched.price_basis_desc && (
@@ -111,6 +158,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
                     )} */}
                 
             </div>
+            </Popover>
             </div>
            
           </React.Fragment>

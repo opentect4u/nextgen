@@ -104,6 +104,7 @@ function VendorForm() {
   // };
 
   const [formValues, setValues] = useState({
+    v_type:"",
     v_name: "",
     v_email: "",
     v_phone: "",
@@ -144,6 +145,7 @@ function VendorForm() {
   });
 
   const initialValues = {
+    v_type:"",
     v_name: "",
     v_email: "",
     v_phone: "",
@@ -195,6 +197,7 @@ function VendorForm() {
   };
 
   const validationSchema = Yup.object({
+    v_type: Yup.string().required("Type is required"),
     v_name: Yup.string().required("Name is required"),
     v_phone: Yup.string()
       .required("Phone is required")
@@ -353,6 +356,7 @@ function VendorForm() {
                       }
                       setValues((prevValues) => ({
                         ...prevValues,
+                        v_type:resVendor.data.msg.vendor_type,
                         v_name: resVendor.data.msg.vendor_name,
                         v_email: resVendor.data.msg.vendor_email,
                         v_phone: resVendor.data.msg.vendor_phone,
@@ -458,6 +462,7 @@ function VendorForm() {
       .post(url + "/api/addVendor", {
         v_id: +params.id,
         user: localStorage.getItem("email"),
+        v_type:values.v_type,
         v_name: values.v_name,
         v_gst: values.v_gst,
         v_pan: values.v_pan,
@@ -542,8 +547,24 @@ function VendorForm() {
                 <div className="card flex flex-col justify-center">
                   {/*  <Stepper ref={stepperRef} style={{ flexBasis: '80rem' }}>
                     <StepperPanel header="Header I">*/}
-                  <div className="grid gap-4 sm:grid-cols-6 sm:gap-6">
-                    <div className="sm:col-span-2">
+                  <div className="grid gap-4 sm:grid-cols-12 sm:gap-6">
+                  <div className="sm:col-span-3">
+                      <TDInputTemplate
+                        placeholder="Select type"
+                        type="text"
+                        label="Vendor type"
+                        name="v_type"
+                        formControlName={values.v_type}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        data={[{name:'Service',code:'E'},{name:'Supplier',code:'U'}]}
+                        mode={2}
+                      />
+                      {errors.v_type && touched.v_type ? (
+                        <VError title={errors.v_type} />
+                      ) : null}
+                    </div>
+                    <div className="sm:col-span-3">
                       <TDInputTemplate
                         placeholder="Type name..."
                         type="text"
@@ -558,7 +579,7 @@ function VendorForm() {
                         <VError title={errors.v_name} />
                       ) : null}
                     </div>
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-3">
                       <TDInputTemplate
                         placeholder="Type TAN..."
                         type="text"
@@ -573,7 +594,7 @@ function VendorForm() {
                         <VError title={errors.v_tan} />
                       ) : null}
                     </div>
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-3">
                       <TDInputTemplate
                         placeholder="Type PAN..."
                         type="text"
@@ -597,7 +618,7 @@ function VendorForm() {
                           {values.dynamicFields_category?.map(
                             (field, index) => (
                               <React.Fragment key={index}>
-                                <div className="sm:col-span-4 mb-5">
+                                <div className="sm:col-span-10 mb-5">
                                   <TDInputTemplate
                                     placeholder="Deals in"
                                     type="text"
@@ -621,8 +642,8 @@ function VendorForm() {
                                     />
                                   ) : null}
                                 </div>
-                                <div className="sm:col-span-1"></div>
-                                <div className="sm:col-span-1 flex gap-2 justify-end item-center mt-5">
+                                {/* <div className="sm:col-span-1"></div> */}
+                                <div className="sm:col-span-2 flex gap-2 justify-end item-center mt-5">
                                   {values.dynamicFields_category?.length >
                                     1 && (
                                     <Button

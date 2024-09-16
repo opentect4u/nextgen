@@ -13,7 +13,7 @@ import Notes from "../../Components/Steps/Notes";
 import Tooltip from '@mui/material/Tooltip';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, EyeOutlined, FileTextOutlined, LoadingOutlined, SyncOutlined, TruckOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, EyeOutlined, FileTextOutlined, LoadingOutlined, LockOutlined, SyncOutlined, TruckOutlined } from "@ant-design/icons";
 import { Button, FloatButton } from "antd";
 import PaymentTerms from "../../Components/Steps/PaymentTerms";
 import axios from "axios";
@@ -22,10 +22,12 @@ import { Spin } from "antd";
 import { Message } from "../../Components/Message";
 import DialogBox from "../../Components/DialogBox";
 import { Tag } from 'antd';
-import { Timeline } from 'antd';
-import TDInputTemplate from "../../Components/TDInputTemplate";
+import { BlockUI } from 'primereact/blockui';
+// import { Timeline } from 'antd';
+// import TDInputTemplate from "../../Components/TDInputTemplate";
 import { SaveOutlined } from "@mui/icons-material";
 import PoLogs from "../../Components/Steps/PoLogs";
+import TDInputTemplate from "../../Components/TDInputTemplate";
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const params = useParams();
@@ -61,8 +63,28 @@ function PurchaseOrderForm() {
   const [packing_forwarding, setPackingForwarding] = useState("");
   const [packing_forwardingExtra, setPackingForwardingExtra] = useState("");
   const [packing_forwardingExtraVal, setPackingForwardingExtraVal] = useState("");
+  const [pf_cgst ,setpfcgst] = useState("");
+  const [pf_sgst, setpfsgst] = useState("");
+  const [pf_igst, setpfigst] = useState("");
+  const [pf_currency, setpfcurrency] = useState("");
   const [freight_insurance, setFreightInsurance] = useState("");
   const [freight_insurance_val, setFreightInsuranceVal] = useState("");
+
+  const [freight_extra, setFreightExtra] = useState("");
+  const [freight_extra_val, setFreightExtraVal] = useState("");
+  const [freight_cgst ,setfreightcgst] = useState("");
+  const [freight_sgst, setfreightsgst] = useState("");
+  const [freight_igst, setfreightigst] = useState("");
+  const [freight_currency, setfreightcurrency] = useState("");
+
+  const [ins_extra, setinsExtra] = useState("");
+  const [ins_extra_val, setinsExtraVal] = useState("");
+  const [ins_cgst ,setinscgst] = useState("");
+  const [ins_sgst, setinssgst] = useState("");
+  const [ins_igst, setinsigst] = useState("");
+  const [ins_currency, setinscurrency] = useState("");
+
+
   const [insurance, setInsurance] = useState("");
   const [insurance_val, setInsuranceVal] = useState("");
   const [test_certificate, setTestCertificate] = useState("");
@@ -89,6 +111,8 @@ function PurchaseOrderForm() {
   const [clickFlag,setClickFlag]=useState("P")
   const [po_no,setPoNo]=useState('')
   const [count,setCount]=useState(0)
+  const [blocked,setBlocked] = useState(false)
+  const [amendnote,setAmendNote] = useState('')
   const navigate=useNavigate()
   const addcomment=()=>{
     if(localStorage.getItem('po_comments')){
@@ -160,15 +184,49 @@ function PurchaseOrderForm() {
         .packing_forwarding_extra):0.0,
         packing_fwd_extra_val:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
         .packing_forwarding_extra_val):0.0,
+        pf_currency:JSON.parse(localStorage.getItem("terms"))?JSON.parse(localStorage.getItem("terms"))
+        .pf_currency:'',
+        pf_cgst:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .pf_cgst):0.0,
+        pf_sgst:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .pf_sgst):0.0,
+        pf_igst:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .pf_igst):0.0,
       freight_ins: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .freight_insurance:"",
         freight_ins_val: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .freight_insurance_val:"",
         // 
+        freight_extra:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .freight_extra):0.0,
+        freight_extra_val:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .freight_extra_val):0.00,
+        freight_cgst:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .freight_cgst):0.0,
+        freight_sgst:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .freight_sgst):0.0,
+        freight_igst:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .freight_igst):0.0,
+        freight_currency:JSON.parse(localStorage.getItem("terms"))?JSON.parse(localStorage.getItem("terms"))
+        .freight_currency:'',
+        // 
         ins: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .insurance:"",
         ins_val: JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .insurance_val:"",
+
+        ins_extra:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .ins_extra):0.0,
+        ins_extra_val:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .ins_extra_val):0.00,
+        ins_cgst:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .ins_cgst):0.0,
+        ins_sgst:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .ins_sgst):0.0,
+        ins_igst:JSON.parse(localStorage.getItem("terms"))? parseFloat(JSON.parse(localStorage.getItem("terms"))
+        .ins_igst):0.0,
+        ins_currency:JSON.parse(localStorage.getItem("terms"))?JSON.parse(localStorage.getItem("terms"))
+        .ins_currency:'',
         // 
       test_certificate:JSON.parse(localStorage.getItem("terms"))? JSON.parse(localStorage.getItem("terms"))
         .test_certificate:"",
@@ -269,7 +327,11 @@ function PurchaseOrderForm() {
       localStorage.setItem("po_status",res?.data?.msg?.po_status)
       localStorage.setItem("po_issue_date",res?.data?.msg?.po_issue_date)
       localStorage.setItem('po_no',res?.data?.msg?.po_no)
+      localStorage.setItem('amend_note',res?.data?.msg?.amend_note)
+      localStorage.setItem('amend_flag',res?.data?.msg?.amend_flag)
+      setBlocked((localStorage.getItem('amend_flag')=='Y' && localStorage.getItem('amend_note')=='null')?true:false)
       console.log('type   ',typeof(localStorage.getItem('po_no')))
+      console.log(localStorage.getItem('amend_note'),'note')
       setClickFlag(res?.data?.msg?.po_status)
       setBOrderDt(res?.data?.msg?.po_date)
       setOrderType(res?.data?.msg?.type)
@@ -296,6 +358,7 @@ function PurchaseOrderForm() {
             unit_price:resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount,
             delivery_date:resItem?.data?.msg[i].delivery_dt, //
             delivery_to:resItem?.data?.msg[i].delivery_to, //
+            currency:resItem?.data?.msg[i].currency,
             total:resItem?.data?.msg[i].cgst_id? ((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].cgst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].sgst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity):((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity*resItem?.data?.msg[i].igst_id/100)+((resItem?.data?.msg[i].item_rt-resItem?.data?.msg[i].discount)*resItem?.data?.msg[i].quantity)
           })
         }
@@ -308,10 +371,26 @@ function PurchaseOrderForm() {
           setPackingForwarding(resTerm?.data?.msg[0]?.packing_fwd_val)
           setPackingForwardingExtra(resTerm?.data?.msg[0]?.packing_fwd_extra)
           setPackingForwardingExtraVal(resTerm?.data?.msg[0]?.packing_fwd_extra_val)
+          setpfcgst(resTerm?.data?.msg[0]?.pf_cgst)
+          setpfsgst(resTerm?.data?.msg[0]?.pf_sgst)
+          setpfigst(resTerm?.data?.msg[0]?.pf_igst)
+          setpfcurrency(resTerm?.data?.msg[0]?.pf_currency)
           setFreightInsurance(resTerm?.data?.msg[0]?.freight_ins)
           setFreightInsuranceVal(resTerm?.data?.msg[0]?.freight_ins_val)
+          setFreightExtra(resTerm?.data?.msg[0]?.freight_extra)
+          setFreightExtraVal(resTerm?.data?.msg[0]?.freight_extra_val)
+          setfreightcgst(resTerm?.data?.msg[0]?.freight_cgst)
+          setfreightsgst(resTerm?.data?.msg[0]?.freight_sgst)
+          setfreightigst(resTerm?.data?.msg[0]?.freight_igst)
+          setfreightcurrency(resTerm?.data?.msg[0]?.freight_currency)
           setInsurance(resTerm?.data?.msg[0]?.ins)
           setInsuranceVal(resTerm?.data?.msg[0]?.ins_val)
+          setinsExtra(resTerm?.data?.msg[0]?.ins_extra)
+          setinsExtraVal(resTerm?.data?.msg[0]?.ins_extra_val)
+          setinscgst(resTerm?.data?.msg[0]?.ins_cgst)
+          setinssgst(resTerm?.data?.msg[0]?.ins_sgst)
+          setinsigst(resTerm?.data?.msg[0]?.ins_igst)
+          setinscurrency(resTerm?.data?.msg[0]?.ins_currency)
           setTestCertificate(resTerm?.data?.msg[0]?.test_certificate)
           setTestCertificateDesc(resTerm?.data?.msg[0]?.test_certificate_desc)
           setLDApplicableDate(resTerm?.data?.msg[0]?.ld_date)
@@ -339,8 +418,18 @@ function PurchaseOrderForm() {
             packing_forwarding_val:resTerm?.data?.msg[0]?.packing_fwd_val,
             packing_forwarding_extra:resTerm?.data?.msg[0]?.packing_fwd_extra,
             packing_forwarding_extra_val:resTerm?.data?.msg[0]?.packing_fwd_extra_val,
+            pf_currency:resTerm?.data?.msg[0]?.pf_currency,
+            pf_cgst:resTerm?.data?.msg[0]?.pf_cgst,
+            pf_sgst:resTerm?.data?.msg[0]?.pf_sgst,
+            pf_igst:resTerm?.data?.msg[0]?.pf_igst,
             freight_insurance:resTerm?.data?.msg[0]?.freight_ins,
             freight_insurance_val:resTerm?.data?.msg[0]?.freight_ins_val,
+            freight_extra:resTerm?.data?.msg[0]?.freight_extra,
+            freight_extra_val:resTerm?.data?.msg[0]?.freight_extra_val,
+            freight_currency:resTerm?.data?.msg[0]?.freight_currency,
+            freight_cgst:resTerm?.data?.msg[0]?.freight_cgst,
+            freight_sgst:resTerm?.data?.msg[0]?.freight_sgst,
+            freight_igst:resTerm?.data?.msg[0]?.freight_igst,
             test_certificate:resTerm?.data?.msg[0]?.test_certificate,
             test_certificate_desc:resTerm?.data?.msg[0]?.test_certificate_desc,
             ld_applicable_date:resTerm?.data?.msg[0]?.ld_date,
@@ -426,10 +515,10 @@ function PurchaseOrderForm() {
  
   return (
     <>
-    {floatShow && <FloatButton
+    {floatShow &&  <FloatButton
         icon={loading?<LoadingOutlined spin />:<FileTextOutlined />}
         tooltip="Save draft"
-        disabled={loading?true:false}
+        disabled={loading ||blocked?true:false}
         type="primary"
         style={{
           insetInlineEnd: 100,
@@ -447,6 +536,38 @@ function PurchaseOrderForm() {
         title={"Purchase Order"}
         data={''}
       />
+       <BlockUI blocked={blocked && (localStorage.getItem('po_status')!='A' && localStorage.getItem('po_status')!='D'&&localStorage.getItem('po_status')!='L')} template={
+        <div className="flex-col justify-center items-center gap-5 -mt-72"> 
+        <LockOutlined className="text-9xl ml-44 mb-2 text-green-700 animate-bounce"/>
+        <p className="text-white text-xl mb-2">Please cite a ground for amendment to unlock the form.</p>  
+        <textarea rows="5" className="bg-white border-1 border-gray-400 text-sm rounded-lg  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value={amendnote} onChange={e=>{setAmendNote(e.target.value)}}/>
+        {/* <input type="text"/> */}
+        
+        <button
+        type="submit"
+        disabled={!amendnote||loading}
+        className="float-end disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-end px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-green-900 bg-white transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+        onClick={()=>{
+          setLoading(true)
+          axios.post(url+'/api/addamendnote',{id:+params.id,status:amendnote,user:localStorage.getItem('email')}).then(res=>{
+            console.log(res)
+            setLoading(false)
+            if(res?.data?.suc>0){
+              setBlocked(false)
+              localStorage.setItem('amend_note',amendnote)
+            }
+            else{
+              Message('error',res?.data?.msg)
+            }
+          
+          
+          }).catch(err=> {Message('error',err);navigate("/error" + "/" + err.code + "/" + err.message)})
+        }}
+      
+    >Unlock</button>
+        </div>
+        
+        }>
        <Spin
         indicator={<LoadingOutlined spin />}
         size="large"
@@ -458,17 +579,10 @@ function PurchaseOrderForm() {
         
       
          
-     {clickFlag &&   <div className="flex gap-5 justify-end">
-        {/* {localStorage.getItem('po_status')=='P'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="processing">
-        In Progress
-      </Tag>:localStorage.getItem('po_status')=='U'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="gold">
-        Approval Pending
-      </Tag>:localStorage.getItem('po_status')=='A'?<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="lime">
-       Approved
-      </Tag>:<Tag bordered={true} className="text-lg rounded-full shadow-sm p-2 ml-10" color="lime">
-       Delivered
-        
-        </Tag>} */}
+     {clickFlag &&  
+
+      <div className="flex gap-5 justify-end">
+      
          {clickFlag=='P'?<Tag bordered={false} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="processing" icon={<SyncOutlined spin />}>
         In Progress
       </Tag>:clickFlag=='U'?<Tag bordered={false}  icon={<ClockCircleOutlined className="animate-pulse"/>} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="error">
@@ -491,12 +605,6 @@ function PurchaseOrderForm() {
           <StepperPanel header="Basic Details">
             <BasicDetails
               data={{
-                // order_date: b_order_dt,
-                // proj_name: proj_name,
-                // vendor_name: vendor_name,
-                // type: order_type,
-                // order_id: order_id,
-                // po_issue_date:po_issue_date
                 order_date: localStorage.getItem('order_date'),
                 proj_name: localStorage.getItem('proj_name'),
                 vendor_name: localStorage.getItem('vendor_name'),
@@ -544,8 +652,19 @@ function PurchaseOrderForm() {
                 packing_forwarding_val: packing_forwarding,
                 packing_forwarding_extra:packing_forwardingExtra,
                 packing_forwarding_extra_val:packing_forwardingExtraVal,
+                pf_cgst:pf_cgst,
+                pf_sgst:pf_sgst,
+                pf_igst:pf_igst,
+                pf_currency:pf_currency,
                 freight_insurance: freight_insurance,
                 freight_insurance_val: freight_insurance_val,
+                freight_extra:freight_extra,
+                freight_extra_val:freight_extra_val,
+                freight_cgst:freight_cgst,
+                freight_sgst:freight_sgst,
+                freight_igst:freight_igst,
+                freight_currency:freight_currency,
+
                 test_certificate: test_certificate,
                 test_certificate_desc: test_certificate_desc,
                 ld_applicable_date: ld_applicable_date,
@@ -568,7 +687,13 @@ function PurchaseOrderForm() {
                 dispatch_dt:dispatch_dt,
                 comm_dt:comm_dt,
                 insurance:insurance,
-                insurance_val:insurance_val
+                insurance_val:insurance_val,
+                ins_extra:ins_extra,
+                ins_extra_val:ins_extra_val,
+                ins_cgst:ins_cgst,
+                ins_sgst:ins_sgst,
+                ins_igst:ins_igst,
+                ins_currency:ins_currency,
               }}
               pressNext={(values) => {
                 console.log(values);
@@ -579,8 +704,20 @@ function PurchaseOrderForm() {
                 setPackingForwardingExtraVal(values.packing_forwarding_extra_val);
                 setFreightInsurance(values.freight_insurance);
                 setFreightInsuranceVal(values.freight_insurance_val);
+                setFreightExtra(values.freight_extra);
+                setFreightExtraVal(values.freight_extra_val);
+                setfreightcurrency(values.freight_currency);
+                setfreightcgst(values.freight_cgst)
+                setfreightsgst(values.freight_sgst)
+                setfreightigst(values.freight_igst)
                 setInsurance(values.insurance);
                 setInsuranceVal(values.insurance_val);
+                setinsExtra(values.ins_extra);
+                setinsExtraVal(values.ins_extra_val);
+                setinscurrency(values.ins_currency);
+                setinscgst(values.ins_cgst)
+                setinssgst(values.ins_sgst)
+                setinsigst(values.ins_igst)
                 setTestCertificate(values.test_certificate);
                 setTestCertificateDesc(values.test_certificate_desc);
                 setLDApplicableDate(values.ld_applicable_date);
@@ -602,6 +739,10 @@ function PurchaseOrderForm() {
                 setManufactureDesc(values.manufacture_clearance_desc);
                 setdispatchdt(values.dispatch_dt)
                 setcommdt(values.comm_dt)
+                setpfcgst(values.pf_cgst)
+                setpfsgst(values.pf_sgst)
+                setpfigst(values.pf_igst)
+                setpfcurrency(values.pf_currency)
                 stepperRef.current.nextCallback();
               }}
               pressBack={() => {
@@ -778,6 +919,7 @@ function PurchaseOrderForm() {
         </Stepper>
       </div>
       </Spin>
+      </BlockUI>
       <DialogBox visible={visible} flag={10} data={''} onPress={()=>setVisible(false)}/>
     </>
   );

@@ -367,7 +367,7 @@ function PoPreview({ data }) {
                     Insurance
                 </th>
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).insurance=='Y'? JSON.parse(localStorage.getItem('terms')).insurance_val:'No'} 
+                {JSON.parse(localStorage.getItem('terms')).insurance=='Y'? JSON.parse(localStorage.getItem('terms')).insurance_val:'N/A'} 
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -375,7 +375,7 @@ function PoPreview({ data }) {
                     Test Certificate
                 </th>
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).test_certificate=='Y'?'Yes, '+JSON.parse(localStorage.getItem('terms')).test_certificate_desc:'No'}
+                {JSON.parse(localStorage.getItem('terms')).test_certificate=='Y'?'Yes, '+JSON.parse(localStorage.getItem('terms')).test_certificate_desc:'N/A'}
                 </td>
             </tr>
 
@@ -397,7 +397,7 @@ function PoPreview({ data }) {
                 O & M Manual
                 </th>
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).om_manual_flag=='A'?'Applicable. '+ JSON.parse(localStorage.getItem('terms')).om_manual_desc:'Not Applicable.'}
+                {JSON.parse(localStorage.getItem('terms')).om_manual_flag=='A'?'Applicable. '+ JSON.parse(localStorage.getItem('terms')).om_manual_desc:'N/A'}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -405,7 +405,7 @@ function PoPreview({ data }) {
                 Operation/Installation
                 </th>
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).oi_flag=='A'?'Applicable. ' +JSON.parse(localStorage.getItem('terms')).oi_desc:'Not Applicable.'}
+                {JSON.parse(localStorage.getItem('terms')).oi_flag=='A'?'Applicable. ' +JSON.parse(localStorage.getItem('terms')).oi_desc:'N/A'}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -421,7 +421,7 @@ function PoPreview({ data }) {
                 Manufacture Clearance
                 </th>
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).manufacture_clearance=='A'?'Applicable. '+JSON.parse(localStorage.getItem('terms')).manufacture_clearance_desc:'Not Applicable.'}
+                {JSON.parse(localStorage.getItem('terms')).manufacture_clearance=='A'?'Applicable. '+JSON.parse(localStorage.getItem('terms')).manufacture_clearance_desc:'N/A'}
                 </td>
             </tr>
         </tbody>
@@ -484,7 +484,7 @@ function PoPreview({ data }) {
                    MDCC
                </th>
                <td className="px-1 py-1">
-               {localStorage.getItem('mdcc_flag')=='Y'?'Yes. '+localStorage.getItem('mdcc'):'No'}
+               {localStorage.getItem('mdcc_flag')=='Y'?'Yes. '+localStorage.getItem('mdcc'):'N/A'}
                </td>
            </tr>
            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -492,7 +492,7 @@ function PoPreview({ data }) {
                    Inspection
                </th>
                <td className="px-1 py-1">
-               {localStorage.getItem('insp_flag')=='Y'?'Yes. ' +localStorage.getItem('insp'):'No'}
+               {localStorage.getItem('insp_flag')=='Y'?'Yes. ' +localStorage.getItem('insp'):'N/A'}
                </td>
            </tr>
            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -500,7 +500,7 @@ function PoPreview({ data }) {
                    Drawing/Datasheet
                </th>
                <td className="px-1 py-1">
-               {localStorage.getItem('drawing_flag')=='Y'?'Yes . '+localStorage.getItem('drawing')+', '+localStorage.getItem('dt') :'No'}
+               {localStorage.getItem('drawing_flag')=='Y'?'Yes . '+localStorage.getItem('drawing')+', '+localStorage.getItem('dt') :'N/A'}
                </td>
            </tr>
           

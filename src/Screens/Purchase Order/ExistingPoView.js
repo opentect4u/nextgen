@@ -140,6 +140,8 @@ function ExistingPoView() {
       localStorage.removeItem("drawing_flag");
       localStorage.removeItem("drawing");
       localStorage.removeItem("dt");
+      localStorage.removeItem('amend_flag')
+      localStorage.removeItem('amend_note')
     },
     [
      

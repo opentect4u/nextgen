@@ -54,7 +54,7 @@ function PocInfo({data}) {
       ];
   return (
     <div>
-      <Descriptions title="Client Details" className='mx-auto my-6' labelStyle={{color:'#014737'}} items={items} />
+      <Descriptions title="Client Details" className='mx-auto my-6' labelStyle={{color:'#014737',fontWeight:'bold'}} items={items} />
     </div>
   )
 }

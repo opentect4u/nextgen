@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import { Paginator } from "primereact/paginator";
 import { motion } from "framer-motion";
-
+import { Button, Popover } from "antd";
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
@@ -12,16 +12,55 @@ import {
   FileTextOutlined,
   SyncOutlined,
   TruckOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import { Tag } from "antd";
+import DrawerComp from "./DrawerComp";
 
 function POTableView({ po_data, setSearch, title }) {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10);
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState(0);
+  const [id, setId] = useState(0);
+  const [po, setPO] = useState(0);
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
   };
+  const onClose = () => {
+    setOpen(false);
+  };
+  const content = (
+    // <div className="grid grid-cols-2 gap-3 p-3 bg-[#DDEAE0] rounded-lg">
+    <div className="grid grid-cols-2 gap-3 p-3 bg-green-100 rounded-lg">
+      {/* {id||''} */}
+      {/* <Tag className="cursor-pointer col-span-1 p-2 shadow-lg" color="#eb8d00">
+        Upload/View TC
+      </Tag> */}
+  <Tag
+        onClick={() => {
+          setMode(7);
+          setOpen(true);
+        }}
+        className="cursor-pointer col-span-1 p-2 shadow-lg"
+        color="#4FB477"
+      >
+        Upload/View Vendor Receipt
+      </Tag>
+      <Tag
+        onClick={() => {
+          setMode(8);
+          setOpen(true);
+        }}
+        className="cursor-pointer col-span-1 p-2 shadow-lg"
+        color="#014737"
+      >
+        Upload/View MDCC
+      </Tag>
+    
+    </div>
+  );
   return (
     <>
       <motion.section
@@ -102,6 +141,7 @@ function POTableView({ po_data, setSearch, title }) {
               <th scope="col" class="p-4">
                 Status
               </th>
+
               <th scope="col" class="p-4">
                 Created By
               </th>
@@ -139,7 +179,26 @@ function POTableView({ po_data, setSearch, title }) {
                     {item.serial_number}
                   </th>
                   <td class="px-3 py-4">
-                    {item.po_no || "----------------------"}
+                    <span className="flex gap-2">
+                      {" "}
+                      {item.po_no || "----------------------"}{" "}
+                      {item.po_status == "A" && (
+                        <Popover
+                          content={content}
+                          title={"Documents for " + item.po_no}
+                        >
+                          {/* <Tag className="cursor-pointer" color="#014737"> */}
+                            <UploadOutlined
+                              onMouseEnter={() => {
+                                setId(item.sl_no);
+                                setPO(item.po_no);
+                              }}
+                              className="cursor-pointer"
+                            />
+                          {/* </Tag> */}
+                        </Popover>
+                      )}
+                    </span>
                     <p class="text-[10.5px] text-gray-500 italic">
                       {item.modified_at == null ? (
                         <span>
@@ -154,7 +213,7 @@ function POTableView({ po_data, setSearch, title }) {
                                 (new Date().getTime() -
                                   new Date(item.created_at).getTime()) /
                                   1000
-                              ).toFixed(0) + " seconds ago"
+                              ).toFixed(0) + " second(s) ago"
                             : +Math.floor(
                                 (new Date().getTime() -
                                   new Date(item.created_at).getTime()) /
@@ -183,14 +242,29 @@ function POTableView({ po_data, setSearch, title }) {
                                     1000
                                 ) / 3600
                               ).toFixed(0) + " hour(s) ago"
-                            : (
+                            : +Math.floor(
+                                (new Date().getTime() -
+                                  new Date(item.created_at).getTime()) /
+                                  1000
+                              ) /
+                                (3600 * 24) <
+                              31
+                            ? (
                                 +Math.floor(
                                   (new Date().getTime() -
                                     new Date(item.created_at).getTime()) /
                                     1000
                                 ) /
                                 (3600 * 24)
-                              ).toFixed(0) + " day(s) ago"}
+                              ).toFixed(0) + " day(s) ago"
+                            : (
+                                +Math.floor(
+                                  (new Date().getTime() -
+                                    new Date(item.created_at).getTime()) /
+                                    1000
+                                ) /
+                                (3600 * 24 * 31)
+                              ).toFixed(0) + " month(s) ago"}
                         </span>
                       ) : (
                         <span>
@@ -205,7 +279,7 @@ function POTableView({ po_data, setSearch, title }) {
                                 (new Date().getTime() -
                                   new Date(item.modified_at).getTime()) /
                                   1000
-                              ).toFixed(0) + " seconds ago"
+                              ).toFixed(0) + " second(s) ago"
                             : +Math.floor(
                                 (new Date().getTime() -
                                   new Date(item.modified_at).getTime()) /
@@ -234,26 +308,29 @@ function POTableView({ po_data, setSearch, title }) {
                                     1000
                                 ) / 3600
                               ).toFixed(0) + " hour(s) ago"
-                            :  +Math.floor(
-                              (new Date().getTime() -
-                                new Date(item.modified_at).getTime()) /
-                                1000
-                            ) /
-                            (3600 * 24)<31?(
+                            : +Math.floor(
+                                (new Date().getTime() -
+                                  new Date(item.modified_at).getTime()) /
+                                  1000
+                              ) /
+                                (3600 * 24) <
+                              31
+                            ? (
                                 +Math.floor(
                                   (new Date().getTime() -
                                     new Date(item.modified_at).getTime()) /
                                     1000
                                 ) /
                                 (3600 * 24)
-                              ).toFixed(0) + " day(s) ago":(
+                              ).toFixed(0) + " day(s) ago"
+                            : (
                                 +Math.floor(
                                   (new Date().getTime() -
                                     new Date(item.modified_at).getTime()) /
                                     1000
                                 ) /
                                 (3600 * 24 * 31)
-                              ).toFixed(0)+ " month(s) ago"}
+                              ).toFixed(0) + " month(s) ago"}
                         </span>
                       )}
                     </p>
@@ -264,7 +341,7 @@ function POTableView({ po_data, setSearch, title }) {
                     {item.proj_name}
                     {/* {item.fresh_flag} */}
                   </td>
-                  <td class="px-3 py-4">
+                  <td class="px-13 py-4">
                     {item.po_status == "P" ? (
                       <Tag
                         className="text-[12px] p-1 rounded-full w-36"
@@ -313,7 +390,7 @@ function POTableView({ po_data, setSearch, title }) {
                     )}
                   </td>
                   <td class="px-3 py-4">{item.created_by}</td>
-                  <td class="px-3 py-4">
+                  <td class="px-1 py-4 text-nowrap">
                     <Link
                       to={
                         item.fresh_flag == "Y"
@@ -336,6 +413,12 @@ function POTableView({ po_data, setSearch, title }) {
           onPageChange={onPageChange}
         />
       </motion.section>
+      <DrawerComp
+        open={open}
+        flag={mode}
+        data={{ id: id, po: po }}
+        onClose={() => onClose()}
+      />
     </>
   );
 }
