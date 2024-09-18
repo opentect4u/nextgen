@@ -1107,7 +1107,7 @@ async def gettcbypo(id:getDoc):
 async def gettcbypo(id:srcGetByItem):
     print('I am logging in!')
     res_dt = {}
-    select = "item,qty,rcv_qty,tc_qty"
+    select = "item,qty,rc_qty,tc_qty"
     schema = "td_test_cert"
     where = f"po_no='{id.po}' and item='{id.item}'"
     order = "ORDER BY created_at DESC"
