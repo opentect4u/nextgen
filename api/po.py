@@ -144,13 +144,9 @@ class GetPoNo(BaseModel):
 class GetTc(BaseModel):
     id:int
     po_no:str
-    test_dt:str
-    test_place:str
     item:int
     quantity:int
-    status:str
-    test_person:str
-    comments:str
+    tc_quantity:int
     user:str
 
 class GetMdcc(BaseModel):
@@ -830,8 +826,8 @@ async def addtc(dt:GetTc):
     print(dt)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_no,test_dt,test_place,test_person,item,qty,comments,created_by,created_at'
-    values = f'"{dt.po_no}","{dt.test_dt}","{dt.test_place}","{dt.test_person}","{dt.item}","{dt.quantity}","{dt.comments}","{dt.user}","{formatted_dt}"'
+    fields= f'po_no,item,qty,tc_qty,created_by,created_at'
+    values = f'"{dt.po_no}","{dt.item}","{dt.quantity}","{dt.tc_quantity}","{dt.user}","{formatted_dt}"'
     table_name = "td_test_cert"
     whr =  None
     flag = 1 if dt.id>0 else 0
@@ -854,19 +850,18 @@ async def addtc(dt:GetTc):
 
 
 @poRouter.post('/add_tc_files')
-async def add_proj_files(item_id:str = Form(...),po_no:str = Form(...),test_cert_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, docs2:Optional[Union[UploadFile, None]] = None):
+async def add_proj_files(item_id:str = Form(...),po_no:str = Form(...),test_cert_no:str = Form(...), user:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None):
     fileName = ''
     res_dt = {}
     files = []
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    if not docs1 and not docs2:
+    if not docs1:
         return {"suc": 1, "msg": "No file sent"}
     else:
         if docs1:
             files.append(docs1)
-        if docs2:
-            files.append(docs2)
+       
 
         logging.info(f"Number of files received: {len(files)}")
         logging.info(f"Type of files received: {type(files)}")
