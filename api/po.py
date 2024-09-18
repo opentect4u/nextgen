@@ -1013,7 +1013,7 @@ async def gettcbypo(po:srcMdccbyPO):
     res_dt = {}
     select = "m.sl_no,m.po_no,m.item,m.qty,m.tc_qty,m.created_by,m.created_at,m.modified_by,m.modified_at,p.prod_name"
     schema = "td_test_cert m, td_po_items i, md_product p"
-    where = f"m.po_no like '%{po.po}%' or p.prod_name like '%{po.po}%' and m.item=i.sl_no and i.item_id=p.sl_no and m.delete_flag='N'"
+    where = f"(m.po_no like '%{po.po}%' or p.prod_name like '%{po.po}%') and m.item=i.sl_no and i.item_id=p.sl_no and m.delete_flag='N'"
     order = ""
     flag = 1
     result = await db_select(select, schema, where, order, flag)
