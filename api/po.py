@@ -147,6 +147,7 @@ class GetTc(BaseModel):
     item:int
     quantity:int
     tc_quantity:int
+    rc_quantity:int
     user:str
 
 class GetMdcc(BaseModel):
@@ -399,9 +400,9 @@ async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
 
-    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name"
-    schema = "td_po_items i,md_product p"
-    where = f"i.po_sl_no='{id.id}' and i.item_id=p.sl_no" if id.id>0 else ""
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name,tc.qty,tc.rc_qty,tc.tc_qty"
+    schema = "td_po_items i,md_product p,td_test_cert"
+    where = f"i.po_sl_no='{id.id}' and i.item_id=p.sl_no and tc.item=i.item_id" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
@@ -826,8 +827,8 @@ async def addtc(dt:GetTc):
     print(dt)
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_no,item,qty,tc_qty,created_by,created_at'
-    values = f'"{dt.po_no}","{dt.item}","{dt.quantity}","{dt.tc_quantity}","{dt.user}","{formatted_dt}"'
+    fields= f'po_no,item,qty,tc_qty,rc_qty,created_by,created_at'
+    values = f'"{dt.po_no}","{dt.item}","{dt.quantity}","{dt.tc_quantity}","{dt.rc_quantity}","{dt.user}","{formatted_dt}"'
     table_name = "td_test_cert"
     whr =  None
     flag = 1 if dt.id>0 else 0
