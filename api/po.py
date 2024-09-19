@@ -1141,7 +1141,7 @@ async def deletetc(id:deleteDoc):
    table_name = "td_test_cert"
    flag = 1 
    values=''
-   whr=f'po_no="{id.po_no}" and item'
+   whr=f'po_no="{id.po_no}" and item="{id.item}"'
    result = await db_Insert(table_name, fields, values, whr, flag)
 
 
@@ -1149,7 +1149,7 @@ async def deletetc(id:deleteDoc):
    table_name1 = "test_cert_doc"
    flag1 = 1 
    values1=''
-   whr1=f'test_cert_no="{id.id}"'
+   whr1=f'po_no="{id.po_no}" and item_id="{id.item}"'
    result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
    if(result['suc']>0 and result1['suc']>0):
         res_dt = {"suc": 1, "msg": "Deleted successfully!"}
