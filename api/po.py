@@ -176,6 +176,10 @@ class deleteDoc(BaseModel):
     item:int
     user:str
 
+class deleteReceipt(BaseModel):
+    id:int
+    user:str
+
 class addItems(BaseModel):
     sl_no:int
     cust_qty:Union[str,int]
@@ -1738,7 +1742,7 @@ async def deletetc(id:deleteDoc):
 
 
 @poRouter.post('/deletevendormdcc')
-async def deletetc(id:deleteDoc):
+async def deletetc(id:deleteReceipt):
    current_datetime = datetime.now()
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
