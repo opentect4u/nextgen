@@ -188,10 +188,26 @@ class addItems(BaseModel):
 class getDelivery(BaseModel):
     id:int
     po_no:str
-    comments:str
-    itemForm:list[addItems]
-    delivery_date:str
-    status:str
+    item_id:int
+    quantity:int
+    rc_qty:int
+    sl:str
+    remarks:str
+    invoice:str
+    invoice_dt:str
+    lr_no:str
+    waybill:str
+    ic:str
+    og:str
+    dc:str
+    lr:str
+    wb:str
+    pl:str
+    om:str
+    ws:str
+    tc:str
+    wc:str
+    ot:str
     user:str
 
 class DeleteDelivery(BaseModel):
@@ -1240,51 +1256,30 @@ async def adddelivery(data:getDelivery):
     res_dt = {}
     print(data)
     current_datetime = datetime.now()
+
+    
+    select1 = "count(*) as count"
+    schema1 = "td_po_delivery_status"
+    where1 = f"po_no='{data.po_no}'"
+    order1 = ""
+    flag1 = 1 if data.po_no else 0
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+    print(result1['msg']['count'],'res')
+
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_no="{data.po_no}",delivery_date="{data.delivery_date}",comments="{data.comments}",modified_by="{data.user}",del_status="{data.status}",modified_at="{formatted_dt}"' if data.id > 0 else f'po_no,comments,delivery_date,del_status,created_by,created_at'
-    values = f'"{data.po_no}","{data.comments}","{data.delivery_date}","{data.status}","{data.user}","{formatted_dt}"'
+    fields= f'po_no="{data.po_no}",quantity="{data.quantity}",rc_qty="{data.rc_qty}",item_id="{data.item_id}",sl="{data.sl}",remarks="{data.remarks}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'po_no,quantity,rc_qty,item_id,sl,remarks,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,ws,tc,wc,ot,created_by,created_at'
+    values = f'"{data.po_no}","{data.quantity}","{data.rc_qty}","{data.item_id}","{data.sl}","{data.remarks},"{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.user}","{formatted_dt}"'
     table_name = "td_po_delivery_status"
-    whr = f'sl_no="{data.id}"' if data.id > 0 else None
-    flag = 1 if data.id>0 else 0
+    whr = f'po_no="{data.po_no}"' if result1['msg']['count'] > 0 else None
+    flag = 1 if result1['msg']['count']>0 else 0
 
     result = await db_Insert(table_name, fields, values, whr, flag)
-
-    lastID=data.id if data.id>0 else result["lastId"]
-
-    fields3= f'po_status="{data.status}",modified_at="{formatted_dt}",modified_by="{data.user}"'
-    values3 = f''
-    table_name3 = "td_po_basic"
-    whr3 = f'po_no="{data.po_no}"'
-    flag3 = 1 
-    result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
-
-    # del_table_name = 'md_client_poc'
-    # del_whr = f"sl_no not in()"
-    # del_qry = await db_Delete(del_table_name, del_whr)
-
-    # 
-
-    for v in data.itemForm:
-        fields= f'cust_qty="{v.cust_qty}",wh_qty="{v.wh_qty}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.id > 0 else f'po_no,item_id,cust_qty,wh_qty,created_by,created_at'
-        values = f'"{data.po_no}","{v.sl_no}","{v.cust_qty}","{v.wh_qty}","{data.user}","{formatted_dt}"'
-        table_name = "td_item_delivery_details"
-        whr =  f'item_id="{v.sl_no}"' if data.id > 0 else None
-        flag1 = 1 if data.id>0 else 0
-
-        result = await db_Insert(table_name, fields, values, whr, flag1)
-        fields1=f'modified_by="{data.user}",modified_at="{formatted_dt}"'
-        table_name1 = "td_po_items"
-        whr1 =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else ''
-        flag2=1
-        values1=''
-        result1 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
-        
-        if(result['suc']>0 and result1['suc']>0 and result3['suc']>0):
-            res_dt = {"suc": 1, "msg": f"Saved successfully!" if v.sl_no==0 else f"Updated successfully!"}
-        else:
-            res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
-
-
+    if result['suc']>0 :
+                res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+    else:
+                res_dt = {"suc": 0, "msg": "Error while deleting!"}
+            
+    
     return res_dt
 
 @poRouter.post('/add_delivery_files')
