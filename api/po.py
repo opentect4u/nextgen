@@ -1262,7 +1262,7 @@ async def adddelivery(data:getDelivery):
     schema1 = "td_po_delivery_status"
     where1 = f"po_no='{data.po_no}'"
     order1 = ""
-    flag1 = 1 if data.po_no else 0
+    flag1 = 1 if data.po_no>0 else 0
     result1 = await db_select(select1, schema1, where1, order1, flag1)
     print(result1['msg']['count'],'res')
 
