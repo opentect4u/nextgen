@@ -1460,7 +1460,7 @@ async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
 
-    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.cust_qty,d.wh_qty"
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.remarks,d.invoice,d.inv_dt,d.lr_no,d.waybill,d.ic,d.og,d.dc,d.lr,d.wb,d.pl,d.om,d.ws,d.tc,d.wc,d.ot"
     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no and d.delete_flag='N'"
     where = f"i.po_sl_no='{id.id}' " if id.id>0 else ""
     order = ""
