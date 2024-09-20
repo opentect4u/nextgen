@@ -1259,8 +1259,8 @@ async def adddelivery(data:getDelivery):
 
     
     select1 = "count(*) as count"
-    schema1 = "td_po_delivery_status"
-    where1 = f"po_no='{data.po_no}'"
+    schema1 = "td_item_delivery_details"
+    where1 = f"po_no='{data.po_no}' and item='{data.item_id}'"
     order1 = ""
     flag1 = 0 
     result1 = await db_select(select1, schema1, where1, order1, flag1)
@@ -1269,8 +1269,8 @@ async def adddelivery(data:getDelivery):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'po_no="{data.po_no}",quantity="{data.quantity}",rc_qty="{data.rc_qty}",item_id="{data.item_id}",sl="{data.sl}",remarks="{data.remarks}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'po_no,quantity,rc_qty,item_id,sl,remarks,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,ws,tc,wc,ot,created_by,created_at'
     values = f'"{data.po_no}","{data.quantity}","{data.rc_qty}","{data.item_id}","{data.sl}","{data.remarks}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.user}","{formatted_dt}"'
-    table_name = "td_po_delivery_status"
-    whr = f'po_no="{data.po_no}"' if result1['msg']['count'] > 0 else None
+    table_name = "td_item_delivery_details"
+    whr = f'po_no="{data.po_no}" and item="{data.item_id}"' if result1['msg']['count'] > 0 else None
     flag = 1 if result1['msg']['count']>0 else 0
 
     result = await db_Insert(table_name, fields, values, whr, flag)
