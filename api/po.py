@@ -1264,7 +1264,7 @@ async def adddelivery(data:getDelivery):
     order1 = ""
     flag1 = 1 
     result1 = await db_select(select1, schema1, where1, order1, flag1)
-    print(result1['msg']['count'],'res')
+    print(result1,'res')
 
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'po_no="{data.po_no}",quantity="{data.quantity}",rc_qty="{data.rc_qty}",item_id="{data.item_id}",sl="{data.sl}",remarks="{data.remarks}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'po_no,quantity,rc_qty,item_id,sl,remarks,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,ws,tc,wc,ot,created_by,created_at'
