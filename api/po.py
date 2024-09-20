@@ -1722,7 +1722,7 @@ async def getreceiptdoc(id:GetPo):
 
 
 @poRouter.post('/deletevendorreceipt')
-async def deletetc(id:deleteDoc):
+async def deletetc(id:deleteReceipt):
    current_datetime = datetime.now()
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
