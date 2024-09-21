@@ -1385,7 +1385,7 @@ async def deletecustomerdel(po_no:DeleteDelivery):
         formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
         fields=f'delete_flag="Y",deleted_by="{po_no.user}",deleted_at="{formatted_dt}"'
-        table_name = "td_po_delivery_status"
+        table_name = "td_item_delivery_details"
         flag = 1 
         values=''
         whr=f'po_no="{po_no.po_no}" and item_id={po_no.item}'
