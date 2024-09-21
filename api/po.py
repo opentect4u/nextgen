@@ -213,6 +213,7 @@ class getDelivery(BaseModel):
 class DeleteDelivery(BaseModel):
     po_no:str
     user:str
+    item:int
 
 class delLog(BaseModel):
     po_no:str
@@ -1387,7 +1388,7 @@ async def deletecustomerdel(po_no:DeleteDelivery):
         table_name = "td_po_delivery_status"
         flag = 1 
         values=''
-        whr=f'po_no="{po_no.po_no}"'
+        whr=f'po_no="{po_no.po_no}" and item_id={po_no.item}'
         result = await db_Insert(table_name, fields, values, whr, flag)
 
 
