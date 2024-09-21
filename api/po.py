@@ -1392,27 +1392,7 @@ async def deletecustomerdel(po_no:DeleteDelivery):
         result = await db_Insert(table_name, fields, values, whr, flag)
 
 
-        fields1=f'delete_flag="Y",deleted_by="{po_no.user}",deleted_at="{formatted_dt}"'
-        table_name1 = "td_item_delivery_doc"
-        flag1 = 1 
-        values1=''
-        whr1=f'po_no="{po_no.po_no}"'
-        result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
-
-        fields2=f'delete_flag="Y",deleted_by="{po_no.user},cust_qty={0},wh_qty={0}",deleted_at="{formatted_dt}"'
-        table_name2 = "td_item_delivery_details"
-        flag2 = 1 
-        values2=''
-        whr2=f'po_no="{po_no.po_no}"'
-        result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
-
-        fields3= f'po_status="A",modified_at="{formatted_dt}",modified_by="{po_no.user}"'
-        values3 = f''
-        table_name3 = "td_po_basic"
-        whr3 = f'po_no="{po_no.po_no}"'
-        flag3 = 1 
-        result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
-        if(result['suc']>0 and result1['suc']>0 and result2['suc']>0 and result3['suc']):
+        if(result['suc']>0):
                 res_dt = {"suc": 1, "msg": "Deleted successfully!"}
         else:
                 res_dt = {"suc": 0, "msg": "Error while deleting!"}
