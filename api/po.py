@@ -222,6 +222,20 @@ class delLog(BaseModel):
 
 class GetPhrase(BaseModel):
     wrd:str
+
+class minList(BaseModel):
+    sl_no:int
+    item_id:int
+    quantity:int
+    issue_qty:int
+    purpose:str
+    notes:str
+    name:str
+    
+class AddMin(BaseModel):
+    po_no:int
+    min:list[minList]
+    user:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -1872,7 +1886,6 @@ async def approvepo(id:approvePO):
 
 @poRouter.post('/getmindel')
 async def getprojectpoc(data:GetPo):
-
     select = "i.sl_no,i.po_sl_no,i.item_id,d.rc_qty,i.currency,p.prod_name,m.opening_qty,m.issue_qty,m.po_no,m.purpose,m.notes,m.approve_status"
     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_min m on m.item_id=i.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no and d.delete_flag='N'"
     # where = f"i.po_sl_no='{data.id}' " if data.id>0 else ""
@@ -1883,5 +1896,34 @@ async def getprojectpoc(data:GetPo):
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
     return result
+
+@poRouter.post('/addmin')
+async def addmin(data:AddMin):
+   print(data)
+   current_datetime = datetime.now()
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   select1 = "count(*) as count"
+   schema1 = "td_min"
+   where1 = f"po_no='{data.po_no}'"
+   order1 = ""
+   flag1 = 0 
+   result1 = await db_select(select1, schema1, where1, order1, flag1)
+   print(result1,'res')
+
+   for v in data.min:
+        fields= f'opening_qty="{v.quantity}", issue_qty="{v.issue_qty}",po_no="{data.po_no}",purpose="{v.purpose}",notes="{v.notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result['msg']['count'] > 0 else f'opening_qty,issue_qty,po_no,purpose,notes,created_by,created_at'
+        values = f'"{v.quantity}","{v.issue_qty}","{data.po_no}","{v.purpose}","{v.notes}","{data.user}","{formatted_dt}"'
+        table_name = "td_min"
+        whr =  f'sl_no="{v.sl_no}"' if  result['msg']['count'] > 0 else None
+        flag1 = 1 if v.sl_no>0 else 0
+        result = await db_Insert(table_name, fields, values, whr, flag1)
+    
+        if result['suc']:
+         res_dt = {"suc": 1, "msg": f"Action Successful!"}
+        else:
+         res_dt = {"suc": 0, "msg": f"Error while saving!"}
+  
+   return res_dt
+
     
     

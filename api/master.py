@@ -1029,20 +1029,9 @@ async def addvendor(data:addVendor):
         result = await db_Insert(table_name, fields, values, whr, flag1)
         
         if(result['suc']>0):
-            # print(v.sl_no > 0 and v.sl_no in k)
-            # if v.sl_no > 0 and v.sl_no not in k:
-            #     print('hihihihihihihihihi')
-            #     wr=f"sl_no='{v.sl_no}'"
-            #     result1 = await db_Delete(table_name,wr)
-                
             res_dt = {"suc": 1, "msg": f"Vendor saved successfully!" if v.sl_no==0 else f"Vendor updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
-        # if v.sl_no not in k:
-        #     print('here in delete')
-        #     table_name='md_vendor_poc'
-        #     wr=f"sl_no='{v.sl_no}'"
-        #     result = await db_Delete(table_name, wr)
     return res_dt
 
 
