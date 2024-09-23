@@ -1936,8 +1936,8 @@ async def addmin(data:GetPo):
    select = "@a:=@a+1 serial_number, b.po_no, d.created_by,d.created_at,b.sl_no"
     # select = "@a:=@a+1 serial_number, *"
    schema = "td_item_delivery_details d,td_po_basic b,(SELECT @a:= 0) AS a"
-   where = f"b.po_no=d.po_no, delete_flag='N'"
-   order = "ORDER BY created_at DESC"
+   where = f"b.po_no=d.po_no, d.delete_flag='N'"
+   order = "ORDER BY d.created_at DESC"
    flag =  1
    result = await db_select(select, schema, where, order, flag)
    print(result, 'RESULT')
