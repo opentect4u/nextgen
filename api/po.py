@@ -1932,11 +1932,9 @@ async def addmin(data:GetPo):
    current_datetime = datetime.now()
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
    res_dt = {}
-    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-   select = "b.po_no, d.created_by,d.created_at,b.sl_no"
-    # select = "@a:=@a+1 serial_number, *"
+   select = "b.po_no,d.created_by,d.created_at,b.sl_no"
    schema = "td_item_delivery_details d,td_po_basic b"
-   where = f"b.po_no=d.po_no, d.delete_flag='N'"
+   where = f"b.po_no=d.po_no and d.delete_flag='N'"
    order = "ORDER BY d.created_at DESC"
    flag =  1
    result = await db_select(select, schema, where, order, flag)
