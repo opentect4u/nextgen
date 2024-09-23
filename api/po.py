@@ -1876,7 +1876,7 @@ async def getprojectpoc(data:GetPo):
     select = "d.item_id, b.opening_qty, p.prod_name item_name"
     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_min b on b.item_id = d.item_id "
     # where = f"i.po_sl_no='{data.id}' " if data.id>0 else ""
-    where = f"d.delete_flag='N' And b.po_sl_no='{data.id}'" if data.id>0 else "d.delete_flag='N'"
+    where = f"d.delete_flag='N' And b.po_no='{data.id}'" if data.id>0 else "d.delete_flag='N'"
     order = ""
     # flag = 1 if id.id>0 else 0
     flag = 1
