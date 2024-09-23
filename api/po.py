@@ -1873,13 +1873,13 @@ async def approvepo(id:approvePO):
 @poRouter.post('/getmindel')
 async def getprojectpoc(data:GetPo):
 
-    select = "d.item_id, b.opening_qty, p.prod_name item_name"
-    schema = "td_po_items i join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_min b on b.item_id = d.item_id "
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,m.opening_qty,m.issue_qty,m.po_no,m.purpose,m.notes,m.approve_status"
+    schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_min d on d.item_id=i.sl_no and d.delete_flag='N'"
     # where = f"i.po_sl_no='{data.id}' " if data.id>0 else ""
-    where = f"d.delete_flag='N' And i.po_sl_no='{data.id}'" if data.id>0 else "d.delete_flag='N'"
+    where = f"i.po_sl_no='{data.id}'" if data.id>0 else "d.delete_flag='N'"
     order = ""
     # flag = 1 if id.id>0 else 0
-    flag = 1
+    flag =0
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
     return result
