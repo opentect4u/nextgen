@@ -1874,7 +1874,7 @@ async def approvepo(id:approvePO):
 async def getprojectpoc(data:GetPo):
 
     select = "i.sl_no,i.po_sl_no,i.item_id,d.rc_qty,i.currency,p.prod_name,m.opening_qty,m.issue_qty,m.po_no,m.purpose,m.notes,m.approve_status"
-    schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_min m on m.item_id=i.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no and m.delete_flag='N'"
+    schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_min m on m.item_id=i.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no"
     # where = f"i.po_sl_no='{data.id}' " if data.id>0 else ""
     where = f"i.po_sl_no='{data.id}'" if data.id>0 else "d.delete_flag='N'"
     order = ""
