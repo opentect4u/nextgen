@@ -1914,7 +1914,7 @@ async def addmin(data:AddMin):
         fields= f'opening_qty="{v.quantity}", issue_qty="{v.issue_qty}",po_no="{data.po_no}",purpose="{v.purpose}",notes="{v.notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'item_id,opening_qty,issue_qty,po_no,purpose,notes,created_by,created_at'
         values = f'"{v.item_id}","{v.quantity}","{v.issue_qty}","{data.po_no}","{v.purpose}","{v.notes}","{data.user}","{formatted_dt}"'
         table_name = "td_min"
-        whr =  f'sl_no="{v.sl_no}"' if  result1['msg']['count'] > 0 else ''
+        whr =  f'item_id="{v.sl_no}" and po_no="{data.po_no}"' if  result1['msg']['count'] > 0 else ''
         flag = 1 if result1['msg']['count'] > 0 else 0
         result = await db_Insert(table_name, fields, values, whr, flag)
     
