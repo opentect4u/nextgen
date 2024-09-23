@@ -1925,5 +1925,24 @@ async def addmin(data:AddMin):
   
    return res_dt
 
+
+@poRouter.post('/getMRN')
+async def addmin(data:GetPo):
+   print(data)
+   current_datetime = datetime.now()
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   res_dt = {}
+    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
+   select = "@a:=@a+1 serial_number, po_no, created_by,created_at,sl_no"
+    # select = "@a:=@a+1 serial_number, *"
+   schema = "td_item_delivery_details,(SELECT @a:= 0) AS a"
+   where = f""
+   order = "ORDER BY created_at DESC"
+   flag =  1
+   result = await db_select(select, schema, where, order, flag)
+   print(result, 'RESULT')
+   return result
+
+
     
     
