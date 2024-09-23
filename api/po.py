@@ -1932,7 +1932,7 @@ async def addmin(data:GetPo):
    current_datetime = datetime.now()
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
    res_dt = {}
-   select = "b.po_no,d.created_by,d.created_at,b.sl_no"
+   select = "distinct b.po_no,d.created_by,d.created_at,b.sl_no"
    schema = "td_item_delivery_details d,td_po_basic b"
    where = f"b.po_no=d.po_no and d.delete_flag='N'"
    order = "ORDER BY d.created_at DESC"
