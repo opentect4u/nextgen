@@ -1879,7 +1879,7 @@ async def getprojectpoc(data:GetPo):
     where = f"i.po_sl_no='{data.id}'" if data.id>0 else "d.delete_flag='N'"
     order = ""
     # flag = 1 if id.id>0 else 0
-    flag =0
+    flag =1
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
     return result
