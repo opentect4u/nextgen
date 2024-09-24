@@ -191,6 +191,7 @@ class MrnItem(BaseModel):
     rc_qty:int
     sl:str
     remarks:str
+    name:str
 class getDelivery(BaseModel):
     id:int
     po_no:str
