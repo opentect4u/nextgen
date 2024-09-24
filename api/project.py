@@ -348,3 +348,18 @@ async def check_proj_id(proj_id:GetProjectId):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+@projectRouter.post('/getInvoice')
+async def getprojectpocinfo(id:GetPoc):
+    print(id.id)
+    res_dt = {}
+
+    select = "*"
+    schema = "td_item_delivery_invoice"
+    where = f"po_no='{id.id}'"
+    order = ""
+    flag = 1 if id.id else 0
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
