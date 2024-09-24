@@ -1277,7 +1277,7 @@ async def adddelivery(data:getDelivery):
 
     
     select1 = "count(*) as count"
-    schema1 = "td_item_delviery_invoice"
+    schema1 = "td_item_delivery_invoice"
     where1 = f"po_no='{data.po_no}'"
     order1 = ""
     flag1 = 0 
