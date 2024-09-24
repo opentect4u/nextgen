@@ -184,15 +184,17 @@ class addItems(BaseModel):
     sl_no:int
     cust_qty:Union[str,int]
     wh_qty:Union[str,int]
-
-class getDelivery(BaseModel):
-    id:int
-    po_no:str
+class MrnItem(BaseModel):
+    sl_no:int
     item_id:int
     quantity:int
     rc_qty:int
     sl:str
     remarks:str
+class getDelivery(BaseModel):
+    id:int
+    po_no:str
+    items:list[MrnItem]
     invoice:str
     invoice_dt:str
     lr_no:str
@@ -1274,25 +1276,46 @@ async def adddelivery(data:getDelivery):
 
     
     select1 = "count(*) as count"
-    schema1 = "td_item_delivery_details"
-    where1 = f"po_no='{data.po_no}' and item_id='{data.item_id}'"
+    schema1 = "td_invoice"
+    where1 = f"po_no='{data.po_no}'"
     order1 = ""
     flag1 = 0 
     result1 = await db_select(select1, schema1, where1, order1, flag1)
     print(result1,'res')
-
+   
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'po_no="{data.po_no}",quantity="{data.quantity}",rc_qty="{data.rc_qty}",item_id="{data.item_id}",sl="{data.sl}",remarks="{data.remarks}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",delete_flag="N",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'po_no,quantity,rc_qty,item_id,sl,remarks,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,ws,tc,wc,ot,created_by,created_at'
-    values = f'"{data.po_no}","{data.quantity}","{data.rc_qty}","{data.item_id}","{data.sl}","{data.remarks}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.user}","{formatted_dt}"'
-    table_name = "td_item_delivery_details"
-    whr = f'po_no="{data.po_no}" and item_id="{data.item_id}"' if result1['msg']['count'] > 0 else None
-    flag = 1 if result1['msg']['count']>0 else 0
 
+
+    fields= f'po_no="{data.po_no}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",delete_flag="N",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'mrn_no,po_no,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,ws,tc,wc,ot,created_by,created_at'
+    values = f'"MRN/{data.po_no}","{data.po_no}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.user}","{formatted_dt}"'
+    table_name = "td_item_delivery_invoice"
+    whr = f'po_no="{data.po_no}"' if result1['msg']['count'] > 0 else None
+    flag = 1 if result1['msg']['count']>0 else 0
     result = await db_Insert(table_name, fields, values, whr, flag)
+    lastID=result["lastId"]
+    
+    for i in data.items:
+         
+        # fields= f'category_id="{v.category_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,category_id,created_by,created_at'
+        fields= f'del_last_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
+        values = f'"{lastID}","{i.item_id}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}",{data.po_no},"{data.user}","{formatted_dt}"'
+        table_name = "td_item_delivery_details"
+        # whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
+        # whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
+        whr=f""
+        # flag1 = 1 if v.sl_no>0 else 0
+        flag1 =  0
+        result = await db_Insert(table_name, fields, values, whr, flag1)
+        
+        if(result['suc']>0):
+            res_dt = {"suc": 1, "msg": f"Updated Successfully"}
+        else:
+            res_dt = {"suc": 0, "msg": f"Error while updating"}
+
     if result['suc']>0 :
-                res_dt = {"suc": 1, "msg": "Saved successfully!"}
+                res_dt = {"suc": 1, "msg": f"Updated Successfully"}
     else:
-                res_dt = {"suc": 0, "msg": "Error while Saving!"}
+                 res_dt = {"suc": 0, "msg": f"Error while updating"}
             
     
     return res_dt
