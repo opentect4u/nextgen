@@ -1308,12 +1308,12 @@ async def adddelivery(data:getDelivery):
                 whr=f""
                 # flag1 = 1 if v.sl_no>0 else 0
                 flag1 =  0
-                result = await db_Insert(table_name, fields, values, whr, flag1)
+                result2 = await db_Insert(table_name, fields, values, whr, flag1)
                 
-                if(result['suc']>0):
-                    res_dt = {"suc": 1, "msg": f"Updated Successfully"}
+                if(result2['suc']>0):
+                    res_dt1 = {"suc": 1, "msg": f"Updated Successfully"}
                 else:
-                    res_dt = {"suc": 0, "msg": f"Error while updating"}
+                    res_dt1= {"suc": 0, "msg": f"Error while updating"}
 
     if result['suc']>0 :
                 res_dt = {"suc": 1, "msg": f"Updated Successfully"}
