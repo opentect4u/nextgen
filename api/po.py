@@ -1299,20 +1299,21 @@ async def adddelivery(data:getDelivery):
     for i in data.items:
          
         # fields= f'category_id="{v.category_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,category_id,created_by,created_at'
-        fields= f'del_last_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
-        values = f'"{lastID}","{i.item_id}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}","{data.po_no}","{data.user}","{formatted_dt}"'
-        table_name = "td_item_delivery_details"
-        # whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
-        # whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
-        whr=f""
-        # flag1 = 1 if v.sl_no>0 else 0
-        flag1 =  0
-        result = await db_Insert(table_name, fields, values, whr, flag1)
-        
-        if(result['suc']>0):
-            res_dt = {"suc": 1, "msg": f"Updated Successfully"}
-        else:
-            res_dt = {"suc": 0, "msg": f"Error while updating"}
+        if i.rc_qty>0:
+                fields= f'del_last_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
+                values = f'"{lastID}","{i.item_id}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}","{data.po_no}","{data.user}","{formatted_dt}"'
+                table_name = "td_item_delivery_details"
+                # whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
+                # whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
+                whr=f""
+                # flag1 = 1 if v.sl_no>0 else 0
+                flag1 =  0
+                result = await db_Insert(table_name, fields, values, whr, flag1)
+                
+                if(result['suc']>0):
+                    res_dt = {"suc": 1, "msg": f"Updated Successfully"}
+                else:
+                    res_dt = {"suc": 0, "msg": f"Error while updating"}
 
     if result['suc']>0 :
                 res_dt = {"suc": 1, "msg": f"Updated Successfully"}
