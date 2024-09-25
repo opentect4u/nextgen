@@ -200,6 +200,7 @@ class getDelivery(BaseModel):
     invoice_dt:str
     lr_no:str
     waybill:str
+    ot_desc:str
     ic:str
     og:str
     dc:str
@@ -236,7 +237,7 @@ class minList(BaseModel):
     name:str
     
 class AddMin(BaseModel):
-    po_no:int
+    po_no:str
     min:list[minList]
     user:str
 # @poRouter.post('/addpo')
@@ -1287,8 +1288,8 @@ async def adddelivery(data:getDelivery):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
-    fields= f'po_no="{data.po_no}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",delete_flag="N",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'mrn_no,po_no,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,ws,tc,wc,ot,created_by,created_at'
-    values = f'"MRN/{data.po_no}","{data.po_no}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.user}","{formatted_dt}"'
+    fields= f'po_no="{data.po_no}","ot_desc"="{data.ot_desc}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",delete_flag="N",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'mrn_no,po_no,ot_desc,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,ws,tc,wc,ot,created_by,created_at'
+    values = f'"MRN/{data.po_no}","{data.po_no}","{data.ot_desc}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.user}","{formatted_dt}"'
     table_name = "td_item_delivery_invoice"
     whr = f'po_no="{data.po_no}"' if result1['msg']['count'] > 0 else None
     flag = 1 if result1['msg']['count']>0 else 0
@@ -1322,19 +1323,18 @@ async def adddelivery(data:getDelivery):
     return res_dt
 
 @poRouter.post('/add_delivery_files')
-async def add_proj_files(po_no:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, user:str = Form(...),docs2:Optional[Union[UploadFile, None]] = None):
+async def add_proj_files(po_no:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, user:str = Form(...)):
     fileName = ''
     res_dt = {}
     files = []
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    if not docs1 and not docs2:
+    if not docs1:
         return {"suc": 1, "msg": "No file sent"}
     else:
         if docs1:
             files.append(docs1)
-        if docs2:
-            files.append(docs2)
+     
 
         logging.info(f"Number of files received: {len(files)}")
         logging.info(f"Type of files received: {type(files)}")
