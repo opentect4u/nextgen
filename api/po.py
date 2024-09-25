@@ -173,7 +173,7 @@ class getDoc(BaseModel):
 
 class deleteDoc(BaseModel):
     po_no:str
-    item:int
+    # item:int
     user:str
 
 class deleteReceipt(BaseModel):
@@ -1465,7 +1465,7 @@ async def deletetc(id:deleteDoc):
    table_name = "td_item_delivery_doc"
    flag = 1 
    values=''
-   whr=f'sl_no="{id.id}"'
+   whr=f'po_no="{id.po_no}"'
    result = await db_Insert(table_name, fields, values, whr, flag)
    return result
 
