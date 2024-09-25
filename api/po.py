@@ -1313,12 +1313,12 @@ async def adddelivery(data:getDelivery):
                 if(result2['suc']>0):
                     res_dt1 = {"suc": 1, "msg": f"Updated Successfully"}
                 else:
-                    res_dt1= {"suc": 0, "msg": f"Error while updating"}
+                    res_dt1= {"suc": 0, "msg": f"Error while updating item"}
 
     if result['suc']>0 :
                 res_dt = {"suc": 1, "msg": f"Updated Successfully"}
     else:
-                 res_dt = {"suc": 0, "msg": f"Error while updating"}
+                 res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
             
     
     return res_dt
