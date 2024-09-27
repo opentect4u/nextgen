@@ -1987,6 +1987,21 @@ async def addmin(data:GetPo):
    print(result, 'RESULT')
    return result
 
+@poRouter.post('/getMRNPo')
+async def addmin(data:GetPo):
+   print(data)
+   current_datetime = datetime.now()
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   res_dt = {}
+   select = "b.po_no,d.created_by,d.created_at,b.sl_no,d.mrn_no"
+   schema = "td_po_basic b left join td_item_delivery_details d on b.po_no=d.po_no"
+   where = f"d.delete_flag='N' and d.po_status='A'"
+   order = "ORDER BY d.created_at DESC"
+   flag =  1
+   result = await db_select(select, schema, where, order, flag)
+   print(result, 'RESULT')
+   return result
+
 
     
     
