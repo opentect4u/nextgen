@@ -1995,7 +1995,7 @@ async def addmin(data:GetPo):
    res_dt = {}
    select = "b.po_no,d.created_by,d.created_at,b.sl_no,d.mrn_no"
    schema = "td_po_basic b left join td_item_delivery_invoice d on b.po_no=d.po_no"
-   where = f"d.delete_flag='N' and d.po_status='A'"
+   where = f"d.po_status='A'"
    order = "ORDER BY d.created_at DESC"
    flag =  1
    result = await db_select(select, schema, where, order, flag)
