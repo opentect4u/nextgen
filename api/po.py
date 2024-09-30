@@ -715,6 +715,7 @@ async def addfreshpo(data:PoModel):
     payment_save=0
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    req_no=f'REQ-{data.po_no}' if data.po_type=='P' else f''
     fields= f'po_date="{data.po_date}",po_status="{data.po_status}",po_issue_date="{data.po_issue_date}",po_type="{data.po_type}",project_id="{data.project_id}",po_id="{data.po_id}",vendor_id="{data.vendor_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_date,po_type,project_id,po_id,vendor_id,po_status,po_issue_date,created_by,created_at'
     values = f'"{data.po_date}","{data.po_type}","{data.project_id}","{data.po_id}","{data.vendor_id}","{data.po_status}","{data.po_issue_date}","{data.user}","{formatted_dt}"'
     table_name = "td_po_basic"
@@ -824,7 +825,7 @@ async def addfreshpo(data:PoModel):
             currYear = current_datetime.strftime("%Y")
             max_form_no = await db_select("IF(MAX(SUBSTRING(po_no, -6)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -6) as unsigned))+1, 6, '0'), '000001') max_form", "td_po_basic", f"SUBSTRING(po_no, 1, 4) = {currYear}", "", 0)
             po_no = f"{currYear}{max_form_no['msg']['max_form']}"
-            pfields= f'po_no="{po_no}"'
+            pfields= f'po_no="{po_no}",req_no="{req_no}"'
             pvalues = None
             ptable_name = "td_po_basic"
             pwhr = f'sl_no="{lastID}"'
