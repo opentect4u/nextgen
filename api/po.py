@@ -825,7 +825,7 @@ async def addfreshpo(data:PoModel):
             currYear = current_datetime.strftime("%Y")
             max_form_no = await db_select("IF(MAX(SUBSTRING(po_no, -6)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -6) as unsigned))+1, 6, '0'), '000001') max_form", "td_po_basic", f"SUBSTRING(po_no, 1, 4) = {currYear}", "", 0)
             po_no = f"{currYear}{max_form_no['msg']['max_form']}"
-            pfields= f'po_no="{po_no}",req_no="{req_no}"'
+            pfields= f'po_no="{po_no}",req_no="REQ-{po_no}"' if data.po_type=='P' else f'po_no="{po_no}"'
             pvalues = None
             ptable_name = "td_po_basic"
             pwhr = f'sl_no="{lastID}"'
