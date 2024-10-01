@@ -245,7 +245,7 @@ class AddMin(BaseModel):
     user:str
 
 class ProjId(BaseModel):
-    ProjId:int
+    Proj_id:int
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
