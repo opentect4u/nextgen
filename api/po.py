@@ -2011,9 +2011,8 @@ async def addmin(data:GetPo):
 
 @poRouter.post("/item_dtls")
 async def item_dtls(data:ProjId):
-
-    select = "a.mrn_no, a.po_no, b.sl_no, b.del_last_id, b.item_id, b.rc_qty, b.quantity, b.sl, b.remarks"
-    table = "td_item_delivery_invoice a, td_item_delivery_details b"
+    select = "a.mrn_no, a.po_no, b.sl_no, b.del_last_id, b.item_id, c.prod_name, b.rc_qty, b.quantity, b.sl, b.remarks"
+    table = "td_item_delivery_invoice a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_item_delivery_details b ON d.sl_no=b.item_id"
     where = f"a.po_no=b.po_no and a.proj_id={data.Proj_id}"
     order = ""
     flag = 1 
