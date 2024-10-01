@@ -243,6 +243,9 @@ class AddMin(BaseModel):
     po_no:str
     min:list[minList]
     user:str
+
+class ProjId(BaseModel):
+    ProjId:int
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -2004,6 +2007,19 @@ async def addmin(data:GetPo):
    result = await db_select(select, schema, where, order, flag)
    print(result, 'RESULT')
    return result
+
+
+@poRouter.post("/item_dtls")
+async def item_dtls(data:ProjId):
+
+    select = "a.mrn_no, a.po_no, b.sl_no, b.del_last_id, b.item_id, b.rc_qty, b.quantity, b.sl, b.remarks"
+    table = "td_item_delivery_invoice a, td_item_delivery_details b"
+    where = f"a.po_no=b.po_no and a.proj_id={data.Proj_id}"
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+
+    return res_dt
 
 
     
