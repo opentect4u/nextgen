@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
@@ -21,7 +21,15 @@ function Signin() {
     email: "",
     password: "",
   };
-
+  useEffect(()=>{localStorage.clear()},[])
+  useEffect(()=>{
+    return () => {
+      if(!localStorage.getItem('email')){
+        navigate('/')
+      }
+    
+    };
+  },[])
   const onSubmit = (values) => {
     setLoading(true);
     console.log(values);

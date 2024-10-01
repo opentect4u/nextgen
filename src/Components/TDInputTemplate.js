@@ -4,7 +4,7 @@ function TDInputTemplate(props) {
     <>
       <label htmlFor={props.name} className="block mb-2 text-sm capitalize font-bold text-green-900 dark:text-gray-100">
 
-        {props.mode!=3?props.label:props.label+' ('+props.formControlName.length+'/500)'}
+        {props.mode!=3?(props.label):(props.label||'')+' ('+props.formControlName?.length+'/500)'}
         
       </label>
       {props.mode == 1 && (
@@ -18,6 +18,7 @@ function TDInputTemplate(props) {
           accept={props.accept}
           max={props.max}
           setFieldValue={props.setFieldValue}
+          onKeyDown={(e) =>{ if(props.type=='date') e.preventDefault()}}
           className="bg-white border-gray-400 text-gray-800 text-sm rounded-md  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 
           placeholder={props.placeholder}

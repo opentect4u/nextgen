@@ -454,6 +454,7 @@ function ProjectForm() {
         order_dt &&
         proj_ordr_val >= 0 &&
         proj_end_delvry_dt &&
+        // proj_type &&
         order_dt <= proj_end_delvry_dt &&
         (!ldClsVal || (ldClsVal && ld_cls_dtl)) &&
         !proj_ordr_val) ||
@@ -538,20 +539,19 @@ function ProjectForm() {
       order_id &&
       order_dt &&
       proj_end_delvry_dt &&
+      proj_type &&
       count == 0 &&
-      proj_ordr_val >= 0 &&
+      // proj_ordr_val > 0 &&
       order_dt <= proj_end_delvry_dt
     ) {
-      debugger;
       if (proj_ordr_val > 0) {
-        debugger;
         if (projunit) {
-          debugger;
           if (!ldClsVal) stepperRef.current.nextCallback();
           else if (ldClsVal && ld_cls_dtl) {
             stepperRef.current.nextCallback();
           }
-        } else {
+        } 
+        else {
           // if(!ldClsVal)
           //   stepperRef.current.nextCallback();
           //   else if(ldClsVal && ld_cls_dtl){
@@ -559,10 +559,13 @@ function ProjectForm() {
           //   }
         }
       } else {
+        // if(proj_ordr_val=='' && proj_ordr_val!=0) stepperRef.current.nextCallback();
+        if(proj_ordr_val!=0 && proj_ordr_val==''){
         if (!ldClsVal) stepperRef.current.nextCallback();
         else if (ldClsVal && ld_cls_dtl) {
           stepperRef.current.nextCallback();
         }
+      }
       }
     }
   };
@@ -688,14 +691,14 @@ function ProjectForm() {
                       formControlName={proj_ordr_val}
                       handleChange={(txt) => {
                         setOrderVal(txt.target.value);
-                        if (!txt.target.value) {
+                        if (txt.target.value<=0 || !txt.target.value) {
                           setProjUnit("");
                         }
                       }}
                       mode={1}
                     />
-                    {proj_ordr_val < 0 && (
-                      <VError title={"Order value must not be negative!"} />
+                    {proj_ordr_val <= 0 && (
+                      <VError title={"Order value must not be <=0"} />
                     )}
                   </div>
                   <div className="sm:col-span-1">
@@ -704,7 +707,7 @@ function ProjectForm() {
                       type="number"
                       label="Unit"
                       name="projunit"
-                      disabled={!proj_ordr_val}
+                      disabled={!proj_ordr_val || proj_ordr_val<=0}
                       formControlName={projunit}
                       handleChange={(txt) => setProjUnit(txt.target.value)}
                       data={[
@@ -714,7 +717,7 @@ function ProjectForm() {
                       ]}
                       mode={2}
                     />
-                    {proj_ordr_val && !projunit && (
+                    {proj_ordr_val>0 && !projunit && (
                       <VError title={"Unit is required"} />
                     )}
                   </div>
@@ -798,8 +801,8 @@ function ProjectForm() {
                         formControlName={ld_cls_dtl}
                         handleChange={(txt) =>{ setDtl(txt.target.value);
 
-                          if(txt.target.value.length>=3){
-                            axios.post(url+'/api/get_ld_clause',{wrd:txt.target.value}).then(res=>{
+                          if(txt.target.value.length>=3 ){
+                            axios.post(url+'/api/get_ld_clause',{wrd:txt.target.value.toString().trim()}).then(res=>{
                               console.log(res)
                               if(res.data.msg.length>0){
                                 handleOpenChangeld(true)
@@ -855,7 +858,7 @@ function ProjectForm() {
                       handleChange={(txt) => {
                         setWarranty(txt.target.value);
                         if(txt.target.value.length>=3){
-                        axios.post(url+'/api/get_warranty',{wrd:txt.target.value}).then(res=>{
+                        axios.post(url+'/api/get_warranty',{wrd:txt.target.value.toString().trim()}).then(res=>{
                           console.log(res)
                           if(res.data.msg.length>0){
                             handleOpenChangew(true)
@@ -1069,11 +1072,7 @@ function ProjectForm() {
                             <FileTextOutlined className="text-6xl my-7 text-gray-600" />
                           )}
                         </a>
-                        {/* <a target="_blank" href={url+'/uploads/'+file_paths[2].proj_doc}>
-                                        
-                                        {file_paths[2].proj_doc?.split('').reverse().join('').split(".")[0]=='pdf'?<FilePdfOutlined className="text-6xl my-7 text-red-600"/>:file_paths[2].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('doc')?<FileWordOutlined  className="text-6xl my-7 text-blue-900"/>:(file_paths[2].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('xls')||file_paths[2].proj_doc?.split('').reverse().join('').split(".")[0]?.includes('csv'))? <FileExcelOutlined  className="text-6xl my-7 text-green-800"/>:<FileImageOutlined className="text-6xl my-7 text-yellow-500"/>}
-                                        
-                                        </a> */}
+                      
                         <DeleteOutlined
                           className="text-red-800 absolute top-6 "
                           onClick={() => {

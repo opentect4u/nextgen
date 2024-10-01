@@ -39,6 +39,12 @@ export const pathMap={
     'categoryform':'Add/Update Product categories',
     'deliveryComp':'MRN',
     'deliverycustomerview':'MRN',
+    'minComp':'Material Issue Note',
+    'minView':'Material Issue Note',
+    'minForm':'Update Material Issue Note',
+    'reqComp':'Requisition',
+    'reqView':'Requisition',
+    'reqForm':'Update Requisition',
     'deliverycustomerform':'Add/Update MRN',
     'stockinview':'Stock-In',
     'updatestock':'Update Stock',
@@ -58,7 +64,6 @@ export const pathMap={
 
 export const routes={
     'home':'/home',
-    // 'mastersComp':'Masters',
     'users':'mastersComp/users',
     'clients':'mastersComp/clients',
     'vendors':'mastersComp/vendors',
@@ -105,6 +110,9 @@ export const routes={
     'requisitionssendform':'/home/stockComp/requisitionssendform/',
     'requisitionsrcvdform':'/home/stockComp/requisitionsrcvdform/',
     'updatestock':'/home/stockComp/updatestock',
-    'stockupdateform':'/home/stockComp/stockupdateform/'
-    // 'stockupdateform':'Open/Update Stock'
+    'stockupdateform':'/home/stockComp/stockupdateform/',
+    'minView':'/home/minComp/minView',
+    'minForm':'/home/minComp/minForm/',
+    'reqView':'/home/reqComp/reqView',
+    'reqForm':'/home/reqComp/reqForm/',
 }

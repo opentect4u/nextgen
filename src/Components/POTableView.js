@@ -32,12 +32,7 @@ function POTableView({ po_data, setSearch, title }) {
     setOpen(false);
   };
   const content = (
-    // <div className="grid grid-cols-2 gap-3 p-3 bg-[#DDEAE0] rounded-lg">
     <div className="grid grid-cols-2 gap-3 p-3 bg-green-100 rounded-lg">
-      {/* {id||''} */}
-      {/* <Tag className="cursor-pointer col-span-1 p-2 shadow-lg" color="#eb8d00">
-        Upload/View TC
-      </Tag> */}
   <Tag
         onClick={() => {
           setMode(7);
@@ -187,7 +182,6 @@ function POTableView({ po_data, setSearch, title }) {
                           content={content}
                           title={"Documents for " + item.po_no}
                         >
-                          {/* <Tag className="cursor-pointer" color="#014737"> */}
                             <UploadOutlined
                               onMouseEnter={() => {
                                 setId(item.sl_no);
@@ -195,7 +189,6 @@ function POTableView({ po_data, setSearch, title }) {
                               }}
                               className="cursor-pointer"
                             />
-                          {/* </Tag> */}
                         </Popover>
                       )}
                     </span>

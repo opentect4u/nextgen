@@ -139,10 +139,6 @@ function ProductDetails({ pressBack, pressNext, data }) {
   );
   useEffect(() => {
     console.log(data.itemList);
-    // setSgst(data[index]['unit_price']*data[index]['qty']*(data[index]['SGST']/100))
-    // setCgst(data[index]['unit_price']*data[index]['qty']*(data[index]['CGST']/100))
-    // setIgst(+(data[index]['unit_price']*data[index]['qty']*(data[index]['IGST']/100)))
-
     if (data?.itemList?.length) {
       for (let i = 0; i < itemList.length; i++) {
         tot += itemList[i].total;
@@ -181,7 +177,11 @@ function ProductDetails({ pressBack, pressNext, data }) {
       );
     }
     if (event.target.name == "disc") {
-      data[index]["disc_prtg"] = 0;
+
+      data[index]["disc_prtg"] =  +(
+        +event.target.value *100
+        /data[index]["rate"]
+      );;
     }
     data[index][event.target.name] = event.target.value;
     data[index]["unit_price"] = +(data[index]["rate"] - data[index]["disc"]);

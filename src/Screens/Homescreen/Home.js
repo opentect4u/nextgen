@@ -1,19 +1,20 @@
-import React, { useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 import BreadCrumbComp from "../../Components/BreadCrumbComp";
 import { ScrollTop } from "primereact/scrolltop";
 import { ErrorBoundary } from "react-error-boundary";
 import Error from "../../Components/Error";
+import DialogBox from "../../Components/DialogBox";
 function Home() {
   const location = useLocation();
   const paths = location.pathname.split("/");
-  const [theme, setTheme] = useState(localStorage.getItem("col"));
+  const navigate=useNavigate()
+  const [visible,setVisible]=useState(false)
+
   console.log(paths);
-  useState(() => {
-    setTheme(localStorage.getItem("col"));
-  }, [localStorage.getItem("col")]);
+ 
 
   return (
     <div>
@@ -42,6 +43,11 @@ function Home() {
          
         </div>
       </div>
+      <DialogBox
+        visible={visible}
+        flag={1}
+        onPress={() => setVisible(false)}
+      />
     </div>
   );
 }

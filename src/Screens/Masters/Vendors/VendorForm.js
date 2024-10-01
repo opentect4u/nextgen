@@ -234,22 +234,22 @@ function VendorForm() {
     tds_perc: Yup.number().when("v_tds", {
       is: "Y",
       then: () =>
-        Yup.string()
+        Yup.number()
           .required("TDS percentage is required")
           .max(100, "Invalid value!")
-          .min(0, "Invalid Value")
-          .matches(/^[0-9.]+$/, "Invalid value"),
+          .min(0.00001, "Invalid Value"),
+          // .matches(/^[0-9.]+$/, "Invalid value"),
       otherwise: () => Yup.string(),
     }),
     v_tcs: Yup.string().required("TCS is required"),
     tcs_perc: Yup.number().when("v_tcs", {
       is: "Y",
       then: () =>
-        Yup.string()
+        Yup.number()
           .required("TCS percentage is required")
           .max(100, "Invalid value!")
-          .min(0, "Invalid Value")
-          .matches(/^[0-9.]+$/, "Invalid value"),
+          .min(0.00001, "Invalid Value"),
+          // .matches(/^[0-9.]+$/, "Invalid value"),
       otherwise: () => Yup.string(),
     }),
     supply_flag: Yup.string().required("Required"),

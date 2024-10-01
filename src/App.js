@@ -84,6 +84,11 @@ function App() {
         colorText:'white',
         colorTextHeading:'white'
       },
+      Popconfirm:{
+        colorBgElevated:'white',
+        colorText:'white',
+        colorTextHeading:'white'
+      },
       Tabs:{
         inkBarColor:'#014737',
         itemColor:'#014737',

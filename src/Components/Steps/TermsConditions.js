@@ -32,6 +32,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
   const [popomOpen, setomPopOpen] = useState(false);
   const [popoiOpen, setoiPopOpen] = useState(false);
   const [popmcOpen, setmcPopOpen] = useState(false);
+  console.log(data)
   const hide = () => {
     setPopOpen(false);
   };
@@ -100,7 +101,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
     if (JSON.parse(localStorage.getItem("itemList"))) {
       for (let item of JSON.parse(localStorage.getItem("itemList"))) {
         console.log(item);
-        tot += item.total;
+        tot += (item.qty*item.unit_price);
       }
     }
     console.log(tot);
@@ -144,7 +145,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
     });
   }, []);
   const params = useParams();
-  useEffect(() => {}, [data]);
+  useEffect(() => {console.log(data.ins_currency)}, [data]);
   const initialValues = {
     price_basis_flag: data.price_basis_flag ? data.price_basis_flag : "",
     price_basis_desc: data.price_basis_desc ? data.price_basis_desc : "",
@@ -162,7 +163,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
     pf_sgst: data.packing_forwarding_val ? data.pf_sgst : "",
     pf_cgst: data.packing_forwarding_val ? data.pf_cgst : "",
     pf_igst: data.packing_forwarding_val ? data.pf_igst : "",
-    pf_currency: data.packing_forwarding_val ? data.pf_currency : "",
+    pf_currency: data.pf_currency ? data.pf_currency : "",
 
     freight_insurance: data.freight_insurance ? data.freight_insurance : "",
     freight_insurance_val: data.freight_insurance
@@ -187,13 +188,13 @@ function TermsConditions({ pressNext, pressBack, data }) {
       ? data.freight_igst
       : "",
     insurance: data.insurance ? data.insurance : "",
-    insurance_val: data.insurance ? data.insurance_val : "",
-    ins_extra:data.insurance ? data.ins_extra : "",
-    ins_extra_val:data.insurance?data.ins_extra_val:"",
-    ins_currency:data.insurace?data.ins_currency:"",
-    ins_cgst:data.insurance?data.ins_cgst:"",
-    ins_sgst:data.insurance?data.ins_sgst:"",
-    ins_igst:data.insurance?data.ins_sgst:"",
+    insurance_val: data.insurance_val ? data.insurance_val : "",
+    ins_extra:data.ins_extra ? data.ins_extra : "",
+    ins_extra_val:data.ins_extra_val?data.ins_extra_val:"",
+    ins_currency:data.ins_currency?data.ins_currency:"",
+    ins_cgst:data.ins_cgst?data.ins_cgst:"",
+    ins_sgst:data.ins_sgst?data.ins_sgst:"",
+    ins_igst:data.ins_igst?data.ins_igst:"",
 
 
     test_certificate: data.test_certificate ? data.test_certificate : "",
@@ -219,7 +220,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
     oi_flag: data.oi_flag ? data.oi_flag : "",
     oi_desc: data.oi_desc ? data.oi_desc : "",
     packing_type: data.packing_type ? data.packing_type : "",
-    packing_val: data.packing_type ? data.packing_val : "",
+    packing_val: data.packing_val ? data.packing_val : "",
     manufacture_clearance: data.manufacture_clearance
       ? data.manufacture_clearance
       : "",
@@ -227,6 +228,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
       ? data.manufacture_clearance_desc
       : "",
   };
+
   const [formValues, setValues] = useState(initialValues);
   const validationSchema = Yup.object({
     price_basis_flag: Yup.string().required("Price basis date is required"),
@@ -269,7 +271,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
     }),
     ins_extra: Yup.string().when("insurance", {
       is: "Y",
-      then: () => Yup.string().required("Required"),
+      then: () => Yup.number().required("Required").min(0.0000000000000001, "Please enter a non-zero positive input!"),
       otherwise: () => Yup.string()}),
     ins_extra_val: Yup.string().when("insurance", {
         is: "Y",
@@ -278,7 +280,9 @@ function TermsConditions({ pressNext, pressBack, data }) {
     ins_currency: Yup.string().when("insurance", {
       is: "Y",
       then: () => Yup.string().required("Required"),
-      otherwise: () => Yup.string()}),
+      otherwise: () => Yup.string()
+    
+    }),
     // ins_currency:data.insurace?data.ins_currency:"",
     // ins_cgst:data.insurance?data.ins_cgst:"",
     // ins_sgst:data.insurance?data.ins_sgst:"",
@@ -290,7 +294,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
     //   then: () => Yup.string().required("Test Certificate description is required"),
     //   otherwise: () => Yup.string()}),
     pf_currency: Yup.string().when("packing_forwarding_val", {
-      is: "E",
+    is: "E",
     then:()=>Yup.string().required('Currency is required'),
     otherwise:()=>Yup.string()
     }),
@@ -361,7 +365,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
     packing_val: Yup.string().when("packing_type", {
       is: "O",
       then: () => Yup.string().required("Description is required"),
-      otherwise: () => Yup.string().optional(),
+      otherwise: () => Yup.string(),
     }),
     manufacture_clearance: Yup.string().required(
       "Manufacture clearance is required"
@@ -497,7 +501,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
     formik.handleChange(e)
     if(e.target.value.length>=3){
 
-    axios.post(url+`/api/get_${e.target.name}`,{wrd:e.target.value}).then(res=>{
+    axios.post(url+`/api/get_${e.target.name}`,{wrd:e.target.value.toString().trim()}).then(res=>{
       console.log(res)
       if(res.data.msg.length>0){
       setPricePlace([])
@@ -769,6 +773,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 />
                 
               </>
+              
             )}
             {formik.errors.pf_currency && formik.touched.pf_currency && (
               <VError title={formik.errors.pf_currency} />
@@ -1354,7 +1359,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 placeholder="Total Value with GST"
                 type="number"
                 label="Total with GST"
-                name="total_val"
+                name="total_val_freight"
                 disabled={true}
                 formControlName={
                   formik.values.freight_igst > 0 && formik.values.freight_igst != "IGST"
@@ -1549,6 +1554,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                  data={[{code:'I',name:'INR'},{code:'U',name:'USD'},{code:'E',name:'Euro'}]}
                   mode={2}
                 />
+                
                 
               </>
             )}
@@ -1746,7 +1752,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 placeholder="Total Value with GST"
                 type="number"
                 label="Total with GST"
-                name="total_val"
+                name="total_val_ins"
                 disabled={true}
                 formControlName={
                   formik.values.ins_igst > 0 && formik.values.ins_igst != "IGST"

@@ -10,10 +10,11 @@ import TermsConditions from "../../Components/Steps/TermsConditions";
 import ProductDetails from "../../Components/Steps/ProductDetails";
 import HeadingTemplate from "../../Components/HeadingTemplate";
 import Notes from "../../Components/Steps/Notes";
-import Tooltip from '@mui/material/Tooltip';
+// import Tooltip from '@mui/material/Tooltip';
+import {Popover, Tooltip} from "antd";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, EyeOutlined, FileTextOutlined, LoadingOutlined, LockOutlined, SyncOutlined, TruckOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, EyeOutlined, FileTextOutlined, InfoCircleOutlined, InfoOutlined, LoadingOutlined, LockOutlined, QuestionCircleOutlined, SyncOutlined, TruckOutlined } from "@ant-design/icons";
 import { Button, FloatButton } from "antd";
 import PaymentTerms from "../../Components/Steps/PaymentTerms";
 import axios from "axios";
@@ -23,17 +24,15 @@ import { Message } from "../../Components/Message";
 import DialogBox from "../../Components/DialogBox";
 import { Tag } from 'antd';
 import { BlockUI } from 'primereact/blockui';
-// import { Timeline } from 'antd';
-// import TDInputTemplate from "../../Components/TDInputTemplate";
 import { SaveOutlined } from "@mui/icons-material";
 import PoLogs from "../../Components/Steps/PoLogs";
-import TDInputTemplate from "../../Components/TDInputTemplate";
 function PurchaseOrderForm() {
   const stepperRef = useRef(null);
   const params = useParams();
   console.log(params, "params");
   localStorage.setItem("id", params.id);
   var act=0
+ 
   const [floatShow,setFloatShow]=useState(false)
   const [loading,setLoading] = useState(false)
   const [visible,setVisible] = useState(false)
@@ -114,6 +113,7 @@ function PurchaseOrderForm() {
   const [blocked,setBlocked] = useState(false)
   const [amendnote,setAmendNote] = useState('')
   const navigate=useNavigate()
+ 
   const addcomment=()=>{
     if(localStorage.getItem('po_comments')){
     setLoading(true)
@@ -313,8 +313,9 @@ function PurchaseOrderForm() {
     
     setFloatShow((localStorage.getItem('po_status')=='P' || localStorage.getItem('po_status')=='U') && (localStorage.getItem('order_date') || localStorage.getItem('vendor_name'))?true:false)
   },[localStorage.getItem('order_date'),localStorage.getItem('vendor_name')])
-  
+
   useEffect(()=>{
+    
   if(+params.id>0){
     axios.post(url+'/api/getpo',{id:+params.id}).then(res=>{
       console.log(res)
@@ -449,7 +450,15 @@ function PurchaseOrderForm() {
             manufacture_clearance:resTerm?.data?.msg[0]?.manufacture_clearance,
             manufacture_clearance_desc:resTerm?.data?.msg[0]?.manufacture_clearance_desc,
             dispatch_dt:resTerm?.data?.msg[0]?.dispatch_dt=='Y'?true:false,
-            comm_dt:resTerm?.data?.msg[0]?.comm_dt=='Y'?true:false
+            comm_dt:resTerm?.data?.msg[0]?.comm_dt=='Y'?true:false,
+            insurance: resTerm?.data?.msg[0]?.ins,
+            insurance_val:resTerm?.data?.msg[0]?.ins_val,
+            ins_extra:resTerm?.data?.msg[0]?.ins_extra,
+            ins_extra_val:resTerm?.data?.msg[0]?.ins_extra_val,
+            ins_currency:resTerm?.data?.msg[0]?.ins_currency,
+            ins_cgst:resTerm?.data?.msg[0]?.ins_cgst,
+            ins_sgst:resTerm?.data?.msg[0]?.ins_sgst,
+            ins_igst:resTerm?.data?.msg[0]?.ins_igst,
           };
           console.log(terms_conditions)
           localStorage.setItem('terms',JSON.stringify(terms_conditions))
@@ -511,7 +520,15 @@ function PurchaseOrderForm() {
       
     }).catch(err=>navigate("/error" + "/" + err.code + "/" + err.message));
   }
+ 
   },[])
+
+  const content = (
+    <div>
+      <p>{localStorage.getItem('amend_note')}</p>
+      <p>Content</p>
+    </div>
+  );
  
   return (
     <>
@@ -530,17 +547,20 @@ function PurchaseOrderForm() {
         onClick={() => {setLoading(true); setClickFlag("P"); localStorage.setItem('po_status','P'); submitPo()}
         }
       />}
+     
       <HeadingTemplate
         text={params.id > 0 ? "Update purchase order" : "Create purchase order"}
         mode={params.id > 0 ? 1 : 0}
         title={"Purchase Order"}
         data={''}
       />
+       
+       
        <BlockUI blocked={blocked && (localStorage.getItem('po_status')!='A' && localStorage.getItem('po_status')!='D'&&localStorage.getItem('po_status')!='L')} template={
         <div className="flex-col justify-center items-center gap-5 -mt-72"> 
         <LockOutlined className="text-9xl ml-44 mb-2 text-green-700 animate-bounce"/>
-        <p className="text-white text-xl mb-2">Please cite a ground for amendment to unlock the form.</p>  
-        <textarea rows="5" className="bg-white border-1 border-gray-400 text-sm rounded-lg  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value={amendnote} onChange={e=>{setAmendNote(e.target.value)}}/>
+        <p className="text-white text-xl mb-2">Please cite a ground for amendment to unlock the form.({amendnote.length}/500)</p>  
+        <textarea rows="5" maxLength={500} className="bg-white border-1 border-gray-400 text-sm rounded-lg  focus:border-green-900 active:border-green-600 focus:ring-green-600 focus:border-1 duration-500 block w-full p-1.5 dark:bg-bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value={amendnote} onChange={e=>{setAmendNote(e.target.value)}}/>
         {/* <input type="text"/> */}
         
         <button
@@ -575,12 +595,10 @@ function PurchaseOrderForm() {
         spinning={loading}
       >
       <div className="card bg-white rounded-lg p-5">
-        
-        
-      
-         
+     
+     
      {clickFlag &&  
-
+<>
       <div className="flex gap-5 justify-end">
       
          {clickFlag=='P'?<Tag bordered={false} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="processing" icon={<SyncOutlined spin />}>
@@ -593,8 +611,18 @@ function PurchaseOrderForm() {
        Delivered
         
         </Tag>:<Tag bordered={false} icon={<TruckOutlined/>} className="text-base rounded-full shadow-sm p-1.5 ml-10" color="purple">Partially Delivered</Tag>}
-        
-        </div>}
+
+        {localStorage.getItem('amend_note')!='null' && localStorage.getItem('amend_flag')=='Y' &&
+             <Tooltip title={'Amendment note- '+localStorage.getItem('amend_note')} >
+        <QuestionCircleOutlined className="text-gray-500 z-50"/>
+          </Tooltip>
+   }
+        </div>
+       
+       
+   </>
+        }
+       
         <Stepper
           ref={stepperRef}
           style={{ flexBasis: "100%" }}
@@ -664,7 +692,6 @@ function PurchaseOrderForm() {
                 freight_sgst:freight_sgst,
                 freight_igst:freight_igst,
                 freight_currency:freight_currency,
-
                 test_certificate: test_certificate,
                 test_certificate_desc: test_certificate_desc,
                 ld_applicable_date: ld_applicable_date,

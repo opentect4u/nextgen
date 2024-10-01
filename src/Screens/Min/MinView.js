@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { routePaths } from "../Assets/Data/Routes";
-import { Link} from "react-router-dom";
-import { url } from "../Address/BaseUrl";
+import { routePaths } from "../../Assets/Data/Routes";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { url } from "../../Address/BaseUrl";
 import axios from "axios";
-
 import { Paginator } from "primereact/paginator";
 import { motion } from "framer-motion";
-import nodata from "../../src/Assets/Images/nodata.png";
+import nodata from "../../../src/Assets/Images/nodata.png";
 import {
   EditOutlined,
 } from "@ant-design/icons";
-import SkeletonLoading from "../Components/SkeletonLoading";
+import SkeletonLoading from "../../Components/SkeletonLoading";
 
-function UploadViewTemplate({ flag, title }) {
-  const [first, setFirst] = useState(0);
+function MinView() {
+   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10);
   const [searchVal, setSearchVal] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,11 +49,11 @@ function UploadViewTemplate({ flag, title }) {
     localStorage.removeItem("drawing");
     localStorage.removeItem("dt");
     setLoading(true)
-    axios.post(url + "/api/getpo", { id:0 }).then((res) => {
+    axios.post(url + "/api/getMRN", { id:0 }).then((res) => {
       console.log(res);
       setLoading(false);
-      setCopy(res?.data?.msg.filter(e=>e.po_status=='A'));
-      setPoData(res?.data?.msg.filter(e=>e.po_status=='A'));
+      setCopy(res?.data?.msg);
+      setPoData(res?.data?.msg);
     });
   }, []);
   const setSearch = (word) => {
@@ -84,7 +83,7 @@ function UploadViewTemplate({ flag, title }) {
                 transition={{ delay: 1, type: "just" }}
                 className="text-xl w-48 capitalize text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5"
               >
-                {title}
+                Material Issue Note
               </motion.h2>
 
               <label for="simple-search" className="sr-only">
@@ -189,11 +188,7 @@ function UploadViewTemplate({ flag, title }) {
                       <td class="px-3 py-4 flex gap-3">
                       
                         <Link
-                          to={
-                            flag == "M"
-                              ? routePaths.MDCCFORM + item.sl_no
-                              : routePaths.TESTCERTFORM + item.sl_no+'/'+item.po_no
-                          }
+                          to={routePaths.MINFORM + item.sl_no+'/'+item.po_no}
                         >
                           <EditOutlined className="text-md text-green-900" />
                         </Link>
@@ -216,4 +211,4 @@ function UploadViewTemplate({ flag, title }) {
   );
 }
 
-export default UploadViewTemplate;
+export default MinView

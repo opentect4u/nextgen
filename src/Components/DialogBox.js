@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
-import { useNavigate } from 'react-router-dom';
-import { Tabs } from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Popconfirm, Popover, Tabs, Tooltip } from 'antd';
 import ProfileInfo from './ProfileInfo';
 import PasswordComp from './PasswordComp';
 import { routePaths } from '../Assets/Data/Routes';
@@ -14,11 +14,28 @@ import ProdInfo from './ProdInfo';
 import PoPreview from './Steps/PoPreview';
 import TDInputTemplate from './TDInputTemplate';
 import AmendPreview from './AmendPreview';
-const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id }) => {
+import { Timeline } from 'antd';
+import { ClockCircleOutlined, DeleteOutlined, InfoCircleOutlined, InfoOutlined } from '@ant-design/icons';
+import axios from 'axios';
+import { PanoramaSharp } from '@mui/icons-material';
+import { Message } from './Message';
+import { url } from '../Address/BaseUrl';
+const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) => {
   const navigate = useNavigate();
   const [po_no,setPoNo]=useState('')
+  const [item_nm,setItemNm]=useState('')
+  const [item_qty,setItemQty]=useState('')
+  const [item_sl,setItemSl]=useState('')
+  const [item_remarks,setItemRemarks]=useState('')
   useEffect(()=>{setPoNo('')},[])
+  const params=useParams()
   console.log(data)
+  const content = (
+    <div>
+      <p>{item_sl}</p>
+      <p>{item_remarks}</p>
+    </div>
+  );
   const onChange = (key) => {
     console.log(key,'onChange');
   };
@@ -34,7 +51,60 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id }) => {
       children: <PasswordComp mode={2} onPress={onPress}/>
     }
   ];
- 
+  const timeLineItems=[]
+ if(flag==15){
+  for(let i=0; i<data.length;i++){
+    timeLineItems.push({
+      children:
+      <>
+      <span>Received {data[i].rc_qty} unit(s) by {data[i].rc_by}</span>
+      <div className='my-2 p-2 bg-gray-200 rounded-lg flex-col justify-center items-center'>
+      <span>Remarks: {data[i].remarks}</span> <br/>
+      <span>Serial No.: {data[i].sl}</span>
+      </div>
+      </>
+       ,
+      // label:'Received on '+i.rc_at?.split('T')[0]+' at '+i.rc_at?.split('T')[1]
+      label:<span>Received on {data[i].rc_at?.split('T')[0]+' at '+data[i].rc_at?.split('T')[1] } 
+       <Popconfirm
+    title="Delete the item"
+    description="Are you sure to delete this item?"
+    zIndex={50000}
+    okText="Yes"
+    cancelText="No"
+    onConfirm={()=>{
+      {
+        axios.post(url+'/api/deleteitemdel',{po_no:params.po_no,user:localStorage.getItem('email'),item:data[i].item_sl}).then(res=>{
+          if(res?.data?.suc>0)
+            {
+              Message('success',res?.data?.msg)
+            
+              // timeLineItems.splice(i,1)
+              confirm(1)
+              
+            }
+          else{
+            Message('error',res?.data?.msg)
+            confirm(0)
+
+
+          }
+        })
+      }
+
+    }}
+  >
+    {/* <Button danger>Delete</Button> */}
+    <Tooltip title={'Delete'}>
+      <DeleteOutlined className='mx-2 font-bold text-red-900'/>
+      </Tooltip>
+      
+  </Popconfirm>
+
+      </span>
+    })
+  }
+ }
   return (
       <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2 && flag!=5  && flag!=6 && flag!=7 && flag!=8 && flag!=9 && flag!=10  && flag!=11?'Warning!':flag!=10?'Information':'Preview'}</div>} visible={visible} maximizable style={{
          width: '50vw',
@@ -167,52 +237,86 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id }) => {
         {flag==15 && 
         
         <>
-          {data.length > 0 && (
-                    <table className="w-full text-sm text-left rtl:text-right shadow-lg text-gray-500 dark:text-gray-400">
-                      <thead className="text-xs bg-[#C4F1BE] font-bold uppercase text-green-900 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 font-bold">
-                            Item
-                          </th>
+          {/* {data.length > 0 &&
+           data.map((item)=>(
+                    <table className="w-full border-separate border border-[#C4F1BE] overflow-x-scroll text-sm text-left rtl:text-right shadow-lg text-gray-500 dark:text-gray-400">
+                    <thead className="text-xs bg-[#C4F1BE] font-bold uppercase text-green-900 dark:bg-gray-700 dark:text-gray-400">
+                      <tr>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 w-1/4 font-bold"
+                        >
+                          Item
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 w-1/4 font-bold"
+                        >
+                          Ordered Quantity
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 w-1/4 font-bold"
+                        >
+                          Received Quantity
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 w-1/4 font-bold"
+                        >
+                          SL No.
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 w-1/4 font-bold"
+                        >
+                          Remarks
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-[#DDEAE0] border-b-2 border-white my-3 font-bold dark:bg-gray-800 dark:border-gray-700">
+                        <th
+                          scope="row"
+                          className="px-4 w-1/4 py-4  text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          {item.name}
+                        </th>
+                        <th
+                          scope="row"
+                          className="px-4 w-1/4 py-4  text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                         {item.quantity}
 
-                          <th scope="col" className="px-6 py-3 font-bold">
-                            Quantity To be delivered
-                          </th>
-                          <th scope="col" className="px-6 py-3 font-bold">
-                            Quantity to Client
-                          </th>
-                          <th scope="col" className="px-6 py-3 font-bold">
-                            Quantity to Warehouse
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data.map((item, index) => (
-                        <tr className="bg-[#DDEAE0] border-b-2 border-white my-3 font-bold dark:bg-gray-800 dark:border-gray-700">
-                            <th
-                              scope="row"
-                              className="px-6 w-3/12 py-4  text-gray-900 whitespace-nowrap dark:text-white"
-                            >
-                              {item.item}
-                            </th>
+                        </th>
 
-                            <td className="px-6 py-4 w-3/12">
-                            {item.quantity}
-                            </td>
-                            <td className="px-6 py-4 w-3/12">
-                             {item.cust_qty}
-                            </td>
-                            <td className="px-6 py-4 w-3/12">
-                             {item.wh_qty}
-                            </td>
+                        <td className="px-6 py-4 w-1/4">
+                          {item.rc_qty}
                            
-                          </tr>
-                          
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
-        
+                        
+                        </td>
+                        <td className="px-6 py-4 w-1/4">
+                          {item.sl}
+                           
+                        </td>
+                        <td className="px-6 py-4 w-1/4">
+                         {item.remarks}
+                           
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+          )
+                  )
+                  
+                  
+                  }
+         */}
+          <Timeline
+          className='my-2'
+    mode="right"
+    items={timeLineItems}
+  />
         
         </>}
       </Dialog>

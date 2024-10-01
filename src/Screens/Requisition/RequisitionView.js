@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { routePaths } from "../Assets/Data/Routes";
+import { routePaths } from "../../Assets/Data/Routes";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { url } from "../Address/BaseUrl";
+import { url } from "../../Address/BaseUrl";
 import axios from "axios";
 import { Paginator } from "primereact/paginator";
 import { motion } from "framer-motion";
-import nodata from "../../src/Assets/Images/nodata.png";
+import nodata from "../../../src/Assets/Images/nodata.png";
 import {
   EditOutlined,
 } from "@ant-design/icons";
-import SkeletonLoading from "../Components/SkeletonLoading";
+import SkeletonLoading from "../../Components/SkeletonLoading";
 
 
-function DeliveryViewTemplate({flag}) {
+function RequisitionView() {
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
     const [searchVal, setSearchVal] = useState("");
@@ -27,12 +27,7 @@ function DeliveryViewTemplate({flag}) {
       { label: "Uploaded", value: 1 },
       { label: "Yet to upload", value: 2 },
     ];
-    const [value, setValue] = useState(0);
     const [po_data, setPoData] = useState([]);
-    const [vendors, setVendors] = useState([]);
-    const [vendorList, setVendorList] = useState([]);
-    const [projects, setProjects] = useState([]);
-    const [projectList, setProjectList] = useState([]);
     const [copy, setCopy] = useState([]);
     const params=useParams()
     const navigate = useNavigate();
@@ -78,24 +73,7 @@ function DeliveryViewTemplate({flag}) {
 
     }, []);
     
-    const search = (value) => {
-      setLoading(true);
-      if (flag == "C") {
-        axios.post(url + "/api/getdelbypo", { po: value }).then((res) => {
-          console.log(res);
-          setLoading(false);
-          setCopy(res?.data?.msg);
-          setPoData(res?.data?.msg);
-        });
-      } else {
-        axios.post(url + "/api/getmdccbypo", { po: value }).then((res) => {
-          console.log(res);
-          setLoading(false);
-          setCopy(res?.data?.msg);
-          setPoData(res?.data?.msg);
-        });
-      }
-    };
+   
     const setSearch = (word) => {
       setPoData(
         copy?.filter(
@@ -122,7 +100,7 @@ function DeliveryViewTemplate({flag}) {
                   transition={{ delay: 1, type: "just" }}
                   class="text-xl w-48 capitalize text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5"
                 >
-                  {flag=='C'?'MRN Details':'DeliveryDetails'}
+                  {'Requisition'}
                 </motion.h2>
   
                 <label for="simple-search" class="sr-only">
@@ -151,10 +129,9 @@ function DeliveryViewTemplate({flag}) {
                     animate={{ opacity: 1, width: "100%" }}
                     transition={{ delay: 1.1, type: "just" }}
                     class="bg-white border rounded-full border-emerald-500 text-gray-800 text-sm  block w-full  pl-10 dark:bg-gray-800 md:ml-4  duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Search"
+                    placeholder="Search "
                     required=""
                     onChange={(text) => setSearch(text.target.value)}
-
                   />
                 </div>
               
@@ -230,9 +207,7 @@ function DeliveryViewTemplate({flag}) {
                         
                           <Link
                             to={
-                              flag == "C"
-                                ? routePaths.DELIVERYCUSTOMERFORM + item.sl_no+'/'+item.po_no
-                                : routePaths.TESTCERTFORM + item.sl_no
+                              routePaths.REQFORM + item.sl_no +'/'+item.po_no
                             }
                           >
                             <EditOutlined class="text-md text-green-900" />
@@ -256,4 +231,4 @@ function DeliveryViewTemplate({flag}) {
     );
 }
 
-export default DeliveryViewTemplate
+export default RequisitionView

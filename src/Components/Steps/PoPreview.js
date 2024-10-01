@@ -21,6 +21,7 @@ function PoPreview({ data }) {
  const [prodInfo,setProdInfo]=useState()
  const [grandTot,setGrandTot]=useState(0)
  const [po_no,setPoNo]=useState('')
+ const [subTot,setSubTot]=useState('')
  const [totVal,setTotVal]=useState(0)
   useEffect(()=>{
     
@@ -50,6 +51,12 @@ function PoPreview({ data }) {
 
             setGrandTot(tot.toFixed(2))
             tot=0
+            for(let item of resItems?.data?.msg){
+                    tot+=((item.item_rt-item.discount)*item.quantity)
+                  }
+                setSubTot(tot)
+                tot=0
+                 
             // "prod_name": "Prod_2",
             // "prod_make": "Make_2",
             // "catg_name": "Misc",
@@ -351,7 +358,7 @@ function PoPreview({ data }) {
                     Packing & Forwarding
                 </th>
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).packing_forwarding_val=='I'?'Inclusive':`Extra  ${JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra}% - ${(grandTot * JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra/100).toFixed(2)}`}
+                {JSON.parse(localStorage.getItem('terms')).packing_forwarding_val=='I'?'Inclusive':`Extra  ${JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra}% - ${(subTot * JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra/100).toFixed(2)}  (CGST-${(JSON.parse(localStorage.getItem('terms')).pf_cgst*JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra_val/100).toFixed(2)} SGST-${(JSON.parse(localStorage.getItem('terms')).pf_sgst*JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra_val/100).toFixed(2)} IGST-${(JSON.parse(localStorage.getItem('terms')).pf_igst*JSON.parse(localStorage.getItem('terms')).packing_forwarding_extra_val/100).toFixed(2)}) `}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -359,7 +366,7 @@ function PoPreview({ data }) {
                     Freight
                 </th>
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).freight_insurance=='I'?'Inclusive':'Extra'} - {JSON.parse(localStorage.getItem('terms')).freight_insurance_val}
+                {JSON.parse(localStorage.getItem('terms')).freight_insurance=='I'?'Inclusive':'Extra'} - {JSON.parse(localStorage.getItem('terms')).freight_insurance_val +  `${JSON.parse(localStorage.getItem('terms')).freight_extra}% - ${(subTot * JSON.parse(localStorage.getItem('terms')).freight_extra/100).toFixed(2)} (CGST-${(JSON.parse(localStorage.getItem('terms')).freight_cgst*JSON.parse(localStorage.getItem('terms')).freight_extra_val/100).toFixed(2)} SGST-${(JSON.parse(localStorage.getItem('terms')).freight_sgst*JSON.parse(localStorage.getItem('terms')).freight_extra_val/100).toFixed(2)} IGST-${(JSON.parse(localStorage.getItem('terms')).freight_igst*JSON.parse(localStorage.getItem('terms')).freight_extra_val/100).toFixed(2)})`}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -367,7 +374,7 @@ function PoPreview({ data }) {
                     Insurance
                 </th>
                 <td className="px-1 py-1">
-                {JSON.parse(localStorage.getItem('terms')).insurance=='Y'? JSON.parse(localStorage.getItem('terms')).insurance_val:'N/A'} 
+                {JSON.parse(localStorage.getItem('terms')).insurance=='Y'? JSON.parse(localStorage.getItem('terms')).insurance_val + `${JSON.parse(localStorage.getItem('terms')).ins_extra}% - ${(subTot * JSON.parse(localStorage.getItem('terms')).ins_extra/100).toFixed(2)}  (CGST-${(JSON.parse(localStorage.getItem('terms')).ins_cgst * JSON.parse(localStorage.getItem('terms')).ins_extra_val/100).toFixed(2)} SGST-${(JSON.parse(localStorage.getItem('terms')).ins_sgst * JSON.parse(localStorage.getItem('terms')).ins_extra_val/100).toFixed(2)} IGST-${(JSON.parse(localStorage.getItem('terms')).ins_igst * JSON.parse(localStorage.getItem('terms')).ins_extra_val/100).toFixed(2)})`:'N/A'} 
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -464,7 +471,7 @@ function PoPreview({ data }) {
                 {JSON.parse(localStorage.getItem('terms')).ld_applied_on=='O'?`Others - ${JSON.parse(localStorage.getItem('terms')).others_applied}`:JSON.parse(localStorage.getItem('terms')).ld_applied_on=='P'?'Pending Material Value':JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='NA'?'':'PO Total Value(%)'}
                 </td>
                 <td className="px-1 py-1 text-wrap">
-                {JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='NA'?'':'LD @'+JSON.parse(localStorage.getItem('terms')).ld_value+'% per week to a maximum of' +JSON.parse(localStorage.getItem('terms')).po_min_value+'% of the order value would be applicable for any delay beyond the stipulated delivery period.'}
+                {JSON.parse(localStorage.getItem('terms')).ld_applicable_date=='NA'?'':JSON.parse(localStorage.getItem('terms')).ld_value && JSON.parse(localStorage.getItem('terms')).po_min_value?'LD @'+JSON.parse(localStorage.getItem('terms')).ld_value+'% per week to a maximum of ' +JSON.parse(localStorage.getItem('terms')).po_min_value+'% of the order value would be applicable for any delay beyond the stipulated delivery period.':''}
                 </td>
                 
                 <td className="px-1 py-1">

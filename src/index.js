@@ -17,6 +17,8 @@ import CatchError from "./Screens/CatchError";
 
 
 
+
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const Home = lazy(() => import("./Screens/Homescreen/Home"));
 const HomeScreen = lazy(() => import("./Screens/Homescreen/HomeScreen"));
@@ -138,6 +140,14 @@ const ToCustomer =lazy(()=>import( "./Screens/Delivery/ToCustomer/ToCustomer"))
 const ToCustomerView =lazy(()=>import( "./Screens/Delivery/ToCustomer/ToCustomerView"))
 const ToCustomerForm =lazy(()=>import( "./Screens/Delivery/ToCustomer/ToCustomerForm"))
 
+const MinComp =lazy(()=>import("./Screens/Min/MinComp"));
+const MinForm =lazy(()=>import("./Screens/Min/MinForm"));
+const MinView =lazy(()=>import("./Screens/Min/MinView"));
+
+const Requisition =lazy(()=>import("./Screens/Requisition/Requisition"));
+const RequisitionView =lazy(()=>import("./Screens/Requisition/RequisitionView"));
+const RequisitionForm =lazy(()=>import("./Screens/Requisition/RequisitionForm"));
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -239,20 +249,7 @@ const router = createBrowserRouter([
                   },
                 ],
               },
-              // {
-              //   path: "projects",
-              //   element: <ProjectComp />,
-              //   children: [
-              //     {
-              //       path: "",
-              //       element: <ProjectView />,
-              //     },
-              //     {
-              //       path: "projectaddform/:id",
-              //       element: <ProjectForm />,
-              //     },
-              //   ],
-              // },
+            
               {
                 path: "products",
                 element: <ProductComp />,
@@ -381,7 +378,7 @@ const router = createBrowserRouter([
                     element: <UploadTCView />,
                   },
                       {
-                        path:'upload/:id',
+                        path:'upload/:id/:po_no',
                         element:<UploadTCForm/>
                       },
                 ]
@@ -425,7 +422,7 @@ const router = createBrowserRouter([
                 element: <ToCustomerView />,
               },
               {
-                path: "deliverycustomerform/:id",
+                path: "deliverycustomerform/:id/:po_no",
                 element: <ToCustomerForm />,
               },
             ]
@@ -490,6 +487,36 @@ const router = createBrowserRouter([
                 path: "requisitionsrcvdform/:id",
                 element: <ReqRcvdForm />,
               },
+            ],
+          },
+          {
+            path: "minComp",
+            element: <MinComp />,
+            children: [
+              {
+                path: "minView",
+                element: <MinView />,
+              },
+              {
+                path: "minForm/:id/:po_no",
+                element: <MinForm />,
+              },
+            
+            ],
+          },
+          {
+            path: "reqComp",
+            element: <Requisition />,
+            children: [
+              {
+                path: "reqView",
+                element: <RequisitionView />,
+              },
+              {
+                path: "reqForm/:id/:po_no",
+                element: <RequisitionForm />,
+              },
+            
             ],
           },
           {
