@@ -2064,15 +2064,31 @@ async def save_requisition(data:SaveReq):
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
                 
                 if(result2['suc']>0):
-                    res_dt1 = {"suc": 1, "msg": f"Updated Successfully"}
+                    res_dt1 = {"suc": 1, "msg": f"Saved Successfully"}
                 else:
                     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
 
     if result['suc']>0 :
-                res_dt = {"suc": 1, "msg": f"Updated Successfully"}
+                res_dt = {"suc": 1, "msg": f"Saved Successfully"}
     else:
                  res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
             
     
     return res_dt
-    
+
+
+@poRouter.post('/get_requisition')
+async def get_requisition(data:GetPo):
+    print('I am logging in!')
+    print(data.id)
+    res_dt = {}
+    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
+    select = "@a:=@a+1 serial_number, req_no,intended_for,req_date, req_type,purpose,project_id, created_by,created_at,modified_by,modified_at,sl_no"
+    # select = "@a:=@a+1 serial_number, *"
+    schema = "td_requisition,(SELECT @a:= 0) AS a"
+    where = f"sl_no='{data.id}'" if data.id>0 else f"delete_flag='N'"
+    order = "ORDER BY created_at DESC"
+    flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
