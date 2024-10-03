@@ -2099,7 +2099,7 @@ async def get_requisition(data:GetPo):
     print(result, 'RESULT')
     return result
 
-@poRouter.post("/req_item_dtls")
+@poRouter.post('/req_item_dtls')
 async def req_item_dtls(data:ReqId):
 
     select = "a.sl_no, a.last_req_id, a.req_no, a.item_id, b.prod_name, a.rc_qty, a.req_qty"
