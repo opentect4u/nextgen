@@ -2092,3 +2092,19 @@ async def get_requisition(data:GetPo):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@poRouter.post('/get_requisition_items')
+async def get_requisition(data:GetPo):
+    print('I am logging in!')
+    print(data.id)
+    res_dt = {}
+    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
+    select = "@a:=@a+1 serial_number, last_req_id,item_id,rc_qty, req_qty,created_by,created_at,modified_by,modified_at,sl_no"
+    # select = "@a:=@a+1 serial_number, *"
+    schema = "td_requisition_items,(SELECT @a:= 0) AS a"
+    where = f"last_req_id='{data.id}' and delete_flag='N'" if data.id>0 else f"delete_flag='N'"
+    order = "ORDER BY created_at DESC"
+    flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
