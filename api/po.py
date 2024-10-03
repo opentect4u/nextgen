@@ -129,6 +129,9 @@ class PoModel(BaseModel):
 class GetPo(BaseModel):
     id:int
 
+class GetReq(BaseModel):
+    Proj_id:int
+
 class approvePO(BaseModel):
     id:int
     status:str
