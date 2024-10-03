@@ -245,6 +245,23 @@ class AddMin(BaseModel):
 
 class ProjId(BaseModel):
     Proj_id:int
+
+class ReqItems(BaseModel):
+    sl_no:int
+    item_id:int
+    rc_qty:int
+    req_qty:int
+
+
+class SaveReq(BaseModel):
+    sl_no:int
+    intended_for:str
+    req_date:str
+    project_id:int
+    req_type:str
+    purpose:str
+    items:list[ReqItems]
+    user:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -2020,5 +2037,42 @@ async def item_dtls(data:ProjId):
     return res_dt
 
 
+@poRouter.post('/save_requisition')
+async def save_requisition(data:SaveReq):
+    res_dt = {}
+    print(data)
+    current_datetime = datetime.now()
+    reqNo = int(round(current_datetime.timestamp()))
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+
+    fields= f"intended_for='{data.intended_for}', project_id={data.project_id}, req_type='{data.req_type}', purpose='{data.purpose}', modified_by='{data.user}', modified_at='{formatted_dt}'" if data.sl_no > 0 else f"req_no,intended_for,req_date,project_id,req_type,purpose,created_by,created_at"
+    values = f"'REQ-{reqNo}', '{data.intended_for}', '{data.req_date}', {data.project_id}, '{data.req_type}', '{data.purpose}','{data.user}','{formatted_dt}'"
+    table_name = "td_requisition"
+    whr = f'sl_no={data.sl_no}' if data.sl_no > 0 else None
+    flag = 1 if data.sl_no>0 else 0
+    result = await db_Insert(table_name, fields, values, whr, flag)
+    lastID=result["lastId"]
     
+    for i in data.items:
+                fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,item_id,rc_qty,req_qty,created_by,created_at'
+                values = f'"REQ-{reqNo}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}"'
+                table_name = "td_requisition_items"
+                whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
+                # flag1 = 1 if v.sl_no>0 else 0
+                flag1 = 1 if data.sl_no>0 else 0
+                result2 = await db_Insert(table_name, fields, values, whr, flag1)
+                
+                if(result2['suc']>0):
+                    res_dt1 = {"suc": 1, "msg": f"Updated Successfully"}
+                else:
+                    res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+
+    if result['suc']>0 :
+                res_dt = {"suc": 1, "msg": f"Updated Successfully"}
+    else:
+                 res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
+            
+    
+    return res_dt
     
