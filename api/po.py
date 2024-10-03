@@ -265,6 +265,9 @@ class SaveReq(BaseModel):
     purpose:str
     items:list[ReqItems]
     user:str
+
+class ReqId(BaseModel):
+    last_req_id:int
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -2096,19 +2099,14 @@ async def get_requisition(data:GetPo):
     print(result, 'RESULT')
     return result
 
-@poRouter.post('/get_requisition_items')
-async def get_requisition(data:GetReq):
-    print('I am logging in!')
-    print(data.Proj_id)
-    res_dt = {}
-    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number, last_req_id,item_id,rc_qty, req_qty,created_by,created_at,modified_by,modified_at,sl_no"
-    # select = "@a:=@a+1 serial_number, *"
-    schema = "td_requisition_items,(SELECT @a:= 0) AS a"
-    where = f"last_req_id='{data.Proj_id}' and delete_flag='N'" if data.Proj_id>0 else f"delete_flag='N'"
-    order = "ORDER BY created_at DESC"
-    flag = 1  if data.Proj_id>0 else 1
-    # if data.id>0 else 1
-    result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
-    return result
+@poRouter.post("/req_item_dtls")
+async def req_item_dtls(data:ReqId):
+
+    select = "a.sl_no, a.last_req_id, a.req_no, a.item_id, b.prod_name, a.rc_qty, a.req_qty"
+    table = "td_requisition_items a left join md_product b on a.item_id=b.sl_no"
+    where = f"a.last_req_id = {data.last_req_id}"
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+    print(res_dt["msg"])   
+    return res_dt
