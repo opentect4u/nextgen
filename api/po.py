@@ -2099,7 +2099,7 @@ async def get_requisition(data:GetPo):
 @poRouter.post('/get_requisition_items')
 async def get_requisition(data:GetReq):
     print('I am logging in!')
-    print(data.id)
+    print(data.Proj_id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
     select = "@a:=@a+1 serial_number, last_req_id,item_id,rc_qty, req_qty,created_by,created_at,modified_by,modified_at,sl_no"
