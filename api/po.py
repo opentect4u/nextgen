@@ -201,7 +201,6 @@ class getDelivery(BaseModel):
     lr_no:str
     waybill:str
     ot_desc:str
-    project_id:int
     ic:str
     og:str
     dc:str
@@ -1296,8 +1295,8 @@ async def adddelivery(data:getDelivery):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
-    fields= f'po_no="{data.po_no}",ot_desc="{data.ot_desc}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",om_manual="{data.om_manual}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",confirm="{data.confirm}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'mrn_no,proj_id,po_no,ot_desc,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,om_manual,ws,tc,wc,ot,confirm,created_by,created_at'
-    values = f'"MRN-{data.po_no}","{data.project_id}","{data.po_no}","{data.ot_desc}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.om_manual}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.confirm}","{data.user}","{formatted_dt}"'
+    fields= f'po_no="{data.po_no}",ot_desc="{data.ot_desc}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",om_manual="{data.om_manual}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",confirm="{data.confirm}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'mrn_no,po_no,ot_desc,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,om_manual,ws,tc,wc,ot,confirm,created_by,created_at'
+    values = f'"MRN-{data.po_no}","{data.po_no}","{data.ot_desc}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.om_manual}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.confirm}","{data.user}","{formatted_dt}"'
     table_name = "td_item_delivery_invoice"
     whr = f'po_no="{data.po_no}"' if result1['msg']['count'] > 0 else None
     flag = 1 if result1['msg']['count']>0 else 0
