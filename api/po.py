@@ -2097,7 +2097,7 @@ async def get_requisition(data:GetPo):
     return result
 
 @poRouter.post('/get_requisition_items')
-async def get_requisition(data:GetPo):
+async def get_requisition(data:GetReq):
     print('I am logging in!')
     print(data.id)
     res_dt = {}
@@ -2105,7 +2105,7 @@ async def get_requisition(data:GetPo):
     select = "@a:=@a+1 serial_number, last_req_id,item_id,rc_qty, req_qty,created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_requisition_items,(SELECT @a:= 0) AS a"
-    where = f"last_req_id='{data.id}' and delete_flag='N'" if data.id>0 else f"delete_flag='N'"
+    where = f"last_req_id='{data.Proj_id}' and delete_flag='N'" if data.Proj_id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
     flag = 1
     # if data.id>0 else 1
