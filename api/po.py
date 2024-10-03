@@ -2055,8 +2055,8 @@ async def save_requisition(data:SaveReq):
     lastID=result["lastId"]
     
     for i in data.items:
-                fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,item_id,rc_qty,req_qty,created_by,created_at'
-                values = f'"REQ-{reqNo}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}"'
+                fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,item_id,rc_qty,req_qty,created_by,created_at'
+                values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}"'
                 table_name = "td_requisition_items"
                 whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
                 # flag1 = 1 if v.sl_no>0 else 0
