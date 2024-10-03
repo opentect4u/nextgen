@@ -2104,7 +2104,7 @@ async def get_requisition(data:GetPo):
     schema = "td_requisition_items,(SELECT @a:= 0) AS a"
     where = f"last_req_id='{data.id}' and delete_flag='N'" if data.id>0 else f"delete_flag='N'"
     order = "ORDER BY created_at DESC"
-    flag = 0 
+    flag = 1
     # if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
