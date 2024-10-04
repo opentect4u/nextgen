@@ -1923,6 +1923,36 @@ async def getreceiptdoc(wrd:GetPhrase):
     print(result, 'RESULT')
     return result
 
+@poRouter.post('/get_others_ld')  
+async def getreceiptdoc(wrd:GetPhrase):
+    print('I am logging in!')
+    # print(id.id)
+    res_dt = {}
+    select = "distinct ld_date_desc"
+    schema = "td_po_terms_condition"
+    where = f"ld_date_desc like '%{wrd.wrd}%'"
+    order = "ORDER BY modified_at,created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+@poRouter.post('/get_others_applied')  
+async def getreceiptdoc(wrd:GetPhrase):
+    print('I am logging in!')
+    # print(id.id)
+    res_dt = {}
+    select = "distinct ld_val_desc"
+    schema = "td_po_terms_condition"
+    where = f"ld_val_desc like '%{wrd.wrd}%'"
+    order = "ORDER BY modified_at,created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
+
 
 @poRouter.post('/get_term_dtls')  
 async def getreceiptdoc(wrd:GetPhrase):
