@@ -2146,7 +2146,7 @@ async def req_item_dtls(data:ReqId):
 async def req_item_dtls(data:getMrnList):
     select = "*"
     table = "td_item_delivery_invoice"
-    where = f"po_no = {data.last_req_id}"
+    where = f"po_no = '{data.last_req_id}'"
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
