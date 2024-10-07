@@ -273,6 +273,10 @@ class ReqId(BaseModel):
 class MrnId(BaseModel):
     id:int
     invoice:str
+
+class getMrnList(BaseModel):
+    last_req_id:str
+
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -2139,7 +2143,7 @@ async def req_item_dtls(data:ReqId):
     return res_dt
 
 @poRouter.post('/get_mrn_list')
-async def req_item_dtls(data:MrnId):
+async def req_item_dtls(data:getMrnList):
     select = "*"
     table = "td_item_delivery_invoice"
     where = f"po_no = {data.last_req_id}"
