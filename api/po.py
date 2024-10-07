@@ -1329,8 +1329,8 @@ async def adddelivery(data:getDelivery):
     
     for i in data.items:
         if i.rc_qty>0:
-                fields= f'mrn_no,del_last_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
-                values = f'"MRN-{data.po_no}","{lastID}","{i.item_id}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}","{data.po_no}","{data.user}","{formatted_dt}"'
+                fields= f'mrn_no,invoice,del_last_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
+                values = f'"MRN-{data.po_no}","{data.invoice}","{lastID}","{i.item_id}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}","{data.po_no}","{data.user}","{formatted_dt}"'
                 table_name = "td_item_delivery_details"
                 whr=f""
                 flag1 =  0
