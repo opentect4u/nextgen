@@ -2148,7 +2148,7 @@ async def req_item_dtls(data:MrnId):
     print(res_dt["msg"])   
     return res_dt
 
-poRouter.post('/get_received_items')
+@poRouter.post('/get_received_items')
 async def req_item_dtls(data:MrnId):
     select = "*"
     table = "td_item_delivery_details"
