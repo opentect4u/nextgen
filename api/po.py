@@ -271,7 +271,8 @@ class ReqId(BaseModel):
     last_req_id:int
 
 class MrnId(BaseModel):
-    last_req_id:str
+    id:int
+    invoice:str
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -2150,11 +2151,10 @@ async def req_item_dtls(data:MrnId):
 
 @poRouter.post('/get_received_items')
 async def req_item_dtls(data:MrnId):
-    select = "*"
-    table = "td_item_delivery_details"
-    where = f"invoice = '{data.last_req_id}' and delete_flag='N'"
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,d.created_at,d.created_by"
+    schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no "
+    where = f"i.po_sl_no='{data.id}' and d.invoice='{data.invoice}' and d.delete_flag='N'" 
     order = ""
     flag = 1 
-    res_dt = await db_select(select,table,where,order,flag)
-    print(res_dt["msg"])   
-    return res_dt
+    result = await db_select(select, schema, where, order, flag)
+    return result
