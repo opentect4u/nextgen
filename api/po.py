@@ -195,6 +195,7 @@ class MrnItem(BaseModel):
     sl:str
     remarks:str
     name:str
+
 class getDelivery(BaseModel):
     id:int
     po_no:str
@@ -1327,16 +1328,11 @@ async def adddelivery(data:getDelivery):
     lastID=result["lastId"]
     
     for i in data.items:
-         
-        # fields= f'category_id="{v.category_id}",modified_by="{data.user}",modified_at="{formatted_dt}"' if v.sl_no > 0 else f'vendor_id,category_id,created_by,created_at'
         if i.rc_qty>0:
-                fields= f'del_last_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
-                values = f'"{lastID}","{i.item_id}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}","{data.po_no}","{data.user}","{formatted_dt}"'
+                fields= f'mrn_no,del_last_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
+                values = f'"MRN-{data.po_no}","{lastID}","{i.item_id}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}","{data.po_no}","{data.user}","{formatted_dt}"'
                 table_name = "td_item_delivery_details"
-                # whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
-                # whr =  f'sl_no="{v.sl_no}"' if v.sl_no > 0 else None
                 whr=f""
-                # flag1 = 1 if v.sl_no>0 else 0
                 flag1 =  0
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
                 
@@ -1352,6 +1348,10 @@ async def adddelivery(data:getDelivery):
             
     
     return res_dt
+
+
+
+
 
 @poRouter.post('/add_delivery_files')
 async def add_proj_files(po_no:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, user:str = Form(...)):
@@ -1950,9 +1950,6 @@ async def getreceiptdoc(wrd:GetPhrase):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
-
-
-
 
 @poRouter.post('/get_term_dtls')  
 async def getreceiptdoc(wrd:GetPhrase):
