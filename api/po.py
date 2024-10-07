@@ -1349,10 +1349,6 @@ async def adddelivery(data:getDelivery):
     
     return res_dt
 
-
-
-
-
 @poRouter.post('/add_delivery_files')
 async def add_proj_files(po_no:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, user:str = Form(...)):
     fileName = ''
@@ -2132,6 +2128,17 @@ async def req_item_dtls(data:ReqId):
     select = "a.sl_no, a.last_req_id, a.req_no, a.item_id, b.prod_name, a.rc_qty, a.req_qty"
     table = "td_requisition_items a left join md_product b on a.item_id=b.sl_no"
     where = f"a.last_req_id = {data.last_req_id}"
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+    print(res_dt["msg"])   
+    return res_dt
+
+@poRouter.post('/get_mrn_list')
+async def req_item_dtls(data:ReqId):
+    select = "*"
+    table = "td_item_delivery_invoice"
+    where = f"po_no = {data.last_req_id}"
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
