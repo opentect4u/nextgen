@@ -1353,7 +1353,7 @@ async def adddelivery(data:getDelivery):
     return res_dt
 
 @poRouter.post('/add_delivery_files')
-async def add_proj_files(po_no:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, user:str = Form(...)):
+async def add_proj_files(po_no:str = Form(...),invoice:str = Form(...),docs1:Optional[Union[UploadFile, None]] = None, user:str = Form(...)):
     fileName = ''
     res_dt = {}
     files = []
@@ -1373,8 +1373,8 @@ async def add_proj_files(po_no:str = Form(...),docs1:Optional[Union[UploadFile, 
             for f in files:
                 fileName = ''
                 fileName = None if not f else await uploadfileToLocal2(f)
-                fields3= f'doc,po_no,created_by,created_at'
-                values3 = f'"upload_delivery/{fileName}","{po_no}","{user}","{formatted_dt}"' 
+                fields3= f'doc,po_no,invoice,created_by,created_at'
+                values3 = f'"upload_delivery/{fileName}","{po_no}","{invoice}","{user}","{formatted_dt}"' 
                 table_name3 = "td_item_delivery_doc"
                 whr3 =  ""
                 flag3 = 0
@@ -1495,7 +1495,7 @@ async def check_proj_id(po_no:GetPoNo):
 
     select = "po_no,sl_no,doc"
     schema = "td_item_delivery_doc"
-    where = f"po_no='{po_no.po_no}' and delete_flag='N'"
+    where = f"invoice='{po_no.po_no}' and delete_flag='N'"
     order = ""
     flag = 1 if po_no.po_no else 0
     result = await db_select(select, schema, where, order, flag)
