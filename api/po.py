@@ -2188,7 +2188,7 @@ async def get_item_dtls(data:ProjId):
     return result
 
 
-@poRouter.post("/item__req_dtls")
+@poRouter.post("/item_req_dtls")
 async def item_dtls(data:ProjId):
     select = "c.prod_name, c.sl_no prod_id, sum(b.rc_qty) tot_rc_qty"
     table = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_requisition b ON d.sl_no=b.item_id"
