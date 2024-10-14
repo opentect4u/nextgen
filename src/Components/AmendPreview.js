@@ -38,10 +38,24 @@ function AmendPreview({id}) {
     const [packing_forwarding, setPackingForwarding] = useState("");
     const [packing_forwardingExtra, setPackingForwardingExtra] = useState("");
     const [packing_forwardingExtraVal, setPackingForwardingExtraVal] = useState("");
+    const [pf_cgst ,setpfcgst] = useState("");
+    const [pf_sgst, setpfsgst] = useState("");
+    const [pf_igst, setpfigst] = useState("");
     const [freight_insurance, setFreightInsurance] = useState("");
     const [freight_insurance_val, setFreightInsuranceVal] = useState("");
+    const [freight_insurance_extra_val, setFreightInsuranceExtraVal] = useState("");
+    const [freight_cgst ,setfreightcgst] = useState("");
+    const [freight_sgst, setfreightsgst] = useState("");
+    const [freight_igst, setfreightigst] = useState("");
     const [insurance, setInsurance] = useState("");
     const [insurance_val, setInsuranceVal] = useState("");
+  const [ins_extra_val, setinsExtraVal] = useState("");
+  const [freight_extra, setFreightExtra] = useState("");
+  const [ins_extra, setInsExtra] = useState("");
+
+    const [ins_cgst ,setinscgst] = useState("");
+    const [ins_sgst, setinssgst] = useState("");
+    const [ins_igst, setinsigst] = useState("");
     const [test_certificate, setTestCertificate] = useState("");
     const [test_certificate_desc, setTestCertificateDesc] = useState("");
     const [ld_applicable_date, setLDApplicableDate] = useState("");
@@ -100,10 +114,10 @@ useEffect(()=>{
             console.log(prodInfo)
             for(let item of resItems?.data?.msg){
                 if(item.sgst_id){
-                  tot+=((item.item_rt-item.discount)*item.quantity*item.cgst_id/100)+(item.item_rt-item.discount)*item.quantity*(item.sgst_id/100)+((item.item_rt-item.discount)*item.quantity)
+                  tot+=((item.item_rt-item.discount)*item.quantity)
                 }
                 else{
-                   tot+=((item.item_rt-item.discount)*item.quantity*item.igst_id/100)+((item.item_rt-item.discount)*item.quantity)
+                   tot+=((item.item_rt-item.discount)*item.quantity)
                 }
             }
             console.log(tot)
@@ -197,10 +211,24 @@ useEffect(()=>{
               setPackingForwarding(resTerm?.data?.msg[0]?.packing_fwd_val)
               setPackingForwardingExtra(resTerm?.data?.msg[0]?.packing_fwd_extra)
               setPackingForwardingExtraVal(resTerm?.data?.msg[0]?.packing_fwd_extra_val)
+              setpfcgst(resTerm?.data?.msg[0]?.pf_cgst)
+              setpfsgst(resTerm?.data?.msg[0]?.pf_sgst)
+              setpfigst(resTerm?.data?.msg[0]?.pf_igst)
               setFreightInsurance(resTerm?.data?.msg[0]?.freight_ins)
               setFreightInsuranceVal(resTerm?.data?.msg[0]?.freight_ins_val)
+              setFreightInsuranceExtraVal(resTerm?.data?.msg[0]?.freight_extra_val)
+              setfreightcgst(resTerm?.data?.msg[0]?.freight_cgst)
+              setfreightsgst(resTerm?.data?.msg[0]?.freight_sgst)
+              setfreightigst(resTerm?.data?.msg[0]?.freight_igst)
               setInsurance(resTerm?.data?.msg[0]?.ins)
               setInsuranceVal(resTerm?.data?.msg[0]?.ins_val)
+          setinsExtraVal(resTerm?.data?.msg[0]?.ins_extra_val)
+          setFreightExtra(resTerm?.data?.msg[0]?.freight_extra)
+          setInsExtra(resTerm?.data?.msg[0]?.ins_extra)
+
+              setinscgst(resTerm?.data?.msg[0]?.ins_cgst)
+              setinssgst(resTerm?.data?.msg[0]?.ins_sgst)
+              setinsigst(resTerm?.data?.msg[0]?.ins_igst)
               setTestCertificate(resTerm?.data?.msg[0]?.test_certificate)
               setTestCertificateDesc(resTerm?.data?.msg[0]?.test_certificate_desc)
               setLDApplicableDate(resTerm?.data?.msg[0]?.ld_date)
@@ -547,7 +575,10 @@ useEffect(()=>{
                     Packing & Forwarding
                 </th>
                 <td className="px-6 py-4">
-                {packing_forwarding=='I'?'Inclusive':`Extra  ${packing_forwardingExtra}% - ${(grandTot * packing_forwardingExtra/100).toFixed(2)}`}
+                {packing_forwarding=='I'?'Inclusive':`Extra  ${packing_forwardingExtra}% - ${(grandTot * packing_forwardingExtra/100).toFixed(2)}
+                (CGST-${(pf_cgst*packing_forwardingExtra*grandTot/10000).toFixed(2)} SGST-${(pf_sgst*packing_forwardingExtra*grandTot/10000).toFixed(2)} IGST-${(pf_igst*packing_forwardingExtra*grandTot/10000).toFixed(2)})
+                
+                `}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -555,7 +586,9 @@ useEffect(()=>{
                     Freight
                 </th>
                 <td className="px-6 py-4">
-                {freight_insurance=='I'?'Inclusive':'Extra'} - {freight_insurance_val}
+                {freight_insurance=='I'?'Inclusive':'Extra'} -{freight_extra}% {freight_insurance_extra_val}
+{/* {(grandTot * freight_insurance_extra_val/100).toFixed(2)} */}
+                (CGST-{(freight_cgst*freight_insurance_extra_val/100).toFixed(2)} SGST-{(freight_sgst*freight_insurance_extra_val/100).toFixed(2)} IGST-{(freight_igst*freight_insurance_extra_val/100).toFixed(2)})
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -563,7 +596,12 @@ useEffect(()=>{
                     Insurance
                 </th>
                 <td className="px-6 py-4">
-                {insurance=='Y'?insurance_val:'No'} 
+                {insurance=='Y'?`${insurance_val}${ins_extra}% ${ins_extra_val} 
+                (CGST-${(ins_cgst * ins_extra_val/100).toFixed(2)} SGST ${(ins_sgst * ins_extra_val/100).toFixed(2)} IGST ${(ins_igst *ins_extra_val/100).toFixed(2)})`
+                
+                :'N/A'} 
+
+{/* (CGST-{(freight_cgst*freight_insurance_val/100).toFixed(2)} SGST-{(freight_sgst*freight_insurance_val/100).toFixed(2)} IGST-{(freight_igst*freight_insurance_val/100).toFixed(2)}) */}
                 </td>
             </tr>
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">

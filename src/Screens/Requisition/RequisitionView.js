@@ -8,8 +8,12 @@ import { motion } from "framer-motion";
 import nodata from "../../../src/Assets/Images/nodata.png";
 import {
   EditOutlined,
+  InteractionOutlined,
+  PrinterOutlined,
 } from "@ant-design/icons";
 import SkeletonLoading from "../../Components/SkeletonLoading";
+import { Tooltip } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 
 function RequisitionView() {
@@ -64,7 +68,7 @@ function RequisitionView() {
       //   setCopy(res?.data?.msg.filter(e=>e.po_status=='A'));
       //   setPoData(res?.data?.msg.filter(e=>e.po_status=='A'));
       // });
-      axios.post(url + "/api/getMRNPo", { id:0 }).then((res) => {
+      axios.post(url + "/api/get_requisition", { id:0 }).then((res) => {
         console.log(res);
         setLoading(false);
         setCopy(res?.data?.msg);
@@ -78,14 +82,44 @@ function RequisitionView() {
       setPoData(
         copy?.filter(
           (e) =>
-            e?.po_no?.toLowerCase().includes(word?.toLowerCase()) ||
+            e?.req_no?.toLowerCase().includes(word?.toLowerCase()) ||
                       e?.created_by?.toLowerCase().includes(word?.toLowerCase())||
-                      e?.mrn_no?.toLowerCase().includes(word?.toLowerCase())
+                      e?.req_date?.toLowerCase().includes(word?.toLowerCase())
         )
       );
     };
     return (
       <>
+          <div className="flex items-center  justify-end h-14 -mt-[72px] w-auto dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 rounded-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3, type: "just" }}
+            className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0"
+          >
+            <Tooltip title={"Create Vendor Order"}>
+              <Link
+                to={routePaths.REQFORM  + 0}
+                type="submit"
+                className="flex items-center justify-center border-2 border-white border-r-0 text-white bg-green-900 hover:bg-primary-800 text-nowrap rounded-l-md transition ease-in-out  active:scale-90 text-sm p-1 px-2 dark:bg-gray-800 dark:text-white dark:hover:bg-primary-700 focus:outline-none shadow-lg  hover:duration-500 hover:shadow-lg dark:focus:ring-primary-800 ml-2 capitalize"
+              >
+                <InteractionOutlined className="text-sm" /> {"Make a requisition"}
+              </Link>
+            </Tooltip>
+          </motion.div>
+          <motion.button
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.3, type: "just" }}
+            className={
+              "bg-white border-2 border-l-0 text-green-900 font-semibold text-lg rounded-r-full p-0.5 shadow-lg"
+            }
+          >
+            <Tooltip title="Print this table" arrow>
+              <PrinterOutlined />
+            </Tooltip>
+          </motion.button>
+        </div>
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -176,10 +210,10 @@ function RequisitionView() {
                       #
                     </th>
                     <th scope="col" class="p-4">
-                      PO No.
+                      Requisition NO.
                     </th>
                     <th scope="col" class="p-4">
-                      MRN No.
+                      Date.
                     </th>
                   
                     <th scope="col" class="p-4">
@@ -200,14 +234,14 @@ function RequisitionView() {
                         >
                           {item.sl_no}
                         </th>
-                        <td class="px-6 py-4">{item.po_no}</td>
-                        <td class="px-6 py-4">{item.mrn_no}</td>
+                        <td class="px-6 py-4">{item.req_no}</td>
+                        <td class="px-6 py-4">{item.req_date}</td>
                         <td class="px-6 py-4">{item.created_by}</td>
                         <td class="px-3 py-4 flex gap-3">
                         
                           <Link
                             to={
-                              routePaths.REQFORM + item.sl_no +'/'+item.po_no
+                              routePaths.REQFORM + item.sl_no
                             }
                           >
                             <EditOutlined class="text-md text-green-900" />

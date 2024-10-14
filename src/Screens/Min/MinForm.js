@@ -70,7 +70,7 @@ function MinForm() {
       .then((resPO) => {
         setId(resPO?.data?.msg?.filter((e) => e.po_no == po_no)[0]?.sl_no);
         axios
-          .post(url + "/api/getmindel", {
+          .post(url + "/api/item_req_dtls", {      //getmindel
             id: +params.id,
           })
           .then((resItems) => {

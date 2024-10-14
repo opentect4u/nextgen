@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TDInputTemplate from "../TDInputTemplate";
 import VError from "../../Components/VError";
 import { useParams } from "react-router-dom";
+import { Popover, Tag } from "antd";
 function More({ pressNext, pressBack, type,data }) {
   const [insp_flag, setInspFlag] = useState(data.insp_flag?data.insp_flag:"N");
   const [insp, setInsp] = useState(data.insp?data.insp:"");
@@ -10,8 +11,38 @@ function More({ pressNext, pressBack, type,data }) {
   const [mdcc_flag, setMdccFlag] = useState(data.mdcc_flag?data.mdcc_flag:"N");
   const [mdcc, setMdcc] = useState(data.mdcc?data.mdcc:"");
   const [drawingDate, setDrawingDate] = useState(data.drawingDate?data.drawingDate:'');
+  const [mdccDescVal,setMdccDescVal]=useState([])
+  const [inspDescVal,setInspDescVal]=useState([])
+  const [drawDescVal,setDrawDescVal]=useState([])
+  const [popmdccOpen, setmdccPopOpen] = useState(false);
+  const [popinspOpen, setinspPopOpen] = useState(false);
+  const [popdrawOpen, setdrawPopOpen] = useState(false);
+
+
   const params = useParams();
- 
+
+
+  const hidemdcc = () => {
+    setmdccPopOpen(false);
+  };
+
+  const handlemdccOpenChange = (newOpen) => {
+    setmdccPopOpen(newOpen);
+  };
+  const hideinsp = () => {
+    setinspPopOpen(false);
+  };
+
+  const handleinspOpenChange = (newOpen) => {
+    setinspPopOpen(newOpen);
+  };
+  const hidedraw = () => {
+    setdrawPopOpen(false);
+  };
+
+  const handledrawOpenChange = (newOpen) => {
+    setdrawPopOpen(newOpen);
+  };
   const onSubmit = () => {
     console.log(drawingDate);
 
@@ -113,6 +144,32 @@ function More({ pressNext, pressBack, type,data }) {
           
         </div>
         <div  className="flex flex-col sm:col-span-3 gap-3 mt-5"> 
+        {/* <Popover
+            content={
+              <>
+                <ul>
+                  {mdccDescVal?.map((price) => (
+                    <li className="my-2">
+                      <Tag
+                        className="cursor-pointer"
+                        onClick={() => {
+                         setMdcc(price.mdcc)
+                          handlemdccOpenChange(false);
+                        }}
+                      >
+                        {price.mdcc}
+                      </Tag>
+                    </li>
+                  ))}
+                </ul>
+                <a onClick={hidemdcc}>Close</a>
+              </>
+            }
+            title="Do you mean?"
+            trigger="click"
+            open={popmdccOpen}
+            onOpenChange={handlemdccOpenChange}
+          > */}
         {mdcc_flag == "Y" && (
             <TDInputTemplate
               placeholder="MDCC Scope"
@@ -129,6 +186,33 @@ function More({ pressNext, pressBack, type,data }) {
           {mdcc_flag == "Y" && !mdcc && (
             <VError title={"MDCC scope is required"} />
           )} 
+          {/* </Popover> */}
+          {/* <Popover
+            content={
+              <>
+                <ul>
+                  {inspDescVal?.map((price) => (
+                    <li className="my-2">
+                      <Tag
+                        className="cursor-pointer"
+                        onClick={() => {
+                         setInsp(price.insp)
+                          handleinspOpenChange(false);
+                        }}
+                      >
+                        {price.insp}
+                      </Tag>
+                    </li>
+                  ))}
+                </ul>
+                <a onClick={hideinsp}>Close</a>
+              </>
+            }
+            title="Do you mean?"
+            trigger="click"
+            open={popinspOpen}
+            onOpenChange={handleinspOpenChange}
+          > */}
          {insp_flag == "Y" && (
             <TDInputTemplate
               placeholder="Inspection Scope"
@@ -145,6 +229,7 @@ function More({ pressNext, pressBack, type,data }) {
           {insp_flag == "Y" && !insp && (
             <VError title={"Inspection scope is required"} />
           )}
+          {/* </Popover> */}
         {drawing_flag == "Y" && (
             <>
               <TDInputTemplate

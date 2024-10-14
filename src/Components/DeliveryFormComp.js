@@ -16,11 +16,13 @@ import {
   FilePdfOutlined,
   FileWordOutlined,
   LoadingOutlined,
+  MinusOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import DialogBox from "../Components/DialogBox";
 import Viewdetails from "../Components/Viewdetails";
-import { Divider, Spin, Tag } from "antd";
+import { Button, Divider, Spin, Tag } from "antd";
 import { Message } from "./Message";
 import { Checkbox, Col, Row } from "antd";
 import moment from "moment/moment";
@@ -30,6 +32,8 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
   const [loading, setLoading] = useState(false);
   const [itemForm, setItemForm] = useState([]);
   const [itemList, setItemList] = useState([]);
+  const [mrnList,setMrnList]=useState([])
+  const [mrnDetails,setMrnDetails]=useState([])
   const navigate = useNavigate();
   const [flag1, setFlag] = useState(4);
   const [id, setId] = useState();
@@ -42,6 +46,8 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
   const [inv_dt, setInvoiceDt] = useState("");
   const [lr_no, setLrNo] = useState("");
   const [waybill, setWayBill] = useState("");
+  const [inv_el,setInvEl]=useState("")
+  // const [invList,setInvList]=useState([{sl:0,invoice:'',inv_dt:'',lr_no:'',waybill:''}])
   const [doc, setDoc] = useState("");
   const [itemInfo, setItemInfo] = useState("");
   const [mrn_no, setMrnNo] = useState("");
@@ -61,6 +67,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
   const [isError,setIsError]=useState([])
   const [zeroError,setZeroError]=useState(0)
   const [project_id,setProjectId]=useState()
+  const [received_log,setReceivedLod]=useState([])
   // const []
 
   const onChangeIc = (e) => {
@@ -79,47 +86,30 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
     if (e.target.name == "ot") setOt(e.target.checked);
     if (e.target.name == "con") setCon(e.target.checked);
   };
+  useEffect(()=>{
+    axios.post(url+'/api/get_mrn_list',{last_req_id:params.po_no}).then(res=>{
+      console.log(res)
+      setMrnDetails(res?.data?.msg)
+      
+      for(let i of res?.data?.msg){
+        mrnList.push({
+          name:i.invoice,
+          code:i.invoice
+        })
+      }
+    })
+  },[])
+  const getMrnLog=()=>{
+    axios.post(url+'/api/get_received_items',{invoice:inv_el,id:params.id}).then(res=>{
+      console.log(res)
+      setItemInfo(res?.data?.msg)
+      setVisible(true);
+
+    })
+  }
   useEffect(() => {
     getItemInfo(params.po_no);
-    axios.post(url + "/api/getInvoice", { id: params.po_no }).then((res) => {
-      console.log(res);
-      setInvoice(res?.data.msg[0]?.invoice || "");
-      setInvoiceDt(res?.data.msg[0]?.invoice_dt || "");
-      setLrNo(res?.data.msg[0]?.lr_no || "");
-      setWayBill(res?.data.msg[0]?.waybill || "");
-      setIc(res?.data.msg[0]?.ic == "Y" ? true : false);
-      setOg(res?.data.msg[0]?.og == "Y" ? true : false);
-      setDc(res?.data.msg[0]?.dc == "Y" ? true : false);
-      setLr(res?.data.msg[0]?.lr == "Y" ? true : false);
-      setWb(res?.data.msg[0]?.wb == "Y" ? true : false);
-      setPl(res?.data.msg[0]?.pl == "Y" ? true : false);
-      setOm(res?.data.msg[0]?.om == "Y" ? true : false);
-      setOmManual(res?.data.msg[0]?.om_manual == "Y" ? true : false);
-      setWs(res?.data.msg[0]?.ws == "Y" ? true : false);
-      setTc(res?.data.msg[0]?.tc == "Y" ? true : false);
-      setWc(res?.data.msg[0]?.wc == "Y" ? true : false);
-      setOt(res?.data.msg[0]?.ot == "Y" ? true : false);
-      setOtDesc(res?.data.msg[0]?.ot_desc);
-      setMrnNo(res?.data.msg[0]?.mrn_no);
-      setCon(res?.data.msg[0]?.confirm=='Y'?true:false);
-      if(!res?.data.msg[0]?.mrn_no){
-       
-        setZeroError(1)
-      }
-      else{setZeroError(0)}
-    });
-    axios
-      .post(url + "/api/getdeliverydoc", { po_no: params.po_no })
-      .then((resDoc) => {
-        console.log(resDoc);
-        for (let i of resDoc?.data?.msg) {
-          fileList.push({
-            sl_no: i.sl_no,
-            doc: i.doc,
-          });
-        }
-        console.log(fileList);
-      });
+  
   }, []);
 
   const deleteItem = () => {
@@ -179,6 +169,8 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                 rc_qty: i.rc_qty,
                 rc_by: i.created_by,
                 rc_at: i.created_at,
+                mrn_no:i.mrn_no,
+                invoice:i.invoice
               });
             }
           })
@@ -213,8 +205,6 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
         setItemForm(itemForm);
         console.log(itemForm,isError);
       });
-      
-
   };
  
   const handleDtChange = (index, event) => {
@@ -248,6 +238,42 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
       err+=i.flag
     return err
   }
+  useEffect(()=>{
+     console.log(mrnDetails.filter(e=>e.invoice==inv_el))
+     setInvoice(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.invoice || "");
+      setInvoiceDt(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.invoice_dt || "");
+      setLrNo(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.lr_no || "");
+      setWayBill(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.waybill || "");
+      setIc(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.ic == "Y" ? true : false);
+      setOg(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.og == "Y" ? true : false);
+      setDc(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.dc == "Y" ? true : false);
+      setLr(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.lr == "Y" ? true : false);
+      setWb(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.wb == "Y" ? true : false);
+      setPl(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.pl == "Y" ? true : false);
+      setOm(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.om == "Y" ? true : false);
+      setOmManual(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.om_manual == "Y" ? true : false);
+      setWs(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.ws == "Y" ? true : false);
+      setTc(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.tc == "Y" ? true : false);
+      setWc(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.wc == "Y" ? true : false);
+      setOt(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.ot == "Y" ? true : false);
+      setOtDesc(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.ot_desc);
+      setMrnNo(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.mrn_no);
+      setCon(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.confirm=='Y'?true:false);
+    fileList.length=0
+
+      axios
+        .post(url + "/api/getdeliverydoc", { po_no: inv_el })
+        .then((resDoc) => {
+          console.log(resDoc);
+          for (let i of resDoc?.data?.msg) {
+            fileList.push({
+              sl_no: i.sl_no,
+              doc: i.doc,
+            });
+          }
+          console.log(fileList);
+        });
+  },[inv_el])
   const onsubmit = () => {
     onSubmit({
       po_no: params.po_no,
@@ -258,7 +284,6 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
       doc1: doc,
       invoice_dt: inv_dt,
       waybill: waybill,
-      project_id:project_id,
       ic: ic,
       og: og,
       dc: dc,
@@ -310,13 +335,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
       >
         <div className="grid grid-cols-12 gap-2">
           <div className={"w-full col-span-12 bg-white p-6 rounded-2xl"}>
-            {mrn_no && (
-              <div className="sm:col-span-12 flex justify-end">
-                <Tag className="text-lg" color="#eb8d00">
-                  {mrn_no}
-                </Tag>
-              </div>
-            )}
+          
 
             <div className="grid gap-4 sm:grid-cols-12 sm:gap-6">
               <div className="sm:col-span-12">
@@ -338,29 +357,64 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                         setVisible(true);
                       }}
                     />
-                    {/* {itemList.length > 0 && (
-                      <a
-                        className="my-2"
-                        onClick={() => {
-                          setFlag(15);
-                          setVisible(true);
-                        }}
-                      >
-                        <Tag color="#4FB477">Previous record(s)</Tag>
-                      </a>
-                    )} */}
+                 
                   </div>
                 )}
-              </div>
 
+              </div>
+              {mrnList.length>0 &&
+              <div  className="sm:col-span-12">
+                                  <TDInputTemplate
+                                    placeholder="Select invoice"
+                                    type="text"
+                                    name="inv_el"
+                                    label="Invoice"
+                                    data={mrnList}
+                                    formControlName={inv_el}
+                                    handleChange={(event) =>
+                                     setInvEl(event.target.value)
+                                    }
+                                    mode={2}
+                                  />
+                                {inv_el!='' && inv_el!='Select invoice' &&    <span
+                                  scope="row"
+                                  className=" w-1/6 py-2 flex justify-between gap-10 items-center text-gray-900 whitespace-nowrap dark:text-white"
+                                >
+                                 
+                                  <a
+                                    onClick={() => {
+                                      setFlag(16);
+                                      // setItemInfo(
+                                      //   itemList.filter(
+                                      //     (e) => e.sl_no == item.sl_no
+                                      //   )
+                                      // );
+                                      getMrnLog()
+                                      
+                                    }}
+                                  >
+                                    <Tag color="#4FB477">Items under this invoice</Tag>
+                                  </a>
+                                </span>
+}
+                                </div>
+                                
+}
+{mrn_no && (
+              <div className="sm:col-span-12 flex justify-end">
+                <Tag className="text-lg" color="#eb8d00">
+                  {mrn_no}
+                </Tag>
+              </div>
+            )}
               <table className="w-full border-separate border border-[#C4F1BE] overflow-x-scroll text-sm text-left rtl:text-right shadow-lg text-gray-500 dark:text-gray-400 sm:col-span-12">
-                <thead className="text-xs bg-[#C4F1BE] font-bold uppercase text-green-900 dark:bg-gray-700 dark:text-gray-400">
+              <thead className="text-xs bg-[#C4F1BE] font-bold uppercase text-green-900 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-6 py-3 w-1/4 font-bold">
-                      Invoice No.
+                      Invoice No. <span className="text-xs text-red-600">*</span>
                     </th>
                     <th scope="col" className="px-6 py-3 w-1/4 font-bold">
-                      Invoice Date
+                      Invoice Date  <span className="text-xs text-red-600">*</span>
                     </th>
                     <th scope="col" className="px-6 py-3 w-1/4 font-bold">
                       LR No.
@@ -371,7 +425,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="bg-[#DDEAE0] border-b-2 border-white my-3 font-bold dark:bg-gray-800 dark:border-gray-700">
+                  <tr className="bg-[#DDEAE0]  border-b-2 border-white my-3 font-bold dark:bg-gray-800 dark:border-gray-700">
                     <th
                       scope="row"
                       className="px-4 w-1/4 py-4  text-gray-900 whitespace-nowrap dark:text-white"
@@ -382,8 +436,10 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                         name="invoice"
                         formControlName={invoice}
                         handleChange={(txt) => setInvoice(txt.target.value)}
+                        disabled={inv_el!=''&&inv_el!='Select invoice'}
                         mode={1}
                       />
+                   
                     </th>
                     <td className="px-6 py-4 w-1/4">
                       <TDInputTemplate
@@ -391,7 +447,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                         type="date"
                         name="inv_dt"
                         formControlName={inv_dt}
-                        handleChange={(txt) => setInvoiceDt(txt.target.value)}
+                        handleChange={(txt)=>setInvoiceDt(txt.target.value)}
                         min={moment(
                           new Date(
                             new Date().setFullYear(new Date().getFullYear() - 3)
@@ -400,6 +456,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                         max={moment(new Date()).format("yyyy-MM-DD")} //may need to change
                         mode={1}
                       />
+                     
                     </td>
                     <td className="px-6 py-4 w-1/4">
                       <TDInputTemplate
@@ -407,7 +464,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                         type="text"
                         name="lr_no"
                         formControlName={lr_no}
-                        handleChange={(txt) => setLrNo(txt.target.value)}
+                        handleChange={(txt)=>setLrNo(txt.target.value)}
                         mode={1}
                       />
                     </td>
@@ -417,12 +474,13 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                         type="text"
                         name="waybill"
                         formControlName={waybill}
-                        handleChange={(txt) => setWayBill(txt.target.value)}
+                        handleChange={(txt)=>setWayBill(txt.target.value)}
                         mode={1}
                       />
                     </td>
                   </tr>
                 </tbody>
+
               </table>
               <div className="bg-[#C4F1BE] px-6 py-3  sm:col-span-12 text-green-900 font-bold text-xs uppercase">
                 Documents
@@ -590,8 +648,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                               <CloseCircleFilled className="text-[#92140C]" />
                             )}{" "}
                           </span>
-                          {/* 
-                          <Tag color={rowSum(itemList.filter(e=>e.sl_no==item.item_id),item.quantity).flag==1?"#014737":rowSum(itemList.filter(e=>e.sl_no==item.item_id),item.quantity).sum>0?'#eb8d00':'#92140C'}> {item.name} </Tag> */}
+                       
                         </Divider>
                       )}
                       <table className="w-full border-separate border border-[#C4F1BE] overflow-x-scroll text-sm text-left rtl:text-right shadow-lg text-gray-500 dark:text-gray-400">
@@ -881,9 +938,9 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                               </p>:null} 
             <div className="flex justify-center items-center gap-4">
              
-           
+            {/* {!con } {errorSum(isError)} {zeroError} { invoice } {inv_dt}  */}
               <button
-                disabled={!con || errorSum(isError) ||zeroError}
+                disabled={!con || errorSum(isError) ||zeroError || !invoice || !inv_dt} 
                 onClick={() => onsubmit()}
                 className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
               >
@@ -902,7 +959,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
         onPress={() => setVisible(false)}
         onDelete={() => deleteItem()}
         confirm={(value)=>{if(value) {setVisible(false);
-        
+        window.location.reload()
         }}}
       />
     </section>

@@ -513,7 +513,7 @@ const router = createBrowserRouter([
                 element: <RequisitionView />,
               },
               {
-                path: "reqForm/:id/:po_no",
+                path: "reqForm/:id",
                 element: <RequisitionForm />,
               },
             

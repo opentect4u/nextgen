@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Popconfirm, Popover, Tabs, Tooltip } from 'antd';
+import { Popconfirm, Popover, Spin, Tabs, Tooltip } from 'antd';
 import ProfileInfo from './ProfileInfo';
 import PasswordComp from './PasswordComp';
 import { routePaths } from '../Assets/Data/Routes';
@@ -15,9 +15,8 @@ import PoPreview from './Steps/PoPreview';
 import TDInputTemplate from './TDInputTemplate';
 import AmendPreview from './AmendPreview';
 import { Timeline } from 'antd';
-import { ClockCircleOutlined, DeleteOutlined, InfoCircleOutlined, InfoOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import { PanoramaSharp } from '@mui/icons-material';
 import { Message } from './Message';
 import { url } from '../Address/BaseUrl';
 const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) => {
@@ -27,6 +26,7 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
   const [item_qty,setItemQty]=useState('')
   const [item_sl,setItemSl]=useState('')
   const [item_remarks,setItemRemarks]=useState('')
+  const [loading,setLoading]=useState(false)
   useEffect(()=>{setPoNo('')},[])
   const params=useParams()
   console.log(data)
@@ -58,9 +58,11 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
       children:
       <>
       <span>Received {data[i].rc_qty} unit(s) by {data[i].rc_by}</span>
-      <div className='my-2 p-2 bg-gray-200 rounded-lg flex-col justify-center items-center'>
-      <span>Remarks: {data[i].remarks}</span> <br/>
-      <span>Serial No.: {data[i].sl}</span>
+      <div className='my-2 p-2 bg-gray-200 rounded-lg flex-col justify-center items-center shadow-lg'>
+      <p className='font-bold text-green-900 flex justify-center items-center'>Remarks: {data[i].remarks}</p>
+      <p className='font-bold text-green-900 flex justify-center items-center'>Serial No.: {data[i].sl}</p>
+      <p className='font-bold text-green-900 flex justify-center items-center'>MRN No.: {data[i].mrn_no}</p>
+      <p className='font-bold text-green-900 flex justify-center items-center'>Invoice: {data[i].invoice}</p>
       </div>
       </>
        ,
@@ -74,7 +76,9 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
     cancelText="No"
     onConfirm={()=>{
       {
+        setLoading(true)
         axios.post(url+'/api/deleteitemdel',{po_no:params.po_no,user:localStorage.getItem('email'),item:data[i].item_sl}).then(res=>{
+          setLoading(false)
           if(res?.data?.suc>0)
             {
               Message('success',res?.data?.msg)
@@ -89,7 +93,11 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
 
 
           }
-        })
+        }).catch((err) => {
+          console.log(err);
+          setLoading(false);
+          navigate("/error" + "/" + err.code + "/" + err.message);
+        });
       }
 
     }}
@@ -105,6 +113,7 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
     })
   }
  }
+ 
   return (
       <Dialog  closable={flag!=3?true:false} header={<div className={flag!=1?'text-green-900  font-bold':'text-green-900  font-bold w-20'}>{flag!=2 && flag!=5  && flag!=6 && flag!=7 && flag!=8 && flag!=9 && flag!=10  && flag!=11?'Warning!':flag!=10?'Information':'Preview'}</div>} visible={visible} maximizable style={{
          width: '50vw',
@@ -237,88 +246,115 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
         {flag==15 && 
         
         <>
-          {/* {data.length > 0 &&
-           data.map((item)=>(
-                    <table className="w-full border-separate border border-[#C4F1BE] overflow-x-scroll text-sm text-left rtl:text-right shadow-lg text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs bg-[#C4F1BE] font-bold uppercase text-green-900 dark:bg-gray-700 dark:text-gray-400">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 w-1/4 font-bold"
-                        >
-                          Item
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 w-1/4 font-bold"
-                        >
-                          Ordered Quantity
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 w-1/4 font-bold"
-                        >
-                          Received Quantity
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 w-1/4 font-bold"
-                        >
-                          SL No.
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 w-1/4 font-bold"
-                        >
-                          Remarks
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="bg-[#DDEAE0] border-b-2 border-white my-3 font-bold dark:bg-gray-800 dark:border-gray-700">
-                        <th
-                          scope="row"
-                          className="px-4 w-1/4 py-4  text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          {item.name}
-                        </th>
-                        <th
-                          scope="row"
-                          className="px-4 w-1/4 py-4  text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                         {item.quantity}
-
-                        </th>
-
-                        <td className="px-6 py-4 w-1/4">
-                          {item.rc_qty}
-                           
-                        
-                        </td>
-                        <td className="px-6 py-4 w-1/4">
-                          {item.sl}
-                           
-                        </td>
-                        <td className="px-6 py-4 w-1/4">
-                         {item.remarks}
-                           
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-          )
-                  )
-                  
-                  
-                  }
-         */}
+          <Spin
+        indicator={<LoadingOutlined spin />}
+        size="large"
+        className="text-green-900 dark:text-gray-400"
+        spinning={loading}
+      >
           <Timeline
           className='my-2'
     mode="right"
     items={timeLineItems}
   />
-        
+      </Spin>  
         </>}
+        {flag==16 && 
+        
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-white uppercase bg-green-900 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Item
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Received quantity
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Sl No.
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Remarks
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Log
+                </th>
+              
+            </tr>
+        </thead>
+        <tbody>
+        {data.length>0 && data?.map((item)=>
+            <tr class="odd:bg-white text-xs odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {item.prod_name}
+                </th>
+                
+                <td class="px-6 py-4">
+                   {item.rc_qty}
+                </td>
+                <td class="px-6 py-4">
+                   {item.sl}
+                </td>
+               
+                <td class="px-6 py-4">
+                   {item.remarks}
+                </td>
+                <td class="px-6 py-4">
+                   
+                   {'Received by- '+item.created_by+' on '+item.created_at?.split('T')[0]+' at '+item.created_at?.split('T')[1]}
+                </td>
+              
+            </tr>
+)}
+          
+        </tbody>
+    </table>
+</div>
+        }
+          {flag==17 && 
+        
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-white uppercase bg-green-900 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Item
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    PO
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Received quantity
+                </th>
+               
+               
+              
+            </tr>
+        </thead>
+        <tbody>
+        {data.length>0 && data?.map((item)=>
+            <tr class="odd:bg-white text-xs odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {item.prod_name}
+                </th>
+                <td class="px-6 py-4">
+                   {item.po_no}
+                </td>
+                <td class="px-6 py-4">
+                   {item.rc_qty}
+                </td>
+              
+               
+             
+              
+            </tr>
+)}
+          
+        </tbody>
+    </table>
+</div>
+        }
       </Dialog>
   );
 };

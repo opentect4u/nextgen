@@ -27,7 +27,6 @@ function ToCustomerForm() {
           invoice_dt:values.invoice_dt,
           lr_no:values.lr_no,
           waybill:values.waybill,
-          project_id:values.project_id,
           ic:values.ic?'Y':'N',
           og:values.og?'Y':'N',
           dc:values.dc?'Y':'N',
@@ -46,6 +45,7 @@ function ToCustomerForm() {
           console.log(res);
           formData.append("user", localStorage.getItem("email"));
           formData.append("po_no", values.po_no);
+          formData.append('invoice',values.invoice)
           if (values.doc1) formData.append("docs1", values.doc1);
           axios
             .post(url + "/api/add_delivery_files", formData)

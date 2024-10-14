@@ -57,42 +57,6 @@
 .p-stepper-separator{
   background-color: #1F2937
 }
-/* .p-stepper-action{ */
-  /* background-color: #1F2937 */
-/* } */
-
-/* .p-dropdown{
-  background: #1F2937 !important;
-  color:white
-}
-.p-dropdown-items-wrapper{
-  background: #1F2937 !important;
-   color:white
-}
-.p-dropdown-items{
-  background: #1F2937 !important;
-   color:white
-}*/
-/* .p-dialog-content{
-   background: #347865 !important;
-   color:white
-  }
-.p-dialog-header{
-  background: #347865 !important;
-
-}
-.p-dialog-header-close{
-  color:white
-}
-.p-dialog-header-maximize{
-  color:white
-  
-}  */
-/* * {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-} */
 
 .p-stepper-number{
   background-color: #eb8d00;
@@ -105,6 +69,11 @@
 .p-blockui{
   border-radius: 10px;
   
+}
+.p-scrollpanel-bar{
+  background-color: #eb8d00;
+  width: 15px;
+  border-radius: 24px;
 }
 
 

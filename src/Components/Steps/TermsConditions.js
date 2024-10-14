@@ -18,13 +18,15 @@ function TermsConditions({ pressNext, pressBack, data }) {
   const [cgstList, setcGstList] = useState([]);
   const [sgstList, setsGstList] = useState([]);
   const [igstList, setiGstList] = useState([]);
-  const [pricePlace,setPricePlace]=useState([])
-  const [freightdesc,setFreightDesc]=useState([])
-  const [mcdesc,setmcDesc]=useState([])
-  const [insdesc,setInsDesc]=useState([])
-  const [tcdesc,settcDesc]=useState([])
-  const [omdesc,setomDesc]=useState([])
-  const [oidesc,setoiDesc]=useState([])
+  const [pricePlace, setPricePlace] = useState([]);
+  const [freightdesc, setFreightDesc] = useState([]);
+  const [mcdesc, setmcDesc] = useState([]);
+  const [insdesc, setInsDesc] = useState([]);
+  const [tcdesc, settcDesc] = useState([]);
+  const [omdesc, setomDesc] = useState([]);
+  const [oidesc, setoiDesc] = useState([]);
+  const [ldothers, setldothers] = useState([]);
+  const [ldval, setldval] = useState([]);
   const [popOpen, setPopOpen] = useState(false);
   const [popfrOpen, setfrPopOpen] = useState(false);
   const [popinsOpen, setinsPopOpen] = useState(false);
@@ -32,7 +34,9 @@ function TermsConditions({ pressNext, pressBack, data }) {
   const [popomOpen, setomPopOpen] = useState(false);
   const [popoiOpen, setoiPopOpen] = useState(false);
   const [popmcOpen, setmcPopOpen] = useState(false);
-  console.log(data)
+  const [popldOthersOpen, setldOthersPopOpen] = useState(false);
+  const [popldvalOpen, setldvalPopOpen] = useState(false);
+  console.log(data);
   const hide = () => {
     setPopOpen(false);
   };
@@ -50,7 +54,18 @@ function TermsConditions({ pressNext, pressBack, data }) {
   const hideins = () => {
     setinsPopOpen(false);
   };
-
+  const handleldothersOpenChange = (newOpen) => {
+    setldOthersPopOpen(newOpen);
+  };
+  const hideldothers = () => {
+    setldOthersPopOpen(false);
+  };
+  const handleldvalOpenChange = (newOpen) => {
+    setldvalPopOpen(newOpen);
+  };
+  const hideldval = () => {
+    setldvalPopOpen(false);
+  };
   const handleinsOpenChange = (newOpen) => {
     setinsPopOpen(newOpen);
   };
@@ -101,14 +116,13 @@ function TermsConditions({ pressNext, pressBack, data }) {
     if (JSON.parse(localStorage.getItem("itemList"))) {
       for (let item of JSON.parse(localStorage.getItem("itemList"))) {
         console.log(item);
-        tot += (item.qty*item.unit_price);
+        tot += item.qty * item.unit_price;
       }
     }
     console.log(tot);
     setGrand(tot);
   }, []);
- 
-  
+
   useEffect(() => {
     axios.post(url + "/api/getgst", { id: 0 }).then((resGst) => {
       setGstList(resGst?.data?.msg);
@@ -145,7 +159,9 @@ function TermsConditions({ pressNext, pressBack, data }) {
     });
   }, []);
   const params = useParams();
-  useEffect(() => {console.log(data.ins_currency)}, [data]);
+  useEffect(() => {
+    console.log(data.ins_currency);
+  }, [data]);
   const initialValues = {
     price_basis_flag: data.price_basis_flag ? data.price_basis_flag : "",
     price_basis_desc: data.price_basis_desc ? data.price_basis_desc : "",
@@ -169,33 +185,20 @@ function TermsConditions({ pressNext, pressBack, data }) {
     freight_insurance_val: data.freight_insurance
       ? data.freight_insurance_val
       : "",
-    freight_extra: data.freight_extra
-      ? data.freight_extra
-      : "",
-    freight_extra_val: data.freight_extra_val
-      ? data.freight_extra_val
-      : "",
-    freight_currency: data.freight_currency
-      ? data.freight_currency
-      : "",
-    freight_cgst: data.freight_cgst
-      ? data.freight_cgst
-      : "",
-    freight_sgst: data.freight_sgst
-      ? data.freight_sgst
-      : "",
-      freight_igst: data.freight_igst
-      ? data.freight_igst
-      : "",
+    freight_extra: data.freight_extra ? data.freight_extra : "",
+    freight_extra_val: data.freight_extra_val ? data.freight_extra_val : "",
+    freight_currency: data.freight_currency ? data.freight_currency : "",
+    freight_cgst: data.freight_cgst ? data.freight_cgst : "",
+    freight_sgst: data.freight_sgst ? data.freight_sgst : "",
+    freight_igst: data.freight_igst ? data.freight_igst : "",
     insurance: data.insurance ? data.insurance : "",
     insurance_val: data.insurance_val ? data.insurance_val : "",
-    ins_extra:data.ins_extra ? data.ins_extra : "",
-    ins_extra_val:data.ins_extra_val?data.ins_extra_val:"",
-    ins_currency:data.ins_currency?data.ins_currency:"",
-    ins_cgst:data.ins_cgst?data.ins_cgst:"",
-    ins_sgst:data.ins_sgst?data.ins_sgst:"",
-    ins_igst:data.ins_igst?data.ins_igst:"",
-
+    ins_extra: data.ins_extra ? data.ins_extra : "",
+    ins_extra_val: data.ins_extra_val ? data.ins_extra_val : "",
+    ins_currency: data.ins_currency ? data.ins_currency : "",
+    ins_cgst: data.ins_cgst ? data.ins_cgst : "",
+    ins_sgst: data.ins_sgst ? data.ins_sgst : "",
+    ins_igst: data.ins_igst ? data.ins_igst : "",
 
     test_certificate: data.test_certificate ? data.test_certificate : "",
     test_certificate_desc: data.test_certificate_desc
@@ -245,7 +248,10 @@ function TermsConditions({ pressNext, pressBack, data }) {
     }),
     packing_forwarding_extra_val: Yup.string().when("packing_forwarding_val", {
       is: "E",
-      then: () => Yup.string().required('Required').matches(/^[0-9.]+$/, "Invalid value"),
+      then: () =>
+        Yup.string()
+          .required("Required")
+          .matches(/^[0-9.]+$/, "Invalid value"),
       otherwise: () => Yup.string(),
     }),
 
@@ -260,7 +266,10 @@ function TermsConditions({ pressNext, pressBack, data }) {
     }),
     freight_extra_val: Yup.string().when("freight_insurance", {
       is: "E",
-      then: () => Yup.string().required('Required').matches(/^[0-9.]+$/, "Invalid value"),
+      then: () =>
+        Yup.string()
+          .required("Required")
+          .matches(/^[0-9.]+$/, "Invalid value"),
       otherwise: () => Yup.string(),
     }),
     insurance: Yup.string().required("Insurance is required"),
@@ -271,17 +280,21 @@ function TermsConditions({ pressNext, pressBack, data }) {
     }),
     ins_extra: Yup.string().when("insurance", {
       is: "Y",
-      then: () => Yup.number().required("Required").min(0.0000000000000001, "Please enter a non-zero positive input!"),
-      otherwise: () => Yup.string()}),
+      then: () =>
+        Yup.number()
+          .required("Required")
+          .min(0.0000000000000001, "Please enter a non-zero positive input!"),
+      otherwise: () => Yup.string(),
+    }),
     ins_extra_val: Yup.string().when("insurance", {
-        is: "Y",
-        then: () => Yup.string().required("Required"),
-        otherwise: () => Yup.string()}),
+      is: "Y",
+      then: () => Yup.string().required("Required"),
+      otherwise: () => Yup.string(),
+    }),
     ins_currency: Yup.string().when("insurance", {
       is: "Y",
       then: () => Yup.string().required("Required"),
-      otherwise: () => Yup.string()
-    
+      otherwise: () => Yup.string(),
     }),
     // ins_currency:data.insurace?data.ins_currency:"",
     // ins_cgst:data.insurance?data.ins_cgst:"",
@@ -294,14 +307,14 @@ function TermsConditions({ pressNext, pressBack, data }) {
     //   then: () => Yup.string().required("Test Certificate description is required"),
     //   otherwise: () => Yup.string()}),
     pf_currency: Yup.string().when("packing_forwarding_val", {
-    is: "E",
-    then:()=>Yup.string().required('Currency is required'),
-    otherwise:()=>Yup.string()
+      is: "E",
+      then: () => Yup.string().required("Currency is required"),
+      otherwise: () => Yup.string(),
     }),
     freight_currency: Yup.string().when("freight_insurance", {
       is: "E",
-    then:()=>Yup.string().required('Currency is required'),
-    otherwise: () => Yup.string(),
+      then: () => Yup.string().required("Currency is required"),
+      otherwise: () => Yup.string(),
     }),
     ld_applicable_date: Yup.string().required("LD applicable date is required"),
     others_ld: Yup.string().when("ld_applicable_date", {
@@ -384,51 +397,102 @@ function TermsConditions({ pressNext, pressBack, data }) {
     initialValues: +params.id > 0 ? formValues : initialValues,
     validate: (values) => {
       const errors = {};
-       console.log(values)
-      if (values.packing_forwarding_val === 'E' && values.pf_currency=='I') {
+      console.log(values);
+      if (values.packing_forwarding_val === "E" && values.pf_currency == "I") {
         // If "extra" is selected, enforce either (CGST + SGST) or IGST
-        if ((!values.pf_cgst || values.pf_cgst=='CGST') && (!values.pf_sgst || values.pf_sgst=='SGST') && (!values.pf_igst||values.pf_igst=='IGST')) {
-          errors.pf_cgst = 'Either CGST + SGST or IGST is required';
-          errors.pf_sgst = 'Either CGST + SGST or IGST is required';
-          errors.pf_igst = 'Either CGST + SGST or IGST is required';
-        } else if ((values.pf_cgst && values.pf_cgst!='CGST' && (!values.pf_sgst||values.pf_sgst=='SGST')) || ((!values.pf_cgst || values.pf_cgst=='CGST') && values.pf_sgst && values.pf_sgst!='SGST')) {
-          errors.pf_cgst = 'Both CGST and SGST must be filled together';
-          errors.pf_sgst = 'Both CGST and SGST must be filled together';
-        } else if (values.pf_igst && values.pf_igst!='IGST' && ((values.pf_cgst && values.pf_cgst!='CGST') || (values.pf_sgst && values.pf_sgst!='SGST'))) {
-          errors.pf_igst = 'IGST should be filled alone or leave CGST and SGST empty';
+        if (
+          (!values.pf_cgst || values.pf_cgst == "CGST") &&
+          (!values.pf_sgst || values.pf_sgst == "SGST") &&
+          (!values.pf_igst || values.pf_igst == "IGST")
+        ) {
+          errors.pf_cgst = "Either CGST + SGST or IGST is required";
+          errors.pf_sgst = "Either CGST + SGST or IGST is required";
+          errors.pf_igst = "Either CGST + SGST or IGST is required";
+        } else if (
+          (values.pf_cgst &&
+            values.pf_cgst != "CGST" &&
+            (!values.pf_sgst || values.pf_sgst == "SGST")) ||
+          ((!values.pf_cgst || values.pf_cgst == "CGST") &&
+            values.pf_sgst &&
+            values.pf_sgst != "SGST")
+        ) {
+          errors.pf_cgst = "Both CGST and SGST must be filled together";
+          errors.pf_sgst = "Both CGST and SGST must be filled together";
+        } else if (
+          values.pf_igst &&
+          values.pf_igst != "IGST" &&
+          ((values.pf_cgst && values.pf_cgst != "CGST") ||
+            (values.pf_sgst && values.pf_sgst != "SGST"))
+        ) {
+          errors.pf_igst =
+            "IGST should be filled alone or leave CGST and SGST empty";
         }
       }
-      if (values.freight_insurance === 'E' && values.freight_currency=='I') {
+      if (values.freight_insurance === "E" && values.freight_currency == "I") {
         // If "extra" is selected, enforce either (CGST + SGST) or IGST
-        if ((!values.freight_cgst || values.freight_cgst=='CGST') && (!values.freight_sgst || values.freight_sgst=='SGST') && (!values.freight_igst||values.freight_igst=='IGST')) {
-          errors.freight_cgst = 'Either CGST + SGST or IGST is required';
-          errors.freight_sgst = 'Either CGST + SGST or IGST is required';
-          errors.freight_igst = 'Either CGST + SGST or IGST is required';
-        } else if ((values.freight_cgst && values.freight_cgst!='CGST' && (!values.freight_sgst||values.freight_sgst=='SGST')) || ((!values.freight_cgst || values.freight_cgst=='CGST') && values.freight_sgst && values.freight_sgst!='SGST')) {
-          errors.freight_cgst = 'Both CGST and SGST must be filled together';
-          errors.freight_sgst = 'Both CGST and SGST must be filled together';
-        } else if (values.freight_igst && values.freight_igst!='IGST' && ((values.freight_cgst && values.freight_cgst!='CGST') || (values.freight_sgst && values.freight_sgst!='SGST'))) {
-          errors.freight_igst = 'IGST should be filled alone or leave CGST and SGST empty';
+        if (
+          (!values.freight_cgst || values.freight_cgst == "CGST") &&
+          (!values.freight_sgst || values.freight_sgst == "SGST") &&
+          (!values.freight_igst || values.freight_igst == "IGST")
+        ) {
+          errors.freight_cgst = "Either CGST + SGST or IGST is required";
+          errors.freight_sgst = "Either CGST + SGST or IGST is required";
+          errors.freight_igst = "Either CGST + SGST or IGST is required";
+        } else if (
+          (values.freight_cgst &&
+            values.freight_cgst != "CGST" &&
+            (!values.freight_sgst || values.freight_sgst == "SGST")) ||
+          ((!values.freight_cgst || values.freight_cgst == "CGST") &&
+            values.freight_sgst &&
+            values.freight_sgst != "SGST")
+        ) {
+          errors.freight_cgst = "Both CGST and SGST must be filled together";
+          errors.freight_sgst = "Both CGST and SGST must be filled together";
+        } else if (
+          values.freight_igst &&
+          values.freight_igst != "IGST" &&
+          ((values.freight_cgst && values.freight_cgst != "CGST") ||
+            (values.freight_sgst && values.freight_sgst != "SGST"))
+        ) {
+          errors.freight_igst =
+            "IGST should be filled alone or leave CGST and SGST empty";
         }
       }
-      if (values.insurance === 'Y' && values.ins_currency=='I') {
-        if ((!values.ins_cgst || values.ins_cgst=='CGST') && (!values.ins_sgst || values.ins_sgst=='SGST') && (!values.ins_igst||values.ins_igst=='IGST')) {
-          errors.ins_cgst = 'Either CGST + SGST or IGST is required';
-          errors.ins_sgst = 'Either CGST + SGST or IGST is required';
-          errors.ins_igst = 'Either CGST + SGST or IGST is required';
-        } else if ((values.ins_cgst && values.ins_cgst!='CGST' && (!values.ins_sgst||values.ins_sgst=='SGST')) || ((!values.ins_cgst || values.ins_cgst=='CGST') && values.ins_sgst && values.ins_sgst!='SGST')) {
-          errors.ins_cgst = 'Both CGST and SGST must be filled together';
-          errors.ins_sgst = 'Both CGST and SGST must be filled together';
-        } else if (values.ins_igst && values.ins_igst!='IGST' && ((values.ins_cgst && values.ins_cgst!='CGST') || (values.ins_sgst && values.ins_sgst!='SGST'))) {
-          errors.ins_igst = 'IGST should be filled alone or leave CGST and SGST empty';
+      if (values.insurance === "Y" && values.ins_currency == "I") {
+        if (
+          (!values.ins_cgst || values.ins_cgst == "CGST") &&
+          (!values.ins_sgst || values.ins_sgst == "SGST") &&
+          (!values.ins_igst || values.ins_igst == "IGST")
+        ) {
+          errors.ins_cgst = "Either CGST + SGST or IGST is required";
+          errors.ins_sgst = "Either CGST + SGST or IGST is required";
+          errors.ins_igst = "Either CGST + SGST or IGST is required";
+        } else if (
+          (values.ins_cgst &&
+            values.ins_cgst != "CGST" &&
+            (!values.ins_sgst || values.ins_sgst == "SGST")) ||
+          ((!values.ins_cgst || values.ins_cgst == "CGST") &&
+            values.ins_sgst &&
+            values.ins_sgst != "SGST")
+        ) {
+          errors.ins_cgst = "Both CGST and SGST must be filled together";
+          errors.ins_sgst = "Both CGST and SGST must be filled together";
+        } else if (
+          values.ins_igst &&
+          values.ins_igst != "IGST" &&
+          ((values.ins_cgst && values.ins_cgst != "CGST") ||
+            (values.ins_sgst && values.ins_sgst != "SGST"))
+        ) {
+          errors.ins_igst =
+            "IGST should be filled alone or leave CGST and SGST empty";
         }
       }
-      if(values.duration_val<=0){
-        errors.duration_val="Duration must be >0"
+      if (values.duration_val <= 0) {
+        errors.duration_val = "Duration must be >0";
       }
-      if(values.ld_value>values.po_min_value){
-        errors.ld_value="LD value must be <= Maximum %"
-        errors.po_min_value="LD value must be <= Maximum %"
+      if (values.ld_value > values.po_min_value) {
+        errors.ld_value = "LD value must be <= Maximum %";
+        errors.po_min_value = "LD value must be <= Maximum %";
       }
 
       return errors;
@@ -438,138 +502,172 @@ function TermsConditions({ pressNext, pressBack, data }) {
     validateOnMount: true,
     enableReinitialize: true,
   });
-  const onChangeVal=(e)=>{
-    formik.handleChange(e)
-    formik.setFieldValue('packing_forwarding_extra',((e.target.value/grand_total)*100).toFixed(2))
+  const onChangeVal = (e) => {
+    formik.handleChange(e);
+    formik.setFieldValue(
+      "packing_forwarding_extra",
+      ((e.target.value / grand_total) * 100).toFixed(2)
+    );
     // formik.values.packing_forwarding_extra=(e.target.value/grand_total)*100
-  }
-  const onChangeExtra=(e)=>{
-    formik.handleChange(e)
-    formik.setFieldValue('packing_forwarding_extra_val',((e.target.value*grand_total)/100).toFixed(2))
+  };
+  const onChangeExtra = (e) => {
+    formik.handleChange(e);
+    formik.setFieldValue(
+      "packing_forwarding_extra_val",
+      ((e.target.value * grand_total) / 100).toFixed(2)
+    );
     // formik.values.packing_forwarding_extra_val=(e.target.value*grand_total)/100
-  }
-  const onChangeValFr=(e)=>{
-    formik.handleChange(e)
-    formik.setFieldValue('freight_extra',((e.target.value/grand_total)*100).toFixed(2))
+  };
+  const onChangeValFr = (e) => {
+    formik.handleChange(e);
+    formik.setFieldValue(
+      "freight_extra",
+      ((e.target.value / grand_total) * 100).toFixed(2)
+    );
     // formik.values.packing_forwarding_extra=(e.target.value/grand_total)*100
-  }
-  const onChangeExtraFr=(e)=>{
-    formik.handleChange(e)
-    formik.setFieldValue('freight_extra_val',((e.target.value*grand_total)/100).toFixed(2))
+  };
+  const onChangeExtraFr = (e) => {
+    formik.handleChange(e);
+    formik.setFieldValue(
+      "freight_extra_val",
+      ((e.target.value * grand_total) / 100).toFixed(2)
+    );
     // formik.values.packing_forwarding_extra_val=(e.target.value*grand_total)/100
-  }
-  const onChangePfCurrencyFr=(e)=>{
-    formik.handleChange(e)
-    if(e.target.value!='I'){
-    formik.setFieldValue('freight_cgst','')
-    formik.setFieldValue('freight_sgst','')
-    formik.setFieldValue('freight_igst','')
+  };
+  const onChangePfCurrencyFr = (e) => {
+    formik.handleChange(e);
+    if (e.target.value != "I") {
+      formik.setFieldValue("freight_cgst", "");
+      formik.setFieldValue("freight_sgst", "");
+      formik.setFieldValue("freight_igst", "");
     }
     // formik.values.packing_forwarding_extra_val=(e.target.value*grand_total)/100
-  }
-  const onChangePfCurrency=(e)=>{
-    formik.handleChange(e)
-    if(e.target.value!='I'){
-    formik.setFieldValue('pf_cgst','')
-    formik.setFieldValue('pf_sgst','')
-    formik.setFieldValue('pf_igst','')
+  };
+  const onChangePfCurrency = (e) => {
+    formik.handleChange(e);
+    if (e.target.value != "I") {
+      formik.setFieldValue("pf_cgst", "");
+      formik.setFieldValue("pf_sgst", "");
+      formik.setFieldValue("pf_igst", "");
     }
     // formik.values.packing_forwarding_extra_val=(e.target.value*grand_total)/100
-  }
+  };
 
-  const onChangeValIns=(e)=>{
-    formik.handleChange(e)
-    formik.setFieldValue('ins_extra',((e.target.value/grand_total)*100).toFixed(2))
+  const onChangeValIns = (e) => {
+    formik.handleChange(e);
+    formik.setFieldValue(
+      "ins_extra",
+      ((e.target.value / grand_total) * 100).toFixed(2)
+    );
     // formik.values.packing_forwarding_extra=(e.target.value/grand_total)*100
-  }
-  const onChangeExtraIns=(e)=>{
-    formik.handleChange(e)
-    formik.setFieldValue('ins_extra_val',((e.target.value*grand_total)/100).toFixed(2))
+  };
+  const onChangeExtraIns = (e) => {
+    formik.handleChange(e);
+    formik.setFieldValue(
+      "ins_extra_val",
+      ((e.target.value * grand_total) / 100).toFixed(2)
+    );
     // formik.values.packing_forwarding_extra_val=(e.target.value*grand_total)/100
-  }
-  const onChangePfCurrencyIns=(e)=>{
-    formik.handleChange(e)
-    if(e.target.value!='I'){
-    formik.setFieldValue('ins_cgst','')
-    formik.setFieldValue('ins_sgst','')
-    formik.setFieldValue('ins_igst','')
+  };
+  const onChangePfCurrencyIns = (e) => {
+    formik.handleChange(e);
+    if (e.target.value != "I") {
+      formik.setFieldValue("ins_cgst", "");
+      formik.setFieldValue("ins_sgst", "");
+      formik.setFieldValue("ins_igst", "");
     }
     // formik.values.packing_forwarding_extra_val=(e.target.value*grand_total)/100
-  }
+  };
 
-  const onChangePhrase=(e)=>{
-    formik.handleChange(e)
-    if(e.target.value.length>=3){
-
-    axios.post(url+`/api/get_${e.target.name}`,{wrd:e.target.value.toString().trim()}).then(res=>{
-      console.log(res)
-      if(res.data.msg.length>0){
-      setPricePlace([])
-      setFreightDesc([])
-      setInsDesc([])
-      settcDesc([])
-      setomDesc([])
-      setoiDesc([])
-      setmcDesc([])
-      handleOpenChange(false)
-      handlefrOpenChange(false)
-      handleinsOpenChange(false)
-      handletcOpenChange(false)
-      handleomOpenChange(false)
-      handleoiOpenChange(false)
-      handlemcOpenChange(false)
-      if(e.target.name=='price_basis_desc'){
-      handleOpenChange(true)
-      setPricePlace(res.data.msg)
-      }
-      if(e.target.name=='freight_insurance_val'){
-        handlefrOpenChange(true)
-        setFreightDesc(res.data.msg)
-      }
-      if(e.target.name=='freight_insurance_val'){
-        handlefrOpenChange(true)
-        setFreightDesc(res.data.msg)
-      }
-      if(e.target.name=='insurance_val'){
-        handleinsOpenChange(true)
-        setInsDesc(res.data.msg)
-      }
-      if(e.target.name=='test_certificate_desc'){
-        handletcOpenChange(true)
-        settcDesc(res.data.msg)
-      }
-      if(e.target.name=='om_manual_desc'){
-        handleomOpenChange(true)
-        setomDesc(res.data.msg)
-      }
-      if(e.target.name=='oi_desc'){
-        handleoiOpenChange(true)
-        setoiDesc(res.data.msg)
-      }
-      if(e.target.name=='manufacture_clearance_desc'){
-        handlemcOpenChange(true)
-        setmcDesc(res.data.msg)
-      }
-      }
-      else{
-      handleOpenChange(false)
-      handlefrOpenChange(false)
-      handleinsOpenChange(false)
-      handletcOpenChange(false)
-      handleomOpenChange(false)
-      handleoiOpenChange(false)
-      handlemcOpenChange(false)
-      setPricePlace([])
-      setFreightDesc([])
-      setInsDesc([])
-      settcDesc([])
-      setomDesc([])
-      setoiDesc([])
-      setmcDesc([])
-      }
-    })
-  }
-  }
+  const onChangePhrase = (e) => {
+    formik.handleChange(e);
+    if (e.target.value.length >= 3) {
+      axios
+        .post(url + `/api/get_${e.target.name}`, {
+          wrd: e.target.value.toString().trim(),
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.data.msg.length > 0) {
+            setPricePlace([]);
+            setFreightDesc([]);
+            setInsDesc([]);
+            settcDesc([]);
+            setomDesc([]);
+            setoiDesc([]);
+            setmcDesc([]);
+            setldothers([]);
+            setldval([]);
+            handleOpenChange(false);
+            handlefrOpenChange(false);
+            handleinsOpenChange(false);
+            handletcOpenChange(false);
+            handleomOpenChange(false);
+            handleoiOpenChange(false);
+            handlemcOpenChange(false);
+            handleldothersOpenChange(false);
+            handleldvalOpenChange(false);
+            if (e.target.name == "price_basis_desc") {
+              handleOpenChange(true);
+              setPricePlace(res.data.msg);
+            }
+            if (e.target.name == "freight_insurance_val") {
+              handlefrOpenChange(true);
+              setFreightDesc(res.data.msg);
+            }
+            if (e.target.name == "freight_insurance_val") {
+              handlefrOpenChange(true);
+              setFreightDesc(res.data.msg);
+            }
+            if (e.target.name == "insurance_val") {
+              handleinsOpenChange(true);
+              setInsDesc(res.data.msg);
+            }
+            if (e.target.name == "test_certificate_desc") {
+              handletcOpenChange(true);
+              settcDesc(res.data.msg);
+            }
+            if (e.target.name == "om_manual_desc") {
+              handleomOpenChange(true);
+              setomDesc(res.data.msg);
+            }
+            if (e.target.name == "oi_desc") {
+              handleoiOpenChange(true);
+              setoiDesc(res.data.msg);
+            }
+            if (e.target.name == "manufacture_clearance_desc") {
+              handlemcOpenChange(true);
+              setmcDesc(res.data.msg);
+            }
+            if (e.target.name == "others_ld") {
+              handleldothersOpenChange(true);
+              setldothers(res.data.msg);
+            }
+            if (e.target.name == "others_applied") {
+              handleldvalOpenChange(true);
+              setldval(res.data.msg);
+            }
+          } else {
+            handleOpenChange(false);
+            handlefrOpenChange(false);
+            handleinsOpenChange(false);
+            handletcOpenChange(false);
+            handleomOpenChange(false);
+            handleoiOpenChange(false);
+            handlemcOpenChange(false);
+            handleldothersOpenChange(false);
+            setPricePlace([]);
+            setFreightDesc([]);
+            setInsDesc([]);
+            settcDesc([]);
+            setomDesc([]);
+            setoiDesc([]);
+            setmcDesc([]);
+            setldothers([]);
+          }
+        });
+    }
+  };
 
   useEffect(() => {
     localStorage.removeItem("terms");
@@ -578,9 +676,9 @@ function TermsConditions({ pressNext, pressBack, data }) {
       formik.values.ld_value = "";
       formik.values.po_min_value = "";
     }
-    console.log(formik)
+    console.log(formik);
     // console.log(formik.values);
-    
+
     localStorage.setItem("terms", JSON.stringify(formik.values));
   }, [formik.values]);
   return (
@@ -620,42 +718,55 @@ function TermsConditions({ pressNext, pressBack, data }) {
           <div className="sm:col-span-5">
             {/* {pricePlace} */}
             <Popover
-      content={<>
-      <ul>
-      {pricePlace?.map(price=><li className="my-2">
-        <Tag className="cursor-pointer" onClick={()=>{formik.setFieldValue('price_basis_desc',price.price_basis_desc);handleOpenChange(false)}} >
-        {price.price_basis_desc}
-          
-          </Tag>  
-        </li>)}
-
-      </ul>
-     <a onClick={hide}>Close</a>  
-      </>}
-      title="Do you mean?"
-      trigger="click"
-      open={popOpen}
-      onOpenChange={handleOpenChange}
-    >
-            <TDInputTemplate
-              placeholder="Price Basis Description"
-              type="text"
-              label="Price Basis Description"
-              name="price_basis_desc"
-              formControlName={formik.values.price_basis_desc}
-              // handleChange={formik.handleChange}
-              
-              handleChange={(e)=>{onChangePhrase(e)}}
-              handleBlur={formik.handleBlur}
-              mode={3}
-              disabled={
-                localStorage.getItem("po_status") == "A" ||
-                localStorage.getItem("po_status") == "D" ||
-                localStorage.getItem("po_status") == "L"
-                  ? true
-                  : false
+              content={
+                <>
+                  <ul>
+                    {pricePlace?.map((price) => (
+                      <li className="my-2">
+                        <Tag
+                          className="cursor-pointer"
+                          onClick={() => {
+                            formik.setFieldValue(
+                              "price_basis_desc",
+                              price.price_basis_desc
+                            );
+                            handleOpenChange(false);
+                          }}
+                        >
+                          {price.price_basis_desc}
+                        </Tag>
+                      </li>
+                    ))}
+                  </ul>
+                  <a onClick={hide}>Close</a>
+                </>
               }
-            />
+              title="Do you mean?"
+              trigger="click"
+              open={popOpen}
+              onOpenChange={handleOpenChange}
+            >
+              <TDInputTemplate
+                placeholder="Price Basis Description"
+                type="text"
+                label="Price Basis Description"
+                name="price_basis_desc"
+                formControlName={formik.values.price_basis_desc}
+                // handleChange={formik.handleChange}
+
+                handleChange={(e) => {
+                  onChangePhrase(e);
+                }}
+                handleBlur={formik.handleBlur}
+                mode={3}
+                disabled={
+                  localStorage.getItem("po_status") == "A" ||
+                  localStorage.getItem("po_status") == "D" ||
+                  localStorage.getItem("po_status") == "L"
+                    ? true
+                    : false
+                }
+              />
             </Popover>
             {formik.errors.price_basis_desc &&
               formik.touched.price_basis_desc && (
@@ -706,7 +817,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     : false
                 }
                 formControlName={formik.values.packing_forwarding_extra}
-                handleChange={(e)=>onChangeExtra(e)}
+                handleChange={(e) => onChangeExtra(e)}
                 // handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
                 mode={1}
@@ -738,7 +849,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 //   100
                 // ).toFixed(2)}
                 formControlName={formik.values.packing_forwarding_extra_val}
-                handleChange={(e)=>onChangeVal(e)}
+                handleChange={(e) => onChangeVal(e)}
                 // handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
                 mode={1}
@@ -759,21 +870,23 @@ function TermsConditions({ pressNext, pressBack, data }) {
                   name="pf_currency"
                   // data={[{name:'Inclusive',code:"I"},{name:'Extra(%)',code:'E'}]}
                   formControlName={formik.values.pf_currency}
-                  handleChange={e=>onChangePfCurrency(e)}
+                  handleChange={(e) => onChangePfCurrency(e)}
                   handleBlur={formik.handleBlur}
                   disabled={
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
-                    localStorage.getItem("po_status") == "L" 
+                    localStorage.getItem("po_status") == "L"
                       ? true
                       : false
                   }
-                 data={[{code:'I',name:'INR'},{code:'U',name:'USD'},{code:'E',name:'Euro'}]}
+                  data={[
+                    { code: "I", name: "INR" },
+                    { code: "U", name: "USD" },
+                    { code: "E", name: "Euro" },
+                  ]}
                   mode={2}
                 />
-                
               </>
-              
             )}
             {formik.errors.pf_currency && formik.touched.pf_currency && (
               <VError title={formik.errors.pf_currency} />
@@ -795,7 +908,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
-                    formik.values.pf_currency!='I' ||
+                    formik.values.pf_currency != "I" ||
                     (formik.values.pf_igst > 0 &&
                       formik.values.pf_igst != "IGST")
                       ? true
@@ -838,7 +951,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
-                    formik.values.pf_currency!='I' ||
+                    formik.values.pf_currency != "I" ||
                     (formik.values.pf_igst > 0 &&
                       formik.values.pf_igst != "IGST")
                       ? true
@@ -886,7 +999,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
-                    formik.values.pf_currency!='I' ||
+                    formik.values.pf_currency != "I" ||
                     formik.values.pf_cgst > 0 ||
                     formik.values.pf_sgst > 0
                       ? true
@@ -1032,57 +1145,64 @@ function TermsConditions({ pressNext, pressBack, data }) {
               formik.touched.freight_insurance && (
                 <VError title={formik.errors.freight_insurance} />
               )}
-              
           </div>
           <Popover
-      content={<>
-      <ul>
-      {freightdesc?.map(price=><li className="my-2">
-        <Tag className="cursor-pointer" onClick={()=>{formik.setFieldValue('freight_insurance_val',price.freight_ins_val);handlefrOpenChange(false)}} >
-        {price.freight_ins_val}
-          
-          </Tag>  
-        </li>)}
-
-      </ul>
-     <a onClick={hidefr}>Close</a>  
-      </>}
-      title="Do you mean?"
-      trigger="click"
-      open={popfrOpen}
-      onOpenChange={handlefrOpenChange}
-    >
-          <div className="sm:col-span-3">
-            <TDInputTemplate
-              placeholder="Freight Description"
-              type="text"
-              label="Freight Description"
-              name="freight_insurance_val"
-              disabled={
-                localStorage.getItem("po_status") == "A" ||
-                localStorage.getItem("po_status") == "D" ||
-                localStorage.getItem("po_status") == "L"
-                  ? true
-                  : false
-              }
-              formControlName={formik.values.freight_insurance_val}
-              handleChange={(e)=>onChangePhrase(e)}
-              handleBlur={formik.handleBlur}
-              mode={3}
-            />
-            {formik.errors.freight_insurance_val &&
-              formik.touched.freight_insurance_val && (
-                <VError title={formik.errors.freight_insurance_val} />
-              )}
-          </div>
-          
-         
+            content={
+              <>
+                <ul>
+                  {freightdesc?.map((price) => (
+                    <li className="my-2">
+                      <Tag
+                        className="cursor-pointer"
+                        onClick={() => {
+                          formik.setFieldValue(
+                            "freight_insurance_val",
+                            price.freight_ins_val
+                          );
+                          handlefrOpenChange(false);
+                        }}
+                      >
+                        {price.freight_ins_val}
+                      </Tag>
+                    </li>
+                  ))}
+                </ul>
+                <a onClick={hidefr}>Close</a>
+              </>
+            }
+            title="Do you mean?"
+            trigger="click"
+            open={popfrOpen}
+            onOpenChange={handlefrOpenChange}
+          >
+            <div className="sm:col-span-3">
+              <TDInputTemplate
+                placeholder="Freight Description"
+                type="text"
+                label="Freight Description"
+                name="freight_insurance_val"
+                disabled={
+                  localStorage.getItem("po_status") == "A" ||
+                  localStorage.getItem("po_status") == "D" ||
+                  localStorage.getItem("po_status") == "L"
+                    ? true
+                    : false
+                }
+                formControlName={formik.values.freight_insurance_val}
+                handleChange={(e) => onChangePhrase(e)}
+                handleBlur={formik.handleBlur}
+                mode={3}
+              />
+              {formik.errors.freight_insurance_val &&
+                formik.touched.freight_insurance_val && (
+                  <VError title={formik.errors.freight_insurance_val} />
+                )}
+            </div>
           </Popover>
           {/*  */}
-       
         </div>
         <div className="grid gap-4 sm:grid-cols-6 sm:gap-6 my-10">
-        <div className="sm:col-span-3">
+          <div className="sm:col-span-3">
             {formik.values.freight_insurance == "E" && (
               <TDInputTemplate
                 placeholder="Freight Extra(%)"
@@ -1097,16 +1217,15 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     : false
                 }
                 formControlName={formik.values.freight_extra}
-                handleChange={(e)=>onChangeExtraFr(e)}
+                handleChange={(e) => onChangeExtraFr(e)}
                 // handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
                 mode={1}
               />
             )}
-            {formik.errors.freight_extra &&
-              formik.touched.freight_extra && (
-                <VError title={formik.errors.freight_extra} />
-              )}
+            {formik.errors.freight_extra && formik.touched.freight_extra && (
+              <VError title={formik.errors.freight_extra} />
+            )}
           </div>
 
           <div className="sm:col-span-3">
@@ -1129,7 +1248,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 //   100
                 // ).toFixed(2)}
                 formControlName={formik.values.freight_extra_val}
-                handleChange={(e)=>onChangeValFr(e)}
+                handleChange={(e) => onChangeValFr(e)}
                 // handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
                 mode={1}
@@ -1150,24 +1269,28 @@ function TermsConditions({ pressNext, pressBack, data }) {
                   name="freight_currency"
                   // data={[{name:'Inclusive',code:"I"},{name:'Extra(%)',code:'E'}]}
                   formControlName={formik.values.freight_currency}
-                  handleChange={e=>onChangePfCurrencyFr(e)}
+                  handleChange={(e) => onChangePfCurrencyFr(e)}
                   handleBlur={formik.handleBlur}
                   disabled={
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
-                    localStorage.getItem("po_status") == "L" 
+                    localStorage.getItem("po_status") == "L"
                       ? true
                       : false
                   }
-                 data={[{code:'I',name:'INR'},{code:'U',name:'USD'},{code:'E',name:'Euro'}]}
+                  data={[
+                    { code: "I", name: "INR" },
+                    { code: "U", name: "USD" },
+                    { code: "E", name: "Euro" },
+                  ]}
                   mode={2}
                 />
-                
               </>
             )}
-            {formik.errors.freight_currency && formik.touched.freight_currency && (
-              <VError title={formik.errors.freight_currency} />
-            )}
+            {formik.errors.freight_currency &&
+              formik.touched.freight_currency && (
+                <VError title={formik.errors.freight_currency} />
+              )}
           </div>
           <div className="sm:col-span-1">
             {formik.values.freight_insurance == "E" && (
@@ -1185,7 +1308,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
-                    formik.values.freight_currency!='I' ||
+                    formik.values.freight_currency != "I" ||
                     (formik.values.freight_igst > 0 &&
                       formik.values.freight_igst != "IGST")
                       ? true
@@ -1202,9 +1325,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     >
                       &#8377;{" "}
                       {(
-                        (((+formik.values.freight_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.freight_extra * grand_total) / 100) *
                           formik.values.freight_cgst) /
                         100
                       ).toFixed(2)}
@@ -1228,7 +1349,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
-                    formik.values.freight_currency!='I' ||
+                    formik.values.freight_currency != "I" ||
                     (formik.values.freight_igst > 0 &&
                       formik.values.freight_igst != "IGST")
                       ? true
@@ -1248,9 +1369,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     >
                       &#8377;{" "}
                       {(
-                        (((+formik.values.freight_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.freight_extra * grand_total) / 100) *
                           formik.values.freight_sgst) /
                         100
                       ).toFixed(2)}
@@ -1276,7 +1395,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
-                    formik.values.freight_currency!='I' ||
+                    formik.values.freight_currency != "I" ||
                     formik.values.freight_cgst > 0 ||
                     formik.values.freight_sgst > 0
                       ? true
@@ -1296,9 +1415,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     >
                       &#8377;{" "}
                       {(
-                        (((+formik.values.freight_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.freight_extra * grand_total) / 100) *
                           formik.values.freight_igst) /
                         100
                       ).toFixed(2)}
@@ -1320,23 +1437,18 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 name="total_gst_freight"
                 disabled={true}
                 formControlName={
-                  formik.values.freight_igst > 0 && formik.values.freight_igst != "IGST"
+                  formik.values.freight_igst > 0 &&
+                  formik.values.freight_igst != "IGST"
                     ? (
-                        (((+formik.values.freight_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.freight_extra * grand_total) / 100) *
                           formik.values.freight_igst) /
                         100
                       ).toFixed(2)
                     : (
-                        (((+formik.values.freight_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.freight_extra * grand_total) / 100) *
                           formik.values.freight_sgst) /
                           100 +
-                        (((+formik.values.freight_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.freight_extra * grand_total) / 100) *
                           formik.values.freight_cgst) /
                           100
                       ).toFixed(2)
@@ -1350,7 +1462,6 @@ function TermsConditions({ pressNext, pressBack, data }) {
               formik.touched.packing_forwarding_extra_val && (
                 <VError title={formik.errors.packing_forwarding_extra_val} />
               )} */}
-
           </div>
           <div className="sm:col-span-1">
             {/* {grand_total} */}
@@ -1362,29 +1473,22 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 name="total_val_freight"
                 disabled={true}
                 formControlName={
-                  formik.values.freight_igst > 0 && formik.values.freight_igst != "IGST"
+                  formik.values.freight_igst > 0 &&
+                  formik.values.freight_igst != "IGST"
                     ? (
-                        (((+formik.values.freight_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.freight_extra * grand_total) / 100) *
                           formik.values.freight_igst) /
                           100 +
-                        (formik.values.freight_extra * grand_total) /
-                          100
+                        (formik.values.freight_extra * grand_total) / 100
                       ).toFixed(2)
                     : (
-                        (((+formik.values.freight_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.freight_extra * grand_total) / 100) *
                           formik.values.freight_sgst) /
                           100 +
-                        (((+formik.values.freight_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.freight_extra * grand_total) / 100) *
                           formik.values.freight_cgst) /
                           100 +
-                        (formik.values.freight_extra * grand_total) /
-                          100
+                        (formik.values.freight_extra * grand_total) / 100
                       ).toFixed(2)
                 }
                 handleChange={formik.handleChange}
@@ -1399,82 +1503,92 @@ function TermsConditions({ pressNext, pressBack, data }) {
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-6 sm:gap-6 my-10">
-
-<div className="sm:col-span-3">
-  <TDInputTemplate
-    placeholder="Insurance"
-    type="text"
-    label="Insurance"
-    name="insurance"
-    data={[
-      { name: "Yes", code: "Y" },
-      { name: "No", code: "N" },
-    ]}
-    disabled={
-      localStorage.getItem("po_status") == "A" ||
-      localStorage.getItem("po_status") == "D" ||
-      localStorage.getItem("po_status") == "L"
-        ? true
-        : false
-    }
-    formControlName={formik.values.insurance}
-    handleChange={formik.handleChange}
-    handleBlur={formik.handleBlur}
-    mode={2}
-  />
-  {formik.errors.insurance && formik.touched.insurance && (
-    <VError title={formik.errors.insurance} />
-  )}
-</div>
-{formik.values.insurance == "Y" && (
-    <Popover
-    content={<>
-    <ul>
-    {insdesc?.map(price=><li className="my-2">
-      <Tag className="cursor-pointer" onClick={()=>{formik.setFieldValue('insurance_val',price.ins_val);handleinsOpenChange(false)}} >
-      {price.ins_val}
-        
-        </Tag>  
-      </li>)}
-
-    </ul>
-   <a onClick={hideins}>Close</a>  
-    </>}
-    title="Do you mean?"
-    trigger="click"
-    open={popinsOpen}
-    onOpenChange={handleinsOpenChange}
-  >
-  <div className="sm:col-span-3">
-    <TDInputTemplate
-      placeholder="Insurance Description"
-      type="text"
-      label="Insurance Description"
-      name="insurance_val"
-      disabled={
-        localStorage.getItem("po_status") == "A" ||
-        localStorage.getItem("po_status") == "D" ||
-        localStorage.getItem("po_status") == "L"
-          ? true
-          : false
-      }
-      formControlName={formik.values.insurance_val}
-      // handleChange={formik.handleChange}
-    handleChange={(e)=>onChangePhrase(e)}
-
-      handleBlur={formik.handleBlur}
-      mode={3}
-    />
-    {formik.errors.insurance_val && formik.touched.insurance_val && (
-      <VError title={formik.errors.insurance_val} />
-    )}
-  </div>
-  </Popover>
-)}
-{/*  */}
-</div>
-<div className="grid gap-4 sm:grid-cols-6 sm:gap-6 my-10">
-        <div className="sm:col-span-3">
+          <div className="sm:col-span-3">
+            <TDInputTemplate
+              placeholder="Insurance"
+              type="text"
+              label="Insurance"
+              name="insurance"
+              data={[
+                { name: "Yes", code: "Y" },
+                { name: "No", code: "N" },
+              ]}
+              disabled={
+                localStorage.getItem("po_status") == "A" ||
+                localStorage.getItem("po_status") == "D" ||
+                localStorage.getItem("po_status") == "L"
+                  ? true
+                  : false
+              }
+              formControlName={formik.values.insurance}
+              handleChange={formik.handleChange}
+              handleBlur={formik.handleBlur}
+              mode={2}
+            />
+            {formik.errors.insurance && formik.touched.insurance && (
+              <VError title={formik.errors.insurance} />
+            )}
+          </div>
+          {formik.values.insurance == "Y" && (
+            <Popover
+              content={
+                <>
+                  <ul>
+                    {insdesc?.map((price) => (
+                      <li className="my-2">
+                        <Tag
+                          className="cursor-pointer"
+                          onClick={() => {
+                            formik.setFieldValue(
+                              "insurance_val",
+                              price.ins_val
+                            );
+                            handleinsOpenChange(false);
+                          }}
+                        >
+                          {price.ins_val}
+                        </Tag>
+                      </li>
+                    ))}
+                  </ul>
+                  <a onClick={hideins}>Close</a>
+                </>
+              }
+              title="Do you mean?"
+              trigger="click"
+              open={popinsOpen}
+              onOpenChange={handleinsOpenChange}
+            >
+              <div className="sm:col-span-3">
+                <TDInputTemplate
+                  placeholder="Insurance Description"
+                  type="text"
+                  label="Insurance Description"
+                  name="insurance_val"
+                  disabled={
+                    localStorage.getItem("po_status") == "A" ||
+                    localStorage.getItem("po_status") == "D" ||
+                    localStorage.getItem("po_status") == "L"
+                      ? true
+                      : false
+                  }
+                  formControlName={formik.values.insurance_val}
+                  // handleChange={formik.handleChange}
+                  handleChange={(e) => onChangePhrase(e)}
+                  handleBlur={formik.handleBlur}
+                  mode={3}
+                />
+                {formik.errors.insurance_val &&
+                  formik.touched.insurance_val && (
+                    <VError title={formik.errors.insurance_val} />
+                  )}
+              </div>
+            </Popover>
+          )}
+          {/*  */}
+        </div>
+        <div className="grid gap-4 sm:grid-cols-6 sm:gap-6 my-10">
+          <div className="sm:col-span-3">
             {formik.values.insurance == "Y" && (
               <TDInputTemplate
                 placeholder="Insurance Extra(%)"
@@ -1489,16 +1603,15 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     : false
                 }
                 formControlName={formik.values.ins_extra}
-                handleChange={(e)=>onChangeExtraIns(e)}
+                handleChange={(e) => onChangeExtraIns(e)}
                 // handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
                 mode={1}
               />
             )}
-            {formik.errors.ins_extra &&
-              formik.touched.ins_extra && (
-                <VError title={formik.errors.ins_extra} />
-              )}
+            {formik.errors.ins_extra && formik.touched.ins_extra && (
+              <VError title={formik.errors.ins_extra} />
+            )}
           </div>
 
           <div className="sm:col-span-3">
@@ -1521,16 +1634,15 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 //   100
                 // ).toFixed(2)}
                 formControlName={formik.values.ins_extra_val}
-                handleChange={(e)=>onChangeValIns(e)}
+                handleChange={(e) => onChangeValIns(e)}
                 // handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
                 mode={1}
               />
             )}
-            {formik.errors.ins_extra_val &&
-              formik.touched.ins_extra_val && (
-                <VError title={formik.errors.ins_extra_val} />
-              )}
+            {formik.errors.ins_extra_val && formik.touched.ins_extra_val && (
+              <VError title={formik.errors.ins_extra_val} />
+            )}
           </div>
           <div className="sm:col-span-1">
             {formik.values.insurance == "Y" && (
@@ -1542,20 +1654,22 @@ function TermsConditions({ pressNext, pressBack, data }) {
                   name="ins_currency"
                   // data={[{name:'Inclusive',code:"I"},{name:'Extra(%)',code:'E'}]}
                   formControlName={formik.values.ins_currency}
-                  handleChange={e=>onChangePfCurrencyIns(e)}
+                  handleChange={(e) => onChangePfCurrencyIns(e)}
                   handleBlur={formik.handleBlur}
                   disabled={
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
-                    localStorage.getItem("po_status") == "L" 
+                    localStorage.getItem("po_status") == "L"
                       ? true
                       : false
                   }
-                 data={[{code:'I',name:'INR'},{code:'U',name:'USD'},{code:'E',name:'Euro'}]}
+                  data={[
+                    { code: "I", name: "INR" },
+                    { code: "U", name: "USD" },
+                    { code: "E", name: "Euro" },
+                  ]}
                   mode={2}
                 />
-                
-                
               </>
             )}
             {formik.errors.ins_currency && formik.touched.ins_currency && (
@@ -1563,7 +1677,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
             )}
           </div>
           <div className="sm:col-span-1">
-            {formik.values.insurance== "Y" && (
+            {formik.values.insurance == "Y" && (
               <>
                 <TDInputTemplate
                   placeholder="CGST"
@@ -1578,7 +1692,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
-                    formik.values.ins_currency!='I' ||
+                    formik.values.ins_currency != "I" ||
                     (formik.values.ins_igst > 0 &&
                       formik.values.ins_igst != "IGST")
                       ? true
@@ -1595,9 +1709,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     >
                       &#8377;{" "}
                       {(
-                        (((+formik.values.ins_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.ins_extra * grand_total) / 100) *
                           formik.values.ins_cgst) /
                         100
                       ).toFixed(2)}
@@ -1621,7 +1733,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
-                    formik.values.ins_currency!='I' ||
+                    formik.values.ins_currency != "I" ||
                     (formik.values.ins_igst > 0 &&
                       formik.values.ins_igst != "IGST")
                       ? true
@@ -1641,9 +1753,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     >
                       &#8377;{" "}
                       {(
-                        (((+formik.values.ins_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.ins_extra * grand_total) / 100) *
                           formik.values.ins_sgst) /
                         100
                       ).toFixed(2)}
@@ -1669,7 +1779,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
-                    formik.values.ins_currency!='I' ||
+                    formik.values.ins_currency != "I" ||
                     formik.values.ins_cgst > 0 ||
                     formik.values.ins_sgst > 0
                       ? true
@@ -1689,9 +1799,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     >
                       &#8377;{" "}
                       {(
-                        (((+formik.values.ins_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.ins_extra * grand_total) / 100) *
                           formik.values.ins_igst) /
                         100
                       ).toFixed(2)}
@@ -1715,21 +1823,15 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 formControlName={
                   formik.values.ins_igst > 0 && formik.values.ins_igst != "IGST"
                     ? (
-                        (((+formik.values.ins_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.ins_extra * grand_total) / 100) *
                           formik.values.ins_igst) /
                         100
                       ).toFixed(2)
                     : (
-                        (((+formik.values.ins_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.ins_extra * grand_total) / 100) *
                           formik.values.ins_sgst) /
                           100 +
-                        (((+formik.values.ins_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.ins_extra * grand_total) / 100) *
                           formik.values.ins_cgst) /
                           100
                       ).toFixed(2)
@@ -1743,7 +1845,6 @@ function TermsConditions({ pressNext, pressBack, data }) {
               formik.touched.packing_forwarding_extra_val && (
                 <VError title={formik.errors.packing_forwarding_extra_val} />
               )} */}
-
           </div>
           <div className="sm:col-span-1">
             {/* {grand_total} */}
@@ -1757,27 +1858,19 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 formControlName={
                   formik.values.ins_igst > 0 && formik.values.ins_igst != "IGST"
                     ? (
-                        (((+formik.values.ins_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.ins_extra * grand_total) / 100) *
                           formik.values.ins_igst) /
                           100 +
-                        (formik.values.ins_extra * grand_total) /
-                          100
+                        (formik.values.ins_extra * grand_total) / 100
                       ).toFixed(2)
                     : (
-                        (((+formik.values.ins_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.ins_extra * grand_total) / 100) *
                           formik.values.ins_sgst) /
                           100 +
-                        (((+formik.values.ins_extra *
-                          grand_total) /
-                          100) *
+                        (((+formik.values.ins_extra * grand_total) / 100) *
                           formik.values.ins_cgst) /
                           100 +
-                        (formik.values.ins_extra * grand_total) /
-                          100
+                        (formik.values.ins_extra * grand_total) / 100
                       ).toFixed(2)
                 }
                 handleChange={formik.handleChange}
@@ -1820,50 +1913,60 @@ function TermsConditions({ pressNext, pressBack, data }) {
               )}
           </div>
           <Popover
-      content={<>
-      <ul>
-      {tcdesc?.map(price=><li className="my-2">
-        <Tag className="cursor-pointer" onClick={()=>{formik.setFieldValue('test_certificate_desc',price.test_certificate_desc);handletcOpenChange(false)}} >
-        {price.test_certificate_desc}
-          
-          </Tag>  
-        </li>)}
-
-      </ul>
-     <a onClick={hidetc}>Close</a>  
-      </>}
-      title="Do you mean?"
-      trigger="click"
-      open={poptcOpen}
-      onOpenChange={handletcOpenChange}
-    >
-          <div className="sm:col-span-5">
-            {formik.values.test_certificate == "Y" && (
-              
-              <TDInputTemplate
-                placeholder="Test Certificate Description"
-                type="text"
-                label="Test Certificate Description"
-                name="test_certificate_desc"
-                disabled={
-                  localStorage.getItem("po_status") == "A" ||
-                  localStorage.getItem("po_status") == "D" ||
-                  localStorage.getItem("po_status") == "L"
-                    ? true
-                    : false
-                }
-                formControlName={formik.values.test_certificate_desc}
-                // handleChange={formik.handleChange}
-                handleChange={(e)=>onChangePhrase(e)}
-                handleBlur={formik.handleBlur}
-                mode={3}
-              />
-            )}
-            {formik.errors.test_certificate_desc &&
-              formik.touched.test_certificate_desc && (
-                <VError title={formik.errors.test_certificate_desc} />
+            content={
+              <>
+                <ul>
+                  {tcdesc?.map((price) => (
+                    <li className="my-2">
+                      <Tag
+                        className="cursor-pointer"
+                        onClick={() => {
+                          formik.setFieldValue(
+                            "test_certificate_desc",
+                            price.test_certificate_desc
+                          );
+                          handletcOpenChange(false);
+                        }}
+                      >
+                        {price.test_certificate_desc}
+                      </Tag>
+                    </li>
+                  ))}
+                </ul>
+                <a onClick={hidetc}>Close</a>
+              </>
+            }
+            title="Do you mean?"
+            trigger="click"
+            open={poptcOpen}
+            onOpenChange={handletcOpenChange}
+          >
+            <div className="sm:col-span-5">
+              {formik.values.test_certificate == "Y" && (
+                <TDInputTemplate
+                  placeholder="Test Certificate Description"
+                  type="text"
+                  label="Test Certificate Description"
+                  name="test_certificate_desc"
+                  disabled={
+                    localStorage.getItem("po_status") == "A" ||
+                    localStorage.getItem("po_status") == "D" ||
+                    localStorage.getItem("po_status") == "L"
+                      ? true
+                      : false
+                  }
+                  formControlName={formik.values.test_certificate_desc}
+                  // handleChange={formik.handleChange}
+                  handleChange={(e) => onChangePhrase(e)}
+                  handleBlur={formik.handleBlur}
+                  mode={3}
+                />
               )}
-          </div>
+              {formik.errors.test_certificate_desc &&
+                formik.touched.test_certificate_desc && (
+                  <VError title={formik.errors.test_certificate_desc} />
+                )}
+            </div>
           </Popover>
 
           <div className="sm:col-span-2">
@@ -1879,7 +1982,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 { name: "Not Applicable", code: "NA" },
               ]}
               disabled={
-                localStorage.getItem('amend_flag') =='Y' ||
+                localStorage.getItem("amend_flag") == "Y" ||
                 localStorage.getItem("po_status") == "A" ||
                 localStorage.getItem("po_status") == "D" ||
                 localStorage.getItem("po_status") == "L"
@@ -1905,7 +2008,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
               label="LD value applied on"
               name="ld_applied_on"
               disabled={
-                localStorage.getItem('amend_flag') =='Y' ||
+                localStorage.getItem("amend_flag") == "Y" ||
                 localStorage.getItem("po_status") == "A" ||
                 localStorage.getItem("po_status") == "D" ||
                 localStorage.getItem("po_status") == "L" ||
@@ -1935,7 +2038,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
               label="LD value (%)"
               name="ld_value"
               disabled={
-                localStorage.getItem('amend_flag') =='Y' ||
+                localStorage.getItem("amend_flag") == "Y" ||
                 localStorage.getItem("po_status") == "A" ||
                 localStorage.getItem("po_status") == "D" ||
                 localStorage.getItem("po_status") == "L" ||
@@ -1952,42 +2055,41 @@ function TermsConditions({ pressNext, pressBack, data }) {
               <VError title={formik.errors.ld_value} />
             )}
           </div>
-          <div className="sm:col-span-10">
-            {formik.values.ld_applicable_date == "O" && (
-              <TDInputTemplate
-                placeholder="Others (LD Applicable Date)"
-                type="text"
-                label="Others (LD Applicable Date)"
-                name="others_ld"
-                disabled={
-                  localStorage.getItem('amend_flag') =='Y' ||
-                  localStorage.getItem("po_status") == "A" ||
-                  localStorage.getItem("po_status") == "D" ||
-                  localStorage.getItem("po_status") == "L" ||
-                  formik.values.ld_applicable_date == "NA"
-                    ? true
-                    : false
-                }
-                formControlName={formik.values.others_ld}
-                handleChange={formik.handleChange}
-                handleBlur={formik.handleBlur}
-                mode={3}
-              />
-            )}
-            {formik.errors.others_ld && formik.touched.others_ld && (
-              <VError title={formik.errors.others_ld} />
-            )}
-          </div>
-          <div className="sm:col-span-10">
-            {formik.values.ld_applied_on == "O" &&
-              formik.values.ld_applicable_date != "NA" && (
+          <Popover
+            content={
+              <>
+                <ul>
+                  {ldothers?.map((price) => (
+                    <li className="my-2">
+                      <Tag
+                        className="cursor-pointer"
+                        onClick={() => {
+                          formik.setFieldValue("others_ld", price.ld_date_desc);
+                          handleldothersOpenChange(false);
+                        }}
+                      >
+                        {price.ld_date_desc}
+                      </Tag>
+                    </li>
+                  ))}
+                </ul>
+                <a onClick={hideldothers}>Close</a>
+              </>
+            }
+            title="Do you mean?"
+            trigger="click"
+            open={popldOthersOpen}
+            onOpenChange={handleldothersOpenChange}
+          >
+            <div className="sm:col-span-10">
+              {formik.values.ld_applicable_date == "O" && (
                 <TDInputTemplate
-                  placeholder="Others (LD Value applied on)"
+                  placeholder="Others (LD Applicable Date)"
                   type="text"
-                  label="Others (LD Value applied on)"
-                  name="others_applied"
+                  label="Others (LD Applicable Date)"
+                  name="others_ld"
                   disabled={
-                    localStorage.getItem('amend_flag') =='Y' ||
+                    localStorage.getItem("amend_flag") == "Y" ||
                     localStorage.getItem("po_status") == "A" ||
                     localStorage.getItem("po_status") == "D" ||
                     localStorage.getItem("po_status") == "L" ||
@@ -1995,16 +2097,75 @@ function TermsConditions({ pressNext, pressBack, data }) {
                       ? true
                       : false
                   }
-                  formControlName={formik.values.others_applied}
-                  handleChange={formik.handleChange}
+                  formControlName={formik.values.others_ld}
+                  handleChange={(e) => onChangePhrase(e)}
                   handleBlur={formik.handleBlur}
                   mode={3}
                 />
               )}
-            {formik.errors.others_applied && formik.touched.others_applied && (
-              <VError title={formik.errors.others_applied} />
-            )}
-          </div>
+              {formik.errors.others_ld && formik.touched.others_ld && (
+                <VError title={formik.errors.others_ld} />
+              )}
+            </div>
+          </Popover>
+          <Popover
+            content={
+              <>
+                <ul>
+                  {ldval?.map((price) => (
+                    <li className="my-2">
+                      <Tag
+                        className="cursor-pointer"
+                        onClick={() => {
+                          formik.setFieldValue(
+                            "others_applied",
+                            price.ld_val_desc
+                          );
+                          handleldvalOpenChange(false);
+                        }}
+                      >
+                        {price.ld_val_desc}
+                      </Tag>
+                    </li>
+                  ))}
+                </ul>
+                <a onClick={hideldval}>Close</a>
+              </>
+            }
+            title="Do you mean?"
+            trigger="click"
+            open={popldvalOpen}
+            onOpenChange={handleldvalOpenChange}
+          >
+            <div className="sm:col-span-10">
+              {formik.values.ld_applied_on == "O" &&
+                formik.values.ld_applicable_date != "NA" && (
+                  <TDInputTemplate
+                    placeholder="Others (LD Value applied on)"
+                    type="text"
+                    label="Others (LD Value applied on)"
+                    name="others_applied"
+                    disabled={
+                      localStorage.getItem("amend_flag") == "Y" ||
+                      localStorage.getItem("po_status") == "A" ||
+                      localStorage.getItem("po_status") == "D" ||
+                      localStorage.getItem("po_status") == "L" ||
+                      formik.values.ld_applicable_date == "NA"
+                        ? true
+                        : false
+                    }
+                    formControlName={formik.values.others_applied}
+                    handleChange={(e) => onChangePhrase(e)}
+                    handleBlur={formik.handleBlur}
+                    mode={3}
+                  />
+                )}
+              {formik.errors.others_applied &&
+                formik.touched.others_applied && (
+                  <VError title={formik.errors.others_applied} />
+                )}
+            </div>
+          </Popover>
           <div className="sm:col-span-10">
             <TDInputTemplate
               placeholder="Maximum % on PO value"
@@ -2012,7 +2173,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
               label="Maximum % on PO value"
               name="po_min_value"
               disabled={
-                localStorage.getItem('amend_flag') =='Y' ||
+                localStorage.getItem("amend_flag") == "Y" ||
                 localStorage.getItem("po_status") == "A" ||
                 localStorage.getItem("po_status") == "D" ||
                 localStorage.getItem("po_status") == "L" ||
@@ -2041,7 +2202,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                 { code: "G", name: "Guarantee" },
               ]}
               disabled={
-                localStorage.getItem('amend_flag') =='Y' ||
+                localStorage.getItem("amend_flag") == "Y" ||
                 localStorage.getItem("po_status") == "A" ||
                 localStorage.getItem("po_status") == "D" ||
                 localStorage.getItem("po_status") == "L"
@@ -2067,7 +2228,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     checked={formik.values.dispatch_dt}
                     name="dispatch_dt"
                     disabled={
-                localStorage.getItem('amend_flag') =='Y' ||
+                      localStorage.getItem("amend_flag") == "Y" ||
                       localStorage.getItem("po_status") == "A" ||
                       localStorage.getItem("po_status") == "D" ||
                       localStorage.getItem("po_status") == "L"
@@ -2082,7 +2243,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
                     checked={formik.values.comm_dt}
                     name="comm_dt"
                     disabled={
-                localStorage.getItem('amend_flag') =='Y' ||
+                      localStorage.getItem("amend_flag") == "Y" ||
                       localStorage.getItem("po_status") == "A" ||
                       localStorage.getItem("po_status") == "D" ||
                       localStorage.getItem("po_status") == "L"
@@ -2122,7 +2283,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
               handleBlur={formik.handleBlur}
               mode={2}
               disabled={
-                localStorage.getItem('amend_flag') =='Y' ||
+                localStorage.getItem("amend_flag") == "Y" ||
                 localStorage.getItem("po_status") == "A" ||
                 localStorage.getItem("po_status") == "D" ||
                 localStorage.getItem("po_status") == "L"
@@ -2141,7 +2302,7 @@ function TermsConditions({ pressNext, pressBack, data }) {
               label="Duration Value"
               name="duration_val"
               disabled={
-                localStorage.getItem('amend_flag') =='Y' ||
+                localStorage.getItem("amend_flag") == "Y" ||
                 localStorage.getItem("po_status") == "A" ||
                 localStorage.getItem("po_status") == "D" ||
                 localStorage.getItem("po_status") == "L"
@@ -2159,7 +2320,6 @@ function TermsConditions({ pressNext, pressBack, data }) {
           </div>
 
           <div className="sm:col-span-5">
-            
             <TDInputTemplate
               placeholder="O&M Manual"
               type="text"
@@ -2187,47 +2347,59 @@ function TermsConditions({ pressNext, pressBack, data }) {
           </div>
 
           <div className="sm:col-span-5">
-          <Popover
-      content={<>
-      <ul>
-      {omdesc?.map(price=><li className="my-2">
-        <Tag className="cursor-pointer" onClick={()=>{formik.setFieldValue('om_manual_desc',price.o_m_desc);handleomOpenChange(false)}} >
-        {price.o_m_desc}
-          
-          </Tag>  
-        </li>)}
-
-      </ul>
-     <a onClick={hideom}>Close</a>  
-      </>}
-      title="Do you mean?"
-      trigger="click"
-      open={popomOpen}
-      onOpenChange={handleomOpenChange}
-    >
-            {formik.values.om_manual_flag == "A" && (
-              <TDInputTemplate
-                placeholder="O&M Manual Description"
-                type="text"
-                label="O&M Manual Description"
-                name="om_manual_desc"
-                formControlName={formik.values.om_manual_desc}
-                // handleChange={formik.handleChange}
-                handleChange={(e)=>onChangePhrase(e)}
-                handleBlur={formik.handleBlur}
-                disabled={
-                  localStorage.getItem("po_status") == "A" ||
-                  localStorage.getItem("po_status") == "D" ||
-                  localStorage.getItem("po_status") == "L"
-                    ? true
-                    : false
-                }
-                mode={3}
-              />
-            )}
-            {formik.errors.om_manual_desc && formik.touched.om_manual_desc && (
-              <VError title={formik.errors.om_manual_desc} />
-            )}
+            <Popover
+              content={
+                <>
+                  <ul>
+                    {omdesc?.map((price) => (
+                      <li className="my-2">
+                        <Tag
+                          className="cursor-pointer"
+                          onClick={() => {
+                            formik.setFieldValue(
+                              "om_manual_desc",
+                              price.o_m_desc
+                            );
+                            handleomOpenChange(false);
+                          }}
+                        >
+                          {price.o_m_desc}
+                        </Tag>
+                      </li>
+                    ))}
+                  </ul>
+                  <a onClick={hideom}>Close</a>
+                </>
+              }
+              title="Do you mean?"
+              trigger="click"
+              open={popomOpen}
+              onOpenChange={handleomOpenChange}
+            >
+              {formik.values.om_manual_flag == "A" && (
+                <TDInputTemplate
+                  placeholder="O&M Manual Description"
+                  type="text"
+                  label="O&M Manual Description"
+                  name="om_manual_desc"
+                  formControlName={formik.values.om_manual_desc}
+                  // handleChange={formik.handleChange}
+                  handleChange={(e) => onChangePhrase(e)}
+                  handleBlur={formik.handleBlur}
+                  disabled={
+                    localStorage.getItem("po_status") == "A" ||
+                    localStorage.getItem("po_status") == "D" ||
+                    localStorage.getItem("po_status") == "L"
+                      ? true
+                      : false
+                  }
+                  mode={3}
+                />
+              )}
+              {formik.errors.om_manual_desc &&
+                formik.touched.om_manual_desc && (
+                  <VError title={formik.errors.om_manual_desc} />
+                )}
             </Popover>
           </div>
           <div className="sm:col-span-5">
@@ -2257,47 +2429,58 @@ function TermsConditions({ pressNext, pressBack, data }) {
             )}
           </div>
           <div className="sm:col-span-5">
-          <Popover
-      content={<>
-      <ul>
-      {oidesc?.map(price=><li className="my-2">
-        <Tag className="cursor-pointer" onClick={()=>{formik.setFieldValue('oi_desc',price.operation_installation_desc);handleoiOpenChange(false)}} >
-        {price.operation_installation_desc}
-          
-          </Tag>  
-        </li>)}
-
-      </ul>
-     <a onClick={hideoi}>Close</a>  
-      </>}
-      title="Do you mean?"
-      trigger="click"
-      open={popoiOpen}
-      onOpenChange={handleoiOpenChange}
-    >
-            {formik.values.oi_flag == "A" && (
-              <TDInputTemplate
-                placeholder="Operation/Installation Description"
-                type="text"
-                label="Operation/Installation Description"
-                name="oi_desc"
-                formControlName={formik.values.oi_desc}
-                // handleChange={formik.handleChange}
-                handleChange={(e)=>onChangePhrase(e)}
-                handleBlur={formik.handleBlur}
-                disabled={
-                  localStorage.getItem("po_status") == "A" ||
-                  localStorage.getItem("po_status") == "D" ||
-                  localStorage.getItem("po_status") == "L"
-                    ? true
-                    : false
-                }
-                mode={3}
-              />
-            )}
-            {formik.errors.oi_desc && formik.touched.oi_desc && (
-              <VError title={formik.errors.oi_desc} />
-            )}
+            <Popover
+              content={
+                <>
+                  <ul>
+                    {oidesc?.map((price) => (
+                      <li className="my-2">
+                        <Tag
+                          className="cursor-pointer"
+                          onClick={() => {
+                            formik.setFieldValue(
+                              "oi_desc",
+                              price.operation_installation_desc
+                            );
+                            handleoiOpenChange(false);
+                          }}
+                        >
+                          {price.operation_installation_desc}
+                        </Tag>
+                      </li>
+                    ))}
+                  </ul>
+                  <a onClick={hideoi}>Close</a>
+                </>
+              }
+              title="Do you mean?"
+              trigger="click"
+              open={popoiOpen}
+              onOpenChange={handleoiOpenChange}
+            >
+              {formik.values.oi_flag == "A" && (
+                <TDInputTemplate
+                  placeholder="Operation/Installation Description"
+                  type="text"
+                  label="Operation/Installation Description"
+                  name="oi_desc"
+                  formControlName={formik.values.oi_desc}
+                  // handleChange={formik.handleChange}
+                  handleChange={(e) => onChangePhrase(e)}
+                  handleBlur={formik.handleBlur}
+                  disabled={
+                    localStorage.getItem("po_status") == "A" ||
+                    localStorage.getItem("po_status") == "D" ||
+                    localStorage.getItem("po_status") == "L"
+                      ? true
+                      : false
+                  }
+                  mode={3}
+                />
+              )}
+              {formik.errors.oi_desc && formik.touched.oi_desc && (
+                <VError title={formik.errors.oi_desc} />
+              )}
             </Popover>
           </div>
           <div className="sm:col-span-5">
@@ -2383,49 +2566,60 @@ function TermsConditions({ pressNext, pressBack, data }) {
               )}
           </div>
           <div className="sm:col-span-5">
-          <Popover
-      content={<>
-      <ul>
-      {mcdesc?.map(price=><li className="my-2">
-        <Tag className="cursor-pointer" onClick={()=>{formik.setFieldValue('manufacture_clearance_desc',price.manufacture_clearance_desc);handlemcOpenChange(false)}} >
-        {price.manufacture_clearance_desc}
-          
-          </Tag>  
-        </li>)}
-
-      </ul>
-     <a onClick={hidemc}>Close</a>  
-      </>}
-      title="Do you mean?"
-      trigger="click"
-      open={popmcOpen}
-      onOpenChange={handlemcOpenChange}
-    >
-            {formik.values.manufacture_clearance == "A" && (
-              <TDInputTemplate
-                placeholder="Manufacture Clearance Description"
-                type="text"
-                label="Manufacture Clearance Description"
-                name="manufacture_clearance_desc"
-                formControlName={formik.values.manufacture_clearance_desc}
-                // handleChange={formik.handleChange}
-                handleChange={(e)=>onChangePhrase(e)}
-                handleBlur={formik.handleBlur}
-                disabled={
-                  localStorage.getItem("po_status") == "A" ||
-                  localStorage.getItem("po_status") == "D" ||
-                  localStorage.getItem("po_status") == "L"
-                    ? true
-                    : false
-                }
-                mode={3}
-              />
-            )}
-            {formik.errors.manufacture_clearance_desc &&
-              formik.touched.manufacture_clearance_desc && (
-                <VError title={formik.errors.manufacture_clearance_desc} />
+            <Popover
+              content={
+                <>
+                  <ul>
+                    {mcdesc?.map((price) => (
+                      <li className="my-2">
+                        <Tag
+                          className="cursor-pointer"
+                          onClick={() => {
+                            formik.setFieldValue(
+                              "manufacture_clearance_desc",
+                              price.manufacture_clearance_desc
+                            );
+                            handlemcOpenChange(false);
+                          }}
+                        >
+                          {price.manufacture_clearance_desc}
+                        </Tag>
+                      </li>
+                    ))}
+                  </ul>
+                  <a onClick={hidemc}>Close</a>
+                </>
+              }
+              title="Do you mean?"
+              trigger="click"
+              open={popmcOpen}
+              onOpenChange={handlemcOpenChange}
+            >
+              {formik.values.manufacture_clearance == "A" && (
+                <TDInputTemplate
+                  placeholder="Manufacture Clearance Description"
+                  type="text"
+                  label="Manufacture Clearance Description"
+                  name="manufacture_clearance_desc"
+                  formControlName={formik.values.manufacture_clearance_desc}
+                  // handleChange={formik.handleChange}
+                  handleChange={(e) => onChangePhrase(e)}
+                  handleBlur={formik.handleBlur}
+                  disabled={
+                    localStorage.getItem("po_status") == "A" ||
+                    localStorage.getItem("po_status") == "D" ||
+                    localStorage.getItem("po_status") == "L"
+                      ? true
+                      : false
+                  }
+                  mode={3}
+                />
               )}
-              </Popover>
+              {formik.errors.manufacture_clearance_desc &&
+                formik.touched.manufacture_clearance_desc && (
+                  <VError title={formik.errors.manufacture_clearance_desc} />
+                )}
+            </Popover>
           </div>
         </div>
         <div className="flex pt-4 justify-between w-full">

@@ -258,7 +258,7 @@ function UploadTemplate({ onSubmit, flag, title }) {
         setSumTc(res?.data?.msg?.reduce((a, e) => a + e.tc_qty, 0));
         setQtySet(res?.data?.msg);
         axios
-          .post(url + "/api/gettcdoc", { id: params.po_no, item: value })
+          .post(url + "/api/gettcdoc", { id: parseInt(params.po_no), item: value })
           .then((res) => {
             setLoading(false)
             console.log(res);
