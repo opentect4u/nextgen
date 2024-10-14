@@ -2070,9 +2070,6 @@ async def item_dtls(data:ProjId):
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
-
-
-        
     return res_dt
 
 
@@ -2177,3 +2174,18 @@ async def get_item_dtls(data:ProjId):
 
         
     return result
+
+@poRouter.post('/get_item_dtls')
+async def get_item_dtls(data:ProjId):
+    select = "b.sl_no,b.project_id,b.po_no,c.po_sl_no,c.quantity,c.item_id,p.prod_name,c.sl_no as po_item_no,d.mrn_no,d.rc_qty"
+    schema = "td_po_basic b LEFT JOIN td_po_items c on c.po_sl_no = b.sl_no left join md_product p on c.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=c.sl_no"
+    where = f"b.project_id is NULL" if data.Proj_id==0 else f"b.project_id={data.Proj_id}"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+
+        
+    return result
+
+
+
