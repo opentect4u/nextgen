@@ -2132,7 +2132,6 @@ async def get_requisition(data:GetPo):
 
 @poRouter.post('/req_item_dtls')
 async def req_item_dtls(data:ReqId):
-
     select = "a.sl_no, a.last_req_id, a.req_no, a.item_id, b.prod_name, a.rc_qty, a.req_qty"
     table = "td_requisition_items a left join md_product b on a.item_id=b.sl_no"
     where = f"a.last_req_id = {data.last_req_id}"
@@ -2187,6 +2186,17 @@ async def get_item_dtls(data:ProjId):
 
         
     return result
+
+
+@poRouter.post("/item__req_dtls")
+async def item_dtls(data:ProjId):
+    select = "c.prod_name, c.sl_no prod_id, sum(b.rc_qty) tot_rc_qty"
+    table = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_requisition b ON d.sl_no=b.item_id"
+    where = f"a.po_no=b.po_no and a.project_id={data.Proj_id} group by prod_id"
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+    return res_dt
 
 
 
