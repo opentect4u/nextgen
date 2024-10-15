@@ -2191,8 +2191,29 @@ async def get_item_dtls(data:ProjId):
 @poRouter.post("/item_req_dtls")
 async def item_dtls(data:ProjId):
     select = "c.prod_name, c.sl_no prod_id, sum(b.rc_qty) tot_rc_qty"
-    table = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_requisition b ON d.sl_no=b.item_id"
+    table = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_requisition_items b ON d.sl_no=b.item_id"
     where = f"a.po_no=b.po_no and a.project_id={data.Proj_id} group by prod_id"
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+    return res_dt
+
+
+@poRouter.post("/get_req_min")
+async def item_dtls(data:ProjId):
+    select = "*"
+    table = "td_requisition"
+    where = f"sl_no={data.Proj_id}"
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+    return res_dt
+
+@poRouter.post("/get_item_req_min")
+async def item_dtls(data:ProjId):
+    select = "*"
+    table = "td_requisition_items"
+    where = f"sl_no={data.Proj_id}"
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
