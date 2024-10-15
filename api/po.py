@@ -241,6 +241,7 @@ class minList(BaseModel):
     purpose:str
     notes:str
     name:str
+    sum:int
     
 class AddMin(BaseModel):
     req_no:str
