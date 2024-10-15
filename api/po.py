@@ -2222,7 +2222,7 @@ async def item_dtls(data:ProjId):
 @poRouter.post("/get_item_req_min")
 async def item_dtls(data:ProjId):
     select = "c.prod_name,b.sl_no,b.last_req_id,b.item_id,b.rc_qty,b.req_qty"
-    table = "md_product c on c.sl_no=d.item_id LEFT JOIN td_requisition_items b ON d.sl_no=b.item_id"
+    table = "md_product c LEFT JOIN td_requisition_items b ON d.sl_no=b.item_id"
     where = f"b.project_id={data.Proj_id}"
     order = ""
     flag = 1 
