@@ -243,7 +243,7 @@ class minList(BaseModel):
     name:str
     
 class AddMin(BaseModel):
-    po_no:str
+    req_no:str
     min:list[minList]
     user:str
 
@@ -2009,17 +2009,17 @@ async def addmin(data:AddMin):
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
    select1 = "count(*) as count"
    schema1 = "td_min"
-   where1 = f"po_no='{data.po_no}'"
+   where1 = f"req_no='{data.req_no}'"
    order1 = ""
    flag1 = 0 
    result1 = await db_select(select1, schema1, where1, order1, flag1)
    print(result1,'res')
 
    for v in data.min:
-        fields= f'opening_qty="{v.quantity}", issue_qty="{v.issue_qty}",po_no="{data.po_no}",purpose="{v.purpose}",notes="{v.notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'item_id,opening_qty,issue_qty,po_no,purpose,notes,created_by,created_at'
-        values = f'"{v.item_id}","{v.quantity}","{v.issue_qty}","{data.po_no}","{v.purpose}","{v.notes}","{data.user}","{formatted_dt}"'
+        fields= f'opening_qty="{v.quantity}", issue_qty="{v.issue_qty}",req_no="{data.req_no}",purpose="{v.purpose}",notes="{v.notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'item_id,opening_qty,issue_qty,req_no,purpose,notes,created_by,created_at'
+        values = f'"{v.item_id}","{v.quantity}","{v.issue_qty}","{data.req_no}","{v.purpose}","{v.notes}","{data.user}","{formatted_dt}"'
         table_name = "td_min"
-        whr =  f'item_id="{v.sl_no}" and po_no="{data.po_no}"' if  result1['msg']['count'] > 0 else ''
+        whr =  f'item_id="{v.sl_no}" and req_no="{data.req_no}"' if  result1['msg']['count'] > 0 else ''
         flag = 1 if result1['msg']['count'] > 0 else 0
         result = await db_Insert(table_name, fields, values, whr, flag)
     
