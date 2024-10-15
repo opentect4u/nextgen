@@ -2213,7 +2213,7 @@ async def item_dtls(data:ProjId):
 async def item_dtls(data:ProjId):
     select = "*"
     table = "td_requisition_items"
-    where = f"sl_no={data.Proj_id}"
+    where = f"last_req_id={data.Proj_id}"
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
