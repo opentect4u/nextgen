@@ -2223,7 +2223,7 @@ async def item_dtls(data:ProjId):
 async def item_dtls(data:ProjId):
     select = "c.prod_name,b.sl_no,b.last_req_id,b.item_id,b.rc_qty,b.req_qty"
     table = "md_product c LEFT JOIN td_requisition_items b ON d.sl_no=b.item_id"
-    where = f"b.project_id={data.Proj_id}"
+    where = f"b.last_req_id={data.Proj_id}"
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
