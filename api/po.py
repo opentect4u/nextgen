@@ -2224,9 +2224,9 @@ async def item_dtls(data:ProjId):
 
 @poRouter.post("/get_item_req_min")
 async def item_dtls(data:ProjId):
-    select = "c.prod_name,b.sl_no,b.last_req_id,b.item_id,b.rc_qty,b.req_qty,m.issue_qty"
+    select = "c.prod_name,b.sl_no,b.last_req_id,b.item_id,b.rc_qty,b.req_qty, sum(m.issue_qty), m.issue_qty"
     table = "md_product c LEFT JOIN td_requisition_items b ON c.sl_no=b.item_id left join td_min m on m.item_id=b.item_id"
-    where = f"b.last_req_id={data.Proj_id}"
+    where = f"b.last_req_id={data.Proj_id} group by m.item_id"
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
