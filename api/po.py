@@ -2260,7 +2260,7 @@ async def approvepo(id:approvePO):
     return res_dt
 
 
-@app.post("/testing")
+@poRouter.post("/testing")
 async def item_dtls(data:ReqNo):
     select = f"a.sl_no, a.item_id, a.opening_qty, a.issue_qty, (select SUM(issue_qty) from td_min where req_no='{data.req_no}' and item_id=a.item_id group by item_id) as tot_issue_qty, a.req_no, a.purpose, a.notes, a.approve_status, a.created_by, a.created_at, a.modified_by, a.modified_at, a.deleted_by, a.deleted_at, a.delete_flag"
     table = "td_min a left join td_requisition_items b on a.item_id=b.item_id"
