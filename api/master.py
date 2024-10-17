@@ -54,7 +54,7 @@ class addUser(BaseModel):
       u_desig:str
       u_loc:str
       u_type:str
-      u_permission:str
+    #   u_permission:str
       u_email:str
       u_phone:str
       user:str
@@ -674,8 +674,8 @@ async def adduser(data:addUser):
     current_datetime = datetime.now()
     password=random.choice(pass_alphabets)+random.choice(pass_alphabets)+random.choice(pass_alphabets)+random.choice(pass_alphabets)+random.choice(pass_alphabets)+random.choice(pass_alphabets)
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'user_name,user_location,user_dept,user_desig,user_phone,user_permission,user_email,user_password, user_type,first_login_flag,created_by,created_at'
-    values = f'"{data.u_name}","{data.u_loc}","{data.u_dept}","{data.u_desig}","{data.u_phone}","{data.u_permission}","{data.u_email}","{get_hashed_password("1234")}","{data.u_type}","Y","{data.user}","{formatted_dt}"'
+    fields= f'user_name,user_location,user_dept,user_desig,user_phone,user_email,user_password, user_type,first_login_flag,created_by,created_at'
+    values = f'"{data.u_name}","{data.u_loc}","{data.u_dept}","{data.u_desig}","{data.u_phone}","{data.u_email}","{get_hashed_password("1234")}","{data.u_type}","Y","{data.user}","{formatted_dt}"'
     table_name = "md_user"
     whr =  None
     flag = 1 if data.u_id>0 else 0
@@ -703,7 +703,7 @@ async def getuser(id:getData):
     print(id.id)
     res_dt = {}
 
-    select = "@a:=@a+1 serial_number, user_name,user_location,user_dept,user_desig,user_phone,user_permission,user_email,user_password, user_type,first_login_flag,created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number, user_name,user_location,user_dept,user_desig,user_phone,user_email,user_password, user_type,first_login_flag,created_by,created_at,modified_by,modified_at,sl_no"
 
     schema = "md_user,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f"delete_flag='N'"
