@@ -2128,7 +2128,7 @@ async def get_requisition(data:GetPo):
     print(data.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number, req_no,intended_for,req_date, req_type,purpose,project_id, created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number, req_no,intended_for,req_date, req_type,approve_flag,purpose,project_id, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_requisition,(SELECT @a:= 0) AS a"
     where = f"sl_no='{data.id}' and delete_flag='N'" if data.id>0 else f"delete_flag='N'"
