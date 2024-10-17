@@ -90,6 +90,7 @@ class addClient(BaseModel):
 class approvePO(BaseModel):
     id:int
     status:str
+    reason:str
     user:str
 
 class addVPoc(BaseModel):
@@ -1086,7 +1087,7 @@ async def getreceiptdoc(wrd:getPhrase):
 async def approvepo(id:approvePO):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'active_flag="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
+    fields= f'active_flag="{id.status}",block_desc="{id.reason}",modified_by="{id.user}",modified_at="{formatted_dt}"'
     values = f''
     table_name = "md_user"
     whr = f'sl_no="{id.id}"' if id.id > 0 else None
