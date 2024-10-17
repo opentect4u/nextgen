@@ -42,7 +42,7 @@ async def firstRoute(user:getUser):
     print(user)
     select = "user_password"
     schema = "md_user"
-    where = f"user_email='{user.id}'" 
+    where = f"user_email='{user.id}' and active_flag='Y'" 
     order = ""
     flag = 0
     result = await db_select(select, schema, where, order, flag)
