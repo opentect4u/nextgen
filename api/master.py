@@ -688,7 +688,7 @@ async def adduser(data:addUser):
             res_dt = {"suc": 0, "msg": "Error while saving!"}
     else:
         print(flag)
-        fields=f'user_name="{data.u_name}",user_location="{data.u_loc}",user_dept="{data.u_dept}",user_desig="{data.u_desig}",user_phone="{data.u_phone}",user_permission="{data.u_permission}",user_email="{data.u_email}",user_type="{data.u_type}",modified_by="{data.user}",modified_at="{formatted_dt}"'
+        fields=f'user_name="{data.u_name}",user_location="{data.u_loc}",user_dept="{data.u_dept}",user_desig="{data.u_desig}",user_phone="{data.u_phone}",user_email="{data.u_email}",user_type="{data.u_type}",modified_by="{data.user}",modified_at="{formatted_dt}"'
         whr=f'sl_no="{data.u_id}"'
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
