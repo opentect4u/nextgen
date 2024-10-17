@@ -2241,7 +2241,7 @@ async def item_dtls(data:req_id):
 async def approvepo(id:approvePO):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'approval_flag="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
+    fields= f'approve_flag="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
     values = f''
     table_name = "td_requisition"
     whr = f'sl_no="{id.id}"' if id.id > 0 else None
