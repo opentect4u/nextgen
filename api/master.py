@@ -1171,3 +1171,14 @@ async def getuser(id:getProfile):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+@masterRouter.get("/user_type")
+async def item_dtls(sl_no:int):
+    select = "*"
+    table = "md_user_type"
+    where = f"sl_no={sl_no}" if sl_no>0 else f""
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+    return res_dt
