@@ -11,11 +11,15 @@ import random
 from models.utils import get_hashed_password, verify_password
 import json
 import os
-
+from fastapi import FastAPI, Depends, File, UploadFile, Form
 masterRouter = APIRouter()
 
 UPLOAD_POC_FOLDER = "upload_file/upload_poc"
 os.makedirs(UPLOAD_POC_FOLDER, exist_ok=True)
+
+UPLOAD_FOLDER = "upload_file"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# app.mount("/uploads", StaticFiles(directory="upload_file"), name="uploads"
 
 class getMaster(BaseModel):
     id:int
@@ -1100,4 +1104,54 @@ async def approvepo(id:approvePO):
         res_dt = {"suc": 0, "msg": f"Error while saving!"}
   
     return res_dt
+
+
+@masterRouter.post('/edit_user')
+async def edit_user(
+    user_name: str = Form(...),
+    # user_location: str = Form(...),
+    # user_dept: str = Form(...),
+    # user_desig:str = Form(...),
+    user_phone:str = Form(...),
+    file: Optional[UploadFile] = File(None),
+    user_email:str = Form(...),
+    # modified_by:str = Form(...) 
+    ):
+    print(file)
+    fileName = None if not file else await uploadfile(file)
+    # return {"body":data,"file":file}
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    table_name = "md_user"
+    prof_pic = f", user_profile_pic = '/uploads/{fileName}'" if fileName != None else ''
+    # catg_pic1 = f",'/uploads/{fileName}'" if fileName != None else ', ""'
+    # fields = f"user_name ='{user_name}', user_location='{user_location}', user_dept='{user_dept}', user_desig='{user_desig}', user_phone='{user_phone}' {prof_pic}, modified_by = '{modified_by}', modified_at = '{formatted_dt}'" 
+    fields = f"user_name ='{user_name}', user_phone='{user_phone}' {prof_pic}, modified_by = '{user_email}', modified_at = '{formatted_dt}'" 
+    values = None
+    where = f"user_email='{user_email}'" 
+    flag = 1 
+    res_dt = await db_Insert(table_name,fields,values,where,flag)
+    
+    return res_dt
+
+
+async def uploadfile(file):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(UPLOAD_FOLDER, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
 
