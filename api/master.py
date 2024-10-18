@@ -1236,10 +1236,10 @@ async def add_edit_permissions(data:Permission):
     return result
 
 @masterRouter.post("/fetch_permission")
-async def fetch_permission(user_type_id:int):
+async def fetch_permission(user_type_id:getData):
     select = "*"
     table = "td_permission"
-    where = f"user_type_id={user_type_id}" if user_type_id>0 else f""
+    where = f"user_type_id={user_type_id.id}" if user_type_id.id>0 else f""
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
