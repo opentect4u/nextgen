@@ -1154,4 +1154,19 @@ async def uploadfile(file):
         res = ""
     finally:
         return res
+    
 
+@masterRouter.post('/getprofile')
+async def getuser(id:getData):
+    print(id.id)
+    res_dt = {}
+
+    select = "@a:=@a+1 serial_number, user_name,user_location,user_dept,user_desig,user_phone,user_email,user_password, user_type,first_login_flag,user_profile_pic,created_by,created_at,modified_by,modified_at,sl_no,active_flag"
+
+    schema = "md_user,(SELECT @a:= 0) AS a"
+    where = f"user_email='{id.id}'" if id.id>0 else f"delete_flag='N'"
+    order = "ORDER BY created_at DESC"
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
