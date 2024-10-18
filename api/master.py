@@ -140,6 +140,28 @@ class addVendor(BaseModel):
       v_poc:list[addVPoc] 
       v_address:str
       user:str
+
+class Permission(BaseModel):
+    user_type_id:int
+    department:str
+    prod_catg:str
+    unit:str
+    product:str
+    vendor:str
+    client:str
+    gst:str
+    comp_user:str
+    client_orders:str
+    vendor_orders:str
+    existing_po:str
+    amend_po:str
+    approve_po:str
+    certificate:str
+    mrn:str
+    requisition:str
+    min:str
+    reports:str
+    prm:str
 pass_alphabets=[
     'A','B','C','D','E','F','G','H','I','J','K','L',
     'M','N','O','P','Q','R','S','T','U','V','W','X',
@@ -1182,3 +1204,33 @@ async def item_dtls(id:getData):
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
     return res_dt
+
+
+@masterRouter.post('/add_edit_permissions')
+async def add_edit_permissions(data:Permission):
+    # result = {}
+    # print(data)
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+    select = "COUNT(sl_no) sl_no"
+    table = "td_permission"
+    where = f""
+    order = ""
+    flag1 = 1 
+   
+    res_dt = await db_select(select,table,where,order,flag1)
+    print(res_dt["msg"][0]["sl_no"])
+    
+
+    fields= f"department='{data.department}', prod_catg='{data.prod_catg}', unit='{data.unit}', product='{data.product}', vendor='{data.vendor}', client='{data.client}', gst='{data.gst}', comp_user='{data.comp_user}',client_orders='{data.client_orders}', vendor_orders='{data.vendor_orders}', existing_po='{data.existing_po}', amend_po='{data.amend_po}', approve_po='{data.approve_po}', certificate='{data.certificate}', mrn='{data.mrn}', requisition='{data.requisition}', min='{data.min}', reports='{data.reports}', permission='{data.prm}', modified_at='{formatted_dt}'" if res_dt["msg"][0]["sl_no"] > 0 else f"user_type_id, department, prod_catg, unit, product, vendor, client, gst, comp_user, client_orders, vendor_orders, existing_po, amend_po, approve_po, certificate, mrn, requisition, min, reports, permission, created_by, created_at"
+
+    values = None if res_dt["msg"][0]["sl_no"] > 0 else f"{data.user_type_id}, '{data.department}', '{data.prod_catg}','{data.unit}', '{data.product}', '{data.vendor}', '{data.client}','{data.gst}', '{data.comp_user}', '{data.client_orders}', '{data.vendor_orders}', '{data.existing_po}', '{data.amend_po}', '{data.approve_po}', '{data.certificate}', '{data.mrn}', '{data.requisition}', '{data.min}', '{data.reports}', '{data.prm}', '{formatted_dt}'"
+
+    table_name = "td_permission"
+
+    whr = f"user_type_id={data.user_type_id}" if res_dt["msg"][0]["sl_no"] > 0 else f""
+    flag = 1 if res_dt["msg"][0]["sl_no"] > 0 else 0
+    result = await db_Insert(table_name, fields, values, whr, flag)
+
+    return result
