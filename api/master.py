@@ -1213,7 +1213,7 @@ async def add_edit_permissions(data:Permission):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
-    select = "COUNT(sl_no) sl_no"
+    select = "COUNT(user_type_id) sl_no"
     table = "td_permission"
     where = f""
     order = ""
