@@ -148,7 +148,8 @@ pass_alphabets=[
     'w','x','y','z','1','2','3','4','5','6','7','8',
     '9','0','/','*','+','~','@','#','%','^','&','//'
     ]
-
+class getProfile(BaseModel):
+    id:str
 class getPhrase(BaseModel):
     wrd:str
 
@@ -1157,7 +1158,7 @@ async def uploadfile(file):
     
 
 @masterRouter.post('/getprofile')
-async def getuser(id:getData):
+async def getuser(id:getProfile):
     print(id.id)
     res_dt = {}
 
