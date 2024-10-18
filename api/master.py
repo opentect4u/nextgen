@@ -1174,10 +1174,10 @@ async def getuser(id:getProfile):
 
 
 @masterRouter.post("/user_type")
-async def item_dtls(sl_no:int):
+async def item_dtls(id:getData):
     select = "*"
     table = "md_user_type"
-    where = f"sl_no={sl_no}" if sl_no>0 else f""
+    where = f"sl_no={id.id}" if id.id>0 else f""
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
