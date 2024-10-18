@@ -1215,7 +1215,7 @@ async def add_edit_permissions(data:Permission):
 
     select = "COUNT(user_type_id) sl_no"
     table = "td_permission"
-    where = f""
+    where =f"user_type_id={data.user_type_id}"
     order = ""
     flag1 = 1 
    
