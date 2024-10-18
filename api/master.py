@@ -1235,7 +1235,7 @@ async def add_edit_permissions(data:Permission):
 
     return result
 
-@masterRouter.get("/fetch_permission")
+@masterRouter.post("/fetch_permission")
 async def fetch_permission(user_type_id:int):
     select = "*"
     table = "td_permission"
