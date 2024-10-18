@@ -1173,7 +1173,7 @@ async def getuser(id:getProfile):
     return result
 
 
-@masterRouter.get("/user_type")
+@masterRouter.post("/user_type")
 async def item_dtls(sl_no:int):
     select = "*"
     table = "md_user_type"
