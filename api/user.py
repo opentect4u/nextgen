@@ -29,6 +29,10 @@ class getPass(BaseModel):
     newPass:str
     user:str
 
+class forgotPass(BaseModel):
+    newPass:str
+    user:str
+
 userRouter = APIRouter()
 
 @userRouter.get('/userApi')
@@ -94,6 +98,35 @@ async def reset_pass(dt:getPass):
 
     else:
         res_dt={"suc": 0, "msg": "Old password does not exist!"}
+    return res_dt
+
+
+@userRouter.post('/forgot_pass')
+async def reset_pass(dt:forgotPass):
+    print(dt)
+    select = "user_password"
+    schema = "md_user"
+    where = f"user_email='{dt.user}'" 
+    order = ""
+    flag = 0
+    result = await db_select(select, schema, where, order, flag)
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    print(result['msg'])
+    if result['suc']==1 :
+        fields=f'user_password="{get_hashed_password(dt.newPass)}",first_login_flag="N",modified_by="{dt.user}",modified_at="{formatted_dt}",first_login="Y"'
+        table_name="md_user"
+        whr=f'user_email="{dt.user}"'
+        flag1=1
+        values=''
+        result1 = await db_Insert(table_name, fields, values, whr, flag1)
+        if result1['suc']>0:
+                res_dt = {"suc": 1, "msg": "Password updated successfully!"}
+        else:
+                res_dt = {"suc": 0, "msg": "Error while updating!"}
+    else:
+            res_dt={"suc": 0, "msg": "Old password does not exist!"}
+
     return res_dt
 
 # @userRouter.get('/userData/{id}')
