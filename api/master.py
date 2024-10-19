@@ -29,6 +29,9 @@ class getMaster(BaseModel):
 class getData(BaseModel):
     id:int
 
+class getMenu(BaseModel):
+    email:str
+
 class deleteData(BaseModel):
     id:int
     user:str
@@ -1241,6 +1244,16 @@ async def fetch_permission(user_type_id:getData):
     select = "*"
     table = "td_permission"
     where = f"user_type_id={user_type_id.id}" if user_type_id.id>0 else f""
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+    return res_dt
+
+@masterRouter.post("/fetch_menus")
+async def fetch_permission(user_type_id:getMenu):
+    select = "*"
+    table = "td_permission"
+    where = f"user_type_id=(select sl_no from md_user where user_email='{user_type_id.email}')" if user_type_id.email>0 else f""
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
