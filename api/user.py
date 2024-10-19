@@ -114,7 +114,7 @@ async def reset_pass(dt:forgotPass):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     print(result['msg'])
     if result['suc']==1 :
-        fields=f'user_password="{get_hashed_password(dt.newPass)}",first_login_flag="N",modified_by="{dt.user}",modified_at="{formatted_dt}",first_login="Y"'
+        fields=f'user_password="{get_hashed_password(dt.newPass)}",first_login_flag="Y",modified_by="{dt.user}",modified_at="{formatted_dt}"'
         table_name="md_user"
         whr=f'user_email="{dt.user}"'
         flag1=1
