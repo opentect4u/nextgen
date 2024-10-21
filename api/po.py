@@ -2272,7 +2272,7 @@ async def item_dtls(data:ReqNo):
 
 @poRouter.post("/get_proj_id")
 async def item_dtls(data:ProjId):
-    select = "proj_id"
+    select = "proj_id,proj_name"
     table = "td_project"
     where = f"sl_no={data.Proj_id}"
     order = ""
