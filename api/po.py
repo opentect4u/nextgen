@@ -2166,7 +2166,7 @@ async def req_item_dtls(data:getMrnList):
 
 @poRouter.post('/get_received_items')
 async def req_item_dtls(data:MrnId):
-    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,d.created_at,d.created_by"
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.invoice_dt,d.mrn_no,d.created_at,d.created_by"
     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no "
     where = f"i.po_sl_no='{data.id}' and d.invoice='{data.invoice}' and d.delete_flag='N'" 
     order = ""
