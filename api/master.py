@@ -147,6 +147,8 @@ class addVendor(BaseModel):
 class Permission(BaseModel):
     user_type_id:int
     department:str
+    masters:str
+    purchase:str
     prod_catg:str
     unit:str
     product:str
@@ -1227,9 +1229,9 @@ async def add_edit_permissions(data:Permission):
     print(res_dt["msg"][0]["sl_no"])
     
 
-    fields= f"department='{data.department}', prod_catg='{data.prod_catg}', unit='{data.unit}', product='{data.product}', vendor='{data.vendor}', client='{data.client}', gst='{data.gst}', comp_user='{data.comp_user}',client_orders='{data.client_orders}', vendor_orders='{data.vendor_orders}', existing_po='{data.existing_po}', amend_po='{data.amend_po}', approve_po='{data.approve_po}', certificate='{data.certificate}', mrn='{data.mrn}', requisition='{data.requisition}', min='{data.min}', reports='{data.reports}', permission='{data.prm}', modified_at='{formatted_dt}'" if res_dt["msg"][0]["sl_no"] > 0 else f"user_type_id, department, prod_catg, unit, product, vendor, client, gst, comp_user, client_orders, vendor_orders, existing_po, amend_po, approve_po, certificate, mrn, requisition, min, reports, permission, created_by, created_at"
+    fields= f"department='{data.department}', prod_catg='{data.prod_catg}', unit='{data.unit}', product='{data.product}', vendor='{data.vendor}', masters='{data.masters}', purchase='{data.purchase}', client='{data.client}', gst='{data.gst}', comp_user='{data.comp_user}',client_orders='{data.client_orders}', vendor_orders='{data.vendor_orders}', existing_po='{data.existing_po}', amend_po='{data.amend_po}', approve_po='{data.approve_po}', certificate='{data.certificate}', mrn='{data.mrn}', requisition='{data.requisition}', min='{data.min}', reports='{data.reports}', permission='{data.prm}', modified_at='{formatted_dt}'" if res_dt["msg"][0]["sl_no"] > 0 else f"user_type_id, department, prod_catg, unit, product, vendor, masters,purchase, client, gst, comp_user, client_orders, vendor_orders, existing_po, amend_po, approve_po, certificate, mrn, requisition, min, reports, permission, created_by, created_at"
 
-    values = None if res_dt["msg"][0]["sl_no"] > 0 else f"{data.user_type_id}, '{data.department}', '{data.prod_catg}','{data.unit}', '{data.product}', '{data.vendor}', '{data.client}','{data.gst}', '{data.comp_user}', '{data.client_orders}', '{data.vendor_orders}', '{data.existing_po}', '{data.amend_po}', '{data.approve_po}', '{data.certificate}', '{data.mrn}', '{data.requisition}', '{data.min}', '{data.reports}', '{data.prm}','{data.user}', '{formatted_dt}'"
+    values = None if res_dt["msg"][0]["sl_no"] > 0 else f"{data.user_type_id}, '{data.department}', '{data.prod_catg}','{data.unit}', '{data.product}', '{data.vendor}','{data.masters}','{data.purchase}', '{data.client}','{data.gst}', '{data.comp_user}', '{data.client_orders}', '{data.vendor_orders}', '{data.existing_po}', '{data.amend_po}', '{data.approve_po}', '{data.certificate}', '{data.mrn}', '{data.requisition}', '{data.min}', '{data.reports}', '{data.prm}','{data.user}', '{formatted_dt}'"
 
     table_name = "td_permission"
 
