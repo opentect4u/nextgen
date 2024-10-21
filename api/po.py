@@ -2270,6 +2270,18 @@ async def item_dtls(data:ReqNo):
     res_dt = await db_select(select,table,where,order,flag)
     return res_dt
 
+@poRouter.post("/get_proj_id")
+async def item_dtls(data:ProjId):
+    select = "*"
+    table = "md_project"
+    where = f"sl_no={data.Proj_id}"
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+    return res_dt
+
+
+
 
 
 
