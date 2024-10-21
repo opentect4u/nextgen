@@ -1253,7 +1253,7 @@ async def fetch_permission(user_type_id:getData):
 async def fetch_permission(user_type_id:getMenu):
     select = "*"
     table = "td_permission"
-    where = f"user_type_id=(select sl_no from md_user where user_email='{user_type_id.email}')" 
+    where = f"user_type_id=(select user_type from md_user where user_email='{user_type_id.email}')" 
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
