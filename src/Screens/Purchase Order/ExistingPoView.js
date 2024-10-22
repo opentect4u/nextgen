@@ -175,6 +175,7 @@ function ExistingPoView() {
    
     <>
       <div className="flex items-center  justify-end h-14 -mt-[72px] w-auto dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 rounded-lg">
+      {localStorage.getItem('user_type')=='2' && <>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -204,6 +205,8 @@ function ExistingPoView() {
             <PrinterOutlined />
           </Tooltip>
         </motion.button>
+        </>
+}
       </div>
      
       <div className="flex justify-between items-center">

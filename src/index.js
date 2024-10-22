@@ -9,13 +9,9 @@ import Notfound from "./Screens/Notfound/Notfound";
 import Details from "./Screens/Homescreen/Details";
 import { Democontext } from "./Context/Democontext";
 import Loader from "./Components/Loader";
-import {LOADER} from "../src/Assets/Images/loader.gif"
 
 import CircularProgress from '@mui/material/CircularProgress';
 import CatchError from "./Screens/CatchError";
-
-
-
 
 
 
@@ -109,13 +105,13 @@ const AmendView =lazy(()=>import( "./Screens/Purchase Order/AmendView"))
 const OrderView = lazy(() => import("./Screens/Purchase Order/OrderView"));
 const OrderForm = lazy(() => import("./Screens/Purchase Order/OrderForm"));
 
-const StockComp = lazy(() => import("./Screens/Stock/StockComp"));
-const StockInView = lazy(() => import("./Screens/Stock/StockInView"));
-const StockInForm = lazy(() => import("./Screens/Stock/StockInForm"));
-const StockOutView = lazy(() => import("./Screens/Stock/StockOutView"));
-const StockOutForm = lazy(() => import("./Screens/Stock/StockOutForm"));
-const StockAssignView = lazy(() => import("./Screens/Stock/StockAssignView"));
-const StockAssignForm = lazy(() => import("./Screens/Stock/StockAssignForm"));
+// const StockComp = lazy(() => import("./Screens/Stock/StockComp"));
+// const StockInView = lazy(() => import("./Screens/Stock/StockInView"));
+// const StockInForm = lazy(() => import("./Screens/Stock/StockInForm"));
+// const StockOutView = lazy(() => import("./Screens/Stock/StockOutView"));
+// const StockOutForm = lazy(() => import("./Screens/Stock/StockOutForm"));
+// const StockAssignView = lazy(() => import("./Screens/Stock/StockAssignView"));
+// const StockAssignForm = lazy(() => import("./Screens/Stock/StockAssignForm"));
 const UpdateStock = lazy(()=>import("./Screens/Stock/UpdateStock/UpdateStock"))
 const UpdateStockView = lazy(()=>import("./Screens/Stock/UpdateStock/UpdateStockView"));
 const UpdateStockForm = lazy(()=>import("./Screens/Stock/UpdateStock/UpdateStockForm"));
@@ -126,6 +122,10 @@ const CancelForm =lazy(()=>import( "./Screens/Purchase Order/CancelPO/CancelForm
 const MDCC =lazy(()=>import( "./Screens/Purchase Order/UploadMDCC/MDCC"));
 const MDCCView =lazy(()=>import( "./Screens/Purchase Order/UploadMDCC/MDCCView"));
 const MDCCForm =lazy(()=>import( "./Screens/Purchase Order/UploadMDCC/MDCCForm"));
+
+const PermissionsComp =lazy(()=> import("./Screens/Masters/Permissions/PermissionsComp"));
+const PermissionsView =lazy(()=> import("./Screens/Masters/Permissions/PermissionsView"));
+const PermissionsForm =lazy(()=> import("./Screens/Masters/Permissions/PermissionsForm"));
 
 const RequisitionSentView = lazy(() =>
   import("./Screens/Stock/RequisitionSentView")
@@ -204,6 +204,20 @@ const router = createBrowserRouter([
                   {
                     path: "useraddform/:id",
                     element: <UserAddForm />,
+                  },
+                ],
+              },
+              {
+                path: "permissions",
+                element: <PermissionsComp />,
+                children: [
+                  {
+                    path: "",
+                    element: <PermissionsView />,
+                  },
+                  {
+                    path: "permissionsform/:id",
+                    element: <PermissionsForm />,
                   },
                 ],
               },
@@ -427,68 +441,68 @@ const router = createBrowserRouter([
               },
             ]
           },
-          {
-            path: "stockComp",
-            element: <StockComp />,
-            children: [
-              {
-                path: "updatestock",
-                element: <UpdateStock />,
-                children:[
-                  {
-                    path:'',
-                    element:<UpdateStockView/>
-                  },
-                  {
-                    path:'stockupdateform/:id',
-                    element:<UpdateStockForm/>
-                  },
+          // {
+          //   path: "stockComp",
+          //   element: <StockComp />,
+          //   children: [
+          //     {
+          //       path: "updatestock",
+          //       element: <UpdateStock />,
+          //       children:[
+          //         {
+          //           path:'',
+          //           element:<UpdateStockView/>
+          //         },
+          //         {
+          //           path:'stockupdateform/:id',
+          //           element:<UpdateStockForm/>
+          //         },
 
-                ]
-              },
-              {
-                path: "stockinview",
-                element: <StockInView />,
-              },
-              {
-                path: "stockinform/:id",
-                element: <StockInForm />,
-              },
-              {
-                path: "stockoutview",
-                element: <StockOutView />,
-              },
-              {
-                path: "stockoutform/:id",
-                element: <StockOutForm />,
-              },
-              ,
-              {
-                path: "stockassignview",
-                element: <StockAssignView />,
-              },
-              {
-                path: "stockassignform/:id",
-                element: <StockAssignForm />,
-              },
-              {
-                path: "requisitionssentview",
-                element: <RequisitionSentView />,
-              },
-              {
-                path: "requisitionsrcvdview",
-                element: <RequisitionRcvdView />,
-              },
-              {
-                path: "requisitionssendform/:id",
-                element: <ReqSendForm />,
-              },
-              {
-                path: "requisitionsrcvdform/:id",
-                element: <ReqRcvdForm />,
-              },
-            ],
-          },
+          //       ]
+          //     },
+          //     {
+          //       path: "stockinview",
+          //       element: <StockInView />,
+          //     },
+          //     {
+          //       path: "stockinform/:id",
+          //       element: <StockInForm />,
+          //     },
+          //     {
+          //       path: "stockoutview",
+          //       element: <StockOutView />,
+          //     },
+          //     {
+          //       path: "stockoutform/:id",
+          //       element: <StockOutForm />,
+          //     },
+          //     ,
+          //     {
+          //       path: "stockassignview",
+          //       element: <StockAssignView />,
+          //     },
+          //     {
+          //       path: "stockassignform/:id",
+          //       element: <StockAssignForm />,
+          //     },
+          //     {
+          //       path: "requisitionssentview",
+          //       element: <RequisitionSentView />,
+          //     },
+          //     {
+          //       path: "requisitionsrcvdview",
+          //       element: <RequisitionRcvdView />,
+          //     },
+          //     {
+          //       path: "requisitionssendform/:id",
+          //       element: <ReqSendForm />,
+          //     },
+          //     {
+          //       path: "requisitionsrcvdform/:id",
+          //       element: <ReqRcvdForm />,
+          //     },
+          //   ],
+          // },
           {
             path: "minComp",
             element: <MinComp />,
@@ -498,7 +512,7 @@ const router = createBrowserRouter([
                 element: <MinView />,
               },
               {
-                path: "minForm/:id/:po_no",
+                path: "minForm/:id",
                 element: <MinForm />,
               },
             

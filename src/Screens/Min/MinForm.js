@@ -5,7 +5,7 @@ import VError from "../../Components/VError";
 import TDInputTemplate from "../../Components/TDInputTemplate";
 import axios from "axios";
 import { url } from "../../Address/BaseUrl";
-import { Divider, Input } from "antd";
+import { Divider, Input, Tag } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import DialogBox from "../../Components/DialogBox";
@@ -33,7 +33,11 @@ function MinForm() {
   const [issue_qtyCopy, setIssueQtyCopy] = useState(0);
   const [purpose, setPurpose] = useState("");
   const [notes, setnotes] = useState("");
-
+  const [req, setReq] = useState("");
+  const [logList,setLogList] = useState([])
+  const [filteredLogList,setFilteredLogList] = useState([])
+  const [proj_name,setProjName] = useState("")
+  const [proj_id,setProjId] = useState("")
   useEffect(() => {
     getItemInfo(params.po_no);
   }, []);
@@ -63,36 +67,73 @@ function MinForm() {
         });
     }
   };
-  const getItemInfo = (po_no) => {
+  useEffect(() => {
     setLoading(true);
     axios
-      .post(url + "/api/getpo", { id: 0 })
-      .then((resPO) => {
-        setId(resPO?.data?.msg?.filter((e) => e.po_no == po_no)[0]?.sl_no);
+      .post(url + "/api/get_req_min", { Proj_id: +params.id })
+      .then((res) => {
+        console.log(res);
+        setReq(res?.data?.msg[0]?.req_no);
+        axios.post(url+'/api/get_proj_id',{Proj_id:res?.data?.msg[0]?.project_id}).then(res=>{console.log(res)
+        setProjId(res?.data?.msg[0]?.proj_id)
+        setProjName(res?.data?.msg[0]?.proj_name)
+
+        })
         axios
-          .post(url + "/api/item_req_dtls", {      //getmindel
-            id: +params.id,
-          })
+          .post(url + "/api/get_item_req_min", { Proj_id: +params.id,req_no:res?.data?.msg[0]?.req_no })
           .then((resItems) => {
             console.log(resItems);
             setLoading(false);
-            setItems(resItems?.data?.msg);
             for (let i of resItems?.data?.msg) {
               itemForm.push({
                 sl_no: i.sl_no,
-                item_id: i.sl_no,
+                item_id: i.item_id,
                 name: i.prod_name,
-                quantity: i.rc_qty,
-                issue_qty: i.issue_qty || 0,
+                quantity: i.req_qty,
+                tot_qty:i.tot_issue_qty,
+                issue_qty: i.req_qty,
                 notes: i.notes || "",
                 purpose: i.purpose,
               });
             }
+          axios.post(url+'/api/testing',{req_no:res?.data?.msg[0]?.req_no}).then(res=>{
+            console.log(res)
+            setLogList(res?.data?.msg)
           })
-          .catch((err) => {
-            console.log(err);
-            navigate("/error" + "/" + err.code + "/" + err.message);
+
           });
+      });
+  }, []);
+  const getItemInfo = (po_no) => {
+    // setLoading(true);
+    axios
+      .post(url + "/api/getpo", { id: 0 })
+      .then((resPO) => {
+        setId(resPO?.data?.msg?.filter((e) => e.po_no == po_no)[0]?.sl_no);
+        // axios
+        //   .post(url + "/api/item_req_dtls", {      //getmindel
+        //     id: +params.id,
+        //   })
+        //   .then((resItems) => {
+        //     console.log(resItems);
+        //     setLoading(false);
+        //     setItems(resItems?.data?.msg);
+        //     for (let i of resItems?.data?.msg) {
+        //       itemForm.push({
+        //         sl_no: i.sl_no,
+        //         item_id: i.sl_no,
+        //         name: i.prod_name,
+        //         quantity: i.rc_qty,
+        //         issue_qty: i.issue_qty || 0,
+        //         notes: i.notes || "",
+        //         purpose: i.purpose,
+        //       });
+        //     }
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //     navigate("/error" + "/" + err.code + "/" + err.message);
+        //   });
       })
       .catch((err) => {
         console.log(err);
@@ -112,7 +153,7 @@ function MinForm() {
     setLoading(true);
     axios
       .post(url + "/api/addmin", {
-        po_no: params.id,
+        req_no: req,
         user: localStorage.getItem("email"),
         min: itemForm,
       })
@@ -134,7 +175,7 @@ function MinForm() {
   return (
     <section className="bg-transparent dark:bg-[#001529]">
       <HeadingTemplate
-        text={"Update MIN"}
+        text={"Update Material Issue Note"}
         mode={params.id > 0 ? 1 : 0}
         title={"Category"}
         data={""}
@@ -150,30 +191,22 @@ function MinForm() {
             <div className="grid gap-4 sm:grid-cols-12 sm:gap-6">
               <div className="sm:col-span-12">
                 <TDInputTemplate
-                  placeholder="PO No."
+                  placeholder="Requisition"
                   type="text"
-                  label="PO No."
+                  label="Requisition"
                   name="po_no"
-                  formControlName={params.po_no}
+                  formControlName={req}
                   handleChange={(txt) => setPoNo(txt.target.value)}
-                  disabled={params.id > 0}
+                  disabled={true}
                   mode={1}
                 />
-                {params.po_no && (
-                  <div className="flex justify-between">
-                    <Viewdetails
-                      click={() => {
-                        setFlag(14);
-                        setVisible(true);
-                      }}
-                    />
-                  </div>
-                )}
+                <span className="flex justify-end my-2">
+              <Tag color="#014737">Project:{proj_name} | Project ID:{proj_id} </Tag>
+              </span>
               </div>
-
+              
               <>
                 <div className="relative overflow-x-auto sm:col-span-12">
-                     
                   {itemForm?.length > 0 &&
                     itemForm.map((item, index) => (
                       <>
@@ -192,18 +225,24 @@ function MinForm() {
                               >
                                 Opening Quantity
                               </th>
-                              <th
+                            {item.issue_qty>0 &&  <th
+                                scope="col"
+                                className="px-6 py-3 w-1/4 font-bold"
+                              >
+                                Already Issued
+                              </th>}
+                              {item.quantity>item.issue_qty &&  <th
                                 scope="col"
                                 className="px-6 py-3 w-1/4 font-bold"
                               >
                                 Issue Quantity
-                              </th>
-                              <th
+                              </th>}
+                              {item.quantity>item.issue_qty &&  <th
                                 scope="col"
                                 className="px-6 py-3 w-1/4 font-bold"
                               >
                                 Purpose
-                              </th>
+                              </th>}
                             </tr>
                           </thead>
                           <tbody>
@@ -231,7 +270,29 @@ function MinForm() {
                                 />
                               </th>
 
-                              <td className="px-6 py-4 w-1/4">
+                             {item.quantity-item.issue_qty!=item.quantity && <td className="px-6 py-4 w-1/4">
+                              <a
+                                    className="my-2"
+                                    onClick={() => {
+                                      setFlag(18);
+                                      setFilteredLogList(
+                                        logList.filter(
+                                          (e) => e.item_id == item.item_id
+                                        )
+                                      );
+                                      setVisible(true);
+                                    }}
+                                  >
+                                    <Tag color="#4FB477">View Log</Tag>
+                                  </a>
+                                {item.issue_qty > item.quantity ? (
+                                  <VError title={"Invalid value"} />
+                                ) : null}
+                                {!item.issue_qty ? (
+                                  <VError title={"Required"} />
+                                ) : null}
+                              </td>}
+                              {item.quantity>item.issue_qty && <td className="px-6 py-4 w-1/4">
                                 <TDInputTemplate
                                   placeholder="Quantity"
                                   type="number"
@@ -245,11 +306,11 @@ function MinForm() {
                                 {item.issue_qty > item.quantity ? (
                                   <VError title={"Invalid value"} />
                                 ) : null}
-                                 {!item.issue_qty ? (
+                                {!item.issue_qty ? (
                                   <VError title={"Required"} />
                                 ) : null}
-                              </td>
-                              <td className="px-6 py-4 w-1/4">
+                              </td>}
+                              {item.quantity>item.issue_qty &&  <td className="px-6 py-4 w-1/4">
                                 <TDInputTemplate
                                   placeholder="Purpose"
                                   type="number"
@@ -270,7 +331,7 @@ function MinForm() {
                                 {!item.purpose ? (
                                   <VError title={"Required"} />
                                 ) : null}
-                              </td>
+                              </td>}
                             </tr>
                           </tbody>
                         </table>
@@ -305,11 +366,13 @@ function MinForm() {
                             </tr>
                           </tbody>
                         </table>
-                      {itemForm.length>1 &&  <Divider
-                          style={{ borderColor: "#014737", color: "#A8A29E" }}
-                        >
-                          Material Issue Note
-                        </Divider>}
+                        {itemForm.length > 1 && (
+                          <Divider
+                            style={{ borderColor: "#014737", color: "#A8A29E" }}
+                          >
+                            Material Issue Note
+                          </Divider>
+                        )}
                       </>
                     ))}
                 </div>
@@ -331,7 +394,7 @@ function MinForm() {
         visible={visible}
         flag={flag1}
         id={id}
-        data={itemForm}
+        data={filteredLogList}
         onPress={() => setVisible(false)}
         onDelete={() => deleteItem()}
       />

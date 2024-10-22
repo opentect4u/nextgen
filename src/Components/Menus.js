@@ -1,36 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BarChartOutlined,
   DatabaseOutlined,
-  ProjectOutlined,
   BlockOutlined,
   ToolOutlined,
   UserAddOutlined,
   UserSwitchOutlined,
   ShopOutlined,
-  PicRightOutlined,
-  HddOutlined,
   BarsOutlined,
-  ArrowRightOutlined,
-  ArrowLeftOutlined,
-  SwapOutlined,
-  NodeExpandOutlined,
-  NodeCollapseOutlined,
   AuditOutlined,
-  UserOutlined,
   SolutionOutlined,
-  ReconciliationOutlined,
   PayCircleOutlined,
-  IdcardOutlined,
   BankOutlined,
-  MailOutlined,
   PercentageOutlined,
-  DropboxOutlined,
   CheckCircleOutlined,
-  IssuesCloseOutlined,
   SignatureOutlined,
-  CloseCircleOutlined,
-  TruckOutlined,
   DockerOutlined,
   AccountBookOutlined,
   FileProtectOutlined,
@@ -40,11 +24,12 @@ import {
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import { routePaths } from "../Assets/Data/Routes";
-import { CheckOutlined, UploadFileOutlined } from "@mui/icons-material";
+import { CheckOutlined, LockOpenOutlined, UploadFileOutlined } from "@mui/icons-material";
 
-function Menus({ theme }) {
+
+function Menus({ theme,data }) {
   const [current, setCurrent] = React.useState("sub1");
-
+ console.log(data)
   const onClick = (e) => {
     console.log("click ", e);
     setCurrent(e.key);
@@ -55,16 +40,20 @@ function Menus({ theme }) {
       key: "sub1",
       icon: <BarChartOutlined />,
       label: <Link to={""}>Dashboard </Link>,
+      
     },
     {
       label: "Masters",
       key: "sub2",
       icon: <DatabaseOutlined />,
+      disabled: data?.masters=='Y'?false:true,
       children: [
         {
           key: "masters:dept",
           icon: <BankOutlined />,
-          label: <Link to={routePaths.DEPARTMENTS}>Department</Link>,
+          label: <Link disabled={data?.department=='Y'?false:true} to={routePaths.DEPARTMENTS}>Department</Link>,
+          disabled:data?.department=='Y'?false:true
+
         },
         // {
         //   key: "masters:desig",
@@ -74,7 +63,8 @@ function Menus({ theme }) {
         {
           key: "masters:cat",
           icon: <BlockOutlined />,
-          label: <Link to={routePaths.CATEGORIES}>Product Category</Link>,
+          label: <Link disabled={data?.prod_catg=='Y'?false:true} to={routePaths.CATEGORIES}>Product Category</Link>,
+          disabled:data?.prod_catg=='N'?true:false
         },
         // {
         //   key: "masters:3",
@@ -85,33 +75,52 @@ function Menus({ theme }) {
         {
           key: "masters:unit",
           icon: <PayCircleOutlined />,
-          label: <Link to={routePaths.UNITS}>Unit</Link>,
+          label: <Link disabled={data?.unit=='Y'?false:true} to={routePaths.UNITS}>Unit</Link>,
+          disabled:data?.unit=='Y'?false:true
+
         },
         {
           key: "masters:product",
           icon: <ToolOutlined />,
-          label: <Link to={routePaths.PRODUCTS}>Product</Link>,
+          label: <Link disabled={data?.product=='Y'?false:true} to={routePaths.PRODUCTS}>Product</Link>,
+          disabled:data?.product=='Y'?false:true
+
         },
         {
           key: "masters:vendor",
           icon: <ShopOutlined />,
-          label: <Link to={routePaths.VENDORS}>Vendor</Link>,
+          label: <Link disabled={data?.vendor=='Y'?false:true} to={routePaths.VENDORS}>Vendor</Link>,
+          disabled:data?.vendor=='Y'?false:true
+
         },
         {
           key: "masters:client",
           icon: <UserSwitchOutlined />,
-          label: <Link to={routePaths.CLIENTS}>Client </Link>,
+          label: <Link disabled={data?.client=='Y'?false:true} to={routePaths.CLIENTS}>Client </Link>,
+          disabled:data?.client=='Y'?false:true
+
         },
         {
           key: "masters:gst",
           icon: <PercentageOutlined />,
-          label: <Link to={routePaths.GST}>GST </Link>,
+          label: <Link disabled={data?.gst=='Y'?false:true} to={routePaths.GST}>GST </Link>,
+          disabled:data?.gst=='Y'?false:true
+
         },
-        // {
-        //   key: "masters:user",
-        //   icon: <UserAddOutlined />,
-        //   label: <Link to={routePaths.USERS}>Company User </Link>,
-        // },
+        {
+          key: "masters:user",
+          icon: <UserAddOutlined />,
+          label: <Link  disabled={data?.comp_user=='Y'?false:true} to={routePaths.USERS}>Company Users </Link>,
+          disabled:data?.comp_user=='Y'?false:true
+
+        },
+        {
+          key: "masters:permissions",
+          icon: <LockOpenOutlined />,
+          label: <Link disabled={data?.permission=='Y'?false:true} to={routePaths.PERMISSIONS}>Permissions</Link>,
+          disabled:data?.permission=='Y'?false:true
+
+        },
       ],
     },
 
@@ -119,14 +128,13 @@ function Menus({ theme }) {
       label: "Orders",
       key: "sub4",
       icon: <AuditOutlined />,
+      disabled:data?.client_orders=='N' && data?.purchase=='N'?true:false,
       children: [
         {
-          // key: "client-order",
-          // icon: <UserOutlined />,
-          // label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
           key: "master:projects",
           icon: <DockerOutlined />,
           label: "Projects",
+          disabled:data?.client_orders=='Y'?false:true,
 
           children: [
             {
@@ -135,7 +143,9 @@ function Menus({ theme }) {
               // label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
               key: "master:client-orders",
               icon: <UserSwitchOutlined />,
-              label: <Link to={routePaths.PROJECTS}>Client Orders</Link>,
+              label: <Link disabled={data?.client_orders=='Y'?false:true} to={routePaths.PROJECTS}>Client Orders</Link>,
+              disabled:data?.client_orders=='Y'?false:true
+
             },
           ],
         },
@@ -146,47 +156,58 @@ function Menus({ theme }) {
           key: "master:purchase",
           icon: <AccountBookOutlined />,
           label: "Purchase",
+          disabled: data?.purchase=='Y'?false:true,
 
           children: [
             {
               label: (
-                <Link to={routePaths.PURCHASEORDER + "/P"}>Vendor Orders</Link>
+                <Link disabled={data?.vendor_orders=='Y'?false:true} to={routePaths.PURCHASEORDER + "/P"}>Vendor Orders</Link>
               ),
               key: "purchase-order",
               icon: <SolutionOutlined />,
+              disabled:data?.vendor_orders=='Y'?false:true
+
             },
 
             {
               label: (
-                <Link to={routePaths.EXISTINGORDER}>
+                <Link disabled={data?.existing_po=='Y'?false:true} to={routePaths.EXISTINGORDER}>
                   Existing Purchase Orders
                 </Link>
               ),
               key: "existing-order",
               icon: <CheckCircleOutlined />,
+          disabled:data?.existing_po=='Y'?false:true
+
             },
             {
               label: (
-                <Link to={routePaths.AMENDORDER}>Amend Purchase Orders</Link>
+                <Link disabled={data?.amend_po=='Y'?false:true} to={routePaths.AMENDORDER}>Amend Purchase Orders</Link>
               ),
               key: "amend-order",
               icon: <SignatureOutlined />,
+          disabled:data?.amend_po=='Y'?false:true
+
             },
             {
               label: (
-                <Link to={routePaths.APPROVEORDER}>Approve Vendor Orders</Link>
+                <Link disabled={data?.approve_po=='Y'?false:true} to={routePaths.APPROVEORDER}>Approve Vendor Orders</Link>
               ),
               key: "approve-purchase-order",
               icon: <CheckOutlined />,
+          disabled:data?.approve_po=='Y'?false:true
+
             },
             {
               label: (
-                <Link to={routePaths.TESTCERTHOME}>
+                <Link disabled={data?.certificate=='Y'?false:true} to={routePaths.TESTCERTHOME}>
                   Upload Test Certificate
                 </Link>
               ),
               key: "uploadtc-purchase-order",
               icon: <UploadFileOutlined />,
+          disabled:data?.certificate=='Y'?false:true
+
             },
 
             // {
@@ -243,19 +264,25 @@ function Menus({ theme }) {
     //   icon: <UploadFileOutlined />,
     // },
     {
-      label: <Link to={routePaths.DELIVERYCUSTOMERVIEW}> MRN </Link>,
+      label: <Link disabled={data?.mrn=='Y'?false:true} to={routePaths.DELIVERYCUSTOMERVIEW}> MRN </Link>,
       key: "material-delivery",
       icon: <FileProtectOutlined />,
+      disabled:data?.mrn=='Y'?false:true
+
     },
     {
-      label: <Link to={routePaths.REQVIEW}> Requisition </Link>,
+      label: <Link disabled={data?.requisition=='Y'?false:true} to={routePaths.REQVIEW}> Requisition </Link>,
       key: "material-requisition",
       icon: <InteractionOutlined />,
+      disabled:data?.requisition=='Y'?false:true
+
     },
     {
-      label: <Link to={routePaths.MINVIEW}> Material Issue Note </Link>,
+      label: <Link disabled={data?.min=='Y'?false:true} to={routePaths.MINVIEW}> Material Issue Note </Link>,
       key: "material-issue",
       icon: <FileSyncOutlined />,
+      disabled:data?.min=='Y'?false:true
+
     },
     // {
     //   label: "Stock",
@@ -315,6 +342,8 @@ function Menus({ theme }) {
       label: "Reports",
       key: "sub6",
       icon: <BarsOutlined />,
+      disabled:data?.reports=='Y'?false:true
+
     },
   ];
 

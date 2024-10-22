@@ -8,20 +8,30 @@ import { motion } from "framer-motion";
 import nodata from "../../../src/Assets/Images/nodata.png";
 import {
   EditOutlined,
+
 } from "@ant-design/icons";
 import SkeletonLoading from "../../Components/SkeletonLoading";
 
+
 function MinView() {
-   const [first, setFirst] = useState(0);
+  const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10);
   const [searchVal, setSearchVal] = useState("");
   const [loading, setLoading] = useState(false);
+  const [delFlag,setDelFlag]=useState()
+
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
   };
+  const rdBtn = [
+    { label: "Uploaded", value: 1 },
+    { label: "Yet to upload", value: 2 },
+  ];
   const [po_data, setPoData] = useState([]);
   const [copy, setCopy] = useState([]);
+  const params=useParams()
+  const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.removeItem("id");
@@ -49,51 +59,54 @@ function MinView() {
     localStorage.removeItem("drawing");
     localStorage.removeItem("dt");
     setLoading(true)
-    axios.post(url + "/api/getMRN", { id:0 }).then((res) => {
+    axios.post(url + "/api/get_requisition", { id:0 }).then((res) => {
       console.log(res);
       setLoading(false);
       setCopy(res?.data?.msg);
       setPoData(res?.data?.msg);
     });
+
   }, []);
   const setSearch = (word) => {
     setPoData(
       copy?.filter(
         (e) =>
-          e?.po_no?.toLowerCase().includes(word?.toLowerCase()) ||
-                    e?.created_by?.toLowerCase().includes(word?.toLowerCase())
+          e?.req_no?.toLowerCase().includes(word?.toLowerCase()) ||
+                    e?.created_by?.toLowerCase().includes(word?.toLowerCase())||
+                    e?.req_date?.toLowerCase().includes(word?.toLowerCase())
       )
     );
   };
- 
-
   return (
     <>
+        <div className="flex items-center  justify-end h-14 -mt-[72px] w-auto dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 rounded-lg">
+      
+      </div>
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, type: "spring", stiffness: 30 }}
       >
-        <div className="flex flex-col p-1 bg-green-900 rounded-full my-3 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
-          <div className="w-full relative flex justify-normal">
-            <div className="flex items-center justify-between w-11/12">
+        <div class="flex flex-col p-1 bg-green-900 rounded-full my-3 dark:bg-[#22543d] md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 ">
+          <div class="w-full relative flex justify-normal">
+            <div class="flex items-center justify-between w-11/12">
               <motion.h2
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, type: "just" }}
-                className="text-xl w-48 capitalize text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5"
+                class="text-xl w-48 capitalize text-nowrap font-bold text-white dark:text-white sm:block hidden mx-5"
               >
-                Material Issue Note
+                {'Material Issue Note'}
               </motion.h2>
 
-              <label for="simple-search" className="sr-only">
-                Search by PO No.
+              <label for="simple-search" class="sr-only">
+                Search 
               </label>
-              <div className="relative w-full -right-6 2xl:-right-12">
-                <div className="absolute inset-y-0 left-0 flex items-center md:ml-4 pl-3 pointer-events-none">
+              <div class="relative w-full -right-6 2xl:-right-12">
+                <div class="absolute inset-y-0 left-0 flex items-center md:ml-4 pl-3 pointer-events-none">
                   <svg
                     aria-hidden="true"
-                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    class="w-5 h-5 text-gray-500 dark:text-gray-400"
                     fill="currentColor"
                     viewbox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
@@ -112,13 +125,12 @@ function MinView() {
                   animate={{ opacity: 1, width: "100%" }}
                   transition={{ delay: 1.1, type: "just" }}
                   class="bg-white border rounded-full border-emerald-500 text-gray-800 text-sm  block w-full  pl-10 dark:bg-gray-800 md:ml-4  duration-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Search"
+                  placeholder="Search "
                   required=""
                   onChange={(text) => setSearch(text.target.value)}
-
                 />
               </div>
-           
+            
             </div>
           </div>
         </div>
@@ -126,20 +138,20 @@ function MinView() {
       {loading && <SkeletonLoading />}
 
       {copy.length == 0 && loading == false && (
-        <div className="flex-col ml-72 mx-auto justify-center items-center">
+        <div class="flex-col ml-72 mx-auto justify-center items-center">
           <motion.img
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, type: "spring" }}
             src={nodata}
-            className="h-96 w-96 2xl:ml-48 2xl:h-full"
+            class="h-96 w-96 2xl:ml-48 2xl:h-full"
             alt="Flowbite Logo"
           />
           <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, type: "spring" }}
-            className="h-12 text-green-900 -mt-16  2xl:ml-48 2xl:h-24 font-bold"
+            class="h-12 text-green-900 -mt-16  2xl:ml-48 2xl:h-24 font-bold"
           >
              You can either create or search to view any record here!
           </motion.h2>
@@ -152,7 +164,7 @@ function MinView() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, type: "spring", stiffness: 30 }}
           >
-           
+            
             <table class="w-full text-sm text-left rtl:text-right shadow-lg text-green-900dark:text-gray-400">
               <thead class=" text-md  text-gray-700 capitalize   bg-[#C4F1BE] dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -160,9 +172,12 @@ function MinView() {
                     #
                   </th>
                   <th scope="col" class="p-4">
-                    PO No.
+                    Requisition NO.
                   </th>
-                 
+                  <th scope="col" class="p-4">
+                    Date
+                  </th>
+                
                   <th scope="col" class="p-4">
                     Created By
                   </th>
@@ -181,16 +196,17 @@ function MinView() {
                       >
                         {item.sl_no}
                       </th>
-                      <td class="px-6 py-4">{item.po_no}</td>
-                      
-
+                      <td class="px-6 py-4">{item.req_no}</td>
+                      <td class="px-6 py-4">{item.req_date}</td>
                       <td class="px-6 py-4">{item.created_by}</td>
                       <td class="px-3 py-4 flex gap-3">
                       
                         <Link
-                          to={routePaths.MINFORM + item.sl_no+'/'+item.po_no}
+                          to={
+                            routePaths.MINFORM + item.sl_no
+                          }
                         >
-                          <EditOutlined className="text-md text-green-900" />
+                          <EditOutlined class="text-md text-green-900" />
                         </Link>
                       </td>
                     </tr>

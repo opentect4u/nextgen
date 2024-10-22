@@ -44,6 +44,7 @@ function App() {
         itemHoverBg:'white',
         itemSelectedColor:'#4C9F70',
         itemHoverColor:'#014737',
+        itemDisabledColor:'#FEF08A'
       },
       Segmented:{
         itemActiveBg:'#014737',

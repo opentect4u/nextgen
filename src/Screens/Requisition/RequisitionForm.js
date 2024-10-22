@@ -30,7 +30,8 @@ function RequisitionForm() {
   const [error, setError] = useState([]);
   const [flag, setFlag] = useState();
   const [breakupinfo, setBreakUpInfo] = useState([]);
-
+  const [approve_flag,setApproveFlag]=useState("")
+  const [projID,setProjID] = useState("")
   const params = useParams();
   useEffect(() => {
     axios.post(url + "/api/getproject", { id: 0 }).then((res) => {
@@ -52,6 +53,27 @@ function RequisitionForm() {
     for (let i of dt) err += i.flag;
     return err;
   };
+  const onApprove=(status)=>{
+    setLoading(true)
+    axios.post(url+'/api/approve_req',{status:status,user:localStorage.getItem('email'),id:+params.id}).then(res=>{console.log(res)
+     if(res?.data?.suc>0){
+      Message('success',res?.data?.msg)
+      setLoading(false)
+      navigate(-1)
+
+     }
+     else{
+      Message('error',res?.data?.msg)
+      setLoading(false)
+     }
+
+    })
+    .catch((err) => {
+      console.log(err);
+      navigate("/error" + "/" + err.code + "/" + err.message);
+    });
+
+  }
   const handleDtChange = (index, event) => {
     console.log(index, event.target.value);
     let data = [...itemDtlsForm];
@@ -79,7 +101,11 @@ function RequisitionForm() {
           setType(res?.data?.msg?.req_type);
           setProject(res?.data?.msg?.project_id);
           setPurpose(res?.data?.msg?.purpose);
-
+          setApproveFlag(res?.data?.msg?.approve_flag)
+          axios.post(url+'/api/get_proj_id',{Proj_id:res?.data?.msg?.project_id}).then(res=>{
+            console.log(res)
+            setProjID(res?.data?.msg[0]?.proj_id)
+          })
           axios
             .post(url + "/api/req_item_dtls", { last_req_id: +params.id })
             .then((resItems) => {
@@ -139,25 +165,15 @@ function RequisitionForm() {
             });
         });
 
-      // axios.post(url+'/api/get_requisition_items',{id:+params.id}).then(resItems=>{
-      //   console.log(resItems)
-      //   for (let i of resItems?.data?.msg) {
-      //     error.push({flag:0})
-      //     itemDtlsForm.push({
-      //       sl_no:+params.id>0?+params.id:0,
-      //       item_id:i.prod_id,
-      //       prod_name: i.prod_name,
-      //       rc_qty: i.tot_rc_qty,
-      //       req_qty:i.tot_rc_qty
-      //     });
-      //   }
-
-      // })
     } else {
       setReqDate(moment(new Date()).format("yyyy-MM-DD"));
     }
   }, []);
   const getItemDetails = (id) => {
+    axios.post(url+'/api/get_proj_id',{Proj_id:id}).then(res=>{
+      console.log(res)
+      setProjID(res?.data?.msg[0]?.proj_id)
+    })
     itemDtlsForm.length = 0;
     axios
       .post(url + "/api/get_item_dtls", {
@@ -297,7 +313,13 @@ function RequisitionForm() {
       >
         <div className="grid grid-cols-12 gap-2">
           <div className={"w-full col-span-12 bg-white p-6 rounded-2xl"}>
-            <div className="grid gap-4 sm:grid-cols-12 sm:gap-6">
+           <div className="grid gap-4 sm:grid-cols-12 sm:gap-6">
+           {params.id>0 && <div className="sm:col-span-12 flex justify-end">
+                   {approve_flag=='A' && <Tag color="#4FB477">Approved</Tag>}
+                   {approve_flag=='R' && <Tag color="#4FB477">Rejected</Tag>}
+                   {approve_flag=='P' && <Tag color="#4FB477">Pending Approval</Tag>}
+
+                    </div>}
               <div className="sm:col-span-6">
                 <TDInputTemplate
                   placeholder="Date"
@@ -386,11 +408,13 @@ function RequisitionForm() {
                       setProject(txt.target.value);
                       setLoading(true);
                       getItemDetails(txt.target.value);
+                      
                     }}
                     data={projectList}
                     mode={2}
                   />
                   {!project && <VError title={"Required"} />}
+                  <span className="flex justify-between mt-1 items-center">
                   <a
                     onClick={() => {
                       setFlag(17);
@@ -398,7 +422,19 @@ function RequisitionForm() {
                     }}
                   >
                     <Tag color="#4FB477">Itemwise breakup</Tag>
-                  </a>
+                  </a>  
+                  <a
+                    // onClick={() => {
+                    //   setFlag(17);
+                    //   setVisible(true);
+                    // }}
+                  >
+                    <Tag color="#eb8d00">Project ID: {projID}</Tag>
+                  </a>  
+                  
+                  
+                  </span>
+                 
 
                   {/* <Select
                   clearable
@@ -522,7 +558,7 @@ setProject(values[0]?.value);
                 </ScrollPanel>
               )}
               <div className="flex justify-center items-center mx-auto">
-                <button
+               {approve_flag!='A' && <button
                   disabled={
                     errorSum(error) ||
                     !intended ||
@@ -534,6 +570,32 @@ setProject(values[0]?.value);
                 >
                   Submit
                 </button>
+}
+
+              {params.id>0 && approve_flag=='P' && localStorage.getItem('user_type') =='4' && <button
+                  disabled={
+                    errorSum(error) ||
+                    !intended ||
+                    !type ||
+                    !purpose
+                  }
+                  onClick={() => onApprove('A')}
+                  className=" disabled:bg-gray-400 mx-auto disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+                >
+                  Approve
+                </button>}
+                {params.id>0 && approve_flag=='P' && localStorage.getItem('user_type') =='4' &&<button
+                  disabled={
+                    errorSum(error) ||
+                    !intended ||
+                    !type ||
+                    !purpose
+                  }
+                  onClick={() => onApprove('R')}
+                  className=" disabled:bg-gray-400 mx-auto disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+                >
+                  Reject
+                </button>}
               </div>
             </div>
           </div>

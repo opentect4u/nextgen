@@ -12,12 +12,21 @@ import axios from "axios";
 import { Message } from "../../../Components/Message";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import AuditTrail from "../../../Components/AuditTrail";
+import DialogBox from "../../../Components/DialogBox";
+import DrawerComp from "../../../Components/DrawerComp";
 const UserAddForm = () => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const navigate=useNavigate()
   const [desig, setDesig] = useState([]);
+  const [active_flag, setActiveFlag] = useState("");
   const [dept, setDept] = useState([]);
+  const [data,setData]=useState()
+  const [count,setCount]=useState(0)
+  const [reason,setReason]=useState("")
+  const [visible,setVisible]=useState(false)
+  const [types,setTypes] = useState([])
   var designations = [];
   var departments = [];
   const initialValues = {
@@ -26,10 +35,28 @@ const UserAddForm = () => {
     user_type: "",
     user_email: "",
     user_phone: "",
-    user_permission: "",
+    // user_permission: "",
     user_dept: "",
     user_location: "",
   };
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState(0);
+  const onClose = () => {
+    setOpen(false);
+  }
+  useEffect(()=>{
+    axios.post(url+'/api/user_type',{id:0}).then(res=>{
+      console.log(res)
+      setTypes([])
+      for(let i of res?.data?.msg){
+        types.push({
+          name:i.user_type,
+          code:i.sl_no
+        })
+      }
+      setTypes(types)
+    })
+  },[])
   const onSubmit = (values) => {
     setLoading(true)
     console.log(values);
@@ -43,11 +70,13 @@ const UserAddForm = () => {
         u_type: values.user_type,
         u_desig: values.user_designation,
         u_dept: values.user_dept,
-        u_permission: values.user_permission,
+        // u_permission: values.user_permission,
         u_loc: values.user_location,
       })
       .then((res) => {
         setLoading(false);
+        setCount(prev=>prev+1)
+
         if (res.data.suc > 0) {
           Message("success", res.data.msg);
           if (params.id == 0) formik.handleReset();
@@ -90,6 +119,8 @@ const UserAddForm = () => {
     axios.post(url + "/api/getuser", { id: params.id })
     .then((res) => {
       console.log(res.data.msg);
+      setData(res.data?.msg)
+      setActiveFlag(res?.data?.msg?.active_flag)
       setLoading(false);
       setValues({
         user_name: res?.data?.msg?.user_name,
@@ -98,12 +129,29 @@ const UserAddForm = () => {
         user_type: res?.data?.msg?.user_type,
         user_designation: res?.data?.msg?.user_desig,
         user_dept: res?.data?.msg?.user_dept,
-        user_permission: res?.data?.msg?.user_permission,
+        // user_permission: res?.data?.msg?.user_permission,
         user_location: res?.data?.msg?.user_location,
       });
     }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});;;
   }
-  }, []);
+  }, [count]);
+
+  const activate = (status,reason)=>{
+    setVisible(false)
+    setLoading(true)
+    axios.post(url+'/api/activate_user',{id:+params.id,user:localStorage.getItem('email'),status:status,reason:reason}).then(res=>{
+
+      setLoading(false)
+      
+      if (res.data.suc > 0) {
+        Message("success", res.data.msg);
+       navigate(-1)
+      } else {
+        Message("error", res.data.msg);
+      }
+
+    })
+  }
   const validationSchema = Yup.object({
     user_name: Yup.string().required("Name is required"),
     user_designation: Yup.string().required("Designation is required"),
@@ -124,19 +172,25 @@ const UserAddForm = () => {
     enableReinitialize: true,
   });
   return (
-    <section className="bg-white dark:bg-[#001529]">
-      <div className="py-8 mx-auto w-5/6 lg:py-16">
+    <section  className="bg-transparent dark:bg-[#001529]">
         <HeadingTemplate
           text={params.id > 0 ? "Update company user" : "Add company user"}
+          mode={params.id>0?1:0}
+          title={'Product'}
+          data={params.id && data?data:''}
         />
+      <div  className="w-full bg-white p-6 rounded-2xl">
+
  <Spin
           indicator={<LoadingOutlined spin />}
           size="large"
           className="text-green-900 dark:text-gray-400"
           spinning={loading}
         >
+       
         <form onSubmit={formik.handleSubmit}>
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+          
             <div className="sm:col-span-2 mb-2">
               <TDInputTemplate
                 placeholder="Type user name..."
@@ -179,28 +233,29 @@ const UserAddForm = () => {
                 formControlName={formik.values.user_type}
                 handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
-                data={[
-                  {
-                    code: "AD",
-                    name: "Admin",
-                  },
-                  {
-                    code: "PM",
-                    name: "Project Manager",
-                  },
-                  {
-                    code: "WM",
-                    name: "Warehouse Manager",
-                  },
-                  {
-                    code: "PuM",
-                    name: "Purchase Manager",
-                  },
-                  {
-                    code: "GU",
-                    name: "General User",
-                  },
-                ]}
+                // data={[
+                //   {
+                //     code: "AD",
+                //     name: "Admin",
+                //   },
+                //   {
+                //     code: "PM",
+                //     name: "Project Manager",
+                //   },
+                //   {
+                //     code: "WM",
+                //     name: "Warehouse Manager",
+                //   },
+                //   {
+                //     code: "PuM",
+                //     name: "Purchase Manager",
+                //   },
+                //   {
+                //     code: "GU",
+                //     name: "General User",
+                //   },
+                // ]}
+                data={types}
                 mode={2}
               />
               {formik.errors.user_type && formik.touched.user_type ? (
@@ -261,6 +316,7 @@ const UserAddForm = () => {
                 formControlName={formik.values.user_email}
                 handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
+                disabled={+params.id>0}
                 mode={1}
               />
               {formik.errors.user_email && formik.touched.user_email ? (
@@ -282,7 +338,9 @@ const UserAddForm = () => {
                 <VError title={formik.errors.user_phone} />
               ) : null}
             </div>
-            <div className="sm:col-span-2">
+            { params.id>0 && <AuditTrail data={data}/>}
+
+            {/* <div className="sm:col-span-2">
               <TDInputTemplate
                 placeholder="Select permission..."
                 type="text"
@@ -315,16 +373,47 @@ const UserAddForm = () => {
               formik.touched.user_permission ? (
                 <VError title={formik.errors.user_permission} />
               ) : null}
-            </div>
+            </div> */}
             
           </div>
           <BtnComp
             mode={params.id > 0 ? "E" : "A"}
             onReset={formik.handleReset}
           />
+         <div className='flex justify-center w-1/4 mx-auto items-center my-4'>
+         {active_flag=='N' &&  <button type="submit" onClick={()=>activate('Y','')}  className="text-white bg-green-900 hover:bg-
+      green-900 w-1/4 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm sm:w-full px-5 py-2.5 text-center dark:bg-green-500 dark:hover:bg-green-700 dark:focus:ring-green-800 disabled:bg-blue-400">
+        Activate
+      </button>}
+    
+      
+      </div>
         </form>
+        <div className="flex justify-between w-1/3 mx-auto items-center">
+        {active_flag=='Y' &&  <button type="submit" onClick={()=>setVisible(true)} className="text-white bg-red-900 hover:bg-
+      red-900 w-1/4 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm sm:w-full px-5 py-2.5 text-center dark:bg-green-500 dark:hover:bg-green-700 dark:focus:ring-green-800 disabled:bg-blue-400">
+        Deactivate/Block
+      </button>}
+      {params.id>0 &&  <button onClick={()=>{ 
+                          setMode(9);
+                          setOpen(true);
+                      
+                      }} className="text-white bg-green-500 hover:bg-
+      red-900 w-1/6  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-xs sm:w-full px-6 py-3 text-center dark:bg-green-500 dark:hover:bg-green-700 text-nowrap dark:focus:ring-green-800 disabled:bg-blue-400 ml-2">
+        Reset Pasword
+      </button>}
+      </div>
         </Spin>
       </div>
+      <DialogBox
+        visible={visible}
+        flag={19}
+        onPress={() => setVisible(false)}
+        // onDelete={() => deleteItem()}
+        onDeactivate={(values)=>{activate('N',values);console.log(values)}}
+      />
+      <DrawerComp open={open} flag={mode} onClose={() => onClose()} />
+
     </section>
   );
 };

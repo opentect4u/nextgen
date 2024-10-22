@@ -17,6 +17,8 @@ export const routePaths={
     ADDPRODUCTS:'/home/mastersComp/products/productaddform/',
     VENDORS:'mastersComp/vendors',
     ADDVENDORS:'/home/mastersComp/vendors/vendoraddform/',
+    PERMISSIONS:'mastersComp/permissions',
+    ADDPERMISSIONS:'/home/mastersComp/permissions/permissionsform/',
     DEPARTMENTS:'mastersComp/departments',
     ADDDEPARTMENTS:'/home/mastersComp/departments/departmentaddform/',
     DESIGNATIONS:'mastersComp/designations',

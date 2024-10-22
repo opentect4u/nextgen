@@ -170,7 +170,8 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                 rc_by: i.created_by,
                 rc_at: i.created_at,
                 mrn_no:i.mrn_no,
-                invoice:i.invoice
+                invoice:i.invoice,
+                invoice_dt:i.invoice_dt,
               });
             }
           })
@@ -259,7 +260,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
       setOtDesc(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.ot_desc);
       setMrnNo(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.mrn_no);
       setCon(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.confirm=='Y'?true:false);
-    fileList.length=0
+      fileList.length=0
 
       axios
         .post(url + "/api/getdeliverydoc", { po_no: inv_el })

@@ -868,9 +868,8 @@ function PurchaseOrderForm() {
         }
         
     
-    {localStorage.getItem('po_status')=='U' && <>  
+    {localStorage.getItem('po_status')=='U' && localStorage.getItem('user_type')=='1' && <>  
       <Tooltip title='Approve PO'>
-
     <Button
           type="submit"
           className="justify-center disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
@@ -892,7 +891,7 @@ function PurchaseOrderForm() {
 
       
       </>  }
-      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='P') && 
+      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='P') && localStorage.getItem('user_type') == '2' &&
           <Tooltip title='Save PO'>
       
       <Button
@@ -906,43 +905,7 @@ function PurchaseOrderForm() {
         }
             </div>
             <PoLogs data={timeline}/>
-    {/* <div className="grid grid-cols-2 gap-5 my-10">
-   <div className="sm:col-span-1">
-   {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='A' ) && <Timeline
-            mode={'left'}
-        items={timeline}
-      />}
-      </div>
-      <div className="sm:col-span-1">
-      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='A' ) &&  <span className="sm:col-span-4">
-           <TDInputTemplate
-                        placeholder="Comments"
-                        type="text"
-                        label="Comments"
-                        name="po_comments"
-                        
-                        formControlName={comment}
-                        handleChange={(txt)=>{setComment(txt.target.value);localStorage.setItem('po_comments',txt.target.value)}}
-                        mode={3}
-  
-                      /> 
-                       <Spin
-          indicator={<LoadingOutlined spin />}
-          size="large"
-          className="text-green-900 dark:text-gray-400"
-          spinning={loading}
-        >
-                     <button  className="bg-green-900 hover:duration-500 w-full hover:scale-105  text-white p-1 my-3 rounded-full" onClick={()=>{setComment('');addcomment()}}> Add comment </button>
-                     </Spin>
-        
-           </span>}
-      </div>
-       
-
-    </div> */}
-            
           </StepperPanel>
-        
         </Stepper>
       </div>
       </Spin>

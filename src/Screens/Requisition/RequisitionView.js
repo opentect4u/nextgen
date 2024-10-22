@@ -213,9 +213,11 @@ function RequisitionView() {
                       Requisition NO.
                     </th>
                     <th scope="col" class="p-4">
-                      Date.
+                      Date
                     </th>
-                  
+                    <th scope="col" class="p-4">
+                      Status
+                    </th>
                     <th scope="col" class="p-4">
                       Created By
                     </th>
@@ -236,6 +238,7 @@ function RequisitionView() {
                         </th>
                         <td class="px-6 py-4">{item.req_no}</td>
                         <td class="px-6 py-4">{item.req_date}</td>
+                        <td class="px-6 py-4">{item.approve_flag=='A'?'Approved':item.approve_flag=='P'?'Pending':'Rejected'}</td>
                         <td class="px-6 py-4">{item.created_by}</td>
                         <td class="px-3 py-4 flex gap-3">
                         

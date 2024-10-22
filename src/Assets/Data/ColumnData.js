@@ -139,6 +139,14 @@ export const masterheaders={
       { name: "created_by", value: "Created by" },
     ],
   },
+  'permissions':{
+    title: "Permissions",
+    btnText:'',
+    headers: [
+      { name: "sl_no", value: "#" },
+      { name: "user_type", value:"Type"},
+    ],
+  },
     // 'uploadtc': {
     //     title: "Test Certificate",
     //     // btnText:'Add product categories',

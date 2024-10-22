@@ -19,7 +19,7 @@ import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { Message } from './Message';
 import { url } from '../Address/BaseUrl';
-const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) => {
+const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm ,onDeactivate}) => {
   const navigate = useNavigate();
   const [po_no,setPoNo]=useState('')
   const [item_nm,setItemNm]=useState('')
@@ -27,6 +27,7 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
   const [item_sl,setItemSl]=useState('')
   const [item_remarks,setItemRemarks]=useState('')
   const [loading,setLoading]=useState(false)
+  const [reason,setReason] =  useState("")
   useEffect(()=>{setPoNo('')},[])
   const params=useParams()
   console.log(data)
@@ -63,6 +64,7 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
       <p className='font-bold text-green-900 flex justify-center items-center'>Serial No.: {data[i].sl}</p>
       <p className='font-bold text-green-900 flex justify-center items-center'>MRN No.: {data[i].mrn_no}</p>
       <p className='font-bold text-green-900 flex justify-center items-center'>Invoice: {data[i].invoice}</p>
+      <p className='font-bold text-green-900 flex justify-center items-center'>Invoice Date: {data[i].invoice_dt}</p>
       </div>
       </>
        ,
@@ -112,6 +114,34 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
       </span>
     })
   }
+  
+
+  
+ }
+
+ if(flag==18){
+  for(let i=0; i<data.length;i++){
+    timeLineItems.push({
+      children:
+      <>
+      <span>Issued {data[i].issue_qty} unit(s)</span>
+     
+      </>
+       ,
+      // label:'Received on '+i.rc_at?.split('T')[0]+' at '+i.rc_at?.split('T')[1]
+      label:<span> <div className='my-2 p-2 bg-gray-200 rounded-lg flex-col justify-center items-center shadow-lg'>
+      <p className='font-bold text-green-900 flex justify-center items-center'>Purpose: {data[i].purpose=='M'?'Manufacturing Activity':'Resale'}</p>
+      <p className='font-bold text-green-900 flex justify-center items-center'>Notes: {data[i].notes}</p>
+     
+      </div> 
+      
+
+      </span>
+    })
+  }
+  
+
+  
  }
  
   return (
@@ -272,6 +302,9 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
                     Received quantity
                 </th>
                 <th scope="col" class="px-6 py-3">
+                    Invoice Date
+                </th>
+                <th scope="col" class="px-6 py-3">
                     Sl No.
                 </th>
                 <th scope="col" class="px-6 py-3">
@@ -290,9 +323,13 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
                     {item.prod_name}
                 </th>
                 
+                
                 <td class="px-6 py-4">
                    {item.rc_qty}
                 </td>
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {item.invoice_dt}
+                </th>
                 <td class="px-6 py-4">
                    {item.sl}
                 </td>
@@ -354,6 +391,39 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm }) 
         </tbody>
     </table>
 </div>
+        }
+          {flag==18 && 
+        
+        <Timeline
+          className='my-2'
+    mode="right"
+    items={timeLineItems}
+  />
+        }
+
+{flag==19 && 
+             <p className="m-0">Do you want to deactivate this user?
+              <TDInputTemplate
+                        placeholder="Why do you want to deactivate/block this user?"
+                        type="text"
+                        name="block"
+                        label="Why do you want to deactivate/block this user?"
+                        formControlName={reason}
+                        handleChange={(txt) => setReason(txt.target.value)}
+                        mode={3}
+                      />
+             <div className='flex justify-center'>
+            
+             <button type="reset" onClick={onPress} className="inline-flex mr-3 bg-[#92140C] items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white border border-[#92140C] bg-primary-700 rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                No
+             </button>
+             <button
+              disabled={!reason}
+              type="submit" onClick={()=>{onDeactivate(reason)}} className="inline-flex bg-green-900 items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white rounded-full focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                Yes
+             </button>
+             </div>
+             </p>
         }
       </Dialog>
   );

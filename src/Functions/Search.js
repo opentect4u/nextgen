@@ -34,11 +34,11 @@ export const Search=(e,word,dt)=>{
   }
   else if(e=='A')
     return dt?.filter(e=>e?.po_no?.toLowerCase().includes(word?.toLowerCase()) || e?.vendor_name?.toLowerCase().includes(word?.toLowerCase())  || e?.po_issue_date?.toLowerCase().includes(word?.toLowerCase()) || e?.po_status_val?.toLowerCase().includes(word?.toLowerCase()) ||e?.created_by?.toLowerCase().includes(word?.toLowerCase()))
-
   else if(e=='P')
     return dt?.filter(e=>e?.po_no?.toLowerCase().includes(word?.toLowerCase()) || e?.vendor_name?.toLowerCase().includes(word?.toLowerCase())  || e?.po_issue_date?.toLowerCase().includes(word?.toLowerCase()) || e?.po_status_val?.toLowerCase().includes(word?.toLowerCase()) ||e?.created_by?.toLowerCase().includes(word?.toLowerCase()))
-
   else if(e=='updatestock')
     return dt?.filter(e=>e?.stock_dt?.toLowerCase().includes(word?.toLowerCase()) || e?.stock.toString().toLowerCase().includes(word))  || e?.prod_name?.toLowerCase().includes(word?.toLowerCase() ||e?.created_by?.toLowerCase().includes(word?.toLowerCase())) 
+  else if(e=='permissions')
+    return dt?.filter(e=>e?.user_type?.toLowerCase().includes(word?.toLowerCase()) ||e?.created_by?.toLowerCase().includes(word?.toLowerCase())) 
 }
 

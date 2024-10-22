@@ -5,6 +5,8 @@ import Menus from './Menus';
 import { Divider } from '@mui/material';
 import { Drawer } from "antd";
 import { motion } from "framer-motion"
+import { url } from '../Address/BaseUrl';
+import axios from 'axios';
 
 
 function Sidebar() {
@@ -13,6 +15,7 @@ function Sidebar() {
   const [theme,setTheme] = useState(localStorage.getItem('col'))
   const paths = location.pathname.split("/");
   const [open, setOpen] = useState(false);
+  const [menuData,setMenuData] = useState()
   useState(()=>{
     setTheme(localStorage.getItem('col'))
 
@@ -28,6 +31,13 @@ function Sidebar() {
     setOpen(false);
   };
   const drawerWidth = 257;
+
+  useEffect(()=>{
+    axios.post(url+'/api/fetch_menus',{email:localStorage.getItem('email')}).then(res=>{console.log(res)
+      setMenuData(res?.data?.msg[0])
+    })
+      
+    },[])
   return (
     <div className='bg-gray-200 dark:bg-gray-800 '>
         
@@ -61,7 +71,7 @@ function Sidebar() {
                 <motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5, type:'spring'
               }} src={LOGO} className="h-14 mb-5" alt="Flowbite Logo" />
       </div>
-     <Menus  />
+     <Menus data={menuData} />
 {/* <img className='absolute bottom-0 h-40 blur-1' src={sidebar2} alt="Flowbite Logo" /> */}
 
    </div>

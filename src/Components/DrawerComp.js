@@ -8,10 +8,11 @@ import UnitMaster from './MasterDrawer/UnitMaster';
 import GSTMaster from './MasterDrawer/GSTMaster';
 import Docs from './MasterDrawer/Docs';
 import VendorMDCC from './MasterDrawer/VendorMDCC';
+import ForgotPass from './ForgotPass';
 function DrawerComp({open,onClose,flag,data}) {
   console.log(data)
   return (
-    <Drawer width={flag!=7 && flag!=8?900:300} title={flag==1?"Add Vendor":flag==2?"Add Project":flag==3?"Add Item":flag==4?"Add Client":flag==5?"Add Unit":flag==6?"Add GST":flag==7?'Upload/View Vendor Receipt (PO: '+data.po+')':flag==8?'Upload/View Vendor MDCC (PO: '+data.po+')':''} onClose={onClose} open={open}>
+    <Drawer width={flag!=7 && flag!=8?900:300} title={flag==1?"Add Vendor":flag==2?"Add Project":flag==3?"Add Item":flag==4?"Add Client":flag==5?"Add Unit":flag==6?"Add GST":flag==7?'Upload/View Vendor Receipt (PO: '+data.po+')':flag==8?'Upload/View Vendor MDCC (PO: '+data.po+')':'Reset Password'} onClose={onClose} open={open}>
     {flag==1 && <VendorMaster onClose={onClose}/>}
     {flag==2 && <ProjectMaster onClose={onClose}/>}
     {flag==3 && <ProductMaster onClose={onClose}/>}
@@ -20,6 +21,7 @@ function DrawerComp({open,onClose,flag,data}) {
     {flag==6 && <GSTMaster onClose={onClose}/>}
     {flag==7 && <Docs onClose={onClose} data={data}/>}
     {flag==8 && <VendorMDCC onClose={onClose} data={data}/>}
+    {flag==9 && <ForgotPass onClose={onClose} data={data}/>}
   </Drawer>
   )
 }
