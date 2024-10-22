@@ -474,7 +474,7 @@ async def getprojectpoc(id:GetPo):
     select = "@a:=@a+1 serial_number,b.po_no,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,u.user_email,c.proj_manager,p.proj_name,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no,b.fresh_flag,b.amend_flag,b.amend_note"
     schema = '''td_po_basic b
 left join td_project p ON p.sl_no=b.project_id
-join md_vendor v ON v.sl_no=b.vendor_id left join td_project_assign c on c.sl_no=p.sl_no left join on md_user u on u.sl_no = c.sl_no
+join md_vendor v ON v.sl_no=b.vendor_id left join td_project_assign c on c.sl_no=p.sl_no left join md_user u on u.sl_no = c.sl_no
 join (SELECT @a:= 0) AS a '''
     where = f"b.sl_no='{id.id}' and b.po_status IN ('P','U','A','L','D')" if id.id>0 else "b.po_status IN ('P','U','A','L','D') OR (amend_flag = 'Y' AND parent_po_no IS NOT NULL)"
     order = "ORDER BY b.created_at DESC"
