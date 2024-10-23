@@ -2385,7 +2385,7 @@ async def checkinvoice(inv_no:CheckInvoice):
    current_datetime = datetime.now()
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
    select1 = "count(*) as count"
-   schema1 = "td_item_delivery_details"
+   schema1 = "td_item_delivery_invoice"
    where1 = f"invoice='{inv_no.inv_no}'"
    order1 = ""
    flag1 = 0 
