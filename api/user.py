@@ -73,7 +73,7 @@ async def reset_pass(dt:getPass):
     print(dt)
     select = "user_password"
     schema = "md_user"
-    where = f"user_email='{dt.user}'" 
+    where = f"sl_no='{dt.user}'" 
     order = ""
     flag = 0
     result = await db_select(select, schema, where, order, flag)
