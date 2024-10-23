@@ -97,7 +97,7 @@ async def reset_pass(dt:getPass):
             res_dt={"suc": 0, "msg": "Old password does not exist!"}
 
     else:
-        res_dt={"suc": 0, "msg": "Old password does not exist!"}
+        res_dt={"suc": 0, "msg": result['msg']}
     return res_dt
 
 
