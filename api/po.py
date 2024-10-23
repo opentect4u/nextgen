@@ -2298,6 +2298,22 @@ async def item_dtls(data:ProjId):
     return res_dt
 
 
+@poRouter.post('/checkmin')
+async def addmin(data:ReqNo):
+   print(data)
+   current_datetime = datetime.now()
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   select1 = "count(*) as count"
+   schema1 = "td_min"
+   where1 = f"req_no='{data.req_no}'"
+   order1 = ""
+   flag1 = 0 
+   result1 = await db_select(select1, schema1, where1, order1, flag1)
+   print(result1,'res')
+
+   return result1['msg']['count']
+
+
 
 
 
