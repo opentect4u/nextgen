@@ -284,6 +284,9 @@ class req_id(BaseModel):
 class ReqNo(BaseModel):
     req_no:str
 
+class CheckInvoice(BaseModel):
+    inv_no:str
+
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -2378,12 +2381,12 @@ async def addmin(data:ReqNo):
    return result1['msg']['count']
 
 @poRouter.post('/checkinvoice')
-async def checkinvoice(inv_no:str):
+async def checkinvoice(inv_no:CheckInvoice):
    current_datetime = datetime.now()
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
    select1 = "count(*) as count"
    schema1 = "td_requisition"
-   where1 = f"invoice='{inv_no}'"
+   where1 = f"invoice='{inv_no.inv_no}'"
    order1 = ""
    flag1 = 0 
    result1 = await db_select(select1, schema1, where1, order1, flag1)
