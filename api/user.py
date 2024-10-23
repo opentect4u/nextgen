@@ -160,3 +160,18 @@ async def reset_pass(dt:forgotPass):
 #     if q:
 #         results.update({"q": q})
 #     return results
+
+
+@userRouter.post('/checkemail')
+async def checkinvoice(id:getFlag):
+   current_datetime = datetime.now()
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   select1 = "count(*) as count"
+   schema1 = "md_user"
+   where1 = f"user_email='{id.id}'"
+   order1 = ""
+   flag1 = 0 
+   result1 = await db_select(select1, schema1, where1, order1, flag1)
+   print(result1,'res')
+
+   return result1
