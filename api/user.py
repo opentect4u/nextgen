@@ -31,7 +31,7 @@ class getPass(BaseModel):
 
 class forgotPass(BaseModel):
     newPass:str
-    user:str
+    user:int
 
 userRouter = APIRouter()
 

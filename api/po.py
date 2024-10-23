@@ -1333,6 +1333,56 @@ async def check_proj_id(po_no:GetPoNo):
 
 
 
+# @poRouter.post('/adddelivery')
+# async def adddelivery(data:getDelivery):
+#     res_dt = {}
+#     print(data)
+#     current_datetime = datetime.now()
+
+    
+#     select1 = "count(*) as count"
+#     schema1 = "td_item_delivery_invoice"
+#     where1 = f"invoice='{data.invoice}'"
+#     order1 = ""
+#     flag1 = 0 
+#     result1 = await db_select(select1, schema1, where1, order1, flag1)
+#     print(result1,'res')
+   
+#     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+
+#     fields= f'po_no="{data.po_no}",ot_desc="{data.ot_desc}",invoice="{data.invoice}",invoice_dt="{data.invoice_dt}",lr_no="{data.lr_no}",waybill="{data.waybill}",ic="{data.ic}",og="{data.og}",dc="{data.dc}",lr="{data.lr}",wb="{data.wb}",pl="{data.pl}",om="{data.om}",om_manual="{data.om_manual}",ws="{data.ws}",tc="{data.tc}",wc="{data.wc}",ot="{data.ot}",confirm="{data.confirm}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'mrn_no,po_no,ot_desc,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,om_manual,ws,tc,wc,ot,confirm,created_by,created_at'
+#     values = f'"MRN-{data.invoice}","{data.po_no}","{data.ot_desc}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.om_manual}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.confirm}","{data.user}","{formatted_dt}"'
+#     table_name = "td_item_delivery_invoice"
+#     whr = f'invoice="{data.invoice}"' if result1['msg']['count'] > 0 else None
+#     flag = 1 if result1['msg']['count']>0 else 0
+#     result = await db_Insert(table_name, fields, values, whr, flag)
+#     lastID=result["lastId"]
+    
+#     for i in data.items:
+#         if i.rc_qty>0:
+#                 fields= f'mrn_no,invoice,del_last_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
+#                 values = f'"MRN-{data.invoice}","{data.invoice}","{lastID}","{i.item_id}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}","{data.po_no}","{data.user}","{formatted_dt}"'
+#                 table_name = "td_item_delivery_details"
+#                 whr=f""
+#                 flag1 =  0
+#                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
+                
+#                 if(result2['suc']>0):
+#                     res_dt1 = {"suc": 1, "msg": f"Updated Successfully"}
+#                 else:
+#                     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+
+#     if result['suc']>0 :
+#                 res_dt = {"suc": 1, "msg": f"Updated Successfully"}
+#     else:
+#                  res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
+            
+    
+#     return res_dt
+
+
+
 @poRouter.post('/adddelivery')
 async def adddelivery(data:getDelivery):
     res_dt = {}
@@ -1369,7 +1419,21 @@ async def adddelivery(data:getDelivery):
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
                 
                 if(result2['suc']>0):
-                    res_dt1 = {"suc": 1, "msg": f"Updated Successfully"}
+
+                    flds= f'date,proj_id,item_id,req_qty,qty,created_by,created_at'
+                    val = f'"{formatted_dt}",(SELECT project_id FROM td_po_basic WHERE po_no="{data.po_no}"),{i.item_id},{i.rc_qty},{i.quantity},"{data.user}","{formatted_dt}"'
+                    table = "td_stock_new"
+                    whr=f""
+                    flag2 =  0
+                    result3 = await db_Insert(table, flds, val, whr, flag2)
+
+                    if(result3['suc']>0): 
+
+                        res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
+                    else:
+                        res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+
                 else:
                     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
 
