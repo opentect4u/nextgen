@@ -117,7 +117,7 @@ async def reset_pass(dt:forgotPass):
     if result['suc']==1 :
         fields=f'user_password="{get_hashed_password(dt.newPass)}",first_login_flag="Y",modified_by="{dt.user}",modified_at="{formatted_dt}"'
         table_name="md_user"
-        whr=f'user_email="{dt.user}"'
+        whr=f'sl_no="{dt.id}"'
         flag1=1
         values=''
         result1 = await db_Insert(table_name, fields, values, whr, flag1)
