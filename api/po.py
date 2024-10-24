@@ -2232,7 +2232,7 @@ async def save_requisition(data:SaveReq):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
-    fields= f"intended_for='{data.intended_for}', project_id={data.project_id}, req_type='{data.req_type}', purpose='{data.purpose}', modified_by='{data.user}', modified_at='{formatted_dt}'" if data.sl_no > 0 else f"req_no,intended_for,req_date,project_id,req_type,purpose,created_by,created_at"
+    fields= f"intended_for='{data.intended_for}',approve_flag='P', project_id={data.project_id}, req_type='{data.req_type}', purpose='{data.purpose}', modified_by='{data.user}', modified_at='{formatted_dt}'" if data.sl_no > 0 else f"req_no,intended_for,req_date,project_id,req_type,purpose,created_by,created_at"
     values = f"'REQ-{reqNo}', '{data.intended_for}', '{data.req_date}', {data.project_id}, '{data.req_type}', '{data.purpose}','{data.user}','{formatted_dt}'"
     table_name = "td_requisition"
     whr = f'sl_no={data.sl_no}' if data.sl_no > 0 else None
@@ -2416,10 +2416,10 @@ async def approvepo(id:approveReq):
 
                 if(result3['suc']>0): 
 
-                    res_dt = {"suc": 1, "msg": f"Saved Successfully And Inserted to stock"}
+                    res_dt = {"suc": 1, "msg": f"Saved Successfully"}
 
                 else:
-                    res_dt = {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+                    res_dt = {"suc": 0, "msg": f"Error while inserting "}
 
         else:
             res_dt = {"suc": 1, "msg": f"Action Successful!"}
