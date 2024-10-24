@@ -2242,25 +2242,26 @@ async def save_requisition(data:SaveReq):
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
                 
                 if(result2['suc']>0):
-                    res_dt1 = {"suc": 1, "msg": f"Saved Successfully"}
+                    flds= f'date,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
+                    val = f'"{formatted_dt}",{data.project_id},{i.item_id},{i.req_qty},{i.req_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
+                    table = "td_stock_new"
+                    whr=f""
+                    flag2 =  0
+                    result3 = await db_Insert(table, flds, val, whr, flag2)
+
+                    if(result3['suc']>0): 
+
+                        res_dt2 = {"suc": 1, "msg": f"Saved Successfully And Inserted to stock"}
+
+                    else:
+                        res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
                 else:
                     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
 
     if result['suc']>0 :
-                flds= f'date,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
-                val = f'"{formatted_dt}",{data.project_id},{i.item_id},{i.req_qty},{i.req_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
-                table = "td_stock_new"
-                whr=f""
-                flag2 =  0
-                result3 = await db_Insert(table, flds, val, whr, flag2)
-
-                if(result3['suc']>0): 
-                    res_dt2 = {"suc": 1, "msg": f"Saved Successfully And Inserted to stock"}
-
-                else:
-                    res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+                res_dt = {"suc": 1, "msg": f"Saved Successfully"}
     else:
-        res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
+                 res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
             
     
     return res_dt
