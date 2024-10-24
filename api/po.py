@@ -2062,6 +2062,49 @@ async def getreceiptdoc(wrd:GetPhrase):
     return result
 
 
+@poRouter.post('/get_mdcc_scope')  
+async def getreceiptdoc(wrd:GetPhrase):
+    print('I am logging in!')
+    # print(id.id)
+    res_dt = {}
+    select = "distinct mdcc_scope"
+    schema = "td_po_more"
+    where = f"mdcc_scope like '%{wrd.wrd}%'"
+    order = "ORDER BY modified_at,created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+@poRouter.post('/get_draw_scope')  
+async def getreceiptdoc(wrd:GetPhrase):
+    print('I am logging in!')
+    # print(id.id)
+    res_dt = {}
+    select = "distinct draw_scope"
+    schema = "td_po_more"
+    where = f"draw_scope like '%{wrd.wrd}%'"
+    order = "ORDER BY modified_at,created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+@poRouter.post('/get_inspection_scope')  
+async def getreceiptdoc(wrd:GetPhrase):
+    print('I am logging in!')
+    # print(id.id)
+    res_dt = {}
+    select = "distinct inspection_scope"
+    schema = "td_po_more"
+    where = f"inspection_scope like '%{wrd.wrd}%'"
+    order = "ORDER BY modified_at,created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
 @poRouter.post('/addamendnote')
 async def approvepo(id:approvePO):
     current_datetime = datetime.now()
