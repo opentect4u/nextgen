@@ -7,13 +7,18 @@ import { Paginator } from "primereact/paginator";
 import { motion } from "framer-motion";
 import nodata from "../../../src/Assets/Images/nodata.png";
 import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
   EditOutlined,
   InteractionOutlined,
   PrinterOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import SkeletonLoading from "../../Components/SkeletonLoading";
 import { Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { Tag } from "antd";
 
 
 function RequisitionView() {
@@ -71,8 +76,14 @@ function RequisitionView() {
       axios.post(url + "/api/get_requisition", { id:0 }).then((res) => {
         console.log(res);
         setLoading(false);
-        setCopy(res?.data?.msg);
-        setPoData(res?.data?.msg);
+        if(localStorage.getItem('user_type')!='2'){
+        setCopy(res?.data?.msg.filter(e=>e.created_by==localStorage.getItem('email')));
+        setPoData(res?.data?.msg.filter(e=>e.created_by==localStorage.getItem('email')));
+        }
+        if(localStorage.getItem('user_type')=='5'||localStorage.getItem('user_type')=='4'){
+          setCopy(res?.data?.msg);
+          setPoData(res?.data?.msg);
+          }
       });
 
     }, []);
@@ -97,7 +108,7 @@ function RequisitionView() {
             transition={{ delay: 1.3, type: "just" }}
             className="w-full hidden md:block  md:w-auto sm:flex sm:flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0"
           >
-            <Tooltip title={"Create Vendor Order"}>
+            <Tooltip title={"Make a requisition"}>
               <Link
                 to={routePaths.REQFORM  + 0}
                 type="submit"
@@ -210,7 +221,7 @@ function RequisitionView() {
                       #
                     </th>
                     <th scope="col" class="p-4">
-                      Requisition NO.
+                      Requisition No.
                     </th>
                     <th scope="col" class="p-4">
                       Date
@@ -238,7 +249,33 @@ function RequisitionView() {
                         </th>
                         <td class="px-6 py-4">{item.req_no}</td>
                         <td class="px-6 py-4">{item.req_date}</td>
-                        <td class="px-6 py-4">{item.approve_flag=='A'?'Approved':item.approve_flag=='P'?'Pending':'Rejected'}</td>
+                        <td class="px-6 py-4">{item.approve_flag=='A'?
+                         <Tag
+                         className="text-[12px] p-1 rounded-full w-36"
+                         icon={<CheckCircleOutlined />}
+                         color="success"
+                       >
+                        Approved
+                        </Tag>
+                        :
+                        item.approve_flag=='P'?
+                        <Tag
+                        className="text-[12px] p-1 rounded-full w-36"
+                        icon={<SyncOutlined spin />}
+                        color="processing"
+                      >
+                        Pending
+                        </Tag>
+                        :
+                        <Tag
+                        className="text-[12px] p-1 rounded-full w-36"
+                        icon={<CloseCircleOutlined className="animate-spin" />}
+                        color="error"
+                      >
+                        Rejected
+                        </Tag>
+                        
+                        }</td>
                         <td class="px-6 py-4">{item.created_by}</td>
                         <td class="px-3 py-4 flex gap-3">
                         

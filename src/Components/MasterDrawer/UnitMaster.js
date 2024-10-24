@@ -13,7 +13,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import DialogBox from "../../Components/DialogBox";
 
-function UnitMaster({onClose}) {
+function UnitMaster({onClose,onLoading}) {
   const params = useParams();
   const [loading,setLoading]=useState(false)
   const [visible,setVisible]=useState(false)
@@ -25,7 +25,7 @@ function UnitMaster({onClose}) {
     u_nm: "",
   };
   const [formValues, setValues] = useState(initialValues);
-  
+  useEffect(()=>{onLoading(loading)},[loading])
   const onSubmit = (values) => {
     setLoading(true)
     console.log(values);

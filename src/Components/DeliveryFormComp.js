@@ -18,6 +18,7 @@ import {
   LoadingOutlined,
   MinusOutlined,
   PlusOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import DialogBox from "../Components/DialogBox";
@@ -68,6 +69,8 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
   const [zeroError,setZeroError]=useState(0)
   const [project_id,setProjectId]=useState()
   const [received_log,setReceivedLod]=useState([])
+  const [count,setCount] = useState(0)
+  const [checkload,setCheckLoad] = useState(false)
   // const []
 
   const onChangeIc = (e) => {
@@ -431,16 +434,30 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                       scope="row"
                       className="px-4 w-1/4 py-4  text-gray-900 whitespace-nowrap dark:text-white"
                     >
+                     
                       <TDInputTemplate
                         placeholder="Invoice No."
                         type="text"
                         name="invoice"
                         formControlName={invoice}
-                        handleChange={(txt) => setInvoice(txt.target.value)}
+                        handleChange={(txt) => {setInvoice(txt.target.value)
+                                                 }}
+                        handleBlur={txt=>{
+                          if(txt.target.value){
+                            setCheckLoad(true)
+                          axios.post(url+'/api/checkinvoice',{inv_no:txt.target.value}).then(res=>{console.log(res.data.msg.count)
+                           setCheckLoad(false)
+                          setCount(res.data.msg.count)
+
+
+                          })
+                          }
+                        }}
                         disabled={inv_el!=''&&inv_el!='Select invoice'}
                         mode={1}
                       />
-                   
+                     {checkload &&  <Tag icon={<SyncOutlined spin />} color="processing">Checking...</Tag>}
+                    {count>0 && <VError title={'Invoice No. already exists'} />}
                     </th>
                     <td className="px-6 py-4 w-1/4">
                       <TDInputTemplate
@@ -941,7 +958,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
              
             {/* {!con } {errorSum(isError)} {zeroError} { invoice } {inv_dt}  */}
               <button
-                disabled={!con || errorSum(isError) ||zeroError || !invoice || !inv_dt} 
+                disabled={!con || errorSum(isError) ||zeroError || !invoice || !inv_dt || checkload || count>0} 
                 onClick={() => onsubmit()}
                 className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
               >

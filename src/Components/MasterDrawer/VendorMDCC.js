@@ -17,13 +17,14 @@ import { Spin } from "antd";
 import DialogBox from "../DialogBox";
 import { Tooltip } from "@mui/material";
 
-function VendorMDCC({onClose,data}) {
+function VendorMDCC({onClose,data,onLoading}) {
     console.log(data);
     const [doc, setDoc] = useState();
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState();
     const [visible,setVisible]=useState(false)
     const [id,setId]=useState()
+    
     useEffect(() => {
       setDoc(null);
       console.log("hello");
@@ -39,6 +40,8 @@ function VendorMDCC({onClose,data}) {
           ]);
       });
     }, [data]);
+  useEffect(()=>{onLoading(loading)},[loading])
+
     const uploadFile = () => {
       setLoading(true);
       const formData = new FormData();
@@ -51,7 +54,6 @@ function VendorMDCC({onClose,data}) {
         .post(url + "/api/add_vendor_mdcc", formData)
         .then((resProjFile) => {
           setLoading(false);
-  
           if (resProjFile.data.suc > 0) {
             Message("success", resProjFile.data.msg);
             onClose();

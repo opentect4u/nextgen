@@ -12,7 +12,7 @@ import { Message } from "../../Components/Message";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
-function ProductMaster({onClose}) {
+function ProductMaster({onClose,onLoading}) {
   const [cat, setCat] = useState([]);
   const navigate=useNavigate()
   var categories = [];
@@ -32,6 +32,7 @@ function ProductMaster({onClose}) {
   };
   const [formValues, setValues] = useState(initialValues);
   const params = useParams();
+  useEffect(()=>{onLoading(loading)},[loading])
 
   const onSubmit = (values) => {
     setLoading(true);

@@ -62,8 +62,14 @@ function MinView() {
     axios.post(url + "/api/get_requisition", { id:0 }).then((res) => {
       console.log(res);
       setLoading(false);
-      setCopy(res?.data?.msg);
-      setPoData(res?.data?.msg);
+      if(localStorage.getItem('user_type')=='2'){
+        setCopy(res?.data?.msg.filter(e=>e.created_by==localStorage.getItem('email')));
+        setPoData(res?.data?.msg.filter(e=>e.created_by==localStorage.getItem('email')));
+        }
+        if(localStorage.getItem('user_type')=='5'){
+          setCopy(res?.data?.msg);
+          setPoData(res?.data?.msg);
+          }
     });
 
   }, []);
@@ -172,7 +178,7 @@ function MinView() {
                     #
                   </th>
                   <th scope="col" class="p-4">
-                    Requisition NO.
+                    Requisition No.
                   </th>
                   <th scope="col" class="p-4">
                     Date

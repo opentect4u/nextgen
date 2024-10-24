@@ -69,8 +69,14 @@ function DeliveryViewTemplate({ flag }) {
     axios.post(url + "/api/getpo", { id: 0 }).then((res) => {
       console.log(res);
       setLoading(false);
-      setCopy(res?.data?.msg.filter(e=>e.po_status));
-      setPoData(res?.data?.msg.filter(e=>e.po_status));
+      if(localStorage.getItem('user_type')=='2'){
+        setCopy(res?.data?.msg.filter(e=>e.po_status=='A' && e.created_by==localStorage.getItem('email')));
+        setPoData(res?.data?.msg.filter(e=>e.po_status=='A' &&  e.created_by==localStorage.getItem('email')));
+        }
+        if(localStorage.getItem('user_type')=='5'){
+          setCopy(res?.data?.msg.filter(e=>e.po_status=='A'));
+          setPoData(res?.data?.msg.filter(e=>e.po_status=='A'));
+          }
     });
   }, []);
 

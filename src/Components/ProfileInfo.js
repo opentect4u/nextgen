@@ -6,6 +6,7 @@ import { LoadingOutlined, SaveOutlined } from "@ant-design/icons";
 import { url } from "../Address/BaseUrl";
 import axios from "axios";
 import { Message } from "./Message";
+import { Image } from 'antd';
 const ProfileInfo = () => {
   const inputFile = useRef(null);
   const [img, setImg] = useState("");
@@ -133,14 +134,13 @@ const ProfileInfo = () => {
         style={{ display: "none" }}
       />
       <div className={!relativePath?"h-32 w-32 relative my-4 mx-auto rounded-full bg-green-700 text-7xl text-white flex justify-center items-center":"h-32 w-32 relative my-4 mx-auto rounded-full bg-white text-7xl text-white flex justify-center items-center"}>
-        {!relativePath && <span>
-        {localStorage.getItem("user_name").indexOf(" ") > 0
-          ? localStorage.getItem("user_name").split(" ")[0] +
-            localStorage.getItem("user_name").split(" ")[1]
-          : localStorage.getItem("user_name").charAt(0)}
+        {!relativePath && <span className="capitalize">
+        { localStorage.getItem("user_name").charAt(0)}
           </span>
 }
-{relativePath && <img src={imgPath} className="h-32 border-2 border-gray-400 absolute top-50 right-50 w-32 rounded-full"/>}
+{relativePath && 
+<img src={imgPath} className="h-32 border-2 border-gray-400 absolute top-50 right-50 w-32 rounded-full"/>
+}
 
         <span onClick={() => onButtonClick()}>
           <CameraAltOutlined className="absolute cursor-pointer bg-gray-400 bottom-2 rounded-md p-0.5 right-1" />

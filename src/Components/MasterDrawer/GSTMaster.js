@@ -13,7 +13,7 @@ import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import AuditTrail from "../../Components/AuditTrail";
 
-function GSTMaster({onClose}) {
+function GSTMaster({onClose,onLoading}) {
   const params = useParams();
   const navigate=useNavigate()
   const [data,setData]=useState()
@@ -27,6 +27,8 @@ function GSTMaster({onClose}) {
     gst_rate:"",
   };
   const [formValues, setValues] = useState(initialValues);
+  useEffect(()=>{onLoading(loading)},[loading])
+
   const onSubmit = (values) => {
     setLoading(true);
     console.log(values);

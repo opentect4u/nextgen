@@ -9,7 +9,7 @@ import { routePaths } from "../../Assets/Data/Routes";
 import VError from "../../Components/VError";
 import TDInputTemplate from "../../Components/TDInputTemplate";
 import axios from "axios";
-import { Spin } from "antd";
+import { Checkbox, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { url } from "../../Address/BaseUrl";
 import { Message } from "../../Components/Message";
@@ -17,6 +17,7 @@ import { motion } from "framer-motion"
 function Signin() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPass,setShowPass] = useState(false)
   const initialValues = {
     email: "",
     password: "",
@@ -30,6 +31,9 @@ function Signin() {
     
     };
   },[])
+  const onChange = () =>{
+    setShowPass(!showPass)
+  }
   const onSubmit = (values) => {
     setLoading(true);
     console.log(values);
@@ -70,7 +74,7 @@ function Signin() {
   });
 
   return (
-    <div className="bg-green-900 p-20 flex justify-center min-h-screen min-w-screen">
+    <div className="bg-green-900 p-28 flex justify-center min-h-screen min-w-screen">
       <motion.div  initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5,type:'spring'
       }} className="grid grid-cols-2 gap-0 h-auto shadow-lg w-5/6">
         <div className="hidden bg-white sm:block rounded-l-3xl">
@@ -85,7 +89,7 @@ function Signin() {
           
           <div
             className={`max-w-screen px-16
-                flex-col items-center justify-center mt-7
+                flex-col items-center justify-center mt-9
                 `}
           >
             <div className="flex-col items-center justify-center ml-7 2xl:ml-36 2xl:mt-44">
@@ -119,7 +123,7 @@ function Signin() {
                 <div className="pt-6 block">
                   <TDInputTemplate
                     placeholder="*****"
-                    type="password"
+                    type={!showPass?"password":"text"}
                     label="Your password"
                     name="password"
                     formControlName={formik.values.password}
@@ -132,12 +136,16 @@ function Signin() {
                     <VError title={formik.errors.password} />
                   ) : null}
                 </div>
+                <div className="pt-3">
+        <Checkbox onChange={onChange}>Show Password</Checkbox>
+       
+      </div>
                 <div className="pt-2">
-                  <Link to={routePaths.FORGOTPASS}>
+                  {/* <Link to={routePaths.FORGOTPASS}>
                     <p className="text-xs text-green-900 hover:underline py-2 cursor-pointer">
                       Forgot password?
                     </p>
-                  </Link>
+                  </Link> */}
                 </div>
                 <Spin
               indicator={<LoadingOutlined spin />}
@@ -166,17 +174,17 @@ function Signin() {
       <div
           className={`block w-80 sm:hidden 
         bg-white h-auto space-y-5
-         rounded-3xl
+         rounded-3xl mt-5
         `}
         >
           
           <div
             className={`
-                flex-col items-center justify-center mt-7 p-10
+                flex-col items-center justify-center mt-10 p-10
                 `}
           >
             <div className="flex-col items-center justify-center">
-              <motion.h2 className="text-green-900 text-4xl mt-14 mx-24 font-bold" initial={{opacity:1}} animate={{opacity:0,y:-20}} transition={{delay:4, type:'tween'
+              <motion.h2 className="text-green-900 text-4xl mt-16 mx-24 font-bold" initial={{opacity:1}} animate={{opacity:0,y:-20}} transition={{delay:4, type:'tween'
               }}>Welcome</motion.h2>
               <motion.img initial={{opacity:0}} animate={{opacity:1}} transition={{delay:4, type:'spring'
               }} src={LOGO} className="h-20 -mt-16 -ml-4 sm:ml-9 2xl:ml-7 2xl:h-24" alt="Flowbite Logo" />
@@ -187,7 +195,7 @@ function Signin() {
                 onSubmit={formik.handleSubmit}
                 className="w-full py-6 sm:ml-10 2xl:space-y-2 2xl:px-8"
               >
-                <div className="pt-1 block ">
+                <div className="pt-2 block ">
                   <TDInputTemplate
                     placeholder="youremail@gmail.com"
                     type="email"
@@ -203,10 +211,10 @@ function Signin() {
                     <VError title={formik.errors.email} />
                   ) : null}
                 </div>
-                <div className="pt-6 block">
+                <div className="pt-8 block">
                   <TDInputTemplate
                     placeholder="*****"
-                    type="password"
+                    type={!showPass?"password":"text"}
                     label="Your password"
                     name="password"
                     formControlName={formik.values.password}
@@ -219,20 +227,24 @@ function Signin() {
                     <VError title={formik.errors.password} />
                   ) : null}
                 </div>
-                <div className="pt-2">
+                <div className="pt-3">
+        <Checkbox onChange={onChange}>Show Password</Checkbox>
+       
+      </div>
+                {/* <div className="pt-3">
                   <Link to={routePaths.FORGOTPASS}>
                     <p className="text-xs text-green-900 hover:underline py-2 cursor-pointer">
                       Forgot password?
                     </p>
                   </Link>
-                </div>
+                </div> */}
                 <Spin
               indicator={<LoadingOutlined spin />}
               size={5}
               className="text-emerald-600 w-52 dark:text-gray-400"
               spinning={loading}
             >
-                <div className="pt-4 pb-4 flex justify-center text-sm">
+                <div className="pt-6 pb-4 flex justify-center text-sm">
                   <button
                     disabled={!formik.isValid}
                     type="submit"

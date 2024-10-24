@@ -17,13 +17,15 @@ import { Spin } from "antd";
 import DialogBox from "../DialogBox";
 import { Tooltip } from "@mui/material";
 
-function Docs({ onClose, data }) {
+function Docs({ onClose, data ,onLoading}) {
   console.log(data);
   const [doc, setDoc] = useState();
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState();
   const [visible,setVisible]=useState(false)
   const [id,setId]=useState()
+  useEffect(()=>{onLoading(loading)},[loading])
+
   useEffect(() => {
     setDoc(null);
     setLoading(true)

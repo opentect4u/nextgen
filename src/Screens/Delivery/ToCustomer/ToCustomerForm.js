@@ -21,6 +21,7 @@ function ToCustomerForm() {
           user: localStorage.getItem("email"),
           id: +params.id,
           items: values.items,
+          in_out_flag:1,
           po_no: values.po_no,
           ot_desc:values.ot_desc||'',
           invoice:values.invoice,

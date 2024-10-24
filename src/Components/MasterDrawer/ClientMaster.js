@@ -14,7 +14,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import axios from "axios";
 
-function ClientMaster({onClose}) {
+function ClientMaster({onClose,onLoading}) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [count,setCount]=useState(0)
@@ -72,6 +72,7 @@ function ClientMaster({onClose}) {
         },
       ],
     };
+    useEffect(()=>{onLoading(loading)},[loading])
   
     const onSubmit = (values) => {
       console.log("onSubmit");

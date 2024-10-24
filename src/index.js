@@ -102,8 +102,8 @@ const PurchaseOrderForm = lazy(() =>
 const ExistingPoView =lazy(()=>import ("./Screens/Purchase Order/ExistingPoView"));
 const AmendView =lazy(()=>import( "./Screens/Purchase Order/AmendView"))
 
-const OrderView = lazy(() => import("./Screens/Purchase Order/OrderView"));
-const OrderForm = lazy(() => import("./Screens/Purchase Order/OrderForm"));
+// const OrderView = lazy(() => import("./Screens/Purchase Order/OrderView"));
+// const OrderForm = lazy(() => import("./Screens/Purchase Order/OrderForm"));
 
 // const StockComp = lazy(() => import("./Screens/Stock/StockComp"));
 // const StockInView = lazy(() => import("./Screens/Stock/StockInView"));
@@ -147,6 +147,12 @@ const MinView =lazy(()=>import("./Screens/Min/MinView"));
 const Requisition =lazy(()=>import("./Screens/Requisition/Requisition"));
 const RequisitionView =lazy(()=>import("./Screens/Requisition/RequisitionView"));
 const RequisitionForm =lazy(()=>import("./Screens/Requisition/RequisitionForm"));
+
+window.addEventListener("beforeunload", ev => {
+  ev.preventDefault()
+  alert('hii')
+
+})
 
 const router = createBrowserRouter([
   {
@@ -341,14 +347,14 @@ const router = createBrowserRouter([
             path: "poComp",
             element: <PurchaseOrderComp />,
             children: [
-              {
-                path: "clientorder",
-                element: <OrderView />,
-              },
-              {
-                path: "orderform/:id",
-                element: <OrderForm />,
-              },
+              // {
+              //   path: "clientorder",
+              //   element: <OrderView />,
+              // },
+              // {
+              //   path: "orderform/:id",
+              //   element: <OrderForm />,
+              // },
               {
                 path: "projects",
                 element: <ProjectComp />,
@@ -550,6 +556,9 @@ const router = createBrowserRouter([
     element: <Notfound />,
   },
 ]);
+
+
+
 root.render(
   <Democontext>
     <Suspense

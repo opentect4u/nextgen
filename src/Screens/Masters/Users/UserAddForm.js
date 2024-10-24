@@ -10,8 +10,8 @@ import VError from "../../../Components/VError";
 import { url } from "../../../Address/BaseUrl";
 import axios from "axios";
 import { Message } from "../../../Components/Message";
-import { Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Spin, Tag } from "antd";
+import { LoadingOutlined, SyncOutlined } from "@ant-design/icons";
 import AuditTrail from "../../../Components/AuditTrail";
 import DialogBox from "../../../Components/DialogBox";
 import DrawerComp from "../../../Components/DrawerComp";
@@ -27,6 +27,8 @@ const UserAddForm = () => {
   const [reason,setReason]=useState("")
   const [visible,setVisible]=useState(false)
   const [types,setTypes] = useState([])
+  const [emailCount,setEmailCount] = useState(0)
+  const [checkload,setCheckLoad] = useState(false)
   var designations = [];
   var departments = [];
   const initialValues = {
@@ -58,6 +60,7 @@ const UserAddForm = () => {
     })
   },[])
   const onSubmit = (values) => {
+    if(emailCount==0 && !checkload){
     setLoading(true)
     console.log(values);
     axios
@@ -84,6 +87,7 @@ const UserAddForm = () => {
           Message("error", res.data.msg);
         }
       }).catch(err=>{console.log(err); navigate('/error'+'/'+err.code+'/'+err.message)});
+    }
   };
   const [formValues, setValues] = useState(initialValues);
   useEffect(() => {
@@ -315,13 +319,24 @@ const UserAddForm = () => {
                 name="user_email"
                 formControlName={formik.values.user_email}
                 handleChange={formik.handleChange}
-                handleBlur={formik.handleBlur}
+                handleBlur={e=>{formik.handleBlur(e);
+                  setCheckLoad(true)
+                  axios.post(url+'/api/checkemail',{id:formik.values.user_email}).then(res=>{
+                    console.log(res)
+                  setCheckLoad(false)
+
+                    setEmailCount(res.data.msg.count)
+                  })
+                }}
                 disabled={+params.id>0}
                 mode={1}
               />
               {formik.errors.user_email && formik.touched.user_email ? (
                 <VError title={formik.errors.user_email} />
               ) : null}
+
+{checkload &&  <Tag icon={<SyncOutlined spin />} color="processing">Checking...</Tag>}
+{emailCount>0 && <VError title={'Email already exists'} />}
             </div>
             <div>
               <TDInputTemplate

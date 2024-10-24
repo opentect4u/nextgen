@@ -276,7 +276,7 @@ function ProjectForm() {
     axios.post(url + "/api/getuser", { id: 0 }).then((res) => {
       console.log(res.data.msg, "res user");
       const pmlist = res.data.msg
-        .filter((user) => user.user_type === "PM")
+        .filter((user) => user.user_type === '1')
         .map((user) => ({ name: user.user_name, code: user.sl_no }));
       console.log(pmlist, "PMList");
       setLoading(false);

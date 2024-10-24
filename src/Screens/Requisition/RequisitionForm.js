@@ -7,7 +7,7 @@ import axios from "axios";
 import { ScrollPanel } from "primereact/scrollpanel";
 import { url } from "../../Address/BaseUrl";
 import Select from "react-dropdown-select";
-import { LoadingOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined, SyncOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import DialogBox from "../../Components/DialogBox";
 import { Spin, Tag } from "antd";
@@ -32,6 +32,8 @@ function RequisitionForm() {
   const [breakupinfo, setBreakUpInfo] = useState([]);
   const [approve_flag,setApproveFlag]=useState("")
   const [projID,setProjID] = useState("")
+  const [req_no,setReqNo] = useState("")
+  const [count,setCount] =  useState(0)
   const params = useParams();
   useEffect(() => {
     axios.post(url + "/api/getproject", { id: 0 }).then((res) => {
@@ -74,6 +76,9 @@ function RequisitionForm() {
     });
 
   }
+  useEffect(()=>{
+
+  },[])
   const handleDtChange = (index, event) => {
     console.log(index, event.target.value);
     let data = [...itemDtlsForm];
@@ -102,9 +107,13 @@ function RequisitionForm() {
           setProject(res?.data?.msg?.project_id);
           setPurpose(res?.data?.msg?.purpose);
           setApproveFlag(res?.data?.msg?.approve_flag)
+          setReqNo(res?.data?.msg?.req_no)
           axios.post(url+'/api/get_proj_id',{Proj_id:res?.data?.msg?.project_id}).then(res=>{
             console.log(res)
             setProjID(res?.data?.msg[0]?.proj_id)
+          })
+          axios.post(url+'/api/checkmin',{req_no:res?.data?.msg?.req_no}).then(res=>{console.log(res)
+            setCount(res.data)
           })
           axios
             .post(url + "/api/req_item_dtls", { last_req_id: +params.id })
@@ -312,12 +321,35 @@ function RequisitionForm() {
         spinning={loading}
       >
         <div className="grid grid-cols-12 gap-2">
+        
           <div className={"w-full col-span-12 bg-white p-6 rounded-2xl"}>
+          {/* <span className="flex justify-start my-2">
+              </span> */}
            <div className="grid gap-4 sm:grid-cols-12 sm:gap-6">
-           {params.id>0 && <div className="sm:col-span-12 flex justify-end">
-                   {approve_flag=='A' && <Tag color="#4FB477">Approved</Tag>}
-                   {approve_flag=='R' && <Tag color="#4FB477">Rejected</Tag>}
-                   {approve_flag=='P' && <Tag color="#4FB477">Pending Approval</Tag>}
+           {params.id>0 && <div className="sm:col-span-12 flex justify-between">
+            <Tag color="#014737">Requisition: {req_no} </Tag>
+
+                   {approve_flag=='A' &&  <Tag
+                         className="text-[12px] rounded-full w-36"
+                         icon={<CheckCircleOutlined />}
+                         color="success"
+                       >
+                        Approved
+                        </Tag>}
+                   {approve_flag=='R' &&  <Tag
+                        className="text-[12px] rounded-full w-36"
+                        icon={<CloseCircleOutlined className="animate-spin" />}
+                        color="error"
+                      >
+                        Rejected
+                        </Tag>}
+                   {approve_flag=='P' &&  <Tag
+                        className="text-[12px] rounded-full w-36"
+                        icon={<SyncOutlined spin />}
+                        color="processing"
+                      >
+                        Pending
+                        </Tag>}
 
                     </div>}
               <div className="sm:col-span-6">
@@ -572,7 +604,7 @@ setProject(values[0]?.value);
                 </button>
 }
 
-              {params.id>0 && approve_flag=='P' && localStorage.getItem('user_type') =='4' && <button
+              {params.id>0 && approve_flag=='P' && (localStorage.getItem('user_type') =='4' || localStorage.getItem('user_type') =='5')  && count>0 && <button
                   disabled={
                     errorSum(error) ||
                     !intended ||
@@ -584,7 +616,7 @@ setProject(values[0]?.value);
                 >
                   Approve
                 </button>}
-                {params.id>0 && approve_flag=='P' && localStorage.getItem('user_type') =='4' &&<button
+                {params.id>0 && approve_flag=='P' && (localStorage.getItem('user_type') =='4' || localStorage.getItem('user_type') =='5') && count>0 &&<button
                   disabled={
                     errorSum(error) ||
                     !intended ||

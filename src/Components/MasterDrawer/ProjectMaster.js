@@ -27,7 +27,7 @@ import DialogBox from "../../Components/DialogBox";
 import Viewdetails from "../../Components/Viewdetails";
 import { Button, Form, Input } from "antd";
 import VError from "../../Components/VError";
-function ProjectMaster({onClose}) {
+function ProjectMaster({onClose,onLoading}) {
     const navigate = useNavigate();
     const [client, setClient] = useState([]);
     const [globalClient,setGlobal]=useState([])
@@ -79,6 +79,8 @@ function ProjectMaster({onClose}) {
     const [pocSet, setPocSet] = useState([
       { sl_no: 0, poc_name: "", poc_ph_1: "", poc_designation: "", poc_email: "" },
     ]);
+  useEffect(()=>{onLoading(loading)},[loading])
+
     const handleDtChange = (index,event) => {
       console.log(event)
       const selected = pocList.find((poc) => poc.sl_no == event.target.value);
@@ -213,7 +215,7 @@ function ProjectMaster({onClose}) {
       axios.post(url + "/api/getuser", { id: 0 }).then((res) => {
         console.log(res.data.msg, "res user");
         const pmlist = res.data.msg
-          .filter((user) => user.user_type === "PM")
+          .filter((user) => user.user_type === "1")
           .map((user) => ({ name: user.user_name, code: user.sl_no }));
         console.log(pmlist, "PMList");
         setLoading(false)

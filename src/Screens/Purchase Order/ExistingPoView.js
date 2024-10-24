@@ -91,24 +91,50 @@ function ExistingPoView() {
   }, []);
   useEffect(() => {
     setLoading(true);
-
+    if(localStorage.getItem('user_type')=='2' || localStorage.getItem('user_type')=='5'){
     axios
       .post(url + "/api/getpo", { id: 0 })
       .then((res) => {
         console.log(res);
-        setPoData(res?.data?.msg);
-        setCopy(res?.data?.msg.filter((e) => e.fresh_flag == "N"));
+        if(localStorage.getItem('user_type')=='2'){
+        setPoData(res?.data?.msg.filter((e) => e.fresh_flag == "N" && e.created_by==localStorage.getItem('email')));
+        setCopy(res?.data?.msg.filter((e) => e.fresh_flag == "N" && e.created_by==localStorage.getItem('email')));
         setPoData(
           res?.data?.msg.filter(
-            (e) => e.fresh_flag == "N" && e.po_status == "P"
+            (e) => e.fresh_flag == "N" && e.po_status == "P"  && e.created_by==localStorage.getItem('email')
           )
+        
         );
+      }
+      else{
+        setPoData(res?.data?.msg.filter((e) => e.fresh_flag == "N" ));
+        setCopy(res?.data?.msg.filter((e) => e.fresh_flag == "N" ));
+        setPoData(
+          res?.data?.msg.filter(
+            (e) => e.fresh_flag == "N" && e.po_status == "P"  
+          )
+        
+        );
+      }
         setLoading(false);
       })
       .catch((err) => {
         console.log(err);
         navigate("/error" + "/" + err.code + "/" + err.message);
       });
+    }
+    else if(localStorage.getItem('user_type')=='1'){
+      setLoading(true)
+    axios.post(url + "/api/getpopm", { id: 0 }).then(res=>{
+      console.log(res)
+      setLoading(false)
+     setPoData(res?.data?.msg.filter((e) => e.fresh_flag == "N" && (e.user_email==localStorage.getItem('email') || e.type=='G')))
+     setCopy(res?.data?.msg.filter((e) => e.fresh_flag == "N" && (e.user_email==localStorage.getItem('email')|| e.type=='G')));
+
+     console.log(res?.data?.msg.filter((e) => e.fresh_flag == "N" && (e.user_email==localStorage.getItem('email') || e.type=='G')))
+    })
+
+    }
   }, [
     locationpath.pathname.split("/")[
       locationpath.pathname.split("/").length - 1
@@ -175,7 +201,7 @@ function ExistingPoView() {
    
     <>
       <div className="flex items-center  justify-end h-14 -mt-[72px] w-auto dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 rounded-lg">
-      {localStorage.getItem('user_type')=='2' && <>
+      {localStorage.getItem('user_type')=='2' || localStorage.getItem('user_type')=='5' && <>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}

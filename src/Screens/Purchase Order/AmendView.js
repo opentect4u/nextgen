@@ -39,17 +39,33 @@ function AmendView() {
 
   const onChange = (e) => {
     console.log("radio checked", e);
+    if(localStorage.getItem('user_type')!='1'){
+
     if (e == 1) {
-      setPoData(copy.filter((e) => e.po_status == "A" || e.po_status == "U"));
+      setPoData(copy.filter((e) => (e.po_status == "A" || e.po_status == "U") && e.created_by==localStorage.getItem('email')));
       console.log(po_data);
     } else if(e==2) {
-      setPoData(copy.filter((e) => e.po_status == "P"));
+      setPoData(copy.filter((e) => e.po_status == "P"  && e.created_by==localStorage.getItem('email')));
       console.log(po_data);
     }
     else{
-      setPoData(copy.filter((e) => e.po_status == "D"||e.po_status=='L'));
+      setPoData(copy.filter((e) => (e.po_status == "D"|| e.po_status=='L') && e.created_by==localStorage.getItem('email')));
+    }
+  }
+  else{
+    if (e == 1) {
+      setPoData(copy.filter((e) => (e.po_status == "A" || e.po_status == "U") && e.user_email==localStorage.getItem('email')));
+      console.log(po_data);
+    } else if(e==2) {
+      setPoData(copy.filter((e) => e.po_status == "P"  && e.user_email==localStorage.getItem('email')));
+      console.log(po_data);
+    }
+    else{
+      setPoData(copy.filter((e) => (e.po_status == "D"|| e.po_status=='L') && e.user_email==localStorage.getItem('email')));
 
     }
+  
+}
   };
   useState(() => {
     axios
@@ -119,6 +135,17 @@ function AmendView() {
       console.log(res);
       poList.length = 0;
       setPoList([]);
+      if(localStorage.getItem('user_type')=='2'){
+      for (let i of res?.data?.msg) {
+        if (i.po_status == "A" && i.po_no && i.amend_flag == "N"  && i.created_by==localStorage.getItem('email')) {
+          poList.push({
+            code: i.sl_no,
+            name: i.po_no,
+          });
+        }
+      }
+    }
+    else if(localStorage.getItem('user_type')=='5'){
       for (let i of res?.data?.msg) {
         if (i.po_status == "A" && i.po_no && i.amend_flag == "N") {
           poList.push({
@@ -127,6 +154,7 @@ function AmendView() {
           });
         }
       }
+    }
       setPoList(poList);
       setVisible(true);
       setLoading(false);
@@ -159,11 +187,30 @@ function AmendView() {
     localStorage.removeItem("dt");
     localStorage.removeItem('amend_flag')
     localStorage.removeItem('amend_note')
+    if(localStorage.getItem('user_type')=='2' || localStorage.getItem('user_type')=='5'){
     axios.post(url + "/api/getamendproject", { id: 0 }).then((res) => {
       console.log(res);
-      setPoData(res?.data?.msg.filter((e) => e.po_status == "P"));
+      if(localStorage.getItem('user_type')=='2'){
+      setPoData(res?.data?.msg.filter((e) => e.po_status == "P" && e.created_by==localStorage.getItem('email')));
+      setCopy(res?.data?.msg.filter(e=> e.created_by==localStorage.getItem('email')));
+      }
+      else if(localStorage.getItem('user_type')=='5'){
+        setPoData(res?.data?.msg.filter((e) => e.po_status == "P"));
       setCopy(res?.data?.msg);
+      }
+      
     });
+   
+  }
+  else if(localStorage.getItem('user_type')=='1'){
+    axios.post(url + "/api/getamendprojectpm", { id: 0 }).then((res) => {
+      console.log(res);
+      setPoData(res?.data?.msg.filter((e) => e.po_status == "P" && e.user_email==localStorage.getItem('email')));
+      setCopy(res?.data?.msg.filter(e=> e.user_email==localStorage.getItem('email')));
+    
+      
+    });
+  }
   }, [count]);
   const setSearch = (word) => {
     setPoData(
@@ -180,7 +227,7 @@ function AmendView() {
   return (
     <div>
       <div className="flex items-center  justify-end h-14 -mt-[72px] w-auto dark:bg-[#22543d] md:flex-row space-y-3 md:space-y-0 rounded-lg">
-      {localStorage.getItem('user_type')=='2' && <>
+      {localStorage.getItem('user_type')=='2' || localStorage.getItem('user_type')=='5' && <>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}

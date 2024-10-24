@@ -317,6 +317,7 @@ function PurchaseOrderForm() {
   useEffect(()=>{
     
   if(+params.id>0){
+    
     axios.post(url+'/api/getpo',{id:+params.id}).then(res=>{
       console.log(res)
       localStorage.setItem('id',params.id)
@@ -868,7 +869,7 @@ function PurchaseOrderForm() {
         }
         
     
-    {localStorage.getItem('po_status')=='U' && localStorage.getItem('user_type')=='1' && <>  
+    {localStorage.getItem('po_status')=='U' && (localStorage.getItem('user_type')=='1' ||localStorage.getItem('user_type')=='5') && <>  
       <Tooltip title='Approve PO'>
     <Button
           type="submit"
@@ -891,7 +892,7 @@ function PurchaseOrderForm() {
 
       
       </>  }
-      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='P') && localStorage.getItem('user_type') == '2' &&
+      {(localStorage.getItem('po_status')=='U' || localStorage.getItem('po_status')=='P') && localStorage.getItem('user_type') == '2' || localStorage.getItem('user_type') == '5' &&
           <Tooltip title='Save PO'>
       
       <Button

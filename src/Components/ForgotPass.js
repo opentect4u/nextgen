@@ -9,7 +9,7 @@ import * as Yup from "yup";
 import { Message } from "../Components/Message";
 import axios from "axios";
 import { url } from "../Address/BaseUrl";
-import { Spin} from 'antd';
+import { Checkbox, Spin} from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import DialogBox from "../Components/DialogBox";
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +23,13 @@ function ForgotPass({onClose}) {
     const [count,setCount]=useState(0)
     const [data,setData]=useState()
     const navigate=useNavigate()
+  const [showPass,setShowPass] = useState(false)
+
     const [flag,setFlag]=useState(4)
+
+    const onChange = () =>{
+      setShowPass(!showPass)
+    }
       const initialValues = {
           newPass: "",
         };
@@ -33,7 +39,7 @@ function ForgotPass({onClose}) {
         const onSubmit = (values) => {
           setLoading(true)
           setCount(prev=>prev+1)
-          axios.post(url+'/api/forgot_pass',{newPass:values.newPass,user:localStorage.getItem('email')})
+          axios.post(url+'/api/forgot_pass',{newPass:values.newPass,id:+params.id,user:localStorage.getItem('email')})
           .then(res=>{
               setLoading(false)
       
@@ -77,7 +83,7 @@ function ForgotPass({onClose}) {
                     
                     <TDInputTemplate
                       placeholder="New Password"
-                      type="text"
+                      type={!showPass?"password":"text"}
                       label="New Password"
                       name="newPass"
                       formControlName={formik.values.newPass}
@@ -90,6 +96,10 @@ function ForgotPass({onClose}) {
                       <VError title={formik.errors.newPass} />
                     ) : null}
                   </div>
+                  <div className="pt-3">
+        <Checkbox onChange={onChange}>Show Password</Checkbox>
+       
+      </div>
                   </div>
                  
                 <BtnComp mode={'A'} onReset={formik.handleReset}/>

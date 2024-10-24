@@ -51,7 +51,7 @@ function Menus({ theme,data }) {
         {
           key: "masters:dept",
           icon: <BankOutlined />,
-          label: <Link disabled={data?.department=='Y'?false:true} to={routePaths.DEPARTMENTS}>Department</Link>,
+          label: <Link disabled={data?.department=='Y'?false:true} to={data?.department=='Y'?routePaths.DEPARTMENTS:'#'}>Department</Link>,
           disabled:data?.department=='Y'?false:true
 
         },
@@ -63,7 +63,7 @@ function Menus({ theme,data }) {
         {
           key: "masters:cat",
           icon: <BlockOutlined />,
-          label: <Link disabled={data?.prod_catg=='Y'?false:true} to={routePaths.CATEGORIES}>Product Category</Link>,
+          label: <Link disabled={data?.prod_catg=='Y'?false:true} to={data?.prod_catg=='Y'?routePaths.CATEGORIES:'#'}>Product Category</Link>,
           disabled:data?.prod_catg=='N'?true:false
         },
         // {
@@ -75,49 +75,49 @@ function Menus({ theme,data }) {
         {
           key: "masters:unit",
           icon: <PayCircleOutlined />,
-          label: <Link disabled={data?.unit=='Y'?false:true} to={routePaths.UNITS}>Unit</Link>,
+          label: <Link disabled={data?.unit=='Y'?false:true} to={data?.unit=='Y'?routePaths.UNITS:'#'}>Unit</Link>,
           disabled:data?.unit=='Y'?false:true
 
         },
         {
           key: "masters:product",
           icon: <ToolOutlined />,
-          label: <Link disabled={data?.product=='Y'?false:true} to={routePaths.PRODUCTS}>Product</Link>,
+          label: <Link disabled={data?.product=='Y'?false:true} to={data?.product=='Y'?routePaths.PRODUCTS:'#'}>Product</Link>,
           disabled:data?.product=='Y'?false:true
 
         },
         {
           key: "masters:vendor",
           icon: <ShopOutlined />,
-          label: <Link disabled={data?.vendor=='Y'?false:true} to={routePaths.VENDORS}>Vendor</Link>,
+          label: <Link disabled={data?.vendor=='Y'?false:true} to={data?.vendor=='Y'?routePaths.VENDORS:'#'}>Vendor</Link>,
           disabled:data?.vendor=='Y'?false:true
 
         },
         {
           key: "masters:client",
           icon: <UserSwitchOutlined />,
-          label: <Link disabled={data?.client=='Y'?false:true} to={routePaths.CLIENTS}>Client </Link>,
+          label: <Link disabled={data?.client=='Y'?false:true} to={data?.client=='Y'?routePaths.CLIENTS:'#'}>Client </Link>,
           disabled:data?.client=='Y'?false:true
 
         },
         {
           key: "masters:gst",
           icon: <PercentageOutlined />,
-          label: <Link disabled={data?.gst=='Y'?false:true} to={routePaths.GST}>GST </Link>,
+          label: <Link disabled={data?.gst=='Y'?false:true} to={data?.gst=='Y'?routePaths.GST:'#'}>GST </Link>,
           disabled:data?.gst=='Y'?false:true
 
         },
         {
           key: "masters:user",
           icon: <UserAddOutlined />,
-          label: <Link  disabled={data?.comp_user=='Y'?false:true} to={routePaths.USERS}>Company Users </Link>,
+          label: <Link  disabled={data?.comp_user=='Y'?false:true} to={data?.comp_user=='Y'?routePaths.USERS:'#'}>Company Users </Link>,
           disabled:data?.comp_user=='Y'?false:true
 
         },
         {
           key: "masters:permissions",
           icon: <LockOpenOutlined />,
-          label: <Link disabled={data?.permission=='Y'?false:true} to={routePaths.PERMISSIONS}>Permissions</Link>,
+          label: <Link disabled={data?.permission=='Y'?false:true} to={data?.permission=='Y'?routePaths.PERMISSIONS:'#'}>Permissions</Link>,
           disabled:data?.permission=='Y'?false:true
 
         },
@@ -143,7 +143,7 @@ function Menus({ theme,data }) {
               // label: <Link to={routePaths.CLIENTORDER}>Client Orders</Link>,
               key: "master:client-orders",
               icon: <UserSwitchOutlined />,
-              label: <Link disabled={data?.client_orders=='Y'?false:true} to={routePaths.PROJECTS}>Client Orders</Link>,
+              label: <Link disabled={data?.client_orders=='Y'?false:true} to={data?.client_orders=='Y'?routePaths.PROJECTS:'#'}>Client Orders</Link>,
               disabled:data?.client_orders=='Y'?false:true
 
             },
@@ -161,7 +161,7 @@ function Menus({ theme,data }) {
           children: [
             {
               label: (
-                <Link disabled={data?.vendor_orders=='Y'?false:true} to={routePaths.PURCHASEORDER + "/P"}>Vendor Orders</Link>
+                <Link disabled={data?.vendor_orders=='Y'?false:true} to={data?.vendor_orders=='Y'?routePaths.PURCHASEORDER + "/P":'#'}>Vendor Orders</Link>
               ),
               key: "purchase-order",
               icon: <SolutionOutlined />,
@@ -171,7 +171,7 @@ function Menus({ theme,data }) {
 
             {
               label: (
-                <Link disabled={data?.existing_po=='Y'?false:true} to={routePaths.EXISTINGORDER}>
+                <Link disabled={data?.existing_po=='Y'?false:true} to={data?.existing_po=='Y'?routePaths.EXISTINGORDER:'#'}>
                   Existing Purchase Orders
                 </Link>
               ),
@@ -182,7 +182,7 @@ function Menus({ theme,data }) {
             },
             {
               label: (
-                <Link disabled={data?.amend_po=='Y'?false:true} to={routePaths.AMENDORDER}>Amend Purchase Orders</Link>
+                <Link disabled={data?.amend_po=='Y'?false:true} to={data?.amend_po=='Y'?routePaths.AMENDORDER:'#'}>Amend Purchase Orders</Link>
               ),
               key: "amend-order",
               icon: <SignatureOutlined />,
@@ -191,7 +191,7 @@ function Menus({ theme,data }) {
             },
             {
               label: (
-                <Link disabled={data?.approve_po=='Y'?false:true} to={routePaths.APPROVEORDER}>Approve Vendor Orders</Link>
+                <Link disabled={data?.approve_po=='Y'?false:true} to={data?.approve_po=='Y'?routePaths.APPROVEORDER:'#'}>Approve Vendor Orders</Link>
               ),
               key: "approve-purchase-order",
               icon: <CheckOutlined />,
@@ -200,7 +200,7 @@ function Menus({ theme,data }) {
             },
             {
               label: (
-                <Link disabled={data?.certificate=='Y'?false:true} to={routePaths.TESTCERTHOME}>
+                <Link disabled={data?.certificate=='Y'?false:true} to={data?.certificate=='Y'?routePaths.TESTCERTHOME:'#'}>
                   Upload Test Certificate
                 </Link>
               ),
@@ -264,21 +264,21 @@ function Menus({ theme,data }) {
     //   icon: <UploadFileOutlined />,
     // },
     {
-      label: <Link disabled={data?.mrn=='Y'?false:true} to={routePaths.DELIVERYCUSTOMERVIEW}> MRN </Link>,
+      label: <Link disabled={data?.mrn=='Y'?false:true} to={data?.mrn=='Y'?routePaths.DELIVERYCUSTOMERVIEW:'#'}> MRN </Link>,
       key: "material-delivery",
       icon: <FileProtectOutlined />,
       disabled:data?.mrn=='Y'?false:true
 
     },
     {
-      label: <Link disabled={data?.requisition=='Y'?false:true} to={routePaths.REQVIEW}> Requisition </Link>,
+      label: <Link disabled={data?.requisition=='Y'?false:true} to={data?.requisition=='Y'?routePaths.REQVIEW:'#'}> Requisition </Link>,
       key: "material-requisition",
       icon: <InteractionOutlined />,
       disabled:data?.requisition=='Y'?false:true
 
     },
     {
-      label: <Link disabled={data?.min=='Y'?false:true} to={routePaths.MINVIEW}> Material Issue Note </Link>,
+      label: <Link disabled={data?.min=='Y'?false:true} to={data?.min=='Y'?routePaths.MINVIEW:'#'}> Material Issue Note </Link>,
       key: "material-issue",
       icon: <FileSyncOutlined />,
       disabled:data?.min=='Y'?false:true

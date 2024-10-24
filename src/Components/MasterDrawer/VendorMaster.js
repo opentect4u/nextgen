@@ -15,7 +15,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Radio } from "antd";
 
-function VendorMaster({onClose}) {
+function VendorMaster({onClose,onLoading}) {
   const stepperRef = useRef(null);
   const params = useParams();
   const [loading, setLoading] = useState(false);
@@ -278,6 +278,7 @@ function VendorMaster({onClose}) {
       setCat(categories);
     });
   }, [count]);
+  useEffect(()=>{onLoading(loading)},[loading])
 
   const onSubmit = (values) => {
     console.log("onsubmit called");

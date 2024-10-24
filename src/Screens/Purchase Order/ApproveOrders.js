@@ -67,9 +67,9 @@ function ApproveOrders() {
         console.log(res);
         setLoading(false);
         setCopy(
-          res?.data?.msg.filter((e) => e.po_status == "A" || e.po_status == "U")
+          res?.data?.msg.filter((e) => (e.po_status == "A" || e.po_status == "U") && e.created_by==localStorage.getItem('email'))
         );
-        setPoData(res?.data?.msg?.filter((e) => e.po_status == "A"));
+        setPoData(res?.data?.msg?.filter((e) => e.po_status == "A"  && e.created_by==localStorage.getItem('email')));
       })
       .catch((err) => {
         console.log(err);

@@ -61,9 +61,6 @@ function App() {
         margin:30
       },
       Switch:{
-        // colorPrimary:'#025129',
-        // colorPrimaryHover:'#025129'
-
          colorPrimary:'#014737',
         colorPrimaryHover:'#014737'
       },

@@ -93,7 +93,7 @@ function MinForm() {
                 tot_qty:i.tot_issue_qty,
                 issue_qty: i.req_qty,
                 notes: i.notes || "",
-                purpose: i.purpose,
+                purpose: i.purpose || "",
               });
             }
           axios.post(url+'/api/testing',{req_no:res?.data?.msg[0]?.req_no}).then(res=>{
