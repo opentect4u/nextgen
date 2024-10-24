@@ -592,7 +592,7 @@ async def getpreviewitems(id:GetPo):
     return result
 
 @poRouter.post('/approvepo')
-async def approvepo(id:approveReq):
+async def approvepo(id:approvePO):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'po_status="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
@@ -603,28 +603,7 @@ async def approvepo(id:approveReq):
 
     result = await db_Insert(table_name, fields, values, whr, flag)
     if result['suc']:
-
-        if id.status == "R":
-
-            for i in id.items:
-
-                flds= f'date,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
-                val = f'"{formatted_dt}",{id.project_id},{i.item_id},{i.req_qty},{i.req_qty},{id.in_out_flag},"{id.user}","{formatted_dt}"'
-                table = "td_stock_new"
-                whr=f""
-                flag2 =  0
-                result3 = await db_Insert(table, flds, val, whr, flag2)
-
-                if(result3['suc']>0): 
-
-                    res_dt = {"suc": 1, "msg": f"Saved Successfully And Inserted to stock"}
-
-                else:
-                    res_dt = {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
-
-        else:
-            res_dt = {"suc": 1, "msg": f"Action Successful!"}
-
+        res_dt = {"suc": 1, "msg": f"Action Successful!"}
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!"}
   
@@ -2412,7 +2391,7 @@ async def item_dtls(data:req_id):
     return res_dt
 
 @poRouter.post('/approve_req')
-async def approvepo(id:approvePO):
+async def approvepo(id:approveReq):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'approve_flag="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
