@@ -2529,6 +2529,45 @@ async def deletetc(id:deleteMrn):
 
 
 
+@poRouter.post('/deleterequisition')
+async def deletetc(id:deleteMrn):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+   fields=f''
+   table_name = "td_requisition"
+   flag = 1 
+   values=''
+   whr=f'req_no="{id.id}"'
+   result = await db_Delete(table_name, whr)
+ 
+   fields1=f''
+   table_name1 = "td_requisition_items"
+   flag1 = 1 
+   values1=''
+   whr1=f'mrn_no="MRN-{id.id}"'
+   result1 = await db_Delete(table_name1, whr1)
+
+
+
+   fields3=f''
+   table_name3 = "td_stock_new"
+   flag3 = 1 
+   values3=''
+   whr3=f'ref_no="{id.id}"'
+   result3 = await db_Delete(table_name3, whr3)
+
+
+   if(result['suc']>0 and  result3['suc']>0 and result1['suc']>0):
+        res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+       
+   return res_dt
+
+
+
 
 
 
