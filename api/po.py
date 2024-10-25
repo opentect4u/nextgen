@@ -1433,8 +1433,8 @@ async def adddelivery(data:getDelivery):
                 
                 if(result2['suc']>0):
 
-                    flds= f'date,proj_id,po_item_id,item_id,qty,in_out_flag,created_by,created_at'
-                    val = f'"{formatted_dt}",(SELECT project_id FROM td_po_basic WHERE po_no="{data.po_no}"),{i.item_id},(SELECT item_id FROM td_po_items WHERE sl_no="{i.item_id}"),{i.rc_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
+                    flds= f'date,ref_no,proj_id,po_item_id,item_id,qty,in_out_flag,created_by,created_at'
+                    val = f'"MRN-{data.invoice}","{formatted_dt}",(SELECT project_id FROM td_po_basic WHERE po_no="{data.po_no}"),{i.item_id},(SELECT item_id FROM td_po_items WHERE sl_no="{i.item_id}"),{i.rc_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
                     table = "td_stock_new"
                     whr=f""
                     flag2 =  0
