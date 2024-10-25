@@ -2546,7 +2546,7 @@ async def deletetc(id:deleteMrn):
    table_name1 = "td_requisition_items"
    flag1 = 1 
    values1=''
-   whr1=f'mrn_no="MRN-{id.id}"'
+   whr1=f'req_no="{id.id}"'
    result1 = await db_Delete(table_name1, whr1)
 
 
