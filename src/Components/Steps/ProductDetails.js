@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TDInputTemplate from "../TDInputTemplate";
-import { PlusOutlined, MinusOutlined, InfoOutlined } from "@ant-design/icons";
+import { PlusOutlined, MinusOutlined, InfoOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Tag } from "antd";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -445,7 +445,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                           setOpen(true);
                         }}
                       >
-                        <Tag color="#4FB477">Not in list?</Tag>
+                        <Tag color="#4FB477"> <PlusCircleOutlined/> Not in list?</Tag>
                       </a>
                     )}
                 </div>
@@ -597,7 +597,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                           setOpen(true);
                         }}
                       >
-                        <Tag color="#4FB477">Not in list?</Tag>
+                        <Tag color="#4FB477"> <PlusCircleOutlined/> Not in list?</Tag>
                       </a>
                     )}
                 </div>
@@ -658,7 +658,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                           setOpen(true);
                         }}
                       >
-                        <Tag color="#4FB477">Not in list?</Tag>
+                        <Tag color="#4FB477"> <PlusCircleOutlined/> Not in list?</Tag>
                       </a>
                     )}
                   
@@ -713,7 +713,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                           setOpen(true);
                         }}
                       >
-                        <Tag color="#4FB477">Not in list?</Tag>
+                        <Tag color="#4FB477"> <PlusCircleOutlined/> Not in list?</Tag>
                       </a>
                     )}
                     </div>
@@ -756,7 +756,7 @@ function ProductDetails({ pressBack, pressNext, data }) {
                           setOpen(true);
                         }}
                       >
-                        <Tag color="#4FB477">Not in list?</Tag>
+                        <Tag color="#4FB477"> <PlusCircleOutlined/> Not in list?</Tag>
                       </a>
                     )}
 

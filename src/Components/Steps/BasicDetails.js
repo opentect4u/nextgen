@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { url } from "../../Address/BaseUrl";
 import axios from "axios";
 import { Spin } from "antd";
-import { LoadingOutlined, SyncOutlined } from "@ant-design/icons";
+import { LoadingOutlined, PlusCircleOutlined, SyncOutlined } from "@ant-design/icons";
 import Viewdetails from "../Viewdetails";
 import DialogBox from "../DialogBox";
 import moment from 'moment'
@@ -24,6 +24,7 @@ function BasicDetails({ pressNext, pressBack, data }) {
   const [order_id, setOrderId] = useState(data.order_id);
   const [order_date, setOrderDate] = useState(data.order_date);
   const [vendor_name,setVendorName]=useState(data.vendor_name)
+  const [vend_ref,setVendRef]=useState(data.vend_ref)
   const [po_issue_date,setPoIssueDate]=useState(data.po_issue_date)
   const [bank,setBank]=useState([])
   const [visible,setVisible]=useState(false)
@@ -95,29 +96,29 @@ if(mode==2){
 
     console.log(type,proj_name,order_id,order_date,vendor_name);
     if(type!='P'){
-    if(type && vendor_name ){
+    if(type && vendor_name && vend_ref ){
       if(params.flag=='E'){
       if(po_no && count==0){
-        setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
+        setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,vend_ref:vend_ref,po_no:po_no});
         pressNext(val)
       }
       }
       else{
-      setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
+      setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no,vend_ref:vend_ref});
       pressNext(val)
       }
     }
   }
   else{
-    if(type && vendor_name && proj_name){
+    if(type && vendor_name && proj_name && vend_ref){
       if(params.flag=='E'){
         if(po_no){
-          setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
+          setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no,vend_ref:vend_ref});
           pressNext(val)
         }
         }
         else{
-        setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no});
+        setVal({type:type,proj_name:proj_name,order_date:order_date,order_id:order_id,vendor_name:vendor_name,po_no:po_no,vend_ref:vend_ref});
         pressNext(val)
         }
       
@@ -132,6 +133,7 @@ if(mode==2){
     setOrderId(localStorage.getItem('order_id'))
     setType(localStorage.getItem('order_type'))
     setPoIssueDate(localStorage.getItem('po_issue_date'))
+    setVendRef(localStorage.getItem('vend_ref'))
     setPoNo(localStorage.getItem('po_no'))
   },[data.type])
   useEffect(() => {
@@ -372,7 +374,7 @@ if(mode==2){
           )}
           {localStorage.getItem('po_status')!='A' && localStorage.getItem('po_status')!='D' && localStorage.getItem('po_status')!='L' && <a className="my-1" onClick={()=>{setMode(2);setOpen(true)}}>
               
-              <Tag color="#4FB477">Not in list?</Tag>
+              <Tag color="#4FB477"> <PlusCircleOutlined/> Not in list?</Tag>
               </a>
 }
               {/* <p>Not in list?</p> */}
@@ -465,10 +467,32 @@ if(mode==2){
                 }}/>}
               {localStorage.getItem('po_status')!='A' && localStorage.getItem('po_status')!='D'&&localStorage.getItem('po_status')!='L' &&<a className="my-2" onClick={()=>{setMode(1);setOpen(true)}}>
               <Tag  color="#4FB477">
-                Not in list?
+              <PlusCircleOutlined/>  Not in list?
                 </Tag>
                 </a>}
               </div>
+            
+              
+            </div>
+
+            <div className="sm:col-span-6">
+              <TDInputTemplate
+                placeholder="Vendor Reference"
+                type="text"
+                label="Vendor Reference"
+                name="vend_ref"
+                formControlName={vend_ref}
+                handleChange={(event)=>{
+                  setVendRef(event.target.value)
+                  localStorage.setItem('vend_ref',event.target.value)
+                }}
+                // handleBlur={formik.handleBlur}
+                             mode={1}
+              />
+              {!vend_ref && (
+                <VError title={'Vendor reference is required!'} />
+              )}
+            
             
               
             </div>

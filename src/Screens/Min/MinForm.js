@@ -6,7 +6,7 @@ import TDInputTemplate from "../../Components/TDInputTemplate";
 import axios from "axios";
 import { url } from "../../Address/BaseUrl";
 import { Divider, Input, Tag } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { BranchesOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import DialogBox from "../../Components/DialogBox";
 import Viewdetails from "../../Components/Viewdetails";
@@ -283,7 +283,7 @@ function MinForm() {
                                       setVisible(true);
                                     }}
                                   >
-                                    <Tag color="#4FB477">View Log</Tag>
+                                    <Tag color="#4FB477"> <BranchesOutlined /> View Log</Tag>
                                   </a>
                                 {item.issue_qty > item.quantity ? (
                                   <VError title={"Invalid value"} />

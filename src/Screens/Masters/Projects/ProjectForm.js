@@ -16,6 +16,7 @@ import {
   FileWordOutlined,
   FileImageOutlined,
   FileExcelOutlined,
+  PlusCircleOutlined,
 } from "@ant-design/icons";
 import { Popover, Spin, Tag } from "antd";
 import TDInputTemplate from "../../../Components/TDInputTemplate";
@@ -1150,7 +1151,7 @@ function ProjectForm() {
                             setOpen(true);
                           }}
                         >
-                          <Tag color="#4FB477">Not in list?</Tag>
+                          <Tag color="#4FB477"> <PlusCircleOutlined/> Not in list?</Tag>
                         </a>
                       </div>
                     </div>

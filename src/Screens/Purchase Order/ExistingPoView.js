@@ -152,6 +152,7 @@ function ExistingPoView() {
       localStorage.removeItem("order_type");
       localStorage.removeItem("proj_name");
       localStorage.removeItem("vendor_name");
+      localStorage.removeItem("vend_ref");
       localStorage.removeItem("itemList");
       localStorage.removeItem("terms");
       localStorage.removeItem("termList");

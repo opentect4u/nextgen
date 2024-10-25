@@ -7,7 +7,7 @@ import axios from "axios";
 import { ScrollPanel } from "primereact/scrollpanel";
 import { url } from "../../Address/BaseUrl";
 import Select from "react-dropdown-select";
-import { CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined, SyncOutlined } from "@ant-design/icons";
+import { BuildOutlined, CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined, ProfileOutlined, SyncOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import DialogBox from "../../Components/DialogBox";
 import { Spin, Tag } from "antd";
@@ -57,7 +57,7 @@ function RequisitionForm() {
   };
   const onApprove=(status)=>{
     setLoading(true)
-    axios.post(url+'/api/approve_req',{status:status,user:localStorage.getItem('email'),id:+params.id}).then(res=>{console.log(res)
+    axios.post(url+'/api/approve_req',{status:status,user:localStorage.getItem('email'),id:+params.id,items:itemDtlsForm,in_out_flag:0,project_id:project}).then(res=>{console.log(res)
      if(res?.data?.suc>0){
       Message('success',res?.data?.msg)
       setLoading(false)
@@ -288,6 +288,7 @@ function RequisitionForm() {
         req_type: type,
         purpose: purpose,
         items: itemDtlsForm,
+        in_out_flag:-1
       })
       .then((res) => {
         setLoading(false);
@@ -403,7 +404,7 @@ function RequisitionForm() {
                       setVisible(true);
                     }}
                   >
-                    <Tag color="#4FB477">Itemwise breakup</Tag>
+                    <Tag color="#4FB477"> <BuildOutlined /> Itemwise breakup</Tag>
                   </a>
                 )}
               </div>
@@ -453,7 +454,7 @@ function RequisitionForm() {
                       setVisible(true);
                     }}
                   >
-                    <Tag color="#4FB477">Itemwise breakup</Tag>
+                    <Tag color="#4FB477"><BuildOutlined /> Itemwise breakup</Tag>
                   </a>  
                   <a
                     // onClick={() => {
@@ -589,21 +590,10 @@ setProject(values[0]?.value);
                   </div>
                 </ScrollPanel>
               )}
-              <div className="flex justify-center items-center mx-auto">
-               {approve_flag!='A' && <button
-                  disabled={
-                    errorSum(error) ||
-                    !intended ||
-                    !type ||
-                    !purpose
-                  }
-                  onClick={() => onSubmit()}
-                  className=" disabled:bg-gray-400 mx-auto disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
-                >
-                  Submit
-                </button>
-}
-
+            
+            </div>
+            <div className="mx-auto">
+              <div className="flex justify-center gap-2 items-center mx-auto">
               {params.id>0 && approve_flag=='P' && (localStorage.getItem('user_type') =='4' || localStorage.getItem('user_type') =='5')  && count>0 && <button
                   disabled={
                     errorSum(error) ||
@@ -616,6 +606,39 @@ setProject(values[0]?.value);
                 >
                   Approve
                 </button>}
+               {approve_flag!='A' && params.id==0 && <button
+                  disabled={
+                    errorSum(error) ||
+                    !intended ||
+                    !type ||
+                    !purpose
+                  }
+                  onClick={() => onSubmit()}
+                  className=" disabled:bg-gray-400 mx-auto disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+                >
+                  Submit
+                </button>
+}
+{approve_flag!='A' && params.id>0 &&<button
+                  // disabled={
+                  //   errorSum(error) ||
+                  //   !intended ||
+                  //   !type ||
+                  //   !purpose
+                  // }
+                  onClick={() => 
+                    {
+                      setFlag(4);
+                      setVisible(true);
+                    }
+                  }
+                  className=" disabled:bg-gray-400 mx-auto disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+                >
+                  Delete
+                </button>
+}
+
+            
                 {params.id>0 && approve_flag=='P' && (localStorage.getItem('user_type') =='4' || localStorage.getItem('user_type') =='5') && count>0 &&<button
                   disabled={
                     errorSum(error) ||
@@ -624,18 +647,19 @@ setProject(values[0]?.value);
                     !purpose
                   }
                   onClick={() => onApprove('R')}
-                  className=" disabled:bg-gray-400 mx-auto disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+                  className=" disabled:bg-gray-400 mx-auto disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
                 >
                   Reject
                 </button>}
               </div>
-            </div>
+              </div>
           </div>
+          
         </div>
       </Spin>
       <DialogBox
         visible={visible}
-        flag={17}
+        flag={flag}
         id={id}
         // data={itemList}
         //   data={itemInfo}

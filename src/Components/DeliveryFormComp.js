@@ -7,9 +7,11 @@ import axios from "axios";
 import { ScrollPanel } from "primereact/scrollpanel";
 import { url } from "../Address/BaseUrl";
 import {
+  BranchesOutlined,
   CheckCircleFilled,
   ClockCircleFilled,
   CloseCircleFilled,
+  ClusterOutlined,
   DeleteOutlined,
   FileExcelOutlined,
   FileImageOutlined,
@@ -71,6 +73,8 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
   const [received_log,setReceivedLod]=useState([])
   const [count,setCount] = useState(0)
   const [checkload,setCheckLoad] = useState(false)
+  const [showDel,setShowDel] =  useState(false)
+  const [delMode,setDelMode] = useState(0)
   // const []
 
   const onChangeIc = (e) => {
@@ -90,6 +94,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
     if (e.target.name == "con") setCon(e.target.checked);
   };
   useEffect(()=>{
+    setShowDel(false)
     axios.post(url+'/api/get_mrn_list',{last_req_id:params.po_no}).then(res=>{
       console.log(res)
       setMrnDetails(res?.data?.msg)
@@ -117,6 +122,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
 
   const deleteItem = () => {
     setLoading(true);
+    if(delMode==1){
     axios
       .post(url + "/api/deletedeliverydoc", {
         po_no: params.po_no.toString(),
@@ -137,6 +143,23 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
         console.log(err);
         navigate("/error" + "/" + err.code + "/" + err.message);
       });
+    }
+    else{
+      console.log(delMode)
+      axios.post(url+'/api/deletemrn',{id:invoice}).then(res=>{
+        setLoading(false);
+        setVisible(false);
+        if (res?.data?.suc > 0) {
+          Message("success", res?.data?.msg);
+          fileList.splice(0,1);
+        } else {
+          Message("error", res?.data?.msg);
+        }
+      }).catch((err) => {
+        console.log(err);
+        navigate("/error" + "/" + err.code + "/" + err.message);
+      });
+    }
   };
   const getItemInfo = (po_no) => {
     setLoading(true);
@@ -243,7 +266,9 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
     return err
   }
   useEffect(()=>{
-     console.log(mrnDetails.filter(e=>e.invoice==inv_el))
+    console.log(showDel)
+    setShowDel(inv_el!='' && inv_el!='Select invoice'?true:false)
+     console.log(mrnDetails.filter(e=>e.invoice==inv_el),showDel,inv_el)
      setInvoice(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.invoice || "");
       setInvoiceDt(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.invoice_dt || "");
       setLrNo(mrnDetails.filter(e=>e.invoice==inv_el)[0]?.lr_no || "");
@@ -397,7 +422,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                                       
                                     }}
                                   >
-                                    <Tag color="#4FB477">Items under this invoice</Tag>
+                                    <Tag color="#4FB477"> <ClusterOutlined /> Items under this invoice</Tag>
                                   </a>
                                 </span>
 }
@@ -631,6 +656,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                             onClick={() => {
                               setId(item.sl_no);
                               setFlag(4);
+                              setDelMode(1)
                               setVisible(true);
                             }}
                           />
@@ -781,7 +807,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                                       setVisible(true);
                                     }}
                                   >
-                                    <Tag color="#4FB477">View Log</Tag>
+                                    <Tag color="#4FB477"> <BranchesOutlined /> View Log</Tag>
                                   </a>
                                 </span>
                               )}
@@ -820,7 +846,7 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                                       setVisible(true);
                                     }}
                                   >
-                                    <Tag color="#4FB477">View Log</Tag>
+                                    <Tag color="#4FB477"> <BranchesOutlined /> View Log</Tag>
                                   </a>
                                 </th>
                               )}
@@ -955,15 +981,30 @@ function DeliveryFormComp({ flag, title, onSubmit }) {
                               
                               </p>:null} 
             <div className="flex justify-center items-center gap-4">
-             
             {/* {!con } {errorSum(isError)} {zeroError} { invoice } {inv_dt}  */}
-              <button
+            {showDel && <button
+                // disabled={!con || errorSum(isError) ||zeroError || !invoice || !inv_dt || checkload || count>0} 
+                onClick={() =>
+                {
+                  setFlag(4);
+                              setDelMode(2)
+                              setVisible(true);
+                }
+                }
+                className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
+              >
+             Delete 
+              </button>
+}
+             {!showDel && <button
                 disabled={!con || errorSum(isError) ||zeroError || !invoice || !inv_dt || checkload || count>0} 
                 onClick={() => onsubmit()}
                 className=" disabled:bg-gray-400 disabled:dark:bg-gray-400 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300  rounded-full focus:ring-gray-600  dark:focus:ring-primary-900 dark:bg-[#22543d] dark:hover:bg-gray-600"
               >
                 Submit
               </button>
+}
+             
             </div>
           </div>
         </div>

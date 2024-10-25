@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import PrintComp from "../Components/PrintComp";
 import AuditTrail from "../Components/AuditTrail";
 
-function ForgotPass({onClose}) {
+function ForgotPass({onClose,onLoading}) {
     const params = useParams();
     const [loading,setLoading]=useState(false)
     const [visible,setVisible]=useState(false)
@@ -35,7 +35,7 @@ function ForgotPass({onClose}) {
         };
         const [formValues,setValues] = useState(initialValues)
        
-      
+        useEffect(()=>{onLoading(loading)},[loading])
         const onSubmit = (values) => {
           setLoading(true)
           setCount(prev=>prev+1)

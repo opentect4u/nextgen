@@ -70,7 +70,7 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm ,on
        ,
       // label:'Received on '+i.rc_at?.split('T')[0]+' at '+i.rc_at?.split('T')[1]
       label:<span>Received on {data[i].rc_at?.split('T')[0]+' at '+data[i].rc_at?.split('T')[1] } 
-       <Popconfirm
+       {/* <Popconfirm
     title="Delete the item"
     description="Are you sure to delete this item?"
     zIndex={50000}
@@ -85,7 +85,6 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm ,on
             {
               Message('success',res?.data?.msg)
             
-              // timeLineItems.splice(i,1)
               confirm(1)
               
             }
@@ -104,12 +103,11 @@ const DialogBox = ({ visible, flag, onPress,onDelete,data,amendPo,id,confirm ,on
 
     }}
   >
-    {/* <Button danger>Delete</Button> */}
     <Tooltip title={'Delete'}>
       <DeleteOutlined className='mx-2 font-bold text-red-900'/>
       </Tooltip>
       
-  </Popconfirm>
+  </Popconfirm> */}
 
       </span>
     })

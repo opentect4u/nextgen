@@ -18,6 +18,7 @@ function AmendPreview({id}) {
     const [b_order_dt, setBOrderDt] = useState("");
     const [proj_name, setProjectName] = useState("");
     const [vendor_name, setVendorName] = useState("");
+    const [vend_ref, setVendRef] = useState("");
     const [po_issue_date,setPoIssueDate]=useState("")
     const [order_id, setOrderId] = useState("");
     const [itemList, setItemList] = useState([]);
@@ -173,6 +174,7 @@ useEffect(()=>{
           setOrderId(res?.data?.msg?.po_id)
           setProjectName(res?.data?.msg?.project_id)
           setVendorName(res?.data?.msg?.vendor_id)
+          setVendRef(res?.data?.msg?.vend_ref)
           setPoIssueDate(res?.data?.msg?.po_issue_date)
           setPoNo(res?.data?.msg?.po_no)
           console.log(resvendor?.data?.msg)
@@ -402,6 +404,7 @@ useEffect(()=>{
           <span className="uppercase font-extrabold">Phone:  {v_phone}</span>
           <span className="uppercase font-extrabold">GST:  {v_gst}</span>
           <span className="uppercase font-extrabold">PAN:  {v_pan}</span>
+          <span className="uppercase font-extrabold">Reference:  {vend_ref}</span>
         </div>
 
   </div>

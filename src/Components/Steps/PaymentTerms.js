@@ -14,6 +14,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
   };
 
   const handleOpenChange = (newOpen) => {
+    if(termList.length==1)
     setPopOpen(newOpen);
   };
   const [termList, setTermList] = useState(
@@ -44,6 +45,7 @@ function PaymentTerms({ pressBack, pressNext, data }) {
       }
     })
   };
+  
   const addDt = (dt) => {
     setTermList([...termList, dt]);
 
@@ -119,8 +121,11 @@ function PaymentTerms({ pressBack, pressNext, data }) {
       content={<>
       <ul>
       {termdtls?.map(price=><li className="my-2">
-        <Tag className="cursor-pointer" onClick={(index)=>{
-          termList[index+1]['term']=price.terms_dtls;
+        <Tag className="cursor-pointer" onClick={()=>{
+          console.log(termList,index)
+          termList[index]['term']=price.terms_dtls;
+          localStorage.removeItem('termList')
+          localStorage.setItem('termList',JSON.stringify(termList))
           // console.log()
           handleOpenChange(false)
           }} >

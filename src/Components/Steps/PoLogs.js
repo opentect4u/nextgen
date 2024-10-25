@@ -169,8 +169,11 @@ function PoLogs({ data }) {
   return (
     <div className="grid grid-cols-2 gap-10 -ml-20 my-10">
       <div className="sm:col-span-1 rounded-lg shadow-lg -ml-4 bg-[#DDEAE0] p-5">
-        {localStorage.getItem("po_status") == "U" ||
-        localStorage.getItem("po_status") == "A" ? (
+      {/* {localStorage.getItem("po_status") == "U" || localStorage.getItem('po_status') == 'P' || 
+        localStorage.getItem("po_status") == "A" ? ( */}
+
+          {params.id>0 ? (
+          
           <>
             <span className="sm:col-span-4">
               <TDInputTemplate
@@ -282,7 +285,7 @@ function PoLogs({ data }) {
             className="text-green-900 dark:text-gray-400"
             spinning={loading}
           >
-            {localStorage.getItem("po_status") == "U" ||
+            {localStorage.getItem("po_status") == "U" || localStorage.getItem('po_status') == 'P' || 
             localStorage.getItem("po_status") == "A" ? (
               // <Timeline mode={"left"} items={timeline} />
               <TimeLine data={timeline} />

@@ -3,6 +3,8 @@ import TDInputTemplate from "../TDInputTemplate";
 import VError from "../../Components/VError";
 import { useParams } from "react-router-dom";
 import { Popover, Tag } from "antd";
+import { url } from "../../Address/BaseUrl";
+import axios from "axios";
 function More({ pressNext, pressBack, type,data }) {
   const [insp_flag, setInspFlag] = useState(data.insp_flag?data.insp_flag:"N");
   const [insp, setInsp] = useState(data.insp?data.insp:"");
@@ -17,7 +19,7 @@ function More({ pressNext, pressBack, type,data }) {
   const [popmdccOpen, setmdccPopOpen] = useState(false);
   const [popinspOpen, setinspPopOpen] = useState(false);
   const [popdrawOpen, setdrawPopOpen] = useState(false);
-
+  const [dtls,setDtls] = useState([])
 
   const params = useParams();
 
@@ -71,6 +73,7 @@ function More({ pressNext, pressBack, type,data }) {
     <>
       <div className="grid gap-4 sm:grid-cols-3 sm:gap-6">
         <div className="flex flex-col sm:col-span-1 gap-3 mt-5">
+       
           <TDInputTemplate
             placeholder="MDCC"
             type="text"
@@ -85,13 +88,13 @@ function More({ pressNext, pressBack, type,data }) {
               setMdccFlag(e.target.value);
               console.log(mdcc_flag)
               localStorage.setItem('mdcc_flag',e.target.value);
+              
             }}
             mode={2}
             disabled={localStorage.getItem('po_status')=='A' ||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
           />
           {mdcc_flag == "MDCC" && <VError title={"MDCC is required"} />}
-         
         </div>
         <div className="flex flex-col sm:col-span-1 gap-3 mt-5">
           <TDInputTemplate
@@ -171,23 +174,56 @@ function More({ pressNext, pressBack, type,data }) {
             onOpenChange={handlemdccOpenChange}
           > */}
         {mdcc_flag == "Y" && (
+           <Popover
+           content={<>
+           <ul>
+           {dtls?.map(price=><li className="my-2">
+             <Tag className="cursor-pointer" onClick={()=>{
+               setMdcc(price.mdcc_scope)
+               localStorage.setItem('mdcc',price.mdcc_scope)
+               // console.log() 
+               handlemdccOpenChange(false)
+               }} >
+             {price.mdcc_scope}
+               
+               </Tag>  
+             </li>)}
+     
+           </ul>
+          <a onClick={hidemdcc}>Close</a>  
+           </>}
+           title="Do you mean?"
+           trigger="click"
+           open={popmdccOpen}
+           onOpenChange={handlemdccOpenChange}
+         >
             <TDInputTemplate
               placeholder="MDCC Scope"
               type="text"
               label="MDCC Scope"
               name="mdcc"
               formControlName={mdcc}
-              handleChange={(text) => {setMdcc(text.target.value); localStorage.setItem('mdcc',text.target.value)}}
+              handleChange={(text) => {setMdcc(text.target.value); localStorage.setItem('mdcc',text.target.value)
+
+                axios.post(url+'/api/get_mdcc_scope',{wrd:text.target.value}).then(res=>{
+                  if(res.data.msg.length>0){
+                    setDtls(res.data.msg)
+                    handlemdccOpenChange(true)
+                  }
+                })
+
+              }}
               disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
               mode={3}
             />
+            </Popover>
           )}
           {mdcc_flag == "Y" && !mdcc && (
             <VError title={"MDCC scope is required"} />
           )} 
           {/* </Popover> */}
-          {/* <Popover
+          <Popover
             content={
               <>
                 <ul>
@@ -196,11 +232,12 @@ function More({ pressNext, pressBack, type,data }) {
                       <Tag
                         className="cursor-pointer"
                         onClick={() => {
-                         setInsp(price.insp)
+                         setInsp(price.inspection_scope)
                           handleinspOpenChange(false);
+                          localStorage.setItem('insp',price.inspection_scope)
                         }}
                       >
-                        {price.insp}
+                        {price.inspection_scope}
                       </Tag>
                     </li>
                   ))}
@@ -212,16 +249,24 @@ function More({ pressNext, pressBack, type,data }) {
             trigger="click"
             open={popinspOpen}
             onOpenChange={handleinspOpenChange}
-          > */}
+          >
          {insp_flag == "Y" && (
             <TDInputTemplate
               placeholder="Inspection Scope"
               type="text"
               formControlName={insp}
-              handleChange={(text) => {setInsp(text.target.value);localStorage.setItem('insp',text.target.value)}}
+              handleChange={(text) => {setInsp(text.target.value);localStorage.setItem('insp',text.target.value)
+
+                axios.post(url+'/api/get_inspection_scope',{wrd:text.target.value}).then(res=>{
+                  if(res.data.msg.length>0){
+                    setInspDescVal(res.data.msg)
+                    handlemdccOpenChange(true)
+              }})
+
+              }}
               label="Inspection Scope"
               disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
-
+          
               name="insp"
               mode={3}
             />
@@ -229,14 +274,51 @@ function More({ pressNext, pressBack, type,data }) {
           {insp_flag == "Y" && !insp && (
             <VError title={"Inspection scope is required"} />
           )}
-          {/* </Popover> */}
+          </Popover>
         {drawing_flag == "Y" && (
+
             <>
+              <Popover
+            content={
+              <>
+                <ul>
+                  {drawDescVal?.map((price) => (
+                    <li className="my-2">
+                      <Tag
+                        className="cursor-pointer"
+                        onClick={() => {
+                          setDrawing(price.draw_scope)
+                          handledrawOpenChange(false);
+                          localStorage.setItem('drawing',price.draw_scope)
+                        }}
+                      >
+                        {price.draw_scope}
+                      </Tag>
+                    </li>
+                  ))}
+                </ul>
+                <a onClick={hidedraw}>Close</a>
+              </>
+            }
+            title="Do you mean?"
+            trigger="click"
+            open={popdrawOpen}
+            onOpenChange={handledrawOpenChange}
+          >
               <TDInputTemplate
                 placeholder="Drawing/Datasheet Scope"
                 type="text"
                 formControlName={drawing}
-                handleChange={(e) => {setDrawing(e.target.value);localStorage.setItem('drawing',e.target.value)}}
+                handleChange={(e) => {setDrawing(e.target.value);localStorage.setItem('drawing',e.target.value)
+
+
+                  axios.post(url+'/api/get_draw_scope',{wrd:e.target.value}).then(res=>{
+                    if(res.data.msg.length>0){
+                      setDrawDescVal(res.data.msg)
+                      handledrawOpenChange(true)
+                }})
+
+                }}
                 label="Drawing/Datasheet Scope"
                 disabled={localStorage.getItem('po_status')=='A'||localStorage.getItem('po_status')=='D'||localStorage.getItem('po_status')=='L'?true:false}
 
@@ -246,6 +328,7 @@ function More({ pressNext, pressBack, type,data }) {
               {drawing_flag == "Y" && !drawing && (
                 <VError title={"Drawing scope is required"} />
               )}
+                </Popover>
 
                 <>
                   {" "}

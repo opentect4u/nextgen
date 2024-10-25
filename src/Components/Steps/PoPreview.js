@@ -184,6 +184,7 @@ function PoPreview({ data }) {
           <span className="uppercase font-extrabold">Phone:  {v_phone}</span>
           <span className="uppercase font-extrabold">GST:  {v_gst}</span>
           <span className="uppercase font-extrabold">PAN:  {v_pan}</span>
+          <span className="uppercase font-extrabold">Reference:  {localStorage.getItem('vend_ref')}</span>
         </div>
 
   </div>
