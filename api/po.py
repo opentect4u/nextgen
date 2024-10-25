@@ -137,7 +137,8 @@ class approvePO(BaseModel):
     status:str
     user:str
 
-
+class deleteMrn(BaseModel):
+    id:str
 
 class getComments(BaseModel):
     id:int
@@ -2482,7 +2483,7 @@ async def checkinvoice(inv_no:CheckInvoice):
 
 
 @poRouter.post('/deletemrn')
-async def deletetc(id:deleteReceipt):
+async def deletetc(id:deleteMrn):
    current_datetime = datetime.now()
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
