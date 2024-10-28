@@ -274,7 +274,7 @@ async def getproject(id:GetProject):
     print(id.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number,p.proj_type,p.proj_unit,p.proj_id,p.proj_name,p.client_id,p.client_location,p.client_gst,p.client_pan,p.proj_delivery_date,p.order_id,p.order_date,p.proj_desc,p.proj_order_val,p.proj_end_user,p.proj_consultant,p.epc_contractor,p.price_basis,p.ld_clause,p.ld_clause_flag,p.erection_responsibility,p.warranty,pa.proj_manager,u.user_name as proj_manager_name,p.created_by,p.created_at,p.modified_by,p.modified_at,p.sl_no,c.client_name"
+    select = "@a:=@a+1 serial_number,p.proj_type,p.proj_unit,p.proj_id,p.proj_name,p.client_id,p.client_location,p.client_gst,p.client_pan,p.proj_delivery_date,p.order_id,p.order_date,p.proj_desc,p.proj_order_val,p.proj_end_user,p.proj_consultant,p.epc_contractor,p.price_basis,p.ld_clause,p.ld_clause_flag,p.erection_responsibility,p.warranty,pa.proj_manager,u.user_name as proj_manager_name,u.user_email as manager_email,p.created_by,p.created_at,p.modified_by,p.modified_at,p.sl_no,c.client_name"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_project p,td_project_assign pa,md_user u,md_client c,(SELECT @a:= 0) AS a"
     where = f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no and p.sl_no='{id.id}' and p.client_id=c.sl_no" if id.id>0 else f"pa.proj_id=p.proj_id and pa.proj_manager=u.sl_no and p.client_id=c.sl_no"
