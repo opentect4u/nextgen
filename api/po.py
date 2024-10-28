@@ -2333,7 +2333,7 @@ async def get_requisition(data:GetPo):
 #     return res_dt
 
 
-@poRouter.post('/req_item_dtl')
+@poRouter.post('/req_item_dtls')
 async def req_item_dtl(data:ReqId):
     select = "a.sl_no, a.last_req_id, a.req_no, a.item_id, b.prod_name, a.rc_qty, a.req_qty, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id) as stock"
     table = "td_requisition_items a left join md_product b on a.item_id=b.sl_no"
