@@ -1654,7 +1654,7 @@ async def deletetc(id:deleteDoc):
 #     result = await db_select(select, schema, where, order, flag)
 #     return result
 
-@app.post('/getpoitemfordel')
+@poRouter.post('/getpoitemfordel')
 async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
