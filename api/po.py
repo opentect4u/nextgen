@@ -279,6 +279,7 @@ class approveReq(BaseModel):
     user:str
     project_id:int
     in_out_flag:int
+    reason:str
 class ReqId(BaseModel):
     last_req_id:int
 
@@ -2283,7 +2284,7 @@ async def get_requisition(data:GetPo):
     print(data.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number, req_no,intended_for,req_date, req_type,approve_flag,purpose,project_id, created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number,reason, req_no,intended_for,req_date, req_type,approve_flag,purpose,project_id, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_requisition,(SELECT @a:= 0) AS a"
     where = f"sl_no='{data.id}' and delete_flag='N'" if data.id>0 else f"delete_flag='N'"
@@ -2396,7 +2397,7 @@ async def item_dtls(data:req_id):
 async def approvepo(id:approveReq):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'approve_flag="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
+    fields= f'approve_flag="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}",reason="{id.reason}"'
     values = f''
     table_name = "td_requisition"
     whr = f'sl_no="{id.id}"' if id.id > 0 else None
