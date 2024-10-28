@@ -1540,13 +1540,28 @@ async def gettcbypo(id:GetPo):
     return result   
 
 
+# @poRouter.post('/getpoitemforedit')
+# async def getitemforedit(id:GetPo):
+
+#     # print(id.id)
+#     res_dt = {}
+
+#     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name"
+#     schema = "td_po_items i,md_product p"
+#     where = f"i.item_id=p.sl_no and i.po_sl_no='{id.id}'" if id.id>0 else ""
+#     order = ""
+#     flag = 1 if id.id>0 else 0
+#     result = await db_select(select, schema, where, order, flag)
+#     # print(result, 'RESULT')
+#     return result
+
 @poRouter.post('/getpoitemforedit')
 async def getitemforedit(id:GetPo):
 
     # print(id.id)
     res_dt = {}
 
-    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name"
+    select = f"i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id) as stock"
     schema = "td_po_items i,md_product p"
     where = f"i.item_id=p.sl_no and i.po_sl_no='{id.id}'" if id.id>0 else ""
     order = ""
