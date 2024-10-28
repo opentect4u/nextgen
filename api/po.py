@@ -1642,12 +1642,24 @@ async def deletetc(id:deleteDoc):
    return result
 
 
-@poRouter.post('/getpoitemfordel')
+# @poRouter.post('/getpoitemfordel')
+# async def getprojectpoc(id:GetPo):
+#     res_dt = {}
+
+#     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by"
+#     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_item_delivery_invoice t on t.invoice=d.invoice"
+#     where = f"i.po_sl_no='{id.id}' and d.delete_flag='N'" if id.id>0 else ""
+#     order = ""
+#     flag = 1 if id.id>0 else 0
+#     result = await db_select(select, schema, where, order, flag)
+#     return result
+
+@app.post('/getpoitemfordel')
 async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
 
-    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by"
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id) as stock"
     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_item_delivery_invoice t on t.invoice=d.invoice"
     where = f"i.po_sl_no='{id.id}' and d.delete_flag='N'" if id.id>0 else ""
     order = ""
