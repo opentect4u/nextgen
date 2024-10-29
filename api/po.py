@@ -2379,7 +2379,7 @@ async def get_requisition(data:GetPo):
 async def req_item_dtl(data:ReqId):
     select = "a.sl_no, a.last_req_id, a.req_no, a.item_id, b.prod_name, a.rc_qty, a.req_qty, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id=c.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id='0') as warehouse_stock"
     table = "td_requisition_items a left join md_product b on a.item_id=b.sl_no, td_requisition c"
-    where = f"a.last_req_id=c.sl_no and a.last_req_id = {data.last_req_id}"
+    where = f"a.last_req_id=c.sl_no and a.last_req_id = {data.last_req_id}" if data.last_req_id>0 else f"a.last_req_id=c.sl_no"
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)

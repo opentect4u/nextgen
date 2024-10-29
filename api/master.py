@@ -594,6 +594,7 @@ async def getvendorbank(id:getData):
     schema = "md_vendor_bank"
     where = f"vendor_id='{id.id}'" if id.id>0 else ""
     order = ""
+    # flag = 1 if id.id>0 else 0
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
