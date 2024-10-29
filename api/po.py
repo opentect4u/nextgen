@@ -1686,14 +1686,29 @@ async def deletetc(id:deleteDoc):
 #     return result
 
 
+# @poRouter.post('/getpoitemfordel')
+# async def getprojectpoc(id:GetPo):
+#     # print(id.id)
+#     res_dt = {}
+
+#     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=b.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id='0') as warehouse_stock"
+#     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_item_delivery_invoice t on t.invoice=d.invoice, td_po_basic b"
+#     where = f"i.po_sl_no=b.sl_no and i.po_sl_no='{id.id}' and d.delete_flag='N'" if id.id>0 else ""
+#     order = ""
+#     flag = 1 if id.id>0 else 0
+#     result = await db_select(select, schema, where, order, flag)
+#     # print(result, 'RESULT')
+#     return result
+
+
 @poRouter.post('/getpoitemfordel')
 async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
 
     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=b.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id='0') as warehouse_stock"
-    schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_item_delivery_invoice t on t.invoice=d.invoice, td_po_basic b"
-    where = f"i.po_sl_no=b.sl_no and i.po_sl_no='{id.id}' and d.delete_flag='N'" if id.id>0 else ""
+    schema = "td_po_items i, md_product p, td_item_delivery_details d , td_item_delivery_invoice t, td_po_basic b, td_stock_new n"
+    where = f"i.item_id=p.sl_no and t.invoice=d.invoice and i.po_sl_no=b.sl_no and b.project_id=n.proj_id and i.item_id=n.item_id and n.item_id=d.prod_id and d.delete_flag='N' and i.po_sl_no='{id.id}'" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
