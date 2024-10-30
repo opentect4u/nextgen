@@ -129,6 +129,9 @@ class PoModel(BaseModel):
 
 class GetPo(BaseModel):
     id:int
+class GetStock(BaseModel):
+    proj_id:int
+    prod_id:int
 
 class GetReq(BaseModel):
     Proj_id:int
@@ -1685,7 +1688,19 @@ async def getprojectpoc(id:GetPo):
     # print(result, 'RESULT')
     return result
 
+@poRouter.post('/getstock')
+async def getprojectpoc(id:GetStock):
+    # print(id.id)
+    res_dt = {}
 
+    select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock"
+    schema = "td_stock_new"
+    where = f"item_id={id.prod_id} and proj_id ={id.proj_id}"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
 # @poRouter.post('/getpoitemfordel')
 # async def getprojectpoc(id:GetPo):
 #     # print(id.id)
