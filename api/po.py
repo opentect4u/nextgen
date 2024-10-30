@@ -1729,7 +1729,7 @@ async def getprojectpoc(id:GetPo):
     res_dt = await db_select(select1, schema1, whr, odr, flg)
     print(res_dt["msg"])
 
-    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name, 0 rc_qty, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=b.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id='0') as warehouse_stock" if res_dt["msg"]==[] else "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=b.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id='0') as warehouse_stock"
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name, 0 rc_qty, 0 project_stock, 0 warehouse_stock" if res_dt["msg"]==[] else "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=b.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id='0') as warehouse_stock"
 
     schema = "td_po_items i, md_product p, td_item_delivery_details d , td_item_delivery_invoice t, td_po_basic b, td_stock_new n"
     where = f"i.item_id=p.sl_no and t.invoice=d.invoice and i.po_sl_no=b.sl_no and b.project_id=n.proj_id and i.item_id=n.item_id and n.item_id=d.prod_id and d.delete_flag='N' and i.po_sl_no='{id.id}'" if id.id>0 else ""
