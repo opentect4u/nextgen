@@ -1716,7 +1716,7 @@ async def deletetc(id:deleteDoc):
 #     return result
 
 
-@app.post('/getpoitemfordel')
+@poRouter.post('/getpoitemfordel')
 async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
