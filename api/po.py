@@ -304,6 +304,14 @@ class ReqNo(BaseModel):
 class CheckInvoice(BaseModel):
     inv_no:str
 
+class PoSearch(BaseModel):
+    project_id:int
+    vendor_id:int
+    part_no:str
+    prod_id:str
+    from_dt:str
+    to_dt:str
+
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -2722,6 +2730,24 @@ async def deletetc(id:deleteMrn):
         res_dt = {"suc": 0, "msg": "Error while deleting!"}
        
    return res_dt
+
+
+
+@poRouter.post('/advanced_search_po')
+async def getprojectpoc(id:PoSearch):
+    # print(id.id)
+    res_dt = {}
+
+    select = "b.sl_no,b.fresh_flag,b.amend_flag,b.project_id,b.vendor_id,b.po_issue_date,i.item_id,p.prod_name,p.prod_make,p.part_no,b.created_by,b.created_at"
+    schema = '''td_po_basic b left join td_po_items i on b.sl_no = i.po_sl_no
+left join td_project p ON p.sl_no=i.item_id
+'''
+    where = f"b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or b.po_issue_date>={id.from_dt} and b.po_issue_date<={id.to_dt}"
+    order = "ORDER BY b.created_at DESC"
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
 
 
 
