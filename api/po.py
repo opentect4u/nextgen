@@ -2740,7 +2740,7 @@ async def getprojectpoc(id:PoSearch):
 
     select = "b.sl_no,b.fresh_flag,b.amend_flag,b.project_id,b.vendor_id,v.vendor_name,d.proj_name,b.po_issue_date,i.item_id,p.prod_name,p.prod_make,p.part_no,b.created_by,b.created_at"
     schema = '''td_po_basic b left join td_po_items i on b.sl_no = i.po_sl_no
-left join md_product p ON p.sl_no=i.item_id left b.vendor_id=v.sl_no left join b.project_id = d.sl_no
+left join md_product p ON p.sl_no=i.item_id left join b.vendor_id=v.sl_no left join b.project_id = d.sl_no
 '''
     where = f"b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or b.po_issue_date>={id.from_dt} and b.po_issue_date<={id.to_dt}"
     order = "ORDER BY b.created_at DESC"
