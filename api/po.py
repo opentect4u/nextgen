@@ -2744,7 +2744,7 @@ left join md_product p ON p.sl_no=i.item_id
 '''
     where = f"b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or b.po_issue_date>={id.from_dt} and b.po_issue_date<={id.to_dt}"
     order = "ORDER BY b.created_at DESC"
-    flag = 0 
+    flag = 1
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
     return result
