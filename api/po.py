@@ -2767,15 +2767,32 @@ async def getprojectpoc(id:PoSearch):
     return result
 
 
+# @poRouter.post('/advanced_search_delivery')
+# async def getprojectpoc(id:PoSearch):
+#     # print(id.id)
+#     res_dt = {}
+
+#     select = "d.invoice,d.invoice_dt,d.po_no,pr.sl_no,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.prod_id,p.prod_name,p.prod_make,p.part_no"
+#     schema = '''td_item_delivery_invoice d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_item_delivery_details i on i.invoice=d.invoice left join md_product p on i.prod_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id
+# '''
+#     where = f"b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.prod_id='{id.prod_id}' or d.invoice_dt between {id.from_dt} and {id.to_dt}"
+#     order = "ORDER BY d.created_at DESC"
+#     flag = 1
+#     result = await db_select(select, schema, where, order, flag)
+#     # print(result, 'RESULT')
+#     return result
+
+
+
 @poRouter.post('/advanced_search_delivery')
 async def getprojectpoc(id:PoSearch):
     # print(id.id)
     res_dt = {}
 
-    select = "d.invoice,d.invoice_dt,d.po_no,pr.sl_no,pr.proj_name,b.vendor_id,v.vendor_name,i.prod_id,p.prod_name,p.prod_make,p.part_no"
-    schema = '''td_po_basic b left join td_item_delivery_invoice d on d.po_no = b.po_no left join td_project pr on pr.sl_no = b.project_id left join td_item_delivery_details i on i.invoice=d.invoice left join md_product p on i.prod_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id
+    select = "d.invoice,d.invoice_dt,d.po_no,pr.sl_no,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.prod_id,p.prod_name,p.prod_make,p.part_no"
+    schema = '''td_item_delivery_invoice d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_item_delivery_details i on i.invoice=d.invoice left join md_product p on i.prod_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id
 '''
-    where = f"b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.prod_id='{id.prod_id}' or d.invoice_dt>={id.from_dt} and d.invoice_dt<={id.to_dt}"
+    where = f"b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.prod_id='{id.prod_id}' or d.invoice_dt between {id.from_dt} and {id.to_dt}"
     order = "ORDER BY d.created_at DESC"
     flag = 1
     result = await db_select(select, schema, where, order, flag)
