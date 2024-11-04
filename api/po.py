@@ -2756,7 +2756,7 @@ async def getprojectpoc(id:PoSearch):
     # print(id.id)
     res_dt = {}
 
-    select = "r.req_no,r.approve_flag,r.project_id,r.proj_name,r.req_date,d.proj_name,i.item_id,p.prod_name,p.prod_make,p.part_no,r.created_by,r.created_at"
+    select = "r.req_no,r.approve_flag,r.project_id,b.proj_name,r.req_date,d.proj_name,i.item_id,p.prod_name,p.prod_make,p.part_no,r.created_by,r.created_at"
     schema = '''td_requisition_items i left join  md_product p ON p.sl_no=i.item_id left join td_project d on b.project_id = d.sl_no left join td_requisition r on r.req_no = i.req_no
 '''
     where = f"r.project_id='{id.project_id}' or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or r.req_date>={id.from_dt} and r.req_date<={id.to_dt}"
