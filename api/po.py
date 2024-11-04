@@ -314,8 +314,8 @@ class PoSearch(BaseModel):
 
 class DelSearch(BaseModel):
     invoice:Optional[str]=None
-    project_id:Optional[int]=None
-    vendor_id:Optional[int]=None
+    project_id:Optional[Union[int,str]]=None
+    vendor_id:Optional[Union[int,str]]=None
     part_no:Optional[str]=None
     prod_id:Optional[str]=None
     from_dt:Optional[str]=None
