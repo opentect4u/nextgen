@@ -255,6 +255,7 @@ class AddMin(BaseModel):
     req_no:str
     min:list[minList]
     user:str
+    min_dt:str
 
 class ProjId(BaseModel):
     Proj_id:int
@@ -313,13 +314,13 @@ class PoSearch(BaseModel):
     to_dt:str
 
 class DelSearch(BaseModel):
-    invoice:Optional[str]=None
-    project_id:Optional[Union[int,str]]=None
-    vendor_id:Optional[Union[int,str]]=None
-    part_no:Optional[Union[str,None]]=None
-    prod_id:Optional[Union[str,None]]=None
-    from_dt:Optional[Union[str,None]]=None
-    to_dt:Optional[Union[str,None]]=None
+    invoice:str
+    project_id:int
+    vendor_id:int
+    part_no:str
+    prod_id:str
+    from_dt:str
+    to_dt:str
 
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
@@ -2294,8 +2295,8 @@ async def addmin(data:AddMin):
 
    for v in data.min:
         # fields= f'opening_qty="{v.quantity}", issue_qty="{v.issue_qty}",req_no="{data.req_no}",purpose="{v.purpose}",notes="{v.notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'item_id,opening_qty,issue_qty,req_no,purpose,notes,created_by,created_at'
-        fields= f'item_id,opening_qty,issue_qty,req_no,purpose,notes,created_by,created_at'
-        values = f'"{v.item_id}","{v.quantity}","{v.issue_qty}","{data.req_no}","{v.purpose}","{v.notes}","{data.user}","{formatted_dt}"'
+        fields= f'item_id,opening_qty,min_dt,issue_qty,req_no,purpose,notes,created_by,created_at'
+        values = f'"{v.item_id}","{v.quantity}","{data.min_dt}","{v.issue_qty}","{data.req_no}","{v.purpose}","{v.notes}","{data.user}","{formatted_dt}"'
         table_name = "td_min"
         # whr =  f'item_id="{v.sl_no}" and req_no="{data.req_no}"' if  result1['msg']['count'] > 0 else ''
         whr =  ''
