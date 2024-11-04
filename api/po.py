@@ -313,13 +313,13 @@ class PoSearch(BaseModel):
     to_dt:str
 
 class DelSearch(BaseModel):
-    invoice:str
-    project_id:int
-    vendor_id:int
-    part_no:str
-    prod_id:str
-    from_dt:str
-    to_dt:str
+    invoice:Optional[str]=None
+    project_id:Optional[int]=None
+    vendor_id:Optional[int]=None
+    part_no:Optional[str]=None
+    prod_id:Optional[str]=None
+    from_dt:Optional[str]=None
+    to_dt:Optional[str]=None
 
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
