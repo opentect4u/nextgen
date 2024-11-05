@@ -306,12 +306,12 @@ class CheckInvoice(BaseModel):
     inv_no:str
 
 class PoSearch(BaseModel):
-    project_id:int
-    vendor_id:int
-    part_no:str
-    prod_id:str
-    from_dt:str
-    to_dt:str
+    project_id:Optional[int]=None
+    vendor_id:Optional[int]=None
+    part_no:Optional[str]=None
+    prod_id:Optional[str]=None
+    from_dt:Optional[str]=None
+    to_dt:Optional[str]=None
 
 class DelSearch(BaseModel):
     invoice:str
