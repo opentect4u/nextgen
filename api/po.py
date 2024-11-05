@@ -2752,7 +2752,7 @@ async def getprojectpoc(id:PoSearch):
     schema = '''td_po_basic b left join td_po_items i on b.sl_no = i.po_sl_no
 left join md_product p ON p.sl_no=i.item_id left join md_vendor v on b.vendor_id=v.sl_no left join td_project d on b.project_id = d.sl_no
 '''
-    where = f"(b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or b.po_issue_date>={id.from_dt} and b.po_issue_date<={id.to_dt}) AND b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null "
+    where = f"(b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or b.po_issue_date>='{id.from_dt}' and b.po_issue_date<='{id.to_dt}') AND b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null "
     order = "ORDER BY b.created_at DESC"
     flag = 1
     result = await db_select(select, schema, where, order, flag)
