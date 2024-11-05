@@ -2773,7 +2773,7 @@ async def getprojectpoc(id:PoSearch):
     # where = f"r.project_id='{id.project_id}' or p.part_no like '%{id.part_no}%' i.item_id='{id.prod_id}' or r.req_date>={id.from_dt} and r.req_date<={id.to_dt}"
 
     where = f"({f"r.project_id='{id.project_id}' or" if id.project_id != 
-                '' else ""} or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or (r.req_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'}) AND (r.project_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and r.req_date is not null)"
+                '' else ""} p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or (r.req_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'}) AND (r.project_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and r.req_date is not null)"
     order = "ORDER BY r.created_at DESC"
     
     flag = 1
