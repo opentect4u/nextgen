@@ -306,8 +306,8 @@ class CheckInvoice(BaseModel):
     inv_no:str
 
 class PoSearch(BaseModel):
-    project_id:Optional[int]=None
-    vendor_id:Optional[int]=None
+    project_id:Optional[Union[int,str]]=None
+    vendor_id:Optional[Union[int,str]]=None
     part_no:Optional[str]=None
     prod_id:Optional[str]=None
     from_dt:Optional[str]=None
