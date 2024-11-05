@@ -2773,7 +2773,7 @@ async def getprojectpoc(id:PoSearch):
     # where = f"r.project_id='{id.project_id}' or p.part_no like '%{id.part_no}%' i.item_id='{id.prod_id}' or r.req_date>={id.from_dt} and r.req_date<={id.to_dt}"
 
     where = f"({f"r.project_id='{id.project_id}' or" if id.project_id != 
-                '' else ""} or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or (r.req_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'})) AND (r.project_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and r.req_date is not null)"
+                '' else ""} or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or (r.req_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'}) AND (r.project_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and r.req_date is not null)"
     order = "ORDER BY r.created_at DESC"
     
     flag = 1
@@ -2810,7 +2810,7 @@ async def getprojectpoc(id:DelSearch):
     # where = f"b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or d.invoice like '%{id.invoice}%' or p.part_no like '%{id.part_no}%' or i.prod_id='{id.prod_id}' or  d.invoice_dt>={id.from_dt} and d.invoice_dt<={id.to_dt}"
 
     where = f"({f"b.project_id='{id.project_id}' or" if id.project_id != 
-                '' else ""} b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or d.invoice like '%{id.invoice}%' or i.item_id='{id.prod_id}' or (b.po_issue_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'})) AND (b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null) "
+                '' else ""} b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or d.invoice like '%{id.invoice}%' or i.item_id='{id.prod_id}' or (b.po_issue_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'}) AND (b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null) "
     order = "ORDER BY d.created_at DESC"
     order=''
     flag = 1
