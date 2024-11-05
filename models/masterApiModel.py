@@ -15,7 +15,7 @@ async def db_select(select, schema, where, order, flag):
         records = cursor.fetchall() if flag > 0 else cursor.fetchone()
         if(records is not None):
             result = createResponse(records, cursor.column_names, flag)
-            res_dt = {"suc": 1, "msg": result}
+            res_dt = {"suc": 1, "msg": result,"sql":sql}
 
         else:
             res_dt = {"suc": 2, "msg": "No Data Found"}
