@@ -2743,42 +2743,98 @@ async def deletetc(id:deleteMrn):
 
 
 
+# @poRouter.post('/advanced_search_po')
+# async def getprojectpoc(id:PoSearch):
+#     # print(id.id)
+#     res_dt = {}
+
+#     select = "b.po_no,b.sl_no,b.fresh_flag,b.po_status,b.amend_flag,b.project_id,b.vendor_id,v.vendor_name,d.proj_name,b.po_issue_date,i.item_id,p.prod_name,p.prod_make,p.part_no,b.created_by,b.created_at"
+#     schema = '''td_po_basic b left join td_po_items i on b.sl_no = i.po_sl_no
+# left join md_product p ON p.sl_no=i.item_id left join md_vendor v on b.vendor_id=v.sl_no left join td_project d on b.project_id = d.sl_no
+# '''
+#     where = f"({f"b.project_id='{id.project_id}' or" if id.project_id != 
+#                 '' else ""} b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or (b.po_issue_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'})) AND (b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null) "
+    
+#     order = "ORDER BY b.created_at DESC"
+#     flag = 1
+#     result = await db_select(select, schema, where, order, flag)
+#     # print(result, 'RESULT')
+#     return result
+
 @poRouter.post('/advanced_search_po')
 async def getprojectpoc(id:PoSearch):
-    # print(id.id)
+   
     res_dt = {}
 
     select = "b.po_no,b.sl_no,b.fresh_flag,b.po_status,b.amend_flag,b.project_id,b.vendor_id,v.vendor_name,d.proj_name,b.po_issue_date,i.item_id,p.prod_name,p.prod_make,p.part_no,b.created_by,b.created_at"
     schema = '''td_po_basic b left join td_po_items i on b.sl_no = i.po_sl_no
 left join md_product p ON p.sl_no=i.item_id left join md_vendor v on b.vendor_id=v.sl_no left join td_project d on b.project_id = d.sl_no
 '''
-    where = f"({f"b.project_id='{id.project_id}' or" if id.project_id != 
-                '' else ""} b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or (b.po_issue_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'})) AND (b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null) "
+    where = ""
+    if(id.project_id != 0):
+        where += f"b.project_id='{id.project_id}' {"AND " if(id.vendor_id != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.vendor_id != 0):
+        where += f"b.vendor_id='{id.vendor_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.part_no != ''):
+        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.prod_id != ''):
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.to_dt != '' or id.from_dt != ''):
+        where += f'''(b.po_issue_date BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
+
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null)"
+    
     order = "ORDER BY b.created_at DESC"
     flag = 1
     result = await db_select(select, schema, where, order, flag)
-    # print(result, 'RESULT')
     return result
 
 
 
+# @poRouter.post('/advanced_search_requisition')
+# async def getprojectpoc(id:PoSearch):
+#     # print(id.id)
+#     res_dt = {}
+
+#     select = "r.req_no,r.approve_flag,r.project_id,d.proj_name,r.req_date,d.proj_name,i.item_id,p.prod_name,p.prod_make,p.part_no,r.created_by,r.created_at"
+#     schema = '''td_requisition_items i left join  md_product p ON p.sl_no=i.item_id  left join td_requisition r on r.req_no = i.req_no left join td_project d on r.project_id = d.sl_no
+# '''
+#     # where = f"r.project_id='{id.project_id}' or p.part_no like '%{id.part_no}%' i.item_id='{id.prod_id}' or r.req_date>={id.from_dt} and r.req_date<={id.to_dt}"
+
+#     where = f"({f'r.project_id="{id.project_id}" or' if id.project_id != 
+#                 '' else ''} p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or (r.req_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'})) AND (r.project_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and r.req_date is not null)"
+#     order = "ORDER BY r.created_at DESC"
+    
+#     flag = 1
+#     result = await db_select(select, schema, where, order, flag)
+#     # print(result, 'RESULT')
+#     return result
+
+
 @poRouter.post('/advanced_search_requisition')
 async def getprojectpoc(id:PoSearch):
-    # print(id.id)
     res_dt = {}
 
     select = "r.req_no,r.approve_flag,r.project_id,d.proj_name,r.req_date,d.proj_name,i.item_id,p.prod_name,p.prod_make,p.part_no,r.created_by,r.created_at"
-    schema = '''td_requisition_items i left join  md_product p ON p.sl_no=i.item_id  left join td_requisition r on r.req_no = i.req_no left join td_project d on r.project_id = d.sl_no
-'''
-    # where = f"r.project_id='{id.project_id}' or p.part_no like '%{id.part_no}%' i.item_id='{id.prod_id}' or r.req_date>={id.from_dt} and r.req_date<={id.to_dt}"
+    schema = '''td_requisition_items i left join  md_product p ON p.sl_no=i.item_id  left join td_requisition r on r.req_no = i.req_no left join td_project d on r.project_id = d.sl_no'''
 
-    where = f"({f'r.project_id="{id.project_id}" or' if id.project_id != 
-                '' else ''} p.part_no like '%{id.part_no}%' or i.item_id='{id.prod_id}' or (r.req_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'})) AND (r.project_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and r.req_date is not null)"
+    where = ""
+    if(id.project_id != 0):
+        where += f"r.project_id='{id.project_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.part_no != ''):
+        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.prod_id != ''):
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.to_dt != '' or id.from_dt != ''):
+        where += f'''(r.req_date BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
+
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(r.project_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and r.req_date is not null)"
+
     order = "ORDER BY r.created_at DESC"
     
     flag = 1
     result = await db_select(select, schema, where, order, flag)
-    # print(result, 'RESULT')
+   
     return result
 
 
@@ -2799,23 +2855,53 @@ async def getprojectpoc(id:PoSearch):
 
 
 
+# @poRouter.post('/advanced_search_delivery')
+# async def getprojectpoc(id:DelSearch):
+#     # print(id.id)
+#     res_dt = {}
+
+#     select = "d.invoice,d.invoice_dt,d.po_no,pr.sl_no,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.prod_id,p.prod_name,p.prod_make,p.part_no"
+#     schema = '''td_item_delivery_invoice d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_item_delivery_details i on i.invoice=d.invoice left join md_product p on i.prod_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id
+# '''
+#     # where = f"b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or d.invoice like '%{id.invoice}%' or p.part_no like '%{id.part_no}%' or i.prod_id='{id.prod_id}' or  d.invoice_dt>={id.from_dt} and d.invoice_dt<={id.to_dt}"
+
+#     where = f"({f"b.project_id='{id.project_id}' or" if id.project_id != 
+#                 '' else ""} b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or d.invoice like '%{id.invoice}%' or i.item_id='{id.prod_id}' or (b.po_issue_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'})) AND (b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null) "
+#     order = "ORDER BY d.created_at DESC"
+#     order=''
+#     flag = 1
+#     result = await db_select(select, schema, where, order, flag)
+#     # print(result, 'RESULT')
+#     return result
+
+
+
 @poRouter.post('/advanced_search_delivery')
 async def getprojectpoc(id:DelSearch):
     # print(id.id)
     res_dt = {}
 
     select = "d.invoice,d.invoice_dt,d.po_no,pr.sl_no,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.prod_id,p.prod_name,p.prod_make,p.part_no"
-    schema = '''td_item_delivery_invoice d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_item_delivery_details i on i.invoice=d.invoice left join md_product p on i.prod_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id
-'''
-    # where = f"b.project_id='{id.project_id}' or b.vendor_id='{id.vendor_id}' or d.invoice like '%{id.invoice}%' or p.part_no like '%{id.part_no}%' or i.prod_id='{id.prod_id}' or  d.invoice_dt>={id.from_dt} and d.invoice_dt<={id.to_dt}"
+    schema = '''td_item_delivery_invoice d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_item_delivery_details i on i.invoice=d.invoice left join md_product p on i.prod_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id'''
+    
+    where = ""
+    if(id.project_id != 0):
+        where += f"b.project_id={id.project_id} {"AND " if(id.vendor_id != 0 or id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.vendor_id != 0):
+        where += f"b.vendor_id={id.vendor_id} {"AND " if(id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.part_no != ''):
+        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.invoice != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.invoice != ''):
+        where += f"d.invoice like '%{id.invoice}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.prod_id != ''):
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.to_dt != '' or id.from_dt != ''):
+        where += f'''(d.invoice_dt BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
 
-    where = f"({f"b.project_id='{id.project_id}' or" if id.project_id != 
-                '' else ""} b.vendor_id='{id.vendor_id}' or p.part_no like '%{id.part_no}%' or d.invoice like '%{id.invoice}%' or i.item_id='{id.prod_id}' or (b.po_issue_date between {f'{id.from_dt}' if(id.from_dt != '') else 'NULL'} and {f'{id.to_dt}' if(id.to_dt != '') else 'NULL'})) AND (b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null) "
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and d.invoice IS NOT NULL AND i.item_id is not null and d.invoice_dt is not null)" 
     order = "ORDER BY d.created_at DESC"
-    order=''
     flag = 1
     result = await db_select(select, schema, where, order, flag)
-    # print(result, 'RESULT')
     return result
 
 
