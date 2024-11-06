@@ -2881,7 +2881,7 @@ async def getprojectpoc(id:DelSearch):
     # print(id.id)
     res_dt = {}
 
-    select = "d.invoice,d.invoice_dt,d.po_no,pr.sl_no, r.sl_no as del_sl,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.prod_id,p.prod_name,p.prod_make,p.part_no"
+    select = "d.invoice,d.invoice_dt,d.po_no,pr.sl_no, b.sl_no as del_sl,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.prod_id,p.prod_name,p.prod_make,p.part_no"
     schema = '''td_item_delivery_invoice d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_item_delivery_details i on i.invoice=d.invoice left join md_product p on i.prod_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id'''
     
     where = ""
