@@ -2771,9 +2771,9 @@ async def getprojectpoc(id:PoSearch):
 left join md_product p ON p.sl_no=i.item_id left join md_vendor v on b.vendor_id=v.sl_no left join td_project d on b.project_id = d.sl_no
 '''
     where = ""
-    if(id.project_id != 0):
+    if(id.project_id != 0 or id.project_id != ''):
         where += f"b.project_id='{id.project_id}' {"AND " if(id.vendor_id != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
-    if(id.vendor_id != 0):
+    if(id.vendor_id != 0 or id.vendor_id != ''):
         where += f"b.vendor_id='{id.vendor_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
     if(id.part_no != ''):
         where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
@@ -2885,9 +2885,9 @@ async def getprojectpoc(id:DelSearch):
     schema = '''td_item_delivery_invoice d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_item_delivery_details i on i.invoice=d.invoice left join md_product p on i.prod_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id'''
     
     where = ""
-    if(id.project_id != 0):
+    if(id.project_id != 0 or id.project_id!=''):
         where += f"b.project_id={id.project_id} {"AND " if(id.vendor_id != 0 or id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
-    if(id.vendor_id != 0):
+    if(id.vendor_id != 0 or id.vendor_id!=''):
         where += f"b.vendor_id={id.vendor_id} {"AND " if(id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
     if(id.part_no != ''):
         where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.invoice != '' or id.to_dt != '' or id.from_dt != '') else ''}"
