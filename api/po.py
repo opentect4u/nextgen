@@ -2815,7 +2815,7 @@ left join md_product p ON p.sl_no=i.item_id left join md_vendor v on b.vendor_id
 async def getprojectpoc(id:PoSearch):
     res_dt = {}
 
-    select = "r.req_no,r.approve_flag,r.project_id,d.proj_name,r.req_date,d.proj_name,i.item_id,p.prod_name,p.prod_make,p.part_no,r.created_by,r.created_at"
+    select = "r.req_no,r.sl_no,r.approve_flag,r.project_id,d.proj_name,r.req_date,d.proj_name,i.item_id,p.prod_name,p.prod_make,p.part_no,r.created_by,r.created_at"
     schema = '''td_requisition_items i left join  md_product p ON p.sl_no=i.item_id  left join td_requisition r on r.req_no = i.req_no left join td_project d on r.project_id = d.sl_no'''
 
     where = ""
