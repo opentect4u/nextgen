@@ -21,6 +21,7 @@ UPLOAD_FOLDER3 = "upload_file/upload_delivery"
 UPLOAD_FOLDER4 = "upload_file/upload_log"
 UPLOAD_FOLDER5 = "upload_file/upload_receipt"
 UPLOAD_FOLDER6 = "upload_file/upload_vendor_mdcc"
+UPLOAD_FOLDER7 = "upload_file/upload_more"
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -308,6 +309,7 @@ class CheckInvoice(BaseModel):
 class PoSearch(BaseModel):
     project_id:Optional[Union[int,str]]=None
     vendor_id:Optional[Union[int,str]]=None
+    make:Optional[str]=None
     part_no:Optional[str]=None
     prod_id:Optional[str]=None
     from_dt:Optional[str]=None
@@ -315,6 +317,7 @@ class PoSearch(BaseModel):
 
 class DelSearch(BaseModel):
     invoice:Optional[str]=None
+    make:Optional[str]=None
     project_id:Optional[Union[int,str]]=None
     vendor_id:Optional[Union[int,str]]=None
     part_no:Optional[str]=None
@@ -796,9 +799,9 @@ async def addexistingpo(data:PoModel):
     ''' END '''
 
     if(result['suc']>0 and item_save>0 and result2['suc']>0 and payment_save>0 and result4['suc']>0 and result5['suc']>0):
-        res_dt = {"suc": 1, "msg": f"Saved successfully!" if data.sl_no==0 else f"Updated successfully!"}
+        res_dt = {"suc": 1, "msg": f"Saved successfully!" if data.sl_no==0 else f"Updated successfully!","po_sl_no": lastID}
     else:
-        res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating"}
+        res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating","po_sl_no": lastID}
   
     return res_dt
 
@@ -948,6 +951,55 @@ async def addpo(data:PoModel):
      return await addfreshpo(data)
    else:
      return await addexistingpo(data)
+   
+@poRouter.post('/add_po_more_img')
+async def addPoMoreImg(mdcc_doc:Optional[Union[UploadFile, None]] = None, insp_doc:Optional[Union[UploadFile, None]] = None, draw_doc:Optional[Union[UploadFile, None]] = None, user:str = Form(...),po_sl_no:str = Form(...)):
+    res_dt = {}
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    mdcc_doc_fileName = ''
+    insp_doc_fileName = ''
+    draw_doc_fileName = ''
+    if mdcc_doc:
+        mdcc_doc_fileName = '' if not mdcc_doc else await uploadfileToLocal7(mdcc_doc)
+    if insp_doc:
+        insp_doc_fileName = '' if not insp_doc else await uploadfileToLocal7(insp_doc)
+    if draw_doc:
+        draw_doc_fileName = '' if not draw_doc else await uploadfileToLocal7(draw_doc)
+
+    if (mdcc_doc_fileName != '' or insp_doc_fileName != '' or draw_doc_fileName != ''):
+        fields= f'''{f"mdcc_doc = 'upload_more/{mdcc_doc_fileName}', " if mdcc_doc_fileName != '' else ''}{f"insp_doc = 'upload_more/{insp_doc_fileName}'," if insp_doc_fileName != '' else ''} {f"draw_doc = 'upload_more/{draw_doc_fileName}'," if draw_doc_fileName != '' else ''} modified_by = "{user}", modified_dt = "{formatted_dt}"'''
+        values = None
+        table_name = "td_po_more"
+        whr =  f'po_sl_no="{po_sl_no}"'
+        flag = 1
+        # if(id==0):
+        result = await db_Insert(table_name, fields, values, whr, flag)
+        res_dt = result
+    else:
+        res_dt = {"suc": 1, "msg": "No file selected"}
+    
+    return res_dt
+    
+async def uploadfileToLocal7(file):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(UPLOAD_FOLDER7, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
    
 @poRouter.post('/check_po_no')
 async def check_proj_id(po_no:GetPoNo):
@@ -2772,13 +2824,15 @@ left join md_product p ON p.sl_no=i.item_id left join md_vendor v on b.vendor_id
 '''
     where = ""
     if(id.project_id != 0 and id.project_id != ""):
-        where += f"b.project_id='{id.project_id}' {"AND " if(id.vendor_id != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"b.project_id='{id.project_id}' {"AND " if(id.vendor_id != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.vendor_id != 0 and id.vendor_id != ""):
-        where += f"b.vendor_id='{id.vendor_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"b.vendor_id='{id.vendor_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.part_no != ''):
-        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.prod_id != ''):
-        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.make!= ''):
+         where += f"p.prod_make like '%{id.make}%' {"AND " if(id.to_dt != '' or id.from_dt !='') else ''}"
     if(id.to_dt != '' or id.from_dt != ''):
         where += f'''(b.po_issue_date BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
 
@@ -2820,11 +2874,13 @@ async def getprojectpoc(id:PoSearch):
 
     where = ""
     if(id.project_id != 0 and id.project_id!=""):
-        where += f"r.project_id='{id.project_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"r.project_id='{id.project_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.part_no != ''):
-        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.prod_id != ''):
-        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.make!=''):
+        where += f"p.prod_make like '%{id.make}%' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
     if(id.to_dt != '' or id.from_dt != ''):
         where += f'''(r.req_date BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
 
@@ -2886,15 +2942,17 @@ async def getprojectpoc(id:DelSearch):
     
     where = ""
     if(id.project_id != 0 and id.project_id!=""):
-        where += f"b.project_id={id.project_id} {"AND " if(id.vendor_id != 0 or id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"b.project_id={id.project_id} {"AND " if((id.vendor_id != 0 and id.vendor_id!="") or id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.vendor_id != 0 and id.vendor_id!=""):
-        where += f"b.vendor_id={id.vendor_id} {"AND " if(id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"b.vendor_id={id.vendor_id} {"AND " if(id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.part_no != ''):
-        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.invoice != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.invoice != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.invoice != ''):
-        where += f"d.invoice like '%{id.invoice}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"d.invoice like '%{id.invoice}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.prod_id != ''):
-        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.make != ''):
+        where += f"p.prod_make like '%{id.make}%' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
     if(id.to_dt != '' or id.from_dt != ''):
         where += f'''(d.invoice_dt BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
 

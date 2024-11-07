@@ -71,7 +71,7 @@ async def addpoamend(data:GetPo):
             table_name1 = "td_po_delivery"
             result1 = await db_Insert(table_name1, fields1, None, None, 0, True)
 
-            fields2= f'SELECT NULL sl_no, "{lastID}" po_sl_no,mdcc,mdcc_scope,inspection,inspection_scope,draw,draw_scope,draw_period,created_by,created_dt, NULL modified_by, NULL modified_at FROM td_po_more WHERE po_sl_no = "{data.id}"'
+            fields2= f'SELECT NULL sl_no, "{lastID}" po_sl_no,mdcc,mdcc_scope,inspection,inspection_scope,draw,draw_scope,draw_period,mdcc_doc,insp_doc,draw_doc,created_by,created_dt, NULL modified_by, NULL modified_at FROM td_po_more WHERE po_sl_no = "{data.id}"'
             table_name2 = "td_po_more"
             result2 = await db_Insert(table_name2, fields2, None, None, 0, True)
 

@@ -6,7 +6,7 @@ async def db_select(select, schema, where, order, flag):
     whr = f"WHERE {where}" if where != '' else ''
     sql = f"SELECT {select} FROM {schema} {whr} {order}"
     res_dt = {}
-    # print(sql)
+    print(sql)
     try:
         conn = connect()
         cursor = conn.cursor()
@@ -18,7 +18,7 @@ async def db_select(select, schema, where, order, flag):
             res_dt = {"suc": 1, "msg": result,"sql":sql}
 
         else:
-            res_dt = {"suc": 2, "msg": "No Data Found"}
+            res_dt = {"suc": 2, "msg": "No Data Found","sql":sql}
         conn.close()
         cursor.close()    
         
