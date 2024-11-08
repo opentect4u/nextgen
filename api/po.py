@@ -274,6 +274,7 @@ class SaveReq(BaseModel):
     req_date:str
     project_id:int
     # req_type:str
+    client_id:int
     purpose:str
     items:list[ReqItems]
     user:str
@@ -2418,8 +2419,8 @@ async def save_requisition(data:SaveReq):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
-    fields= f"intended_for='{data.intended_for}',approve_flag='P', project_id={data.project_id},  purpose='{data.purpose}', modified_by='{data.user}', modified_at='{formatted_dt}'" if data.sl_no > 0 else f"req_no,intended_for,req_date,project_id,purpose,created_by,created_at"
-    values = f"'REQ-{reqNo}', '{data.intended_for}', '{data.req_date}', {data.project_id}, '{data.purpose}','{data.user}','{formatted_dt}'"
+    fields= f"intended_for='{data.intended_for}',approve_flag='P', project_id={data.project_id},  purpose='{data.purpose}', modified_by='{data.user}',client_id='{data.client_id}' modified_at='{formatted_dt}'" if data.sl_no > 0 else f"req_no,intended_for,req_date,project_id,client_id,purpose,created_by,created_at"
+    values = f"'REQ-{reqNo}', '{data.intended_for}', '{data.req_date}', {data.project_id},'{data.client_id}', '{data.purpose}','{data.user}','{formatted_dt}'"
     table_name = "td_requisition"
     whr = f'sl_no={data.sl_no}' if data.sl_no > 0 else None
     flag = 1 if data.sl_no>0 else 0
@@ -2467,7 +2468,7 @@ async def get_requisition(data:GetPo):
     print(data.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number,reason, req_no,intended_for,req_date, req_type,approve_flag,purpose,project_id, created_by,created_at,modified_by,modified_at,sl_no"
+    select = "@a:=@a+1 serial_number,reason, req_no,intended_for,req_date, req_type,approve_flag,purpose,project_id,client_id, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_requisition,(SELECT @a:= 0) AS a"
     where = f"sl_no='{data.id}' and delete_flag='N'" if data.id>0 else f"delete_flag='N'"
