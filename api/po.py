@@ -30,6 +30,7 @@ os.makedirs(UPLOAD_FOLDER3, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER4, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER5, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER6, exist_ok=True)
+os.makedirs(UPLOAD_FOLDER7, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 poRouter = APIRouter()
