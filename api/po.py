@@ -308,6 +308,12 @@ class ReqNo(BaseModel):
 class CheckInvoice(BaseModel):
     inv_no:str
 
+class approveMRN(BaseModel):
+    inv_no:str
+    po_no:str
+    status:str
+    user:str
+
 class PoSearch(BaseModel):
     project_id:Optional[Union[int,str]]=None
     vendor_id:Optional[Union[int,str]]=None
@@ -3062,6 +3068,26 @@ async def getprojectpoc(id:DelSearch):
     flag = 1
     result = await db_select(select, schema, where, order, flag)
     return result
+
+
+
+@poRouter.post('/approvemrn')
+async def approvepo(id:approveMRN):
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    fields= f'approve_flag="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
+    values = f''
+    table_name = "td_item_delivery_invoice"
+    whr = f'invoice="{id.inv_no}" and po_no="{id.po_no}"'
+    flag = 1 
+
+    result = await db_Insert(table_name, fields, values, whr, flag)
+    if result['suc']:
+        res_dt = {"suc": 1, "msg": f"Action Successful!"}
+    else:
+        res_dt = {"suc": 0, "msg": f"Error while saving!"}
+  
+    return res_dt
 
 
 
