@@ -2821,12 +2821,12 @@ async def deletetc(id:deleteMrn):
    result2 = await db_Delete(table_name2, whr2)
 
 
-   fields3=f''
-   table_name3 = "td_stock_new"
-   flag3 = 1 
-   values3=''
-   whr3=f'ref_no="MRN-{id.id}"'
-   result3 = await db_Delete(table_name3, whr3)
+#    fields3=f''
+#    table_name3 = "td_stock_new"
+#    flag3 = 1 
+#    values3=''
+#    whr3=f'ref_no="MRN-{id.id}"'
+#    result3 = await db_Delete(table_name3, whr3)
 
 
    if(result['suc']>0 and result2['suc']>0 and result3['suc']>0 and result1['suc']>0):
