@@ -526,6 +526,24 @@ join (SELECT @a:= 0) AS a '''
     # print(result, 'RESULT')
     return result
 
+
+@poRouter.post('/getfordeliveryapproval')
+async def getprojectpoc(id:GetPo):
+    # print(id.id)
+    res_dt = {}
+
+    select = " distinct @a:=@a+1 serial_number,b.po_no,b.vend_ref,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no,b.fresh_flag,b.amend_flag,b.amend_note,del.ware_house_flag, (select count(*) from td_item_delivery_invoice where po_no = b.po_no) as invoice_count,inv.approval_flag,inv.invoice"
+    schema = '''td_po_basic b
+left join td_project p ON p.sl_no=b.project_id
+join md_vendor v ON v.sl_no=b.vendor_id left join td_po_delivery del on b.sl_no = del.po_sl_no left join td_item_delivery_invoice inv on b.po_no = inv.po_no
+join (SELECT @a:= 0) AS a '''
+    where = f"b.sl_no='{id.id}' and b.po_status IN ('P','U','A','L','D')" if id.id>0 else "b.po_status IN ('P','U','A','L','D') OR (amend_flag = 'Y' AND parent_po_no IS NOT NULL)"
+    order = "ORDER BY b.created_at DESC"
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
+
 @poRouter.post('/getpopm')
 async def getprojectpoc(id:GetPo):
     # print(id.id)
