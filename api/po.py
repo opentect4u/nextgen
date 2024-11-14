@@ -2829,7 +2829,8 @@ async def deletetc(id:deleteMrn):
 #    result3 = await db_Delete(table_name3, whr3)
 
 
-   if(result['suc']>0 and result2['suc']>0 and result3['suc']>0 and result1['suc']>0):
+#    if(result['suc']>0 and result2['suc']>0 and result3['suc']>0 and result1['suc']>0):
+   if(result['suc']>0 and result2['suc']>0 and result1['suc']>0):
         res_dt = {"suc": 1, "msg": "Deleted successfully!"}
    else:
         res_dt = {"suc": 0, "msg": "Error while deleting!"}
