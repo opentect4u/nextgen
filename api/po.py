@@ -527,7 +527,7 @@ join (SELECT @a:= 0) AS a '''
     return result
 
 
-@poRouter.post('/getfordeliveryapproval')
+@poRouter.post('/getdeliveryapproval')
 async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
