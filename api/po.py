@@ -313,6 +313,7 @@ class approveMRN(BaseModel):
     po_no:str
     status:str
     user:str
+    rej_note:str
 
 class PoSearch(BaseModel):
     project_id:Optional[Union[int,str]]=None
@@ -3075,7 +3076,7 @@ async def getprojectpoc(id:DelSearch):
 async def approvepo(id:approveMRN):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'approve_flag="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
+    fields= f'approve_flag="{id.status}",modified_by="{id.user}",rej_note="{id.rej_note}",modified_at="{formatted_dt}"'
     values = f''
     table_name = "td_item_delivery_invoice"
     whr = f'invoice="{id.inv_no}" and po_no="{id.po_no}"'
