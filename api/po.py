@@ -307,6 +307,9 @@ class ReqNo(BaseModel):
 
 class CheckInvoice(BaseModel):
     inv_no:str
+class MrnApproveItems(BaseModel):
+    item_id:int
+    rc_qty:int
 
 class approveMRN(BaseModel):
     inv_no:str
@@ -316,6 +319,7 @@ class approveMRN(BaseModel):
     rej_note:str
     in_out_flag:int
     items:list[MrnItem]
+    invoice_dt:str
 
 
 class PoSearch(BaseModel):
