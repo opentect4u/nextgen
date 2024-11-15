@@ -318,7 +318,7 @@ class approveMRN(BaseModel):
     user:str
     rej_note:str
     in_out_flag:int
-    items:list[MrnItem]
+    items:list[MrnApproveItems]
     invoice_dt:str
 
 
