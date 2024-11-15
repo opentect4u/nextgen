@@ -3079,23 +3079,23 @@ async def getprojectpoc(id:DelSearch):
 
 
 
-@poRouter.post('/approvemrn')
-async def approvepo(id:approveMRN):
-    current_datetime = datetime.now()
-    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    fields= f'approve_flag="{id.status}",modified_by="{id.user}",rejection_note="{id.rej_note}",modified_at="{formatted_dt}"'
-    values = f''
-    table_name = "td_item_delivery_invoice"
-    whr = f'invoice="{id.inv_no}" and po_no="{id.po_no}"'
-    flag = 1 
+# @poRouter.post('/approvemrn')
+# async def approvepo(id:approveMRN):
+#     current_datetime = datetime.now()
+#     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+#     fields= f'approve_flag="{id.status}",modified_by="{id.user}",rejection_note="{id.rej_note}",modified_at="{formatted_dt}"'
+#     values = f''
+#     table_name = "td_item_delivery_invoice"
+#     whr = f'invoice="{id.inv_no}" and po_no="{id.po_no}"'
+#     flag = 1 
 
-    result = await db_Insert(table_name, fields, values, whr, flag)
-    if result['suc']:
-        res_dt = {"suc": 1, "msg": f"Action Successful!"}
-    else:
-        res_dt = {"suc": 0, "msg": f"Error while saving!"}
+#     result = await db_Insert(table_name, fields, values, whr, flag)
+#     if result['suc']:
+#         res_dt = {"suc": 1, "msg": f"Action Successful!"}
+#     else:
+#         res_dt = {"suc": 0, "msg": f"Error while saving!"}
   
-    return res_dt
+#     return res_dt
 
 
 @poRouter.post('/approvemrn')
