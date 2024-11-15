@@ -131,6 +131,8 @@ class PoModel(BaseModel):
 
 class GetPo(BaseModel):
     id:int
+class GetPoInfo(BaseModel):
+    id:str
 class GetStock(BaseModel):
     proj_id:int
     prod_id:int
@@ -3159,7 +3161,19 @@ async def approvepo(id:approveMRN):
 
 
 
+@poRouter.post('/getpoinfo')
+async def getprojectpoc(id:GetPoInfo):
+    # print(id.id)
+    res_dt = {}
 
+    select = "*"
+    schema = "td_po_basic"
+    where = f"po_no='{id.id}'" 
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
 
 
 
