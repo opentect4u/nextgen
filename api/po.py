@@ -3108,6 +3108,8 @@ async def approvepo(id:approveMRN):
     whr = f'invoice="{id.inv_no}" and po_no="{id.po_no}"'
     flag = 1 
     stock_save = 0
+    result = await db_Insert(table_name, fields, values, whr, flag)
+
     if id.status == 'A':
        for i in id.items:
             flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
@@ -3128,7 +3130,6 @@ async def approvepo(id:approveMRN):
          
        stock_save =1
    
-    result = await db_Insert(table_name, fields, values, whr, flag)
     if result['suc'] and stock_save:
         res_dt = {"suc": 1, "msg": f"Action Successful!","msg2":res_dt2}
     else:
