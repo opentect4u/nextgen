@@ -314,6 +314,9 @@ class approveMRN(BaseModel):
     status:str
     user:str
     rej_note:str
+    in_out_flag:int
+    items:list[MrnItem]
+
 
 class PoSearch(BaseModel):
     project_id:Optional[Union[int,str]]=None
@@ -3089,6 +3092,68 @@ async def approvepo(id:approveMRN):
         res_dt = {"suc": 0, "msg": f"Error while saving!"}
   
     return res_dt
+
+
+@poRouter.post('/approvemrn')
+async def approvepo(id:approveMRN):
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    fields= f'approve_flag="{id.status}",modified_by="{id.user}",rejection_note="{id.rej_note}",modified_at="{formatted_dt}"'
+    values = f''
+    table_name = "td_item_delivery_invoice"
+    whr = f'invoice="{id.inv_no}" and po_no="{id.po_no}"'
+    flag = 1 
+    stock_save = 0
+    if id.status == 'A':
+       for i in id.items:
+            flds= f'date,ref_no,proj_id,po_item_id,item_id,qty,in_out_flag,created_by,created_at'
+            val = f'"{id.invoice_dt}","MRN-{id.inv_no}",(SELECT project_id FROM td_po_basic WHERE po_no="{id.po_no}"),{i.item_id},(SELECT item_id FROM td_po_items WHERE sl_no="{i.item_id}"),{i.rc_qty},{id.in_out_flag},"{id.user}","{formatted_dt}"'
+            table = "td_stock_new"
+            whr=f""
+            flag2 =  0
+            result3 = await db_Insert(table, flds, val, whr, flag2)
+            if(result3['suc']>0): 
+                stock_save = 1
+                res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
+            else:
+                stock_save = 0
+
+                res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+    else:
+         
+          stock_save =1
+   
+
+   
+
+    result = await db_Insert(table_name, fields, values, whr, flag)
+    if result['suc'] and stock_save:
+        res_dt = {"suc": 1, "msg": f"Action Successful!"}
+    else:
+        res_dt = {"suc": 0, "msg": f"Error while saving!"}
+  
+    return res_dt
+
+
+
+
+      #     flds= f'date,ref_no,proj_id,po_item_id,item_id,qty,in_out_flag,created_by,created_at'
+                #     val = f'"{data.invoice_dt}","MRN-{data.invoice}",(SELECT project_id FROM td_po_basic WHERE po_no="{data.po_no}"),{i.item_id},(SELECT item_id FROM td_po_items WHERE sl_no="{i.item_id}"),{i.rc_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
+                #     table = "td_stock_new"
+                #     whr=f""
+                #     flag2 =  0
+                #     result3 = await db_Insert(table, flds, val, whr, flag2)
+
+                #     if(result3['suc']>0): 
+
+                #         res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
+                #     else:
+                #         res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+
+                # else:
+                #     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
 
 
 
