@@ -3110,8 +3110,8 @@ async def approvepo(id:approveMRN):
     stock_save = 0
     if id.status == 'A':
        for i in id.items:
-            flds= f'date,ref_no,proj_id,po_item_id,item_id,qty,in_out_flag,created_by,created_at'
-            val = f'"{id.invoice_dt}","MRN-{id.inv_no}",(SELECT project_id FROM td_po_basic WHERE po_no="{id.po_no}"),{i.item_id},(SELECT item_id FROM td_po_items WHERE sl_no="{i.item_id}"),{i.rc_qty},{id.in_out_flag},"{id.user}","{formatted_dt}"'
+            flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
+            val = f'"{id.invoice_dt}","MRN-{id.inv_no}",(SELECT project_id FROM td_po_basic WHERE po_no="{id.po_no}"),{i.item_id},{i.rc_qty},{id.in_out_flag},"{id.user}","{formatted_dt}"'
             table = "td_stock_new"
             whr=f""
             flag2 =  0
