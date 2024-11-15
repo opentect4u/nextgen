@@ -3126,16 +3126,13 @@ async def approvepo(id:approveMRN):
                 res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
     else:
          
-          stock_save =1
+       stock_save =1
    
-
-   
-
     result = await db_Insert(table_name, fields, values, whr, flag)
     if result['suc'] and stock_save:
-        res_dt = {"suc": 1, "msg": f"Action Successful!"}
+        res_dt = {"suc": 1, "msg": f"Action Successful!","msg2":res_dt2}
     else:
-        res_dt = {"suc": 0, "msg": f"Error while saving!"}
+        res_dt = {"suc": 0, "msg": f"Error while saving!" ,"msg2":res_dt2}
   
     return res_dt
 
