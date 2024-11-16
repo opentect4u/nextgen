@@ -246,6 +246,21 @@ class delLog(BaseModel):
 class GetPhrase(BaseModel):
     wrd:str
 
+class ItemVtoC(BaseModel):
+    item_id:int
+    rc_qty:int
+
+class DelVtoC(BaseModel):
+    po_no:str
+    project_id:int
+    del_dt:str
+    remarks:str
+    user:str
+    in_out_flag:int
+    items:list[ItemVtoC]
+    
+
+
 class minList(BaseModel):
     sl_no:int
     item_id:int
@@ -3175,8 +3190,63 @@ async def getprojectpoc(id:GetPoInfo):
     # print(result, 'RESULT')
     return result
 
+@poRouter.post('/add_v_to_c')
+async def addVtoC(data:DelVtoC):
+   print(data)
+   current_datetime = datetime.now()
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   select1 = "count(*) as count"
+   schema1 = "td_vendor_to_client"
+   where1 = f"po_no='{data.po_no}'"
+   order1 = ""
+   flag1 = 0 
+   result1 = await db_select(select1, schema1, where1, order1, flag1)
+   print(result1,'res')
+
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   delNo = int(round(current_datetime.timestamp()))
 
 
+   fields= f'del_date="{data.del_dt}",remarks="{data.remarks}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'del_no,po_no,del_date,remarks,created_by,created_at'
+   values = f'"DEL-{delNo}","{data.po_no}","{data.del_dt}","{data.remarks}","{data.user}","{formatted_dt}"'
+   table_name = "td_vendor_to_client"
+   whr = f'po_no="{data.po_no}"' if result1['msg']['count'] > 0 else None
+   flag = 1 if result1['msg']['count']>0 else 0
+   result = await db_Insert(table_name, fields, values, whr, flag)
+   lastID=result["lastId"]
+   stock_in = 1
+   stock_out = -1
+
+   for i in data.items:
+            flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
+            val = f'"{data.del_dt}","DEL-{delNo}","{data.project_id}",{i.item_id},{i.rc_qty},{stock_in},"{data.user}","{formatted_dt}"'
+            table = "td_stock_new"
+            whr=f""
+            flag2 =  0
+            result3 = await db_Insert(table, flds, val, whr, flag2)
+            if(result3['suc']>0): 
+                stock_save = 1
+                res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
+            else:
+                stock_save = 0
+
+                res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+
+            flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
+            val_out= f'"{data.del_dt}","DEL-{current_datetime}","{data.project_id}",{i.item_id},{i.rc_qty},{stock_out},"{data.user}","{formatted_dt}"'
+            table_out= "td_stock_new"
+            whr_out=f""
+            flag2_out=  0
+            result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
+            if(result3['suc']>0): 
+                stock_save = 1
+                res_dt2_out = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
+            else:
+                stock_save = 0
+
+                res_dt2_out= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
 
 
 
