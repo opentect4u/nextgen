@@ -3233,7 +3233,7 @@ async def addVtoC(data:DelVtoC):
                 res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
 
             flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
-            val_out= f'"{data.del_dt}","DEL-{current_datetime}","{data.project_id}",{i.item_id},{i.rc_qty},{stock_out},"{data.user}","{formatted_dt}"'
+            val_out= f'"{data.del_dt}","DEL-{delNo}","{data.project_id}",{i.item_id},{i.rc_qty},{stock_out},"{data.user}","{formatted_dt}"'
             table_out= "td_stock_new"
             whr_out=f""
             flag2_out=  0
