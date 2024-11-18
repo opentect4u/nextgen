@@ -3274,7 +3274,7 @@ async def addPoMoreImg(v_to_c_img:Optional[Union[UploadFile, None]] = None, user
         values = f'"{lastID}","upload_vtoc/{v_to_c_img_fileName}","{user}","{formatted_dt}"' 
         table_name = "td_vtoc_doc"
         whr =  f''
-        flag = 1
+        flag = 0
         # if(id==0):
         result = await db_Insert(table_name, fields, values, whr, flag)
         res_dt = result
