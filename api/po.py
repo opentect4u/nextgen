@@ -359,6 +359,9 @@ class DelSearch(BaseModel):
     from_dt:Optional[str]=None
     to_dt:Optional[str]=None
 
+class VtoC(BaseModel):
+    po_no:str
+
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -3257,7 +3260,20 @@ async def addVtoC(data:DelVtoC):
   
    return res_dt
 
+@poRouter.post('/get_vtoc')
+async def getVtoC(po_no:VtoC):
+  
+    # print(id.id)
+    res_dt = {}
 
+    select = "*"
+    schema = "td_vendor_to_client"
+    where = f"po_no='{po_no.po_no}'" 
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
 
 
 @poRouter.post('/add_vtoc_img')
@@ -3279,7 +3295,7 @@ async def addPoMoreImg(v_to_c_img:Optional[Union[UploadFile, None]] = None, user
         result = await db_Insert(table_name, fields, values, whr, flag)
         res_dt = result
     else:
-        res_dt = {"suc": 1, "msg": "No file selected"}
+        res_dt = {"suc": 1, "msg": "Successfully inserted!"}
     
     return res_dt
     
