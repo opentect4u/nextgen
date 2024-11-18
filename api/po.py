@@ -256,7 +256,6 @@ class DelVtoC(BaseModel):
     del_dt:str
     remarks:str
     user:str
-    in_out_flag:int
     items:list[ItemVtoC]
     
 
@@ -3239,7 +3238,7 @@ async def addVtoC(data:DelVtoC):
             whr_out=f""
             flag2_out=  0
             result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
-            if(result3['suc']>0): 
+            if(result3_out['suc']>0): 
                 stock_save = 1
                 res_dt2_out = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
 
@@ -3247,6 +3246,11 @@ async def addVtoC(data:DelVtoC):
                 stock_save = 0
 
                 res_dt2_out= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+
+
+    # if result['suc']>0 :
+
+
 
 
 
