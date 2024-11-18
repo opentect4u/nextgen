@@ -3261,7 +3261,7 @@ async def addVtoC(data:DelVtoC):
 
 
 @poRouter.post('/add_vtoc_img')
-async def addPoMoreImg(v_to_c_img:Optional[Union[UploadFile, None]] = None, user:str = Form(...),lastID:str = Form(...)):
+async def addPoMoreImg(v_to_c_img:Optional[Union[UploadFile, None]] = None, user:str = Form(...),lastID:int = Form(...)):
     res_dt = {}
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
