@@ -22,6 +22,7 @@ UPLOAD_FOLDER4 = "upload_file/upload_log"
 UPLOAD_FOLDER5 = "upload_file/upload_receipt"
 UPLOAD_FOLDER6 = "upload_file/upload_vendor_mdcc"
 UPLOAD_FOLDER7 = "upload_file/upload_more"
+UPLOAD_FOLDER8 = "upload_file/upload_vtoc"
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -31,6 +32,7 @@ os.makedirs(UPLOAD_FOLDER4, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER5, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER6, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER7, exist_ok=True)
+os.makedirs(UPLOAD_FOLDER8, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 poRouter = APIRouter()
@@ -3247,8 +3249,59 @@ async def addVtoC(data:DelVtoC):
 
                 res_dt2_out= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
 
+ 
+   if result['suc'] :
+        res_dt = {"suc": 1, "msg": f"Action Successful!","lastID":lastID}
+   else:
+        res_dt = {"suc": 0, "msg": f"Error while saving!" ,"lastID":lastID}
+  
+   return res_dt
 
-    # if result['suc']>0 :
+
+
+
+@poRouter.post('/add_vtoc_img')
+async def addPoMoreImg(v_to_c_img:Optional[Union[UploadFile, None]] = None, user:str = Form(...),lastID:str = Form(...)):
+    res_dt = {}
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    v_to_c_img_fileName = ''
+    if v_to_c_img:
+        v_to_c_img_fileName = '' if not v_to_c_img else await uploadfileToLocal8(v_to_c_img)
+
+    if (v_to_c_img_fileName != ''):
+        fields= f'del_sl_no,vtoc_img,created_by,created_at'
+        values = f'"{lastID}","upload_vtoc/{v_to_c_img_fileName}","{user}","{formatted_dt}"' 
+        table_name = "td_vtoc_doc"
+        whr =  f''
+        flag = 1
+        # if(id==0):
+        result = await db_Insert(table_name, fields, values, whr, flag)
+        res_dt = result
+    else:
+        res_dt = {"suc": 1, "msg": "No file selected"}
+    
+    return res_dt
+    
+async def uploadfileToLocal8(file):
+    current_datetime = datetime.now()
+    receipt = int(round(current_datetime.timestamp()))
+    modified_filename = f"{receipt}_{file.filename}"
+    res = ""
+    try:
+        file_location = os.path.join(UPLOAD_FOLDER8, modified_filename)
+        print(file_location)
+        
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        
+        res = modified_filename
+        print(res)
+    except Exception as e:
+        # res = e.args
+        res = ""
+    finally:
+        return res
 
 
 
