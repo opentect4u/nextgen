@@ -3396,7 +3396,7 @@ async def getMinReq(id:GetMinReq):
     schema = "td_requisition r,td_min m"
     where = f"r.delete_flag='N' and r.req_no=m.req_no"
     order = ""
-    flag = 0
+    flag = 1
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
     return result
