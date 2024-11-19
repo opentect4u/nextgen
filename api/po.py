@@ -362,6 +362,12 @@ class DelSearch(BaseModel):
 class VtoC(BaseModel):
     po_no:str
 
+class DelVtoC(BaseModel):
+    po_no:str
+    id:int
+    del_no:str
+
+
 # @poRouter.post('/addpo')
 # async def addpo(data:PoModel):
 #     res_dt = {}
@@ -3336,6 +3342,47 @@ async def uploadfileToLocal8(file):
         res = ""
     finally:
         return res
+
+
+
+@poRouter.post('/delete_vtoc')
+async def deletetc(id:DelVtoC):
+   current_datetime = datetime.now()
+   res_dt={}
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+   fields=f''
+   table_name = "td_vendor_to_client"
+   flag = 1 
+   values=''
+   whr=f'po_no="{id.po_no}"'
+   result = await db_Delete(table_name, whr)
+ 
+   fields1=f''
+   table_name1 = "td_vtoc_doc"
+   flag1 = 1 
+   values1=''
+   whr1=f'del_no="{id.id}"'
+   result1 = await db_Delete(table_name1, whr1)
+
+
+
+   fields3=f''
+   table_name3 = "td_stock_new"
+   flag3 = 1 
+   values3=''
+   whr3=f'ref_no="{id.del_no}"'
+   result3 = await db_Delete(table_name3, whr3)
+
+
+   if(result['suc']>0 and  result3['suc']>0 and result1['suc']>0):
+        res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+   else:
+        res_dt = {"suc": 0, "msg": "Error while deleting!"}
+       
+   return res_dt
+
+
 
 
 
