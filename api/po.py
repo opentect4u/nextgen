@@ -3275,6 +3275,24 @@ async def getVtoC(po_no:VtoC):
     # print(result, 'RESULT')
     return result
 
+@poRouter.post('/get_vtoc_doc')
+async def getVtoC(po_no:VtoC):
+  
+    # print(id.id)
+    res_dt = {}
+
+    select = "*"
+    schema = "td_vtoc_doc"
+    where = f"sl_no='{po_no.po_no}'" 
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
+
+# @poRouter.post('/delete_VtoC')
+# async def deleteVtoC()
+
 
 @poRouter.post('/add_vtoc_img')
 async def addPoMoreImg(v_to_c_img:Optional[Union[UploadFile, None]] = None, user:str = Form(...),lastID:int = Form(...)):
