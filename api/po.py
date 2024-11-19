@@ -362,7 +362,7 @@ class DelSearch(BaseModel):
 class VtoC(BaseModel):
     po_no:str
 
-class DelVtoC(BaseModel):
+class DeleteVtoC(BaseModel):
     po_no:str
     id:int
     del_no:str
@@ -3346,7 +3346,7 @@ async def uploadfileToLocal8(file):
 
 
 @poRouter.post('/delete_vtoc')
-async def deletetc(id:DelVtoC):
+async def deletetc(id:DeleteVtoC):
    current_datetime = datetime.now()
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
