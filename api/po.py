@@ -3362,7 +3362,7 @@ async def deletetc(id:DelVtoC):
    table_name1 = "td_vtoc_doc"
    flag1 = 1 
    values1=''
-   whr1=f'del_no="{id.id}"'
+   whr1=f'del_sl_no="{id.id}"'
    result1 = await db_Delete(table_name1, whr1)
 
 
