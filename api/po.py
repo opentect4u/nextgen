@@ -286,7 +286,8 @@ class ReqItems(BaseModel):
     rc_qty:int
     req_qty:int
 
-
+class GetMinReq(BaseModel):
+    id:int
 class SaveReq(BaseModel):
     sl_no:int
     intended_for:str
@@ -3386,7 +3387,7 @@ async def deletetc(id:DeleteVtoC):
 
 
 @poRouter.post('/get_min_req')
-async def getMinReq(id:DeleteVtoC):
+async def getMinReq(id:GetMinReq):
 
     # print(id.id)
     res_dt = {}
