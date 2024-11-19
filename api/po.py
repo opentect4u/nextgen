@@ -1904,7 +1904,7 @@ async def getprojectpoc(id:GetStock):
     # print(id.id)
     res_dt = {}
 
-    select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock"
+    select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty) req_qty"
     schema = "td_stock_new"
     where = f"item_id={id.prod_id} and proj_id ={id.proj_id}"
     order = ""
@@ -2577,8 +2577,10 @@ async def save_requisition(data:SaveReq):
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
                 
                 if(result2['suc']>0):
-                    flds= f'ref_no,date,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
-                    val = f'"REQ-{reqNo}","{formatted_dt}",{data.project_id},{i.item_id},{i.req_qty},{i.req_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
+                    # balance = i.rc_qty-i.req_qty
+                    # flds= f'ref_no,date,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
+                    flds= f'ref_no,date,proj_id,item_id,req_qty,in_out_flag,created_by,created_at'
+                    val = f'"REQ-{reqNo}","{formatted_dt}",{data.project_id},{i.item_id},{i.req_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
                     table = "td_stock_new"
                     whr=f""
                     flag2 =  0
