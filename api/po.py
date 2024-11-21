@@ -2568,33 +2568,33 @@ async def save_requisition(data:SaveReq):
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=result["lastId"]
     
-    for i in data.items:
-                fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,item_id,rc_qty,req_qty,created_by,created_at'
-                values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}"'
-                table_name = "td_requisition_items"
-                whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
-                # flag1 = 1 if v.sl_no>0 else 0
-                flag1 = 1 if data.sl_no>0 else 0
-                result2 = await db_Insert(table_name, fields, values, whr, flag1)
+    # for i in data.items:
+    #             fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,item_id,rc_qty,req_qty,created_by,created_at'
+    #             values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}"'
+    #             table_name = "td_requisition_items"
+    #             whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
+    #             # flag1 = 1 if v.sl_no>0 else 0
+    #             flag1 = 1 if data.sl_no>0 else 0
+    #             result2 = await db_Insert(table_name, fields, values, whr, flag1)
                 
-                if(result2['suc']>0):
-                    # balance = i.rc_qty-i.req_qty
-                    # flds= f'ref_no,date,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
-                    flds= f'ref_no,date,proj_id,item_id,req_qty,in_out_flag,created_by,created_at'
-                    val = f'"REQ-{reqNo}","{formatted_dt}",{data.project_id},{i.item_id},{i.req_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
-                    table = "td_stock_new"
-                    whr=f""
-                    flag2 =  0
-                    result3 = await db_Insert(table, flds, val, whr, flag2)
+    #             if(result2['suc']>0):
+    #                 # balance = i.rc_qty-i.req_qty
+    #                 # flds= f'ref_no,date,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
+    #                 flds= f'ref_no,date,proj_id,item_id,req_qty,in_out_flag,created_by,created_at'
+    #                 val = f'"REQ-{reqNo}","{formatted_dt}",{data.project_id},{i.item_id},{i.req_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
+    #                 table = "td_stock_new"
+    #                 whr=f""
+    #                 flag2 =  0
+    #                 result3 = await db_Insert(table, flds, val, whr, flag2)
 
-                    if(result3['suc']>0): 
+    #                 if(result3['suc']>0): 
 
-                        res_dt2 = {"suc": 1, "msg": f"Saved Successfully And Inserted to stock"}
+    #                     res_dt2 = {"suc": 1, "msg": f"Saved Successfully And Inserted to stock"}
 
-                    else:
-                        res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
-                else:
-                    res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+    #                 else:
+    #                     res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+    #             else:
+    #                 res_dt1= {"suc": 0, "msg": f"Error while updating item"}
 
     if result['suc']>0 :
                 res_dt = {"suc": 1, "msg": f"Saved Successfully"}
@@ -2776,7 +2776,7 @@ async def approvepo(id:approveReq):
     result = await db_Insert(table_name, fields, values, whr, flag)
     if result['suc']:
         
-        if id.status == "R":
+        if id.status == "A":
 
             for i in id.items:
 
@@ -3389,7 +3389,7 @@ async def deletetc(id:DeleteVtoC):
 @poRouter.post('/get_min_req')
 async def getMinReq(id:GetMinReq):
     res_dt = {}
-    select = "distinct r.sl_no,r.req_no,r.approve_flag,r.reason,r.intended_for,r.req_date,r.project_id,r.client_id,r.req_type,r.purpose,m.req_no as min_req_no"
+    select = "distinct r.sl_no,r.req_no,r.approve_flag,r.reason,r.intended_for,r.req_date,r.project_id,r.client_id,r.req_type,r.purpose,m.req_no as min_req_no, p.proj_name,c.client_name"
     schema = "td_requisition r,td_min m"
     where = f"r.delete_flag='N' and r.req_no=m.req_no and r.approve_flag = 'P'"
     order = ""
