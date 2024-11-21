@@ -3389,7 +3389,7 @@ async def deletetc(id:DeleteVtoC):
 @poRouter.post('/get_min_req')
 async def getMinReq(id:GetMinReq):
     res_dt = {}
-    select = "distinct r.sl_no,r.req_no,r.approve_flag,r.reason,r.intended_for,r.req_date,r.project_id,r.client_id,r.req_type,r.purpose,m.req_no as min_req_no, p.proj_name,c.client_name"
+    select = "distinct r.sl_no,r.req_no,r.approve_flag,r.reason,r.intended_for,r.req_date,r.project_id,r.client_id,r.req_type,r.purpose,m.req_no as min_req_no"
     schema = "td_requisition r,td_min m"
     where = f"r.delete_flag='N' and r.req_no=m.req_no and r.approve_flag = 'P'"
     order = ""
