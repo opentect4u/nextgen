@@ -307,6 +307,7 @@ class approveReq(BaseModel):
     project_id:int
     in_out_flag:int
     reason:str
+    ref_no:str
 class ReqId(BaseModel):
     last_req_id:int
 
@@ -2780,8 +2781,8 @@ async def approvepo(id:approveReq):
 
             for i in id.items:
 
-                flds= f'date,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
-                val = f'"{formatted_dt}",{id.project_id},{i.item_id},{i.req_qty},{i.req_qty},{id.in_out_flag},"{id.user}","{formatted_dt}"'
+                flds= f'date,ref_no,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
+                val = f'"{formatted_dt}","{id.ref_no}",{id.project_id},{i.item_id},{i.req_qty},{i.req_qty},{id.in_out_flag},"{id.user}","{formatted_dt}"'
                 table = "td_stock_new"
                 whr=f""
                 flag2 =  0
@@ -3082,7 +3083,7 @@ async def getprojectpoc(id:DelSearch):
     # print(id.id)
     res_dt = {}
 
-    select = "d.invoice,d.invoice_dt,d.po_no,pr.sl_no, b.sl_no as del_sl,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.prod_id,p.prod_name,p.prod_make,p.part_no"
+    select = "d.invoice,d.invoice_dt,d.mrn_no,d.po_no,pr.sl_no, b.sl_no as del_sl,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.prod_id,p.prod_name,p.prod_make,p.part_no"
     schema = '''td_item_delivery_invoice d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_item_delivery_details i on i.invoice=d.invoice left join md_product p on i.prod_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id'''
     
     where = ""
