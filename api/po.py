@@ -2543,7 +2543,7 @@ async def addmin(data:GetPo):
 
 @poRouter.post("/item_dtls")
 async def item_dtls(data:ProjId):
-    select = "c.prod_name, c.sl_no prod_id, sum(b.rc_qty) tot_rc_qty"
+    select = f"c.prod_name, c.sl_no prod_id, sum(b.rc_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock"
     table = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_item_delivery_details b ON d.sl_no=b.item_id"
     where = f"a.po_no=b.po_no and a.project_id={data.Proj_id} group by prod_id"
     order = ""
