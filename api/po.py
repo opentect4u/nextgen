@@ -1650,7 +1650,7 @@ async def adddelivery(data:getDelivery):
                 whr=f""
                 flag1 =  0
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
-                
+                # ==========================================================================
                 # if(result2['suc']>0):
 
                 #     flds= f'date,ref_no,proj_id,po_item_id,item_id,qty,in_out_flag,created_by,created_at'
@@ -1669,6 +1669,7 @@ async def adddelivery(data:getDelivery):
 
                 # else:
                 #     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+                #========================================================================================
 
     if result['suc']>0 :
                 res_dt = {"suc": 1, "msg": f"Updated Successfully"}
@@ -2568,34 +2569,36 @@ async def save_requisition(data:SaveReq):
     flag = 1 if data.sl_no>0 else 0
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=result["lastId"]
-    
+    #========================================================================================================
     for i in data.items:
-                fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,item_id,rc_qty,req_qty,created_by,created_at'
-                values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}"'
-                table_name = "td_requisition_items"
-                whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
-                # flag1 = 1 if v.sl_no>0 else 0
-                flag1 = 1 if data.sl_no>0 else 0
-                result2 = await db_Insert(table_name, fields, values, whr, flag1)
+                # fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,item_id,rc_qty,req_qty,created_by,created_at'
+                # values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}"'
+                # table_name = "td_requisition_items"
+                # whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
+                # # flag1 = 1 if v.sl_no>0 else 0
+                # flag1 = 1 if data.sl_no>0 else 0
+                # result2 = await db_Insert(table_name, fields, values, whr, flag1)
                 
-                if(result2['suc']>0):
+                # if(result2['suc']>0):
                     # balance = i.rc_qty-i.req_qty
                     # flds= f'ref_no,date,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
-                    flds= f'ref_no,date,proj_id,item_id,req_qty,in_out_flag,created_by,created_at'
-                    val = f'"REQ-{reqNo}","{formatted_dt}",{data.project_id},{i.item_id},{i.req_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
-                    table = "td_stock_new"
-                    whr=f""
-                    flag2 =  0
-                    result3 = await db_Insert(table, flds, val, whr, flag2)
+                flds= f"req)_qty='{i.req_qty}', modified_by='{data.user}', modified_at='{formatted_dt}'"
+                val = f'"REQ-{reqNo}","{formatted_dt}",{data.project_id},{i.item_id},{i.req_qty},{data.in_out_flag},"{data.user}","{formatted_dt}"'
+                table = "td_stock_new"
+                whr=f'proj_id={data.project_id} and item_id={i.item_id}' 
+                flag2 =  1
+                result3 = await db_Insert(table, flds, val, whr, flag2)
 
-                    if(result3['suc']>0): 
+                if(result3['suc']>0): 
 
-                        res_dt2 = {"suc": 1, "msg": f"Saved Successfully And Inserted to stock"}
+                    res_dt2 = {"suc": 1, "msg": f"Saved Successfully And Inserted to stock"}
 
-                    else:
-                        res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
                 else:
-                    res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+                    res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+            # else:
+            #     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+
+    #===========================================================================================================
 
     if result['suc']>0 :
                 res_dt = {"suc": 1, "msg": f"Saved Successfully"}
@@ -2781,8 +2784,8 @@ async def approvepo(id:approveReq):
 
             for i in id.items:
 
-                flds= f'date,ref_no,proj_id,item_id,req_qty,qty,in_out_flag,created_by,created_at'
-                val = f'"{formatted_dt}","{id.ref_no}",{id.project_id},{i.item_id},{i.req_qty},{i.req_qty},{id.in_out_flag},"{id.user}","{formatted_dt}"'
+                flds= f'date,ref_no,proj_id,item_id,req_qty,qty,in_out_flag,balance,created_by,created_at'
+                val = f'"{formatted_dt}","{id.ref_no}",{id.project_id},{i.item_id},{0},{i.req_qty},{id.in_out_flag}, "(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=id.project_id)-{i.req_qty}","{id.user}","{formatted_dt}"'
                 table = "td_stock_new"
                 whr=f""
                 flag2 =  0
@@ -3143,8 +3146,8 @@ async def approvepo(id:approveMRN):
 
     if id.status == 'A':
        for i in id.items:
-            flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
-            val = f'"{id.invoice_dt}","MRN-{id.inv_no}",(SELECT project_id FROM td_po_basic WHERE po_no="{id.po_no}"),{i.item_id},{i.rc_qty},{id.in_out_flag},"{id.user}","{formatted_dt}"'
+            flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
+            val = f'"{id.invoice_dt}","MRN-{id.inv_no}",(SELECT project_id FROM td_po_basic WHERE po_no="{id.po_no}"),{i.item_id},{i.rc_qty},{id.in_out_flag},{i.rc_qty},"{id.user}","{formatted_dt}"'
             table = "td_stock_new"
             whr=f""
             flag2 =  0
