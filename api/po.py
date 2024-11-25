@@ -3298,7 +3298,7 @@ async def getVtoC(po_no:VtoCDoc):
 
     select = "*"
     schema = "td_vtoc_doc"
-    where = f"sl_no='{po_no.del_sl_no}'" 
+    where = f"del_sl_no='{po_no.del_sl_no}'" 
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
