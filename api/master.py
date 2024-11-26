@@ -1266,7 +1266,7 @@ async def fetch_permission(user_type_id:getMenu):
 
 @masterRouter.post('/check_product')
 async def check_product(wrd:getPhrase):
-    select = "count(*) as count"
+    select = "count(*) as count,prod_name,prod_desc"
     schema = "md_product"
     where = f"prod_name='{wrd.wrd}'"
     order = ""
