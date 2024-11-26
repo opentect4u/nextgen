@@ -42,7 +42,7 @@ async def getprojectpoc(id:Allstock):
 async def getprojectpoc(id:Itemwise):
     res_dt = {}
 
-    select = f"SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
+    select = f"SUM(st.qty*st.in_out_flag)  project_stock,(SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
     schema = "td_stock_new st, md_product p,td_project pr"
     where = f"st.item_id ={id.item_id} and pr.sl_no=st.proj_id and st.item_id=p.sl_no and {id.dt}<=st.date group by st.proj_id"
     order = ""
