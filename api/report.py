@@ -40,22 +40,22 @@ async def getprojectpoc(id:Allstock):
 
 @reportRouter.post('/itemwise')
 async def getprojectpoc(id:Itemwise):
-    # res_dt = {}
-
-    # select = f"SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
-    # schema = "td_stock_new st, md_product p,td_project pr"
-    # where = f"st.item_id ={id.item_id} and pr.sl_no=st.proj_id and st.item_id=p.sl_no and {id.dt}<=st.date group by st.proj_id"
-    # order = ""
-    # flag = 1 
-    # result = await db_select(select, schema, where, order, flag)
-    # return result
-
     res_dt = {}
 
-    select = f"SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name,st.proj_id"
-    schema = "td_stock_new st, md_product p"
-    where = f"st.item_id ={id.item_id} and st.item_id=p.sl_no and {id.dt}<=st.date group by st.proj_id"
+    select = f"SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
+    schema = "td_stock_new st, md_product p,td_project pr"
+    where = f"st.item_id ={id.item_id} and pr.sl_no=st.proj_id or proj_id='0' and st.item_id=p.sl_no and {id.dt}<=st.date group by st.proj_id"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
     return result
+
+    # res_dt = {}
+
+    # select = f"SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name,st.proj_id"
+    # schema = "td_stock_new st, md_product p"
+    # where = f"st.item_id ={id.item_id} and st.item_id=p.sl_no and {id.dt}<=st.date group by st.proj_id"
+    # order = ""
+    # flag = 1 
+    # result = await db_select(select, schema, where, order, flag)
+    # return result
