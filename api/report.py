@@ -17,7 +17,7 @@ reportRouter = APIRouter()
 
 class Allstock(BaseModel):
     dt:str
-    project_id:str
+    project_id:int
 
 
 @reportRouter.post('/allstock')
