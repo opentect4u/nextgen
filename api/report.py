@@ -43,9 +43,9 @@ async def getprojectpoc(id:Itemwise):
     # print(id.id)
     res_dt = {}
 
-    select = f"SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name "
+    select = f"SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name,st.proj_id "
     schema = "td_stock_new st, md_product p"
-    where = f"st.item_id ={id.item_id} and {id.dt}<=st.date group by st.item_id"
+    where = f"st.item_id ={id.item_id} and {id.dt}<=st.date group by st.item_id group by proj_id"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
