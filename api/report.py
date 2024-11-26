@@ -19,6 +19,10 @@ class Allstock(BaseModel):
     dt:str
     project_id:int
 
+class Itemwise(BaseModel):
+    dt:str
+    item_id:int
+
 
 @reportRouter.post('/allstock')
 async def getprojectpoc(id:Allstock):
@@ -28,6 +32,20 @@ async def getprojectpoc(id:Allstock):
     select = f"SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name "
     schema = "td_stock_new st, md_product p"
     where = f"st.proj_id ={id.project_id} and st.item_id=p.sl_no and {id.dt}<=st.date group by st.item_id"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
+
+@reportRouter.post('/itemwise')
+async def getprojectpoc(id:Itemwise):
+    # print(id.id)
+    res_dt = {}
+
+    select = f"SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name "
+    schema = "td_stock_new st, md_product p"
+    where = f"st.item_id ={id.item_id} and {id.dt}<=st.date group by st.item_id"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
