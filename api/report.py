@@ -24,18 +24,28 @@ class Itemwise(BaseModel):
     item_id:int
 
 
+# @reportRouter.post('/allstock')
+# async def getprojectpoc(id:Allstock):
+#     res_dt = {}
+
+#     select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name "
+#     schema = "td_stock_new st, md_product p,(SELECT @a:= 0) AS a"
+#     where = f"st.proj_id ={id.project_id} and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.item_id"
+#     order = ""
+#     flag = 1 
+#     result = await db_select(select, schema, where, order, flag)
+#     return result
+
 @reportRouter.post('/allstock')
 async def getprojectpoc(id:Allstock):
-    # print(id.id)
     res_dt = {}
 
-    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name "
-    schema = "td_stock_new st, md_product p,(SELECT @a:= 0) AS a"
-    where = f"st.proj_id ={id.project_id} and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.item_id"
+    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name,u.unit_name "
+    schema = "td_stock_new st, md_product p, md_unit u, td_po_items b,  (SELECT @a:= 0) AS a"
+    where = f"st.proj_id ={id.project_id} and  u.sl_no=i.unit_id and (select sl_no from td_po_basic where project_id={id.project_id})=b.po_sl_no, st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.item_id"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
-    # print(result, 'RESULT')
     return result
 
 @reportRouter.post('/itemwise')
