@@ -2804,6 +2804,23 @@ async def approvepo(id:approveReq):
                     res_dt = {"suc": 0, "msg": f"Error while inserting "}
 
         else:
+
+            for i in id.items:
+
+                flds= f"req_qty='{i.req_qty}', modified_by='{id.user}', modified_at='{formatted_dt}'"
+                val = f''
+                table = "td_stock_new"
+                whr=f'proj_id={id.project_id} and item_id={i.item_id}' 
+                flag2 =  1
+                result3 = await db_Insert(table, flds, val, whr, flag2)
+
+                if(result3['suc']>0): 
+
+                    res_dt = {"suc": 1, "msg": f"Saved Successfully"}
+
+                else:
+                    res_dt = {"suc": 0, "msg": f"Error while inserting "}
+
             res_dt = {"suc": 1, "msg": f"Action Successful!"}
 
     else:
