@@ -1278,7 +1278,7 @@ async def check_product(wrd:getPhrase):
 
 @masterRouter.post('/get_same_product')
 async def check_product(wrd:getPhrase):
-    select = "count(*) as count,prod_name,prod_desc"
+    select = "count(*) as count,prod_name,prod_desc,prod_make"
     schema = "md_product"
     where = f"prod_name like '%{wrd.wrd}%'"
     order = ""
