@@ -1276,3 +1276,15 @@ async def check_product(wrd:getPhrase):
     return result
 
 
+@masterRouter.post('/get_same_product')
+async def check_product(wrd:getPhrase):
+    select = "count(*) as count,prod_name,prod_desc"
+    schema = "md_product"
+    where = f"prod_name like '%{wrd.wrd}%'"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
