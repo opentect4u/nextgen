@@ -2503,7 +2503,7 @@ async def addmin(data:AddMin):
         result = await db_Insert(table_name, fields, values, whr, flag)
     
         if result['suc']:
-         res_dt = {"suc": 1, "msg": f"Update successfully!"}
+         res_dt = {"suc": 1, "msg": f"Updated successfully!"}
         else:
          res_dt = {"suc": 0, "msg": f"Error while updating!"}
   

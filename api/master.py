@@ -168,6 +168,9 @@ class Permission(BaseModel):
     reports:str
     prm:str
     user:str
+    approve_mrn:str
+    approve_req:str
+    purchase_requisition:str
 pass_alphabets=[
     'A','B','C','D','E','F','G','H','I','J','K','L',
     'M','N','O','P','Q','R','S','T','U','V','W','X',
@@ -1230,7 +1233,7 @@ async def add_edit_permissions(data:Permission):
     print(res_dt["msg"][0]["sl_no"])
     
 
-    fields= f"department='{data.department}', prod_catg='{data.prod_catg}', unit='{data.unit}', product='{data.product}', vendor='{data.vendor}', masters='{data.masters}', purchase='{data.purchase}', client='{data.client}', gst='{data.gst}', comp_user='{data.comp_user}',client_orders='{data.client_orders}', vendor_orders='{data.vendor_orders}', existing_po='{data.existing_po}', amend_po='{data.amend_po}', approve_po='{data.approve_po}', certificate='{data.certificate}', mrn='{data.mrn}', requisition='{data.requisition}', min='{data.min}', reports='{data.reports}', permission='{data.prm}', modified_at='{formatted_dt}'" if res_dt["msg"][0]["sl_no"] > 0 else f"user_type_id, department, prod_catg, unit, product, vendor, masters,purchase, client, gst, comp_user, client_orders, vendor_orders, existing_po, amend_po, approve_po, certificate, mrn, requisition, min, reports, permission, created_by, created_at"
+    fields= f"department='{data.department}', prod_catg='{data.prod_catg}', unit='{data.unit}', product='{data.product}', vendor='{data.vendor}', masters='{data.masters}', purchase='{data.purchase}', client='{data.client}', gst='{data.gst}', comp_user='{data.comp_user}',purchase_requisition='{data.purchase_requisition}',client_orders='{data.client_orders}', vendor_orders='{data.vendor_orders}', existing_po='{data.existing_po}', amend_po='{data.amend_po}', approve_po='{data.approve_po}', certificate='{data.certificate}', mrn='{data.mrn}',approve_mrn='{data.approve_mrn}', requisition='{data.requisition}',approve_req='{data.approve_req}', min='{data.min}', reports='{data.reports}', permission='{data.prm}', modified_at='{formatted_dt}'" if res_dt["msg"][0]["sl_no"] > 0 else f"user_type_id, department, prod_catg, unit, product, vendor, masters,purchase, client, gst, comp_user, purchase_requisition, client_orders, vendor_orders, existing_po, amend_po, approve_po, certificate, mrn, approve_mrn, requisition, approve_req, min, reports, permission, created_by, created_at"
 
     values = None if res_dt["msg"][0]["sl_no"] > 0 else f"{data.user_type_id}, '{data.department}', '{data.prod_catg}','{data.unit}', '{data.product}', '{data.vendor}','{data.masters}','{data.purchase}', '{data.client}','{data.gst}', '{data.comp_user}', '{data.client_orders}', '{data.vendor_orders}', '{data.existing_po}', '{data.amend_po}', '{data.approve_po}', '{data.certificate}', '{data.mrn}', '{data.requisition}', '{data.min}', '{data.reports}', '{data.prm}','{data.user}', '{formatted_dt}'"
 
