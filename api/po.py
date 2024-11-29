@@ -633,6 +633,21 @@ async def getprojectpoc(id:GetPo):
     # print(result, 'RESULT')
     return result
 
+
+@poRouter.post('/getpoitemfordirectdelivery')
+async def getprojectpoc(id:GetPo):
+    # print(id.id)
+    res_dt = {}
+
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name"
+    schema = "td_po_items i,md_product p"
+    where = f"i.po_sl_no='{id.id}' and i.item_id=p.sl_no" if id.id>0 else ""
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
+
 @poRouter.post('/getpoterms')
 async def getprojectpoc(id:GetPo):
     print(id.id)
@@ -1797,7 +1812,7 @@ async def getitemforedit(id:GetPo):
     # print(id.id)
     res_dt = {}
 
-    select = f"i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=b.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id='0') as warehouse_stock"
+    select = f"i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,p.part_no,p.model_no,p.article_no,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=b.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id='0') as warehouse_stock"
     schema = "td_po_items i, td_po_basic b, md_product p"
     where = f"i.item_id=p.sl_no and i.po_sl_no=b.sl_no and i.po_sl_no='{id.id}'" if id.id>0 else ""
     order = ""
