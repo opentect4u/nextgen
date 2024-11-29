@@ -285,6 +285,7 @@ class ReqItems(BaseModel):
     item_id:int
     rc_qty:int
     req_qty:int
+    stock:int
 
 class GetMinReq(BaseModel):
     id:int
