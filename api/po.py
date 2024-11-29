@@ -2803,7 +2803,7 @@ async def approvepo(id:approveReq):
             for i in id.items:
 
                 flds= f'date,ref_no,proj_id,item_id,req_qty,qty,in_out_flag,balance,created_by,created_at'
-                val = f'"{formatted_dt}","{id.ref_no}",{id.project_id},{i.item_id},{0},{i.req_qty},{id.in_out_flag}, "(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=id.project_id)-{i.req_qty}","{id.user}","{formatted_dt}"'
+                val = f'"{formatted_dt}","{id.ref_no}",{id.project_id},{i.item_id},{i.req_qty},{i.req_qty},{id.in_out_flag}, "(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=id.project_id)-{i.req_qty}","{id.user}","{formatted_dt}"'
                 table = "td_stock_new"
                 whr=f""
                 flag2 =  0
