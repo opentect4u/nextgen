@@ -2823,7 +2823,7 @@ async def approvepo(id:approveReq):
 
             for i in id.items:
 
-                flds= f"req_qty='{i.req_qty}', modified_by='{id.user}', modified_at='{formatted_dt}'"
+                flds= f"req_qty='{0}', modified_by='{id.user}', modified_at='{formatted_dt}'"
                 val = f''
                 table = "td_stock_new"
                 whr=f'proj_id={id.project_id} and item_id={i.item_id}' 
