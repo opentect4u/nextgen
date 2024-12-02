@@ -1925,7 +1925,7 @@ async def getprojectpoc(id:GetStock):
     # print(id.id)
     res_dt = {}
 
-    select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty) req_qty"
+    select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty"
     schema = "td_stock_new"
     where = f"item_id={id.prod_id} and proj_id ={id.proj_id}"
     order = ""
