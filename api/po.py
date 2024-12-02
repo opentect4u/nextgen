@@ -3199,8 +3199,9 @@ async def approvepo(id:approveMRN):
 
                 res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
     else:
-         
        stock_save =1
+       res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
    
     if result['suc'] and stock_save:
         res_dt = {"suc": 1, "msg": f"Action Successful!","msg2":res_dt2}
