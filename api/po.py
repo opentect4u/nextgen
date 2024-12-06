@@ -2777,7 +2777,7 @@ async def item_dtls(data:ProjId):
 
 @poRouter.post("/get_item_req_min")
 async def item_dtls(data:req_id):
-    select = "c.prod_name,b.sl_no,b.last_req_id,b.item_id,b.rc_qty,b.req_qty, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=b.item_id and proj_id=a.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=b.item_id and proj_id='0') as warehouse_stock"
+    select = "c.prod_name,c.part_no,c.article_no,c.model_no,b.sl_no,b.last_req_id,b.item_id,b.rc_qty,b.req_qty, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=b.item_id and proj_id=a.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=b.item_id and proj_id='0') as warehouse_stock"
     table = "md_product c LEFT JOIN td_requisition_items b ON c.sl_no=b.item_id left join td_requisition a on b.last_req_id=a.sl_no"
     where = f"b.last_req_id={data.Proj_id} "
     order = ""
