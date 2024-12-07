@@ -11,6 +11,7 @@ import random
 from models.utils import get_hashed_password, verify_password
 import json
 import os
+from typing import List
 # from fastapi import APIRouter, FastAPI, Depends, File, UploadFile, Form, Optional
 masterRouter = APIRouter()
 
@@ -773,10 +774,15 @@ async def deleteuser(id:deleteData):
    return res_dt
 
 @masterRouter.post('/addclient')
-async def addclient(client_data:str = Form(...), poc_doc:list[UploadFile] = File(...)):
+async def addclient(client_data:str = Form(...), poc_doc:List[UploadFile] = File(...)):
     res_dt = {}
     data = json.loads(client_data)
     # print(data['c_name'])
+    for file in poc_doc:
+        contents=await file.read()
+        with open(f"upload_file/upload_poc/{file.filename}", "wb")  as f:
+            f.write(contents)
+    
     print(poc_doc)
     return len(poc_doc)
 
