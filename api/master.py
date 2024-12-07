@@ -773,7 +773,7 @@ async def deleteuser(id:deleteData):
    return res_dt
 
 @masterRouter.post('/addclient')
-async def addclient(client_data:str = Form(...), poc_doc:list[Union[UploadFile, None]] = File(...)):
+async def addclient(client_data:str = Form(...), poc_doc:list[UploadFile] = File(...)):
     res_dt = {}
     data = json.loads(client_data)
     # print(data['c_name'])
