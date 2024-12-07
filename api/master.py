@@ -784,7 +784,7 @@ async def addclient(client_data:str = Form(...), poc_doc:List[UploadFile] = File
             f.write(contents)
     
     print(poc_doc)
-    return len(poc_doc)
+    # return len(poc_doc)
 
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
