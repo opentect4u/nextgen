@@ -1,5 +1,5 @@
-from fastapi import APIRouter, File, UploadFile, Form
-from typing import Optional, Union
+from fastapi import APIRouter, FastAPI, Depends, File, UploadFile, Form
+from typing import Optional, Union, Annotated
 from enum import Enum
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,7 +11,7 @@ import random
 from models.utils import get_hashed_password, verify_password
 import json
 import os
-from fastapi import FastAPI, Depends, File, UploadFile, Form
+# from fastapi import APIRouter, FastAPI, Depends, File, UploadFile, Form, Optional
 masterRouter = APIRouter()
 
 UPLOAD_POC_FOLDER = "upload_file/upload_poc"
@@ -773,12 +773,12 @@ async def deleteuser(id:deleteData):
    return res_dt
 
 @masterRouter.post('/addclient')
-async def addclient(client_data:str = Form(...), poc_doc:list[Union[UploadFile, None]] = File(...)):
+async def addclient(client_data:str = Form(...), poc_doc:Annotated[bytes | None, File()] = None, poc_doc1:Union[Union[list[Union[UploadFile, None]], Union[UploadFile, None]]] = None):
     res_dt = {}
     data = json.loads(client_data)
     # print(data['c_name'])
-    # print(poc_doc)
-    # return len(poc_doc)
+    print(poc_doc1)
+    return len(poc_doc1)
 
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -831,9 +831,12 @@ async def addclient(client_data:str = Form(...), poc_doc:list[Union[UploadFile, 
     for c in data['c_poc']:
         fileName = ''
         try:
-            fileName = None if not poc_doc[index] else await uploadfileToLocal(poc_doc[index], UPLOAD_POC_FOLDER)
+            fileName = None if not poc_doc1[index] else await uploadfileToLocal(poc_doc1[index], UPLOAD_POC_FOLDER)
+            print(poc_doc1[index], '+++++++++++++++++++++++++++++')
+            print(fileName, '-----------------------------------')
         except Exception as e:
             # res = e.args
+            print(e, '///////////////////////////////')
             fileName = ""
         finally:
             fileName = f"upload_poc/{fileName}"
