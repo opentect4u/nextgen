@@ -778,12 +778,12 @@ async def addclient(client_data:str = Form(...), poc_doc:List[UploadFile] = File
     res_dt = {}
     data = json.loads(client_data)
     # print(data['c_name'])
-    for file in poc_doc:
-        contents=await file.read()
-        with open(f"upload_file/upload_poc/{file.filename}", "wb")  as f:
-            f.write(contents)
+    # for file in poc_doc:
+    #     contents=await file.read()
+    #     with open(f"upload_file/upload_poc/{file.filename}", "wb")  as f:
+    #         f.write(contents)
     
-    print(poc_doc)
+    # print(poc_doc)
     # return len(poc_doc)
 
     current_datetime = datetime.now()
@@ -837,8 +837,8 @@ async def addclient(client_data:str = Form(...), poc_doc:List[UploadFile] = File
     for c in data['c_poc']:
         fileName = ''
         try:
-            fileName = None if not poc_doc1[index] else await uploadfileToLocal(poc_doc1[index], UPLOAD_POC_FOLDER)
-            print(poc_doc1[index], '+++++++++++++++++++++++++++++')
+            fileName = None if not poc_doc[index] else await uploadfileToLocal(poc_doc[index], UPLOAD_POC_FOLDER)
+            print(poc_doc[index], '+++++++++++++++++++++++++++++')
             print(fileName, '-----------------------------------')
         except Exception as e:
             # res = e.args
