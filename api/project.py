@@ -70,6 +70,17 @@ class GetPoc(BaseModel):
 class GetProjectId(BaseModel):
      id:str
 
+class clientSearch(BaseModel):
+     client:str
+     project_manager:str
+     order_val_to:int
+     order_val_from:int
+     delivery_dt_from:str
+     delivery_dt_to:str
+     order_dt_from:str
+     order_dt_to:str
+
+
 # @projectRouter.post('/addproject')
 # async def addproject(dt:Project):
 #     print(dt)
@@ -363,4 +374,33 @@ async def getprojectpocinfo(id:GetPoc):
     flag = 1 if id.id else 0
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
+    return result
+
+
+@projectRouter.post('/advanced_search_client')
+async def getprojectpoc(id:clientSearch):
+   
+    res_dt = {}
+
+    select = "p.proj_name,p.proj_id,p.client_id,p.client_name,u.user_name,p.order_date,p.proj_delivery_date,p.proj_order_val"
+    schema = '''td_project p left join td_project_assign a on p.proj_id = a.proj_id
+left join md_user u ON u.sl_no=a.proj_manager left join md_client c on c.sl_no=p.client_id
+'''
+    where = ""
+    if(id.project_manager != 0 and id.project_manager != ""):
+        where += f"a.proj_manager='{id.project_manager}' {"AND " if(id.client != ''  or id.delivery_dt_to != '' or id.delivery_dt_from != ''  or id.order_dt_to != '' or id.order_dt_from != ''  or id.order_val_to != '' or id.order_val_from != '' ) else ''}"
+    if(id.client != 0 and id.client != ""):
+        where += f"p.client_id='{id.client}' {"AND " if(id.delivery_dt_to != '' or id.delivery_dt_from != ''  or id.order_dt_to != '' or id.order_dt_from != ''  or id.order_val_to != '' or id.order_val_from != '' ) else ''}"
+    if(id.order_val_from != '' or id.order_val_from != ''):
+        where += f'''(p.proj_order_val BETWEEN "{f'{id.order_val_from}' if(id.order_val_from != '') else ''}" and "{f'{id.order_val_to}' if(id.order_val_to != '') else ''}") {"AND " if(id.delivery_dt_to != '' or id.delivery_dt_from != ''  or id.order_dt_to != '' or id.order_dt_from != '') else ''}'''
+    if(id.order_dt_from != '' or id.order_dt_from != ''):
+        where += f'''(p.order_date BETWEEN "{f'{id.order_dt_from}' if(id.order_dt_from != '') else ''}" and "{f'{id.order_dt_to}' if(id.order_dt_to != '') else ''}") {"AND " if(id.delivery_dt_to != '' or id.delivery_dt_from != ''  or id.order_val_to != '' or id.order_val_from != '') else ''}'''
+    if(id.delivery_dt_from != '' or id.delivery_dt_from != ''):
+        where += f'''(p.proj_delivery_date BETWEEN "{f'{id.delivery_dt_from}' if(id.delivery_dt_from != '') else ''}" and "{f'{id.delivery_dt_to}' if(id.delivery_dt_to != '') else ''}") '''
+
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(a.proj_manager IS NOT NULL AND p.client_id IS NOT NULL AND p.proj_order_val IS NOT NULL and p.order_date is not null and p.proj_delivery_date is not null)"
+    
+    order = "ORDER BY p.created_at DESC"
+    flag = 1
+    result = await db_select(select, schema, where, order, flag)
     return result
