@@ -382,7 +382,7 @@ async def getprojectpoc(id:clientSearch):
    
     res_dt = {}
 
-    select = "p.proj_name,p.proj_id,p.client_id,c.client_name,u.user_name,p.order_date,p.proj_delivery_date,p.proj_order_val"
+    select = "p.sl_no,p.proj_name,p.proj_id,p.client_id,c.client_name,u.user_name,p.order_date,p.proj_delivery_date,p.proj_order_val"
     schema = '''td_project p left join td_project_assign a on p.proj_id = a.proj_id
 left join md_user u ON u.sl_no=a.proj_manager left join md_client c on c.sl_no=p.client_id
 '''
