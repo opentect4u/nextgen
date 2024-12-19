@@ -20,6 +20,10 @@ class Stock(BaseModel):
 class getData(BaseModel):
     id:int
 
+class CheckItem(BaseModel):
+    item_id:int
+
+
 @stockRouter.post("/add_edit_stock")
 async def add_edit_stock(data:Stock):
     
@@ -54,6 +58,20 @@ async def getstock(data:getData):
     where = f"s.sl_no='{data.id}' and i.sl_no=s.item_id" if data.id>0 else f"s.delete_flag='N' and i.sl_no=s.item_id"
     order = "ORDER BY s.created_at DESC"
     flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
+@stockRouter.post("/check_item")
+async def getstock(data:CheckItem):
+    print('I am logging in!')
+    res_dt = {}
+    select = "i.qty,t.trans_no,t.purpose,t.to_proj_id,t.from_proj_id,t.req_by"
+    schema = "td_transfer_item i,td_transfer t"
+    where = f"item_id='{data.item_id}' and t.trans_no=i.trans_no"
+    order = "ORDER BY t.created_at DESC"
+    flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
