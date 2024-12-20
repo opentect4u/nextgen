@@ -111,7 +111,7 @@ async def save_trans(data:SaveTrans):
     for i in data.items:
                 fields= f'trans_no,item_id,qty,created_by,created_at'
                 values = f"'TWP-{tno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}'"
-                table_name = "td_requisition_items"
+                table_name = "td_transfer_items"
                 whr=""
                 # flag1 = 1 if v.sl_no>0 else 0
                 flag1 = 1 if data.sl_no>0 else 0
