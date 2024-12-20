@@ -41,6 +41,9 @@ class SaveTrans(BaseModel):
 class GetTrans(BaseModel):
      id:int
 
+class GetTransItem(BaseModel):
+     trans_no:str
+
 @stockRouter.post("/add_edit_stock")
 async def add_edit_stock(data:Stock):
     
@@ -157,10 +160,23 @@ async def save_trans(data:GetTrans):
 async def save_trans(data:GetTrans):
     res_dt = {}
 
-    select = "t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for"
+    select = f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for,t.client_id"
     schema = "td_transfer t,td_project p"
     where = f"t.sl_no='{data.id}' and trans_no like '%{'TWP-'}%' and p.sl_no=t.to_proj_id" if data.id>0 else f"trans_no like '%{'TWP-'}%'  and p.sl_no=t.to_proj_id"
     order = "ORDER BY created_at DESC"
+    flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+@stockRouter.post("/get_trans_items")
+async def save_trans(data:GetTransItem):
+    res_dt = {}
+
+    select = "*"
+    schema = "td_transfer_items"
+    where = f"=trans_no'{data.trans_no}'"
+    order = ""
     flag = 0 if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
