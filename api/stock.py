@@ -177,7 +177,7 @@ async def save_trans(data:GetTransItem):
     schema = "td_transfer_items"
     where = f"=trans_no='{data.trans_no}'"
     order = ""
-    flag = 0 if data.id>0 else 1
+    flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
