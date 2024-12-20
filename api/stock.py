@@ -102,7 +102,7 @@ async def save_trans(data:SaveTrans):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
-    fields= f"trans_no,trans_dt,intended_for,client_id,from_project_id,to_project_id,purpose,created_by,created_at"
+    fields= f"trans_no,trans_dt,intended_for,client_id,from_proj_id,to_proj_id,purpose,created_by,created_at"
     values = f"'TWP-{tno}', '{data.trans_dt}', '{data.intended_for}', {data.client_id},{0}, '{data.project_id}','{data.project_id}','{data.user}','{formatted_dt}'"
     table_name = "td_transfer"
     whr = ""
