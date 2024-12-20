@@ -23,6 +23,21 @@ class getData(BaseModel):
 class CheckItem(BaseModel):
     item_id:int
 
+class TransferItems(BaseModel):
+    sl_no:int
+    item_id:int
+    qty:int
+
+class SaveTrans(BaseModel):
+    sl_no:int
+    trans_dt:str
+    intended_for:str
+    client_id:int
+    project_id:int
+    purpose:str   
+    items:list[TransferItems]
+    user:str
+
 
 @stockRouter.post("/add_edit_stock")
 async def add_edit_stock(data:Stock):
@@ -75,6 +90,54 @@ async def getstock(data:CheckItem):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@stockRouter.post("/save_transfer")
+async def save_trans(data:SaveTrans):
+    res_dt = {}
+    print(data)
+    current_datetime = datetime.now()
+    tno = int(round(current_datetime.timestamp()))
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+
+    fields= f"trans_no,trans_dt,intended_for,client_id,from_project_id,to_project_id,purpose,created_by,created_at"
+    values = f"'TWP-{tno}', '{data.trans_dt}', '{data.intended_for}', {data.client_id},{0}, '{data.project_id}','{data.project_id}','{data.user}','{formatted_dt}'"
+    table_name = "td_transfer"
+    whr = ""
+    flag = 0
+    result = await db_Insert(table_name, fields, values, whr, flag)
+    lastID=result["lastId"]
+    #========================================================================================================
+    for i in data.items:
+                fields= f'trans_no,item_id,qty,created_by,created_at'
+                values = f"'TWP-{tno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}'"
+                table_name = "td_requisition_items"
+                whr=""
+                # flag1 = 1 if v.sl_no>0 else 0
+                flag1 = 1 if data.sl_no>0 else 0
+                result2 = await db_Insert(table_name, fields, values, whr, flag1)
+            
+
+                if(result2['suc']>0): 
+
+                    res_dt2 = {"suc": 1, "msg": f"Saved Successfully"}
+
+                else:
+                    res_dt2= {"suc": 0, "msg": f"Error while inserting"}
+            # else:
+            #     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+
+    #===========================================================================================================
+
+    if result['suc']>0 :
+                res_dt = {"suc": 1, "msg": f"Saved Successfully"}
+    else:
+                 res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
+            
+    
+    return res_dt
+
+
 
 
 
