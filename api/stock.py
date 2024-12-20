@@ -38,6 +38,8 @@ class SaveTrans(BaseModel):
     items:list[TransferItems]
     user:str
 
+class GetTrans(BaseModel):
+     id:int
 
 @stockRouter.post("/add_edit_stock")
 async def add_edit_stock(data:Stock):
@@ -136,6 +138,20 @@ async def save_trans(data:SaveTrans):
             
     
     return res_dt
+
+
+@stockRouter.post("/get_twp")
+async def save_trans(data:GetTrans):
+    res_dt = {}
+
+    select = "@a:=@a+1 serial_number,trans_no,trans_dt,created_by,created_at,sl_no"
+    schema = "td_transfer,(SELECT @a:= 0) AS a"
+    where = f"sl_no='{data.id}' and trans_no like '%{'TWP-'}%'" if data.id>0 else f"delete_flag='N'"
+    order = "ORDER BY created_at DESC"
+    flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
 
 
 
