@@ -159,7 +159,7 @@ async def save_trans(data:GetTrans):
 
     select = "t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id"
     schema = "td_transfer t,td_project p"
-    where = f"sl_no='{data.id}' and trans_no like '%{'TWP-'}%' and p.sl_no=t.to_proj_id" if data.id>0 else f"trans_no like '%{'TWP-'}%'  and p.sl_no=t.to_proj_id"
+    where = f"t.sl_no='{data.id}' and trans_no like '%{'TWP-'}%' and p.sl_no=t.to_proj_id" if data.id>0 else f"trans_no like '%{'TWP-'}%'  and p.sl_no=t.to_proj_id"
     order = "ORDER BY created_at DESC"
     flag = 0 if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
