@@ -38,6 +38,18 @@ class SaveTrans(BaseModel):
     items:list[TransferItems]
     user:str
 
+
+class SaveTransPtoP(BaseModel):
+    sl_no:int
+    trans_dt:str
+    intended_for:str
+    client_id:int
+    from_project_id:int
+    project_id:int
+    purpose:str   
+    items:list[TransferItems]
+    user:str
+
 class GetTrans(BaseModel):
      id:int
 
@@ -159,10 +171,9 @@ async def save_trans(data:GetTrans):
 @stockRouter.post("/get_twp_record")
 async def save_trans(data:GetTrans):
     res_dt = {}
-
     select = f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for,t.client_id,c.client_name"
     schema = "td_transfer t,td_project p,md_client c"
-    where = f"t.sl_no='{data.id}' and trans_no like '%{'TWP-'}%' and p.sl_no=t.to_proj_id and c.sl_no = t.client_id" if data.id>0 else f"trans_no like '%{'TWP-'}%'  and p.sl_no=t.to_proj_id"
+    where = f"t.sl_no='{data.id}' and t.trans_no like '%{'TWP-'}%' and p.sl_no=t.to_proj_id and c.sl_no = t.client_id" 
     order = "ORDER BY created_at DESC"
     flag = 0 if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -181,6 +192,84 @@ async def save_trans(data:GetTransItem):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+
+
+@stockRouter.post("/save_transfer_ptop")
+async def save_trans(data:SaveTransPtoP):
+    res_dt = {}
+    print(data)
+    current_datetime = datetime.now()
+    tno = int(round(current_datetime.timestamp()))
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+
+    fields= f"trans_no,trans_dt,intended_for,client_id,from_proj_id,to_proj_id,purpose,created_by,created_at"
+    values = f"'TPP-{tno}', '{data.trans_dt}', '{data.intended_for}', {data.client_id},'{data.from_project_id}', '{data.project_id}','{data.purpose}','{data.user}','{formatted_dt}'"
+    table_name = "td_transfer"
+    whr = ""
+    flag = 0
+    result = await db_Insert(table_name, fields, values, whr, flag)
+    lastID=result["lastId"]
+    #========================================================================================================
+    for i in data.items:
+                fields= f'trans_no,item_id,qty,created_by,created_at'
+                values = f"'TPP-{tno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}'"
+                table_name = "td_transfer_items"
+                whr=""
+                # flag1 = 1 if v.sl_no>0 else 0
+                flag1 = 1 if data.sl_no>0 else 0
+                result2 = await db_Insert(table_name, fields, values, whr, flag1)
+            
+
+                if(result2['suc']>0): 
+
+                    res_dt2 = {"suc": 1, "msg": f"Saved Successfully"}
+
+                else:
+                    res_dt2= {"suc": 0, "msg": f"Error while inserting"}
+            # else:
+            #     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+
+    #===========================================================================================================
+
+    if result['suc']>0 :
+                res_dt = {"suc": 1, "msg": f"Saved Successfully"}
+    else:
+                 res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
+            
+    
+    return res_dt
+
+
+
+
+@stockRouter.post("/get_tpp")
+async def save_trans(data:GetTrans):
+    res_dt = {}
+
+    select = "t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name"
+    schema = "td_transfer t,td_project p"
+    where = f"t.sl_no='{data.id}' and t.trans_no like '%{'TPP-'}%' and p.sl_no=t.to_proj_id" if data.id>0 else f"t.trans_no like '%{'TPP-'}%' and p.sl_no=t.to_proj_id"
+    order = "ORDER BY t.created_at DESC"
+    flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+@stockRouter.post("/get_tpp_record")
+async def save_trans(data:GetTrans):
+    res_dt = {}
+    select = f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for,t.client_id,c.client_name"
+    schema = "td_transfer t,td_project p,md_client c"
+    where = f"t.sl_no='{data.id}' and t.trans_no like '%{'TPP-'}%' and p.sl_no=t.to_proj_id and c.sl_no = t.client_id" 
+    order = "ORDER BY created_at DESC"
+    flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
 
 
 
