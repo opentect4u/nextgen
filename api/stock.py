@@ -177,7 +177,7 @@ async def save_trans(data:GetTrans):
     order1 = "ORDER BY created_at DESC"
     flag1 = 0 
     result1= await db_select(select1, schema1, where1, order1, flag1)
-    print(result1['msg']['client_id'])
+    print('client_id=',result1['msg']['client_id'])
     res_dt = {}
     select = f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for,t.client_id,c.client_name"
     schema = "td_transfer t,td_project p,md_client c"
