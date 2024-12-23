@@ -276,9 +276,9 @@ async def save_trans(data:GetTrans):
     result1= await db_select(select1, schema1, where1, order1, flag1)
     print('client_id=',result1['msg']['client_id'])
     res_dt = {}
-    select = f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.from_proj_id,p.proj_name as from_proj_name,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for,t.client_id,c.client_name" if result1['msg']['client_id']>0 else f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for"
+    select = f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.from_proj_id,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for,t.client_id,c.client_name" if result1['msg']['client_id']>0 else f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for"
     schema = f"td_transfer t,td_project p,md_client c" if result1['msg']['client_id']>0 else "td_transfer t,td_project p"
-    where = f"t.sl_no='{data.id}' and t.trans_no like '%{'TPP-'}%' and p.sl_no=t.to_proj_id and p.sl_no,t.proj_id and c.sl_no = t.client_id" if result1['msg']['client_id']>0 else f"t.sl_no='{data.id}' and t.trans_no like '%{'TPP-'}%' and p.sl_no=t.to_proj_id"
+    where = f"t.sl_no='{data.id}' and t.trans_no like '%{'TPP-'}%' and p.sl_no=t.to_proj_id and c.sl_no = t.client_id" if result1['msg']['client_id']>0 else f"t.sl_no='{data.id}' and t.trans_no like '%{'TPP-'}%' and p.sl_no=t.to_proj_id"
     order = "ORDER BY t.created_at DESC"
     flag = 0 if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
