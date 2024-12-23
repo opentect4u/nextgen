@@ -301,6 +301,19 @@ async def save_trans(data:GetTrans):
     return result
 
 
+@stockRouter.post("/get_transfer_stock_items")
+async def save_trans(data:GetTransItem):
+    res_dt = {}
+    select = "t.trans_no,t.item_id,t.qty,t.approve_flag,p.prod_name"
+    schema = "td_transfer_items t,md_product p"
+    where = f"t.trans_no='{data.trans_no}' and p.sl_no=t.item_id"
+    order = "ORDER BY t.created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
 
 
 
