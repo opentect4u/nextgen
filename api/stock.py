@@ -28,6 +28,7 @@ class TransferItems(BaseModel):
     sl_no:int
     item_id:int
     qty:int
+    error:int
 
 class SaveTrans(BaseModel):
     sl_no:int
