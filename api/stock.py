@@ -102,7 +102,7 @@ async def getstock(data:CheckItem):
     res_dt = {}
     select = "i.qty,t.trans_no,t.purpose,t.to_proj_id,t.from_proj_id,t.req_by"
     schema = "td_transfer_items i,td_transfer t"
-    where = f"i.item_id='{data.item_id}' and i.approve_flag='P' and t.trans_no=i.trans_no and trans_no like '%{data.trans_no}%'"
+    where = f"i.item_id='{data.item_id}' and i.approve_flag='P' and t.trans_no=i.trans_no and i.trans_no like '%{data.trans_no}%'"
     order = "ORDER BY t.created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
