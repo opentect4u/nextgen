@@ -100,7 +100,7 @@ async def getstock(data:getData):
 async def getstock(data:CheckItem):
     print('I am logging in!')
     res_dt = {}
-    select = "i.qty,t.trans_no,t.purpose,t.to_proj_id,t.from_proj_id,t.req_by"
+    select = "i.qty,t.trans_no,t.purpose,t.to_proj_id,t.from_proj_id,t.req_by,t.created_by,t.created_at"
     schema = "td_transfer_items i,td_transfer t"
     where = f"i.item_id='{data.item_id}' and i.approve_flag='P' and t.trans_no=i.trans_no and i.trans_no like '%{data.trans_no}%'"
     order = "ORDER BY t.created_at DESC"
