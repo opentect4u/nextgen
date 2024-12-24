@@ -321,7 +321,7 @@ async def save_trans(data:GetTrans):
 @stockRouter.post("/get_transfer_stock_items")
 async def save_trans(data:GetTransItem):
     res_dt = {}
-    select = "t.sl_no,t.trans_no,t.item_id,t.qty,t.approve_flag,p.prod_name"
+    select = "t.sl_no,t.trans_no,t.item_id,t.qty,t.approve_flag,p.prod_name,t.approved_by"
     schema = "td_transfer_items t,md_product p"
     where = f"t.trans_no='{data.trans_no}' and p.sl_no=t.item_id"
     order = "ORDER BY t.created_at DESC"
@@ -341,7 +341,6 @@ async def save_trans(data:GetApproveItems):
                 values = f''
                 table_name = "td_transfer_items"
                 whr=f"trans_no='{data.trans_no}' and sl_no={i.sl_no}"   
-                # flag1 = 1 if v.sl_no>0 else 0
                 flag1 = 1 
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
                 if result2['suc']>0:
