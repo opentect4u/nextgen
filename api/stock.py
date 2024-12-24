@@ -58,6 +58,21 @@ class GetTrans(BaseModel):
 class GetTransItem(BaseModel):
      trans_no:str
 
+class ApproveItems(BaseModel):
+    sl_no: int
+    item_id: int
+    prod_name: str
+    qty: int
+    approve_flag: str
+    check: bool
+
+
+class GetApproveItems(BaseModel):
+     trans_no:str
+     items:list[ApproveItems]
+     user:str
+
+
 @stockRouter.post("/add_edit_stock")
 async def add_edit_stock(data:Stock):
     
@@ -314,6 +329,25 @@ async def save_trans(data:GetTransItem):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+
+@stockRouter.post("/approve_transfer_items")
+async def save_trans(data:GetApproveItems):
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    for i in data.items:
+                fields= f"approve_flag='{i.approve_flag}',approved_by={data.user}"
+                values = f''
+                table_name = "td_transfer_items"
+                whr=f"trans_no='{data.trans_no}' and sl_no={i.sl_no}"   
+                # flag1 = 1 if v.sl_no>0 else 0
+                flag1 = 1 
+                result2 = await db_Insert(table_name, fields, values, whr, flag1)
+                
+    else:
+        res_dt = {"suc": 0, "msg": f"Error while saving!"}
+  
+    return res_dt
 
 
 
