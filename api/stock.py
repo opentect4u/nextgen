@@ -339,8 +339,16 @@ async def save_trans(data:GetTransItem):
 async def getprojectpoc(id:GetStock):
     # print(id.id)
     res_dt = {}
+    select1 = f"sum(i.qty) as req_stock"
+    schema1 = "td_transfer t,td_transfer_items i"
+    where1 = f"i.item_id={id.prod_id} and t.proj_id ={id.proj_id} and i.transfer_no=t.transfer_no"
+    order1 = ""
+    flag1 = 1 
+    result1 = await db_select(select, schema, where, order, flag)
+    print("qty=======",result1['msg']['req_stock'])
 
-    select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty,(select sum(i.qty) from td_transfer_items t, td_transfer t where i.item_id={id.prod_id} and i.approve_flag='P' and t.from_proj_id={id.proj_id} and t.trans_no=i.trans_no) as req_stock"
+
+    select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty"
     schema = "td_stock_new"
     where = f"item_id={id.prod_id} and proj_id ={id.proj_id}"
     order = ""
