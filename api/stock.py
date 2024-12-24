@@ -336,7 +336,7 @@ async def save_trans(data:GetApproveItems):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     for i in data.items:
-                fields= f"approve_flag='{i.approve_flag}',approved_by={data.user}"
+                fields= f"approve_flag='{i.approve_flag}',approved_by='{data.user}',approved_at='{formatted_dt}'"
                 values = f''
                 table_name = "td_transfer_items"
                 whr=f"trans_no='{data.trans_no}' and sl_no={i.sl_no}"   
