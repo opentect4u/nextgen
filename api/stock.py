@@ -354,7 +354,9 @@ async def save_trans(data:GetApproveItems):
                 
                 else:
                   res_dt = {"suc": 0, "msg": f"Error while saving!"}
-  
+    
+    res_dt = {"suc": 1, "msg": f"Successfully saved!"}
+   
     return res_dt
 
 
