@@ -336,7 +336,14 @@ async def save_trans(data:GetApproveItems):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     for i in data.items:
-            if i.approve_flag=='A':
+            select1 = f"approve_flag"
+            schema1 = "td_transfer_items"
+            where1= f"sl_no='{i.sl_no}'" 
+            order1 = "ORDER BY created_at DESC"
+            flag1 = 0 
+            result1= await db_select(select1, schema1, where1, order1, flag1)
+            print('client_id=',result1['msg']['client_id'])
+            if i.approve_flag=='A' and result1['msg']['approve_flag']!='A':
                 fields= f"approve_flag='{i.approve_flag}',approved_by='{data.user}',approved_at='{formatted_dt}'"
                 values = f''
                 table_name = "td_transfer_items"
