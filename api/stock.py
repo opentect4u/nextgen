@@ -71,6 +71,8 @@ class GetApproveItems(BaseModel):
      trans_no:str
      items:list[ApproveItems]
      user:str
+     from_proj_id:int
+     to_proj_id:int
 
 
 @stockRouter.post("/add_edit_stock")
@@ -335,6 +337,9 @@ async def save_trans(data:GetTransItem):
 async def save_trans(data:GetApproveItems):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    formatted_appr_dt= current_datetime.strftime("%Y-%m-%d")
+    stock_in = 1
+    stock_out = -1
     for i in data.items:
             select1 = f"approve_flag"
             schema1 = "td_transfer_items"
@@ -354,6 +359,40 @@ async def save_trans(data:GetApproveItems):
                 
                 else:
                   res_dt = {"suc": 0, "msg": f"Error while saving!"}
+
+
+                # ======================================================
+            flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
+            val = f'"{formatted_appr_dt}","{data.trans_no}","{data.to_proj_id}",{i.item_id},{i.qty},{stock_in},"{data.user}","{formatted_dt}"'
+            table = "td_stock_new"
+            whr=f""
+            flag2 =  0
+            result3 = await db_Insert(table, flds, val, whr, flag2)
+            if(result3['suc']>0): 
+                stock_save = 1
+                res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
+            else:
+                stock_save = 0
+
+                res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+
+            flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
+            val_out= f'"{formatted_appr_dt}","{data.trans_no}","{data.from_proj_id}",{i.item_id},{i.qty},{stock_out},"{data.user}","{formatted_dt}"'
+            table_out= "td_stock_new"
+            whr_out=f""
+            flag2_out=  0
+            result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
+            if(result3_out['suc']>0): 
+                stock_save = 1
+                res_dt2_out = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
+            else:
+                stock_save = 0
+
+                res_dt2_out= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+
+                # ======================================================
     
     res_dt = {"suc": 1, "msg": f"Successfully saved!"}
    
