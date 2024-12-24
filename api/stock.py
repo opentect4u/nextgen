@@ -275,7 +275,7 @@ async def save_trans(data:SaveTransPtoP):
 async def save_trans(data:GetTrans):
     res_dt = {}
 
-    select = "t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name"
+    select = "t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id,t.from_proj_id,(select proj_name from td_project where sl_no=t.from_proj_id) as from_proj_name"
     schema = "td_transfer t,td_project p"
     where = f"t.sl_no='{data.id}' and t.trans_no like '%{'TPP-'}%' and p.sl_no=t.to_proj_id" if data.id>0 else f"t.trans_no like '%{'TPP-'}%' and p.sl_no=t.to_proj_id"
     order = "ORDER BY t.created_at DESC"
