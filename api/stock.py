@@ -137,7 +137,7 @@ async def save_trans(data:SaveTrans):
 
 
     fields= f"trans_no,trans_dt,intended_for,client_id,from_proj_id,to_proj_id,purpose,created_by,created_at,req_by"
-    values = f"'TWP-{tno}', '{data.trans_dt}', '{data.intended_for}', {data.client_id},{0}, '{data.project_id}','{data.purpose}','{data.user}','{formatted_dt}',{data.user}"
+    values = f"'TWP-{tno}', '{data.trans_dt}', '{data.intended_for}', {data.client_id},{'0'},'{data.project_id}','{data.purpose}','{data.user}','{formatted_dt}','{data.user}'"
     table_name = "td_transfer"
     whr = ""
     flag = 0
