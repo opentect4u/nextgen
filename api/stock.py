@@ -40,6 +40,9 @@ class SaveTrans(BaseModel):
     items:list[TransferItems]
     user:str
 
+class GetStock(BaseModel):
+    proj_id:int
+    prod_id:int
 
 class SaveTransPtoP(BaseModel):
     sl_no:int
@@ -332,6 +335,19 @@ async def save_trans(data:GetTransItem):
     print(result, 'RESULT')
     return result
 
+@stockRouter.post('/get_logical_stock')
+async def getprojectpoc(id:GetStock):
+    # print(id.id)
+    res_dt = {}
+
+    select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty,(select sum(qty) from td_transfer_items where item_id={id.prod_id}) as req_stock"
+    schema = "td_stock_new"
+    where = f"item_id={id.prod_id} and proj_id ={id.proj_id}"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
 
 @stockRouter.post("/approve_transfer_items")
 async def save_trans(data:GetApproveItems):
