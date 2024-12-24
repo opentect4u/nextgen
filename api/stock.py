@@ -336,6 +336,7 @@ async def save_trans(data:GetApproveItems):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     for i in data.items:
+            if i.approve_flag=='A':
                 fields= f"approve_flag='{i.approve_flag}',approved_by='{data.user}',approved_at='{formatted_dt}'"
                 values = f''
                 table_name = "td_transfer_items"
@@ -343,9 +344,11 @@ async def save_trans(data:GetApproveItems):
                 # flag1 = 1 if v.sl_no>0 else 0
                 flag1 = 1 
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
+                if result2['suc']>0:
+                  res_dt = {"suc": 1, "msg": f"Successfully saved!"}
                 
-    else:
-        res_dt = {"suc": 0, "msg": f"Error while saving!"}
+                else:
+                  res_dt = {"suc": 0, "msg": f"Error while saving!"}
   
     return res_dt
 
