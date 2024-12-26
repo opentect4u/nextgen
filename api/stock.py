@@ -458,7 +458,7 @@ left join md_product p ON p.sl_no=i.item_id
         
     #     '''
 
-    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(t.from_proj_id IS NOT NULL AND t.to_proj_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and p.make is not null)"
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(t.from_proj_id IS NOT NULL AND t.to_proj_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and p.prod_make is not null)"
     
     order = "ORDER BY t.created_at DESC"
     flag = 1
