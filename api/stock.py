@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from typing import Optional
+from typing import Optional,Union
 from enum import Enum
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +9,8 @@ from datetime import datetime
 import datetime as dt
 import random
 from models.utils import get_hashed_password, verify_password
+
+
 stockRouter = APIRouter()
 
 class Stock(BaseModel):
@@ -76,6 +78,14 @@ class GetApproveItems(BaseModel):
      user:str
      from_proj_id:int
      to_proj_id:int
+
+
+class PoSearch(BaseModel):
+    from_proj_id:Optional[Union[int,str]]=None
+    to_proj_id:Optional[Union[int,str]]=None
+    make:Optional[str]=None
+    part_no:Optional[str]=None
+    prod_id:Optional[str]=None
 
 
 @stockRouter.post("/add_edit_stock")
@@ -420,6 +430,41 @@ async def save_trans(data:GetApproveItems):
     res_dt = {"suc": 1, "msg": f"Successfully saved!"}
    
     return res_dt
+
+
+@stockRouter.post('/advanced_search_transfer')
+async def getprojectpoc(id:PoSearch):
+   
+    res_dt = {}
+
+    select = "t.trans_no,t.from_proj_id,t.to_proj_id,i.item_id,p.prod_name,p.prod_make,p.part_no"
+    schema = '''td_transfer t left join td_transfer_items i on t.trans_no=i.trans_no
+left join md_product p ON p.sl_no=i.item_id
+'''
+    where = ""
+    if(id.from_proj_id != 0 and id.from_proj_id != ""):
+        where += f"t.from_proj_id='{id.from_proj_id}' {"AND " if(id.to_proj_id != '' or id.part_no != '' or id.prod_id != '' or id.make!='') else ''}"
+    if(id.to_proj_id != 0 and id.to_proj_id != ""):
+        where += f"t.to_proj_id='{id.to_proj_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.make!='') else ''}"
+    if(id.part_no != ''):
+        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.make!='') else ''}"
+    if(id.prod_id != ''):
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.make!='') else ''}"
+    if(id.make!= ''):
+         where += f"p.prod_make like '%{id.make}%' "
+    # if(id.to_dt != '' or id.from_dt != ''):
+    #     where += f'''(b.po_issue_date BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") 
+        
+        
+    #     '''
+
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(t.from_proj_id IS NOT NULL AND t.to_proj_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and p.make is not null)"
+    
+    order = "ORDER BY t.created_at DESC"
+    flag = 1
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
 
 
 
