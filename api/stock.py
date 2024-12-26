@@ -468,6 +468,25 @@ left join md_product p ON p.sl_no=i.item_id
 
 
 
+@stockRouter.post("/get_req_log")
+async def save_trans(data:GetStock):
+    res_dt = {}
+    select = "r.req_no,r.req_date,r.approve_flag,i.rc_qty,t.reason,i.req_qty"
+    schema = "td_requisition r,td_requisition_items i"
+    where = f"i.item_id='{data.prod_id}' and r.project_id='{data.proj_id}'"
+    order = "ORDER BY r.created_at DESC"
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
+
+
+
+
+
+
 
 
 
