@@ -473,7 +473,7 @@ async def save_trans(data:GetStock):
     res_dt = {}
     select = "r.req_no,r.req_date,r.approve_flag,i.rc_qty,r.reason,r.purpose,i.req_qty"
     schema = "td_requisition r,td_requisition_items i"
-    where = f"i.item_id='{data.prod_id}' and r.project_id='{data.proj_id}'"
+    where = f"i.item_id='{data.prod_id}' and r.project_id='{data.proj_id}' and t.req_no=i.req_no"
     order = "ORDER BY r.created_at DESC"
     flag =  1
     result = await db_select(select, schema, where, order, flag)
