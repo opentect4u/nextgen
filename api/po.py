@@ -2819,6 +2819,7 @@ async def approvepo(id:approveReq):
                 values1 = f''
                 table_name1 = "td_requisition_items"
                 whr1 = f'sl_no="{i.sl_no}"' 
+                
                 flag2 = 1 
 
                 result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
