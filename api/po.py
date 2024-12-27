@@ -2823,9 +2823,18 @@ async def approvepo(id:approveReq):
                 flag = 0 
                 res_dt = await db_select(select,table,where,order,flag)
                 print('dfdfdfdf',res_dt['msg'])
+
+                _select = "approved_qty"
+                _table = "td_requisition_items"
+                _where = f"sl_no={i.sl_no}"
+                _order = ""
+                _flag = 0 
+                _res_dt = await db_select(_select,_table,_where,_order,_flag)
+                print('dfdfdfdf',_res_dt['msg'])
     
                 balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.req_qty - i.qty
-                fields1= f'approved_qty="{i.qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}"'
+                approved_qty = int(_res_dt['msg']['approved_qty']) + i.qty if int(_res_dt['msg']['approved_qty'])>0 else i.qty
+                fields1= f'approved_qty="{approved_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}"'
                 values1 = f''
                 table_name1 = "td_requisition_items"
                 whr1 = f'sl_no="{i.sl_no}"' 
