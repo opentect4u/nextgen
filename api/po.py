@@ -2589,8 +2589,8 @@ async def save_requisition(data:SaveReq):
     lastID=result["lastId"]
     #========================================================================================================
     for i in data.items:
-                fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,item_id,rc_qty,req_qty,created_by,created_at'
-                values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}"'
+                fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,item_id,rc_qty,req_qty,created_by,created_at,balance,approved_qty'
+                values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}","{i.rc_qty}",{"0"}'
                 table_name = "td_requisition_items"
                 whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
                 # flag1 = 1 if v.sl_no>0 else 0
@@ -2668,7 +2668,7 @@ async def get_requisition(data:GetPo):
 
 @poRouter.post('/req_item_dtls')
 async def req_item_dtl(data:ReqId):
-    select = "a.sl_no, a.last_req_id,a.approved_qty, a.req_no, a.item_id, b.prod_name,b.part_no,b.model_no,b.article_no, a.rc_qty, a.req_qty, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id=c.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id='0') as warehouse_stock, c.project_id"
+    select = "a.sl_no, a.last_req_id,a.approved_qty,a.balance, a.req_no, a.item_id, b.prod_name,b.part_no,b.model_no,b.article_no, a.rc_qty, a.req_qty, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id=c.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id='0') as warehouse_stock, c.project_id"
     table = "td_requisition_items a left join md_product b on a.item_id=b.sl_no, td_requisition c"
     where = f"a.last_req_id=c.sl_no and a.last_req_id = {data.last_req_id}" if data.last_req_id>0 else f"a.last_req_id=c.sl_no"
     order = ""
