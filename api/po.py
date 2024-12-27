@@ -280,14 +280,14 @@ class AddMin(BaseModel):
 class ProjId(BaseModel):
     Proj_id:int
 
-# class ReqItems(BaseModel):
-#     sl_no:int
-#     item_id:int
-#     rc_qty:int
-#     req_qty:int
-#     stock:int
-
 class ReqItems(BaseModel):
+    sl_no:int
+    item_id:int
+    rc_qty:int
+    req_qty:int
+    stock:int
+
+class ReqItemsAppr(BaseModel):
     sl_no:int
     item_id:int
     qty:int
@@ -308,7 +308,7 @@ class SaveReq(BaseModel):
     in_out_flag:int
 class approveReq(BaseModel):
     # items:list[ReqItems]
-    items:list[ReqItems]
+    items:list[ReqItemsAppr]
     id:int
     status:str
     user:str
@@ -2815,7 +2815,15 @@ async def approvepo(id:approveReq):
                 # whr=f""
                 # flag2 =  0
                 # result3 = await db_Insert(table, flds, val, whr, flag2)
-                balance = i.req_qty - i.qty
+
+                select = "balance"
+                table = "td_requisition_items"
+                where = f"sl_no={i.sl_no}"
+                order = ""
+                flag = 1 
+                res_dt = await db_select(select,table,where,order,flag)
+    
+                balance = res_dt['msg']['balance'] - i.qty if res_dt['msg']['balance'] else i.req_qty - i.qty
                 fields1= f'approved_qty="{i.qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}"'
                 values1 = f''
                 table_name1 = "td_requisition_items"
