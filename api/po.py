@@ -2815,11 +2815,12 @@ async def approvepo(id:approveReq):
                 # whr=f""
                 # flag2 =  0
                 # result3 = await db_Insert(table, flds, val, whr, flag2)
-                fields1= f'approved_qty="{i.qty}",balance="{i.req_qty}-{i.qty}",modified_by="{id.user}",modified_at="{formatted_dt}"'
+                balance = i.req_qty - i.qty
+                fields1= f'approved_qty="{i.qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}"'
                 values1 = f''
                 table_name1 = "td_requisition_items"
                 whr1 = f'sl_no="{i.sl_no}"' 
-                
+
                 flag2 = 1 
 
                 result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
