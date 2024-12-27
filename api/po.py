@@ -2597,7 +2597,7 @@ async def save_requisition(data:SaveReq):
     #========================================================================================================
     for i in data.items:
                 fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,item_id,rc_qty,req_qty,created_by,created_at,balance,approved_qty'
-                values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}","{i.rc_qty}",{"0"}'
+                values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}","{i.req_qty}",{"0"}'
                 table_name = "td_requisition_items"
                 whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
                 # flag1 = 1 if v.sl_no>0 else 0
@@ -2831,28 +2831,28 @@ async def approvepo(id:approveReq):
                 _flag = 0 
                 _res_dt = await db_select(_select,_table,_where,_order,_flag)
                 print('dfdfdfdf',_res_dt['msg'])
-    
-                balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.req_qty - i.qty
-                approved_qty = int(_res_dt['msg']['approved_qty']) + i.qty if int(_res_dt['msg']['approved_qty'])>0 else i.qty
-                approve_flag = 'A'  if approved_qty == i.req_qty else 'H'
-                fields1= f'approved_qty="{approved_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
-                values1 = f''
-                table_name1 = "td_requisition_items"
-                whr1 = f'sl_no="{i.sl_no}"' 
+                if i.qty>0:
+                    balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.req_qty - i.qty
+                    approved_qty = int(_res_dt['msg']['approved_qty']) + i.qty if int(_res_dt['msg']['approved_qty'])>0 else i.qty
+                    approve_flag = 'A'  if approved_qty == i.req_qty else 'H'
+                    fields1= f'approved_qty="{approved_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
+                    values1 = f''
+                    table_name1 = "td_requisition_items"
+                    whr1 = f'sl_no="{i.sl_no}"' 
 
-                flag2 = 1 
+                    flag2 = 1 
 
-                result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
+                    result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
 
 
                 
 
-                if(result3['suc']>0): 
+                    if(result3['suc']>0): 
 
-                    res_dt = {"suc": 1, "msg": f"Saved Successfully"}
+                        res_dt = {"suc": 1, "msg": f"Saved Successfully"}
 
-                else:
-                    res_dt = {"suc": 0, "msg": f"Error while inserting "}
+                    else:
+                        res_dt = {"suc": 0, "msg": f"Error while inserting "}
 
         else:
 
