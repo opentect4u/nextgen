@@ -2834,7 +2834,8 @@ async def approvepo(id:approveReq):
     
                 balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.req_qty - i.qty
                 approved_qty = int(_res_dt['msg']['approved_qty']) + i.qty if int(_res_dt['msg']['approved_qty'])>0 else i.qty
-                fields1= f'approved_qty="{approved_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}"'
+                approve_flag = 'A'  if int(_res_dt['msg']['approved_qty']) + i.qty == i.req_qty else 'A'
+                fields1= f'approved_qty="{approved_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
                 values1 = f''
                 table_name1 = "td_requisition_items"
                 whr1 = f'sl_no="{i.sl_no}"' 
