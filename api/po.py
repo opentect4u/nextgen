@@ -280,12 +280,18 @@ class AddMin(BaseModel):
 class ProjId(BaseModel):
     Proj_id:int
 
+# class ReqItems(BaseModel):
+#     sl_no:int
+#     item_id:int
+#     rc_qty:int
+#     req_qty:int
+#     stock:int
+
 class ReqItems(BaseModel):
     sl_no:int
     item_id:int
-    rc_qty:int
+    qty:int
     req_qty:int
-    stock:int
 
 class GetMinReq(BaseModel):
     id:int
@@ -301,6 +307,7 @@ class SaveReq(BaseModel):
     user:str
     in_out_flag:int
 class approveReq(BaseModel):
+    # items:list[ReqItems]
     items:list[ReqItems]
     id:int
     status:str
@@ -2802,12 +2809,19 @@ async def approvepo(id:approveReq):
 
             for i in id.items:
 
-                flds= f'date,ref_no,proj_id,item_id,req_qty,qty,in_out_flag,balance,created_by,created_at'
-                val = f'"{formatted_dt}","{id.ref_no}",{id.project_id},{i.item_id},{0},{i.req_qty},{id.in_out_flag}, "(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=id.project_id)-{i.req_qty}","{id.user}","{formatted_dt}"'
-                table = "td_stock_new"
-                whr=f""
-                flag2 =  0
-                result3 = await db_Insert(table, flds, val, whr, flag2)
+                # flds= f'date,ref_no,proj_id,item_id,req_qty,qty,in_out_flag,balance,created_by,created_at'
+                # val = f'"{formatted_dt}","{id.ref_no}",{id.project_id},{i.item_id},{0},{i.req_qty},{id.in_out_flag}, "(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=id.project_id)-{i.req_qty}","{id.user}","{formatted_dt}"'
+                # table = "td_stock_new"
+                # whr=f""
+                # flag2 =  0
+                # result3 = await db_Insert(table, flds, val, whr, flag2)
+                fields1= f'approved_qty="{i.qty}",balance="{i.req_qty}-{i.qty}",modified_by="{id.user}",modified_at="{formatted_dt}"'
+                values1 = f''
+                table_name1 = "td_requisition_items"
+                whr1 = f'sl_no="{i.sl_no}"' 
+                flag2 = 1 
+
+                result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
 
 
                 
