@@ -395,8 +395,35 @@ async def save_trans(data:GetApproveItems):
 
 
                 # ======================================================
-            flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
-            val = f'"{formatted_appr_dt}","{data.trans_no}","{data.to_proj_id}",{i.item_id},{i.qty},{stock_in},"{data.user}","{formatted_dt}"'
+
+            select_stck = f"max(date) as max_dt"
+            schema_stck = "td_stock_new"
+            where_stck= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
+            order_stck = ""
+            flag_stck = 0 
+            result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+
+            select_stck1 = f"max(sl_no) as max_sl"
+            schema_stck1 = "td_stock_new"
+            where_stck1= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
+            order_stck1 = ""
+            flag_stck1 = 0 
+            result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+
+            print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
+
+
+            select_stck2 = f"balance"
+            schema_stck2 = "td_stock_new"
+            where_stck2= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}' and date='{result_stck['msg']['max_dt']}' and sl_no='{result_stck1['msg']['max_sl']}'" 
+            order_stck2 = ""
+            flag_stck2 = 0 
+            result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
+
+            qty = result_stck2['msg']['balance'] + i.qty
+
+            flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
+            val = f'"{formatted_appr_dt}","{data.trans_no}","{data.to_proj_id}",{i.item_id},{i.qty},{stock_in},{qty},"{data.user}","{formatted_dt}"'
             table = "td_stock_new"
             whr=f""
             flag2 =  0
@@ -409,9 +436,35 @@ async def save_trans(data:GetApproveItems):
                 stock_save = 0
 
                 res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+            
+                select_stck = f"max(date) as max_dt"
+            schema_stck = "td_stock_new"
+            where_stck= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
+            order_stck = ""
+            flag_stck = 0 
+            result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
 
-            flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
-            val_out= f'"{formatted_appr_dt}","{data.trans_no}","{data.from_proj_id}",{i.item_id},{i.qty},{stock_out},"{data.user}","{formatted_dt}"'
+            select_stck1 = f"max(sl_no) as max_sl"
+            schema_stck1 = "td_stock_new"
+            where_stck1= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
+            order_stck1 = ""
+            flag_stck1 = 0 
+            result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+
+            print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
+
+
+            select_stck2 = f"balance"
+            schema_stck2 = "td_stock_new"
+            where_stck2= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}' and date='{result_stck['msg']['max_dt']}' and sl_no='{result_stck1['msg']['max_sl']}'" 
+            order_stck2 = ""
+            flag_stck2 = 0 
+            result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
+
+            qty = result_stck2['msg']['balance'] - i.qty
+
+            flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
+            val_out= f'"{formatted_appr_dt}","{data.trans_no}","{data.from_proj_id}",{i.item_id},{i.qty},{stock_out},{qty},"{data.user}","{formatted_dt}"'
             table_out= "td_stock_new"
             whr_out=f""
             flag2_out=  0
