@@ -421,7 +421,7 @@ async def save_trans(data:GetApproveItems):
             flag_stck2 = 0 
             result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
 
-            qty = result_stck2['msg']['balance'] + i.qty
+            qty = result_stck2['msg']['balance'] + i.qty if result_stck2['msg']['balance'] else i.qty
 
             flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
             val = f'"{formatted_appr_dt}","{data.trans_no}","{data.to_proj_id}",{i.item_id},{i.qty},{stock_in},{qty},"{data.user}","{formatted_dt}"'
