@@ -357,7 +357,8 @@ async def getprojectpoc(id:GetStock):
     result1 = await db_select(select1, schema1, where1, order1, flag1)
     print("qty=======",result1['msg']['req_stock'])
 
-    select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty"
+    # select = f"SUM(qty*in_out_flag) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty"
+    select = f"(SELECT SUM(qty*in_out_flag)  td_stock_new where item_id={id.prod_id} and proj_id = {id.proj_id} and proj_id!=0) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty"
     schema = "td_stock_new"
     where = f"item_id={id.prod_id} and proj_id ={id.proj_id}"
     order = ""
@@ -437,7 +438,7 @@ async def save_trans(data:GetApproveItems):
 
                 res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
             
-                select_stck = f"max(date) as max_dt"
+            select_stck = f"max(date) as max_dt"
             schema_stck = "td_stock_new"
             where_stck= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
             order_stck = ""
