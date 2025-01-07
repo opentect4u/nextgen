@@ -386,7 +386,7 @@ async def getprojectpoc(id:GetStock):
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
-    if result1['msg']['req_stock']:
+    if result1['suc']>0:
        return {"result":result,"req_stock":result1['msg']['req_stock']}
     else:
        return {"result":result,"req_stock":0}
