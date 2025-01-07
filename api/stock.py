@@ -481,7 +481,7 @@ async def save_trans(data:GetApproveItems):
 
                 # ======================================================
     
-    res_dt = {"suc": 1, "msg": res_dt2_out}
+    res_dt = {"suc": 1, "msg": res_dt2_out['msg']}
    
     return res_dt
 
