@@ -481,7 +481,7 @@ async def save_trans(data:GetApproveItems):
 
                 # ======================================================
     
-    res_dt = {"suc": 1, "msg": f"Successfully saved!"}
+    res_dt = {"suc": 1, "msg": res_dt2_out}
    
     return res_dt
 
