@@ -88,12 +88,15 @@ async def getprojectpoc(id:Itemwise):
 @reportRouter.post('/get_stock_out_data')
 async def getprojectpoc(id:GetStockOut):
 
-    select_stck1 = f"item_id"
+    select_stck1 = f"distinct item_id as item_id"
     schema_stck1 = "td_stock_new"
     where_stck1= f"proj_id='{id.proj_id}'" 
     order_stck1 = ""
     flag_stck1 = 1 
     result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+
+
+    # for i in result_stck1['msg']['']
 
     # select = f"balance"
     # schema = "td_stock_new"
