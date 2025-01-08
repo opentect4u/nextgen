@@ -23,6 +23,11 @@ class Itemwise(BaseModel):
     dt:str
     item_id:int
 
+class GetStockOut(BaseModel):
+    dt:str
+    item_id:int
+    proj_id:int
+
 class AllItemwise(BaseModel):
     dt:str
 
@@ -79,6 +84,26 @@ async def getprojectpoc(id:Itemwise):
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
     return result
+
+
+@reportRouter.post('/get_stock_out_data')
+async def getprojectpoc(id:GetStockOut):
+
+    select_stck1 = f"max(sl_no) as max_sl"
+    schema_stck1 = "td_stock_new"
+    where_stck1= f"proj_id='{id.proj_id}' and item_id='{id.item_id}'" 
+    order_stck1 = ""
+    flag_stck1 = 0 
+    result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+
+    select = f"balance"
+    schema = "td_stock_new"
+    where = f"sl_no={result_stck1['msg']['max_sl']}"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
 
 @reportRouter.post('/allitemwise')
 async def getprojectpoc(id:AllItemwise):
