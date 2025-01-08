@@ -112,6 +112,7 @@ async def getprojectpoc(id:GetStockOut):
         order = ""
         flag = 0 
         result = await db_select(select, schema, where, order, flag)
+        print(result)
         stock.append(result['msg']['balance'])
 
 
