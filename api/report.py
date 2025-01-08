@@ -97,11 +97,11 @@ async def getprojectpoc(id:GetStockOut):
     print(result_stck1)
     stock = []
 
-    for i in result_stck1['msg']['item_id']:
+    for i in result_stck1['msg']:
         
         select_stck = f"max(sl_no) as max_sl"
         schema_stck = "td_stock_new"
-        where_stck = f"item_id={i}"
+        where_stck = f"item_id={i['item_id']}"
         order_stck = ""
         flag_stck = 1 
         result_stck = await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
