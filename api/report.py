@@ -123,7 +123,7 @@ async def getprojectpoc(id:GetStockOut):
         print(result2)
         stock.append({"id":i['item_id'],"name":i['item_name'],"stock":result['msg']['balance'],"req_stock":result2['msg']['qty']})
 
-        return {'suc':1,'msg':stock}
+    return {'suc':1,'msg':stock}
 
 
 
