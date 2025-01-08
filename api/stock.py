@@ -377,6 +377,14 @@ async def getprojectpoc(id:GetStock):
     order1 = ""
     flag1 = 0 
     result1 = await db_select(select1, schema1, where1, order1, flag1)
+
+
+    select_tot = f"sum(i.req_qty) as tot_stock"
+    schema_tot = "td_requisition t,td_requisition_items i"
+    where_tot = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.req_no=t.req_no"
+    order_tot = ""
+    flag_tot = 0 
+    result_tot = await db_select(select_tot, schema_tot, where_tot, order_tot, flag_tot)
     # print("qty=======",result1['msg']['req_stock'])
 
     select = f"(SELECT SUM(qty*in_out_flag) td_stock_new where item_id={id.prod_id} and proj_id = {id.proj_id} and proj_id!=0) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty"
@@ -387,9 +395,9 @@ async def getprojectpoc(id:GetStock):
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
     if result1['suc']>0:
-       return {"result":result,"req_stock":result1['msg']['req_stock']}
+       return {"result":result,"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock']}
     else:
-       return {"result":result,"req_stock":0}
+       return {"result":result,"req_stock":0,"tot_stock":0}
     
 
 @stockRouter.post("/approve_transfer_items")
