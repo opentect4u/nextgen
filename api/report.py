@@ -123,6 +123,8 @@ async def getprojectpoc(id:GetStockOut):
         print(result2)
         stock.append({"name":i['item_name'],"stock":result['msg']['balance'],"req_stock":result2['msg']['qty']})
 
+        return {'suc':1,'msg':stock}
+
 
 
     # select = f"sum(i.req_qty) req_qty"
