@@ -88,22 +88,29 @@ async def getprojectpoc(id:Itemwise):
 @reportRouter.post('/get_stock_out_data')
 async def getprojectpoc(id:GetStockOut):
 
-    select_stck1 = f"distinct item_id as item_id"
-    schema_stck1 = "td_stock_new"
-    where_stck1= f"proj_id='{id.proj_id}'" 
+    select_stck1 = f"distinct st.item_id as item_id, p.prod_name as item_name"
+    schema_stck1 = "td_stock_new st,md_product p"
+    where_stck1= f"st.proj_id='{id.proj_id}' and st.item_id=p.sl_no" 
     order_stck1 = ""
     flag_stck1 = 1 
     result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
 
 
-    # for i in result_stck1['msg']['']
+    # for i in result_stck1['msg']['item_id']:
 
-    # select = f"balance"
-    # schema = "td_stock_new"
-    # where = f"sl_no={result_stck1['msg']['max_sl']}"
-    # order = ""
-    # flag = 1 
-    # result = await db_select(select, schema, where, order, flag)
+    #     select = f"balance"
+    #     schema = "td_stock_new"
+    #     where = f"sl_no={result_stck1['msg']['max_sl']}"
+    #     order = ""
+    #     flag = 1 
+    #     result = await db_select(select, schema, where, order, flag)
+
+    #     select = f"balance"
+    #     schema = "td_stock_new"
+    #     where = f"sl_no={result_stck1['msg']['max_sl']}"
+    #     order = ""
+    #     flag = 1 
+    #     result = await db_select(select, schema, where, order, flag)
 
 
     # select = f"sum(i.req_qty) req_qty"
