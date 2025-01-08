@@ -25,7 +25,6 @@ class Itemwise(BaseModel):
 
 class GetStockOut(BaseModel):
     dt:str
-    item_id:int
     proj_id:int
 
 class AllItemwise(BaseModel):
