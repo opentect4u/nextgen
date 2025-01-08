@@ -88,7 +88,7 @@ async def getprojectpoc(id:Itemwise):
 @reportRouter.post('/get_stock_out_data')
 async def getprojectpoc(id:GetStockOut):
 
-    select_stck1 = f"sl_no"
+    select_stck1 = f"item_id"
     schema_stck1 = "td_stock_new"
     where_stck1= f"proj_id='{id.proj_id}'" 
     order_stck1 = ""
