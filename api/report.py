@@ -110,7 +110,7 @@ async def getprojectpoc(id:GetStockOut):
         schema = "td_stock_new"
         where = f"sl_no={result_stck['msg']['max_sl']}"
         order = ""
-        flag = 1 
+        flag = 0 
         result = await db_select(select, schema, where, order, flag)
         stock.append(result['msg']['balance'])
 
