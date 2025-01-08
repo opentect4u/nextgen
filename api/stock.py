@@ -31,7 +31,9 @@ class TransferItems(BaseModel):
     item_id:int
     qty:int
     error:int
-
+class StockOutData(BaseModel):
+     id:int
+     stock_out:int
 class SaveTrans(BaseModel):
     sl_no:int
     trans_dt:str
@@ -45,6 +47,12 @@ class SaveTrans(BaseModel):
 class GetStock(BaseModel):
     proj_id:int
     prod_id:int
+
+class StockOutList(BaseModel):
+     proj_id:int
+     dt:str
+     user:str
+     items:list[StockOutData]
 
 class SaveTransPtoP(BaseModel):
     sl_no:int
@@ -568,6 +576,49 @@ async def save_trans(data:GetStock):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@stockRouter.post("/save_stock_out")
+async def save_stock_out(data:StockOutList):
+        current_datetime = datetime.now()
+        
+        formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+        
+        for i in data.items:
+            select_stck = f"max(date) as max_dt"
+            schema_stck = "td_stock_new"
+            where_stck= f"proj_id='{data.proj_id}' and item_id='{i.id}'" 
+            order_stck = ""
+            flag_stck = 0 
+            result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+
+            select_stck1 = f"max(sl_no) as max_sl"
+            schema_stck1 = "td_stock_new"
+            where_stck1= f"proj_id='{data.proj_id}' and item_id='{i.id}'" 
+            order_stck1 = ""
+            flag_stck1 = 0 
+            result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+
+            print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
+
+
+            select_stck2 = f"balance"
+            schema_stck2 = "td_stock_new"
+            where_stck2= f"proj_id='{data.proj_id}' and item_id='{i.id}' and date='{result_stck['msg']['max_dt']}' and sl_no='{result_stck1['msg']['max_sl']}'" 
+            order_stck2 = ""
+            flag_stck2 = 0 
+            result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
+            stock_out=-1
+            qty = result_stck2['msg']['balance'] - i.stock_out
+
+            flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
+            val_out= f'"{formatted_dt}","STK-{formatted_dt}","{data.proj_id}",{i.id},{i.stock_out},{stock_out},{qty},"{data.user}","{formatted_dt}"'
+            table_out= "td_stock_new"
+            whr_out=f""
+            flag2_out=  0
+            result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
+
+        return result3_out
+     
 
 
 
