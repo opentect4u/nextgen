@@ -94,7 +94,7 @@ async def getprojectpoc(id:GetStockOut):
     order_stck1 = ""
     flag_stck1 = 1 
     result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
-
+    print(result_stck1)
     stock = []
 
     for i in result_stck1['msg']['item_id']:
