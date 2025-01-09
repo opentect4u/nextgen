@@ -402,6 +402,7 @@ async def getprojectpoc(id:GetStock):
     order2 = ""
     flag2 = 0 
     result2 = await db_select(select2, schema2, where2, order2, flag2)
+    print(result2)
 
     select = f"(SELECT SUM(qty*in_out_flag) td_stock_new where item_id={id.prod_id} and proj_id = {id.proj_id} and proj_id!=0) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where item_id={id.prod_id} and proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty"
     schema = "td_stock_new"
