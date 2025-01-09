@@ -394,7 +394,7 @@ async def getprojectpoc(id:GetStock):
     order_tot = ""
     flag_tot = 0 
     result_tot = await db_select(select_tot, schema_tot, where_tot, order_tot, flag_tot)
-    # print("qty=======",result1['msg']['req_stock'])
+    print("tot_stock=======",result_tot['msg']['tot_stock'])
 
     select2 = f"sum(qty) as del_stock"
     schema2 = "td_stock_new"
