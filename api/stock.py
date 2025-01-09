@@ -34,6 +34,7 @@ class TransferItems(BaseModel):
 class StockOutData(BaseModel):
      id:int
      stock_out:int
+     req_no:str
 class SaveTrans(BaseModel):
     sl_no:int
     trans_dt:str
@@ -611,7 +612,7 @@ async def save_stock_out(data:StockOutList):
             qty = result_stck2['msg']['balance'] - i.stock_out
 
             flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
-            val_out= f'"{formatted_dt}","STK-{formatted_dt}","{data.proj_id}",{i.id},{i.stock_out},{stock_out},{qty},"{data.user}","{formatted_dt}"'
+            val_out= f'"{formatted_dt}","{i.req_no}","{data.proj_id}",{i.id},{i.stock_out},{stock_out},{qty},"{data.user}","{formatted_dt}"'
             table_out= "td_stock_new"
             whr_out=f""
             flag2_out=  0
