@@ -2611,6 +2611,16 @@ async def item_dtls(data:ProjId):
     res_dt = await db_select(select,table,where,order,flag)
     return res_dt
 
+@poRouter.post("/item_dtls_trans")
+async def item_dtls_req(data:ProjId):
+    select = f"p.prod_name, p.sl_no prod_id, p.article_no, p.part_no, p.model_no, SUM(st.qty * st.in_out_flag) tot_rc_qty, ( SELECT SUM(qty * in_out_flag) FROM `td_stock_new` WHERE item_id = p.sl_no AND proj_id ={data.Proj_id} ) AS project_stock, ( SELECT SUM(qty * in_out_flag) FROM `td_stock_new` WHERE item_id = p.sl_no AND proj_id = '0' ) AS warehouse_stock"
+    table = "td_stock_new st, md_product p"
+    where = f"st.proj_id = {data.Proj_id} AND st.item_id = p.sl_no GROUP BY st.item_id"
+    order = ""
+    flag = 1 
+    res_dt = await db_select(select,table,where,order,flag)
+    return res_dt
+
 
 
 
