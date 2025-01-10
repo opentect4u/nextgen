@@ -113,7 +113,7 @@ async def getprojectpoc(id:GetStockOut):
         flag = 0 
         result = await db_select(select, schema, where, order, flag)
          
-        select_req = f"i.req_qty, i.req_qty as copy_qty,r.req_no as req_no,i.item_id,r.project_id,(select sum(qty) from td_stock_new st where st.item_id={i['item_id']} and st.project_id={id.proj_id} and st.req_no=r.req_no) del_qty"
+        select_req = f"i.req_qty, i.req_qty as copy_qty,r.req_no as req_no,i.item_id,r.project_id,(select sum(qty) from td_stock_new st where st.item_id={i['item_id']} and st.proj_id={id.proj_id} and st.req_no=r.req_no) del_qty"
         schema_req = "td_requisition_items i,td_requisition r"
         where_req = f"i.item_id={i['item_id']} and r.project_id={id.proj_id} and i.approve_flag='A' and i.req_no=r.req_no"
         order_req = ""
