@@ -410,7 +410,6 @@ async def getprojectpoc(id:GetStock):
     order = ""
     flag =1 
     result = await db_select(select, schema, where, order, flag)
-    print(result['msg']['project_stock'], 'RESULT')
     if result1['suc']>0:
        return {"result":result,"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock'] - result2['msg']['del_stock'] if result_tot['msg']['tot_stock'] else 0}
     else:
