@@ -408,7 +408,7 @@ async def getprojectpoc(id:GetStock):
     schema = "td_stock_new"
     where = f"item_id={id.prod_id} and proj_id ={id.proj_id}"
     order = ""
-    flag = 1 
+    flag =0 
     result = await db_select(select, schema, where, order, flag)
     print(result['msg']['project_stock'], 'RESULT')
     if result1['suc']>0:
