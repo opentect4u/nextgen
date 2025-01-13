@@ -1973,7 +1973,9 @@ async def getprojectpoc(id:GetStock):
     # print(result, 'RESULT')
     if result1['suc']>0:
       # return {"result":result,"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock'] - result2['msg']['del_stock']}
-       return {"result":result,"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock'] - result2['msg']['del_stock'] if result_tot['msg']['tot_stock'] and result2['msg']['del_stock'] else result_tot['msg']['tot_stock'] if result_tot['msg']['tot_stock'] else 0}
+    #   return {"result":result,"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock'] - result2['msg']['del_stock'] if result_tot['msg']['tot_stock'] else 0}
+     print(result_tot['msg']['tot_stock'],result2['msg']['del_stock'])
+     return {"result":result,"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock'] - result2['msg']['del_stock'] if result_tot['msg']['tot_stock'] and result2['msg']['del_stock'] else result_tot['msg']['tot_stock'] if result_tot['msg']['tot_stock'] else 0}
     else:
        return {"result":result,"req_stock":0,"tot_stock":0}
     # print(result, 'RESULT')
