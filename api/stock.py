@@ -626,6 +626,9 @@ async def save_stock_out(data:StockOutList):
             result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
 
         return result3_out
+
+
+
      
 
 
