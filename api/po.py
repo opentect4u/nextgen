@@ -3596,7 +3596,7 @@ async def savestockreturn(dt:StockReturn):
             if result_stck['msg']['max_dt'] and result_stck1['msg']['max_sl']:
                  select_stck2 = f"balance,count(balance) as cnt"
                  schema_stck2 = "td_stock_new"
-                 where_stck2= f"proj_id='{dt.proj_id}'') and item_id='{dt.item_id}' and date='{result_stck['msg']['max_dt']}' and sl_no='{result_stck1['msg']['max_sl']}'" 
+                 where_stck2= f"proj_id='{dt.proj_id}') and item_id='{dt.item_id}' and date='{result_stck['msg']['max_dt']}' and sl_no='{result_stck1['msg']['max_sl']}'" 
                  order_stck2 = ""
                  flag_stck2 = 0 
                  result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
