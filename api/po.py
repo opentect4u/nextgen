@@ -3538,6 +3538,18 @@ async def getMinReq(id:GetMinReq):
     result = await db_select(select, schema, where, order, flag)
     return result
 
+@poRouter.post('/get_stock_return')
+async def getMinReq(dt:GetStock):
+    res_dt = {}
+    select = "ref_no,balance"
+    schema = "td_stock_new"
+    where = f"proj_id={dt.proj_id} and item_id={dt.prod_id}"
+    order = ""
+    flag = 1
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
+
 
 
 
