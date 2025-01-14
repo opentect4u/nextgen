@@ -3591,7 +3591,7 @@ async def savestockreturn(dt:StockReturn):
             flag_stck1 = 0 
             result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
 
-            # print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
+            print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
 
             if result_stck['msg']['max_dt'] and result_stck1['msg']['max_sl']:
                  select_stck2 = f"balance,count(balance) as cnt"
