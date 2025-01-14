@@ -3541,7 +3541,7 @@ async def getMinReq(id:GetMinReq):
 @poRouter.post('/get_stock_return')
 async def getMinReq(dt:GetStock):
     res_dt = {}
-    select = "ref_no,qty"
+    select = "sl_no,ref_no,qty"
     schema = "td_stock_new"
     where = f"proj_id={dt.proj_id} and item_id={dt.prod_id} and in_out_flag=-1"
     order = ""
