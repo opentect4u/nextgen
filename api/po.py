@@ -3552,7 +3552,7 @@ async def getMinReq(id:GetMinReq):
 @poRouter.post('/get_stock_return')
 async def getMinReq(dt:GetStock):
     res_dt = {}
-    select = "sl_no,ref_no,qty, (select sum(qty) from td_stock_new where proj_id='{dt.proj_id}' and item_id='{dt.item_id}' and ref_no='RET{ref_no}') as return_qty"
+    select = f"sl_no,ref_no,qty"
     schema = "td_stock_new"
     where = f"proj_id={dt.proj_id} and item_id={dt.prod_id} and in_out_flag=-1"
     order = ""
@@ -3613,6 +3613,13 @@ async def savestockreturn(dt:StockReturn):
             whr=f""
             flag2 =  0
             result3 = await db_Insert(table, flds, val, whr, flag2)
+
+            flds11= f'ret_dt,ref_no,proj_id,item_id,qty,created_by,created_at'
+            val11 = f'"{dt.dt}","RET-{i.ref_no}",{dt.proj_id},{dt.item_id},{i.ret_qty},"{dt.user}","{formatted_dt}"'
+            table11 = "td_return_items"
+            whr11=f""
+            flag11 =  0
+            result11 = await db_Insert(table11, flds11, val11, whr11, flag11)
             if(result3['suc']>0): 
                 stock_save = 1
                 res_dt2 = {"suc": 1, "msg": f"Updated Successfully "}
