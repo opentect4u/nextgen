@@ -608,7 +608,19 @@ async def getprojectpoc(id:GetPo):
     schema = '''td_po_basic b
 left join td_project p ON p.sl_no=b.project_id
 join md_vendor v ON v.sl_no=b.vendor_id left join td_po_delivery del on b.sl_no = del.po_sl_no 
-join (SELECT @a:= 0) AS a '''
+join (SELECT @a:= 0) AS a 
+JOIN (
+   SELECT d.po_no
+    FROM td_po_basic d WHERE d.amend_flag = 'N' AND d.po_no is NOT null
+    HAVING (SELECT COUNT(*) FROM td_po_basic e WHERE e.po_no LIKE CONCAT(d.po_no, '%')) = 1
+    UNION
+    SELECT MAX(po_no) po_no
+    FROM td_po_basic
+    WHERE amend_flag = 'Y' AND po_no is NOT null
+    GROUP BY SUBSTRING_INDEX(po_no,'-',1)
+) c ON c.po_no=b.po_no
+
+'''
     where = f"b.sl_no='{id.id}' and b.po_status IN ('P','U','A','L','D')" if id.id>0 else "b.po_status IN ('P','U','A','L','D') OR (amend_flag = 'Y' AND parent_po_no IS NOT NULL)"
     order = "ORDER BY b.created_at DESC"
     flag = 0 if id.id>0 else 1
