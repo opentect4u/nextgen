@@ -542,7 +542,7 @@ async def getprojectpoc(id:PoSearch):
    
     res_dt = {}
 
-    select = "t.trans_no,t.from_proj_id,t.to_proj_id,i.item_id,p.prod_name,p.prod_make,p.part_no,(select proj_name from td_project where sl_no=t.to_proj_id) to_proj_name,(select proj_name from td_project where sl_no=t.from_proj_id) from_proj_name"
+    select = "t.sl_no,t.trans_no,t.from_proj_id,t.to_proj_id,i.item_id,p.prod_name,p.prod_make,p.part_no,(select proj_name from td_project where sl_no=t.to_proj_id) to_proj_name,(select proj_name from td_project where sl_no=t.from_proj_id) from_proj_name"
     schema = '''td_transfer t left join td_transfer_items i on t.trans_no=i.trans_no
 left join md_product p ON p.sl_no=i.item_id 
 '''
