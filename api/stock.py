@@ -554,7 +554,7 @@ left join md_product p ON p.sl_no=i.item_id
     if(id.part_no != ''):
         where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.make!='') else ''}"
     if(id.prod_id != ''):
-        where += f"i.item_id='{id.prod_id}' {"AND " if(id.make!='') else ''}"
+        where += f"i.item_id='{id.prod_id}' {"AND " if id.make else ''}"
     if(id.make):
          where += f"p.prod_make like '%{id.make}%' "
     # if(id.to_dt != '' or id.from_dt != ''):
