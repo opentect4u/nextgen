@@ -2927,18 +2927,17 @@ async def approvepo(id:approveReq):
                 res_dt = await db_select(select,table,where,order,flag)
                 print('dfdfdfdf',res_dt['msg'])
 
-                _select = "approved_qty"
+                _select = "cancelled_qty"
                 _table = "td_requisition_items"
                 _where = f"sl_no={i.sl_no}"
                 _order = ""
                 _flag = 0 
                 _res_dt = await db_select(_select,_table,_where,_order,_flag)
-                print('dfdfdfdf',_res_dt['msg'])
                 if i.qty>0:
                     balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.req_qty - i.qty
-                    approved_qty = int(_res_dt['msg']['approved_qty']) + i.qty if int(_res_dt['msg']['approved_qty'])>0 else i.qty
-                    approve_flag = 'A'  if approved_qty == i.req_qty else 'H'
-                    fields1= f'approved_qty="{approved_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
+                    cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
+                    cancel_flag = 'R'  if cancelled_qty == i.req_qty else 'H'
+                    fields1= f'cancelled_qty="{cancelled_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{cancel_flag}"'
                     values1 = f''
                     table_name1 = "td_requisition_items"
                     whr1 = f'sl_no="{i.sl_no}"' 
@@ -3568,7 +3567,7 @@ async def getMinReq(id:GetMinReq):
     select = "distinct r.sl_no,r.req_no,r.approve_flag,r.reason,r.intended_for,r.req_date,r.project_id,r.client_id,r.req_type,r.purpose,m.req_no as min_req_no"
     schema = "td_requisition r,td_min m"
     where = f"r.delete_flag='N' and r.req_no=m.req_no "
-    order = ""
+    order = "ORDER BY r.modified_at,r.created_at DESC"
     flag = 1
     result = await db_select(select, schema, where, order, flag)
     return result
