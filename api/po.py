@@ -3165,6 +3165,18 @@ async def getprojectpoc(id:PoSearch):
     select = "b.po_no,b.sl_no,b.fresh_flag,b.po_status,b.amend_flag,b.project_id,b.vendor_id,v.vendor_name,d.proj_name,b.po_issue_date,i.item_id,p.prod_name,p.prod_make,p.part_no,b.created_by,b.created_at"
     schema = '''td_po_basic b left join td_po_items i on b.sl_no = i.po_sl_no
 left join md_product p ON p.sl_no=i.item_id left join md_vendor v on b.vendor_id=v.sl_no left join td_project d on b.project_id = d.sl_no
+JOIN (
+   SELECT d.po_no
+    FROM td_po_basic d WHERE d.amend_flag = 'N' AND d.po_no is NOT null
+    HAVING (SELECT COUNT(*) FROM td_po_basic e WHERE e.po_no LIKE CONCAT(d.po_no, '%')) = 1
+    UNION
+    SELECT MAX(po_no) po_no
+    FROM td_po_basic
+    WHERE amend_flag = 'Y' AND po_no is NOT null
+    GROUP BY SUBSTRING_INDEX(po_no,'-',1)
+) c ON c.po_no=b.po_no
+
+
 '''
     where = ""
     if(id.project_id != 0 and id.project_id != ""):
