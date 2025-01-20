@@ -392,7 +392,7 @@ left join md_user u ON u.sl_no=a.proj_manager left join md_client c on c.sl_no=p
     if(id.client != 0 and id.client != ""):
         where += f"p.client_id='{id.client}' {"AND " if(id.delivery_dt_to != '' or id.delivery_dt_from != ''  or id.order_dt_to != '' or id.order_dt_from != ''  or id.order_val_to != 0 or id.order_val_from != 0 ) else ''}"
     if(id.order_val_from != 0):
-        where += f'''(p.proj_order_val BETWEEN "{f'{id.order_val_from}' if(id.order_val_from != 0) else ''}" and "{f'{id.order_val_to}' if(id.order_val_to != 0) else ''}") {"AND " if(id.delivery_dt_to != '' or id.delivery_dt_from != ''  or id.order_dt_to != '' or id.order_dt_from != '') else ''}'''
+        where += f'''(p.proj_order_val BETWEEN {f'{id.order_val_from}' if(id.order_val_from != 0) else 0} and {f'{id.order_val_to}' if(id.order_val_to != 0) else 0}) {"AND " if(id.delivery_dt_to != '' or id.delivery_dt_from != ''  or id.order_dt_to != '' or id.order_dt_from != '') else ''}'''
     if(id.order_dt_from != '' or id.order_dt_from != ''):
         where += f'''(p.order_date BETWEEN "{f'{id.order_dt_from}' if(id.order_dt_from != '') else ''}" and "{f'{id.order_dt_to}' if(id.order_dt_to != '') else ''}") {"AND " if(id.delivery_dt_to != '' or id.delivery_dt_from != '') else ''}'''
     if(id.delivery_dt_from != '' or id.delivery_dt_from != ''):
