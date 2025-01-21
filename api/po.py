@@ -3738,7 +3738,7 @@ async def getprojectpoc(sl_no:CheckPo):
     order1 = ""
     flag1 = 0
     result1 = await db_select(select1, schema1, where1, order1, flag1)
-
+    print(result1, 'RESULT1')
     select = "count(*) as cnt"
     schema = "td_item_delivery_invoice"
     where = f"po_no='{result1['msg']['po_no']}'"
