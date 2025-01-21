@@ -3734,7 +3734,7 @@ async def getprojectpoc(sl_no:CheckPo):
     res_dt = {}
     select1 = "po_no"
     schema1 = "td_po_basic"
-    where1 = f"po_no={sl_no.sl_no}"
+    where1 = f"sl_no={sl_no.sl_no}"
     order1 = ""
     flag1 = 0
     result1 = await db_select(select1, schema1, where1, order1, flag1)
