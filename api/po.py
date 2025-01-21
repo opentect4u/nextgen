@@ -3741,7 +3741,7 @@ async def getprojectpoc(sl_no:CheckPo):
     print(result1, 'RESULT1')
     select = "count(*) as cnt"
     schema = "td_item_delivery_invoice"
-    where = f"po_no='{result1['msg']['po_no']}'"
+    where = f"po_no like '%{result1['msg']['po_no']}%'"
     order = ""
     flag = 0
     result = await db_select(select, schema, where, order, flag)
