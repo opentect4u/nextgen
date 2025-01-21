@@ -150,6 +150,9 @@ class approvePO(BaseModel):
 class deleteMrn(BaseModel):
     id:str
 
+class CheckPo(BaseModel):
+    po_no:str
+
 class getComments(BaseModel):
     id:int
     comments:str
@@ -3727,11 +3730,11 @@ async def savestockreturn(dt:StockReturn):
 
 
 @poRouter.post('/check_po_list')
-async def getprojectpoc(id:GetPo):
+async def getprojectpoc(po_no:CheckPo):
     res_dt = {}
-    select = "po_no,item_id"
-    schema = "td_mdcc_doc"
-    where = f"po_no='{po_no.po_no}' and delete_flag='N'"
+    select = "count(*) as cnt"
+    schema = "td_item_delivery_invoice"
+    where = f"po_no='{po_no.po_no}'"
     order = ""
     flag = 1 if po_no.po_no else 0
     result = await db_select(select, schema, where, order, flag)
