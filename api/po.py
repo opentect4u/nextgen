@@ -151,7 +151,7 @@ class deleteMrn(BaseModel):
     id:str
 
 class CheckPo(BaseModel):
-    po_no:str
+    sl_no:int
 
 class getComments(BaseModel):
     id:int
@@ -3730,13 +3730,20 @@ async def savestockreturn(dt:StockReturn):
 
 
 @poRouter.post('/check_po_list')
-async def getprojectpoc(po_no:CheckPo):
+async def getprojectpoc(sl_no:CheckPo):
     res_dt = {}
+    select1 = "po_no"
+    schema1 = "td_po_basic"
+    where1 = f"po_no={sl_no.sl_no}"
+    order1 = ""
+    flag1 = 1 if sl_no.sl_no else 0
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+
     select = "count(*) as cnt"
     schema = "td_item_delivery_invoice"
-    where = f"po_no='{po_no.po_no}'"
+    where = f"po_no='{result1['msg']['po_no']}'"
     order = ""
-    flag = 1 if po_no.po_no else 0
+    flag = 1 
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
