@@ -51,9 +51,7 @@ class PurchaseItems(BaseModel):
     error:int
 class SavePur(BaseModel):
     sl_no:int
-    trans_dt:str
-    intended_for:str
-    client_id:int
+    pur_dt:str
     project_id:int
     purpose:str   
     items:list[PurchaseItems]
