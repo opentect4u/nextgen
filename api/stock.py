@@ -647,7 +647,7 @@ async def save_trans(data:SavePur):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
-    fields= f"pur_no,pur_dt,proj_id,pur_by,created_by,created_at,req_by"
+    fields= f"pur_no,pur_date,proj_id,pur_by,created_by,created_at,req_by"
     values = f"'PR-{purno}','{data.project_id}','{data.pur_dt}', '{data.user}','{formatted_dt}','{data.user}'"
     table_name = "td_purchase_req"
     whr = ""
