@@ -641,7 +641,7 @@ async def save_stock_out(data:StockOutList):
 
 
 @stockRouter.post("/save_pur_req")
-async def save_trans(data:SaveTrans):
+async def save_trans(data:SavePur):
     res_dt = {}
     print(data)
     current_datetime = datetime.now()
