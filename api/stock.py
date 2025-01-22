@@ -647,7 +647,7 @@ async def save_trans(data:SavePur):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
-    fields= f"pur_no,pur_date,pur_proj,pur_by,created_by,created_at"
+    fields= f"pur_no,pur_date,pur_proj,pur_by,created_at,created_by"
     values = f"'PR-{purno}','{data.pur_dt}','{data.project_id}', '{data.user}','{formatted_dt}','{data.user}'"
     table_name = "td_purchase_req"
     whr = ""
@@ -683,6 +683,20 @@ async def save_trans(data:SavePur):
             
     
     return res_dt
+
+
+@stockRouter.post("/get_purchase_req")
+async def save_trans(data:GetTrans):
+    res_dt = {}
+
+    select = "t.pur_no,t.pur_dt,t.created_by,t.created_at,t.sl_no,p.proj_name"
+    schema = "td_purchase_req t,td_project p"
+    where = f"t.sl_no='{data.id}' and p.sl_no=t.to_proj_id" if data.id>0 else f"p.sl_no=t.to_proj_id"
+    order = "ORDER BY t.created_at DESC"
+    flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
 
 
 
