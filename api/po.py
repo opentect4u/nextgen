@@ -2676,10 +2676,6 @@ async def item_dtls_req(data:ProjId):
     res_dt = await db_select(select,table,where,order,flag)
     return res_dt
 
-
-
-
-
 @poRouter.post('/save_requisition')
 async def save_requisition(data:SaveReq):
     res_dt = {}

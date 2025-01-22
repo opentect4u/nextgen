@@ -44,6 +44,20 @@ class SaveTrans(BaseModel):
     purpose:str   
     items:list[TransferItems]
     user:str
+class PurchaseItems(BaseModel):
+    sl_no:int
+    item_id:int
+    qty:int
+    error:int
+class SavePur(BaseModel):
+    sl_no:int
+    trans_dt:str
+    intended_for:str
+    client_id:int
+    project_id:int
+    purpose:str   
+    items:list[PurchaseItems]
+    user:str
 
 class GetStock(BaseModel):
     proj_id:int
@@ -167,8 +181,8 @@ async def save_trans(data:SaveTrans):
     lastID=result["lastId"]
     #========================================================================================================
     for i in data.items:
-                fields= f'trans_no,item_id,qty,created_by,created_at'
-                values = f"'TWP-{tno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}'"
+                fields= f'trans_no,item_id,qty,created_by,created_at,approved_qty,balance'
+                values = f"'TWP-{tno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}',{'0'},'{i.qty}'"
                 table_name = "td_transfer_items"
                 whr=""
                 # flag1 = 1 if v.sl_no>0 else 0
@@ -262,8 +276,8 @@ async def save_trans(data:SaveTransPtoP):
     lastID=result["lastId"]
     #========================================================================================================
     for i in data.items:
-                fields= f'trans_no,item_id,qty,created_by,created_at'
-                values = f"'TPP-{tno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}'"
+                fields= f'trans_no,item_id,qty,created_by,created_at,approved_qty,balance'
+                values = f"'TPP-{tno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}',{'0'},'{i.qty}'"
                 table_name = "td_transfer_items"
                 whr=""
                 # flag1 = 1 if v.sl_no>0 else 0
@@ -314,7 +328,6 @@ async def save_trans(data:GetTrans):
     order1 = "ORDER BY created_at DESC"
     flag1 = 0 
     result1= await db_select(select1, schema1, where1, order1, flag1)
-    print('client_id=',result1['msg']['client_id'])
     res_dt = {}
     select = f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.from_proj_id,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for,t.client_id,c.client_name,(select proj_name from td_project where sl_no=t.from_proj_id) as from_proj_name" if result1['msg']['client_id']>0 else f"t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,t.to_proj_id,t.purpose,t.intended_for,(select proj_name from td_project where sl_no=t.from_proj_id) as from_proj_name"
     schema = f"td_transfer t,td_project p,md_client c" if result1['msg']['client_id']>0 else "td_transfer t,td_project p"
@@ -431,7 +444,7 @@ async def save_trans(data:GetApproveItems):
             flag1 = 0 
             result1= await db_select(select1, schema1, where1, order1, flag1)
             if i.approve_flag=='A' and result1['msg']['approve_flag']!='A':
-                fields= f"approve_flag='{i.approve_flag}',approved_by='{data.user}',approved_at='{formatted_dt}'"
+                fields= f"approve_flag='{i.approve_flag}',approved_by='{data.user}',approved_at='{formatted_dt}', approved_qty={i.qty}"
                 values = f''
                 table_name = "td_transfer_items"
                 whr=f"trans_no='{data.trans_no}' and sl_no={i.sl_no}"   
@@ -469,7 +482,6 @@ async def save_trans(data:GetApproveItems):
                  order_stck2 = ""
                  flag_stck2 = 0 
                  result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
-                 print(result_stck2)
                  qty = result_stck2['msg']['balance'] + i.qty 
             else:
                  qty=i.qty
@@ -626,6 +638,54 @@ async def save_stock_out(data:StockOutList):
             result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
 
         return result3_out
+
+
+@stockRouter.post("/save_pur_req")
+async def save_trans(data:SaveTrans):
+    res_dt = {}
+    print(data)
+    current_datetime = datetime.now()
+    purno = int(round(current_datetime.timestamp()))
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+
+    fields= f"pur_no,pur_dt,proj_id,pur_by,created_by,created_at,req_by"
+    values = f"'PR-{purno}','{data.project_id}','{data.pur_dt}', '{data.user}','{formatted_dt}','{data.user}'"
+    table_name = "td_purchase_req"
+    whr = ""
+    flag = 0
+    result = await db_Insert(table_name, fields, values, whr, flag)
+    lastID=result["lastId"]
+    #========================================================================================================
+    for i in data.items:
+                fields= f'pur_no,item_id,qty,created_by,created_at'
+                values = f"'PR-{purno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}'"
+                table_name = "td_purchase_items"
+                whr=""
+                # flag1 = 1 if v.sl_no>0 else 0
+                flag1 = 1 if data.sl_no>0 else 0
+                result2 = await db_Insert(table_name, fields, values, whr, flag1)
+            
+
+                if(result2['suc']>0): 
+
+                    res_dt2 = {"suc": 1, "msg": f"Saved Successfully"}
+
+                else:
+                    res_dt2= {"suc": 0, "msg": f"Error while inserting"}
+            # else:
+            #     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+
+    #===========================================================================================================
+
+    if result['suc']>0 :
+                res_dt = {"suc": 1, "msg": f"Saved Successfully"}
+    else:
+                 res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
+            
+    
+    return res_dt
+
 
 
 
