@@ -82,7 +82,7 @@ class GetTrans(BaseModel):
      id:int
 
 class GetPurItem(BaseModel):
-     pur_no:int
+     pur_no:str
 
 class GetTransItem(BaseModel):
      trans_no:str
@@ -692,7 +692,7 @@ async def save_trans(data:SavePur):
 async def save_trans(data:GetTrans):
     res_dt = {}
 
-    select = "t.sl_no,t.pur_no,t.pur_date,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id"
+    select = "t.pur_no,t.pur_date,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id"
     schema = "td_purchase_req t,td_project p"
     where = f"t.sl_no='{data.id}' and p.sl_no=t.pur_proj" if data.id>0 else f"p.sl_no=t.pur_proj"
     order = "ORDER BY t.created_at DESC"
