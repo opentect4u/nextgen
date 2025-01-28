@@ -81,6 +81,9 @@ class SaveTransPtoP(BaseModel):
 class GetTrans(BaseModel):
      id:int
 
+class GetPurItem(BaseModel):
+     pur_no:int
+
 class GetTransItem(BaseModel):
      trans_no:str
 
@@ -689,11 +692,25 @@ async def save_trans(data:SavePur):
 async def save_trans(data:GetTrans):
     res_dt = {}
 
-    select = "t.pur_no,t.pur_date,t.created_by,t.created_at,t.sl_no,p.proj_name"
+    select = "t.sl_no,t.pur_no,t.pur_date,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id"
     schema = "td_purchase_req t,td_project p"
     where = f"t.sl_no='{data.id}' and p.sl_no=t.pur_proj" if data.id>0 else f"p.sl_no=t.pur_proj"
     order = "ORDER BY t.created_at DESC"
     flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
+@stockRouter.post("/get_purchase_req_items")
+async def save_trans(data:GetPurItem):
+    res_dt = {}
+
+    select = "*"
+    schema = "td_purchase_items"
+    where = f"pur_no='{data.pur_no}'"
+    order = ""
+    flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
