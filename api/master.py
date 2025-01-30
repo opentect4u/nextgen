@@ -651,7 +651,7 @@ async def deletevendor(id:deleteData):
 
 @masterRouter.post('/addproduct')
 async def addproduct(data:addProduct):
-    print(data)
+    print(data, '\\"'.join(data.p_detailed.split('"')), '---------------------')
     res_dt = {}
 
     current_datetime = datetime.now()
