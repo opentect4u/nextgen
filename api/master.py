@@ -657,7 +657,7 @@ async def addproduct(data:addProduct):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code, prod_desc,created_by,created_at'
-    values = f'"{data.p_name}","{data.p_cat}","{data.p_make}","{data.p_part}","{data.p_model}","{data.p_article}","{data.p_hsn}","{data.p_detailed}","{data.user}","{formatted_dt}"'
+    values = f'"{data.p_name.split('"').join('\"')}","{data.p_cat}","{data.p_make.split('"').join('\"')}","{data.p_part}","{data.p_model}","{data.p_article}","{data.p_hsn}","{data.p_detailed.split('"').join('\"')}","{data.user}","{formatted_dt}"'
     table_name = "md_product"
     whr =  None
     flag = 1 if data.p_id>0 else 0
