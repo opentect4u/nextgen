@@ -674,8 +674,8 @@ async def addproduct(data:addProduct):
             res_dt = {"suc": 0, "msg": "Error while saving!"}
     else:
         print(flag)
-        fields=f'prod_name="{data.p_name}",prod_cat="{data.p_cat}",prod_make="{data.p_make}",part_no="{data.p_part}",model_no="{data.p_model}",article_no="{data.p_article}",hsn_code="{data.p_hsn}",prod_desc="{data.p_detailed}",modified_by="{data.user}",modified_at="{formatted_dt}"'
-        whr=f'sl_no="{data.p_id}"'
+        fields=f''''prod_name="{p_name}",prod_cat="{data.p_cat}",prod_make="{p_make}",part_no="{data.p_part}",model_no="{data.p_model}",article_no="{data.p_article}",hsn_code="{data.p_hsn}",prod_desc="{p_detailed}",modified_by="{data.user}",modified_at="{formatted_dt}"'
+        whr=f'sl_no="{data.p_id}"'''
         result = await db_Insert(table_name, fields, values, whr, flag)
         if(result['suc']>0):
             res_dt = {"suc": 1, "msg": "Product updated successfully!"}
