@@ -654,10 +654,13 @@ async def addproduct(data:addProduct):
     print(data, f'''"{'\\"'.join(data.p_detailed.split('"'))}"''', '---------------------')
     res_dt = {}
 
+    p_detailed = data.p_detailed.replace('"', '\\"')
+    p_name = data.p_name.replace('"', '\\"')
+    p_make = data.p_make.replace('"', '\\"')
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     fields= f'prod_name,prod_cat,prod_make,part_no,model_no,article_no,hsn_code, prod_desc,created_by,created_at'
-    values = f'''"{'\\"'.join(data.p_name.split('"'))}","{data.p_cat}","{'\\"'.join(data.p_make.split('"'))}","{data.p_part}","{data.p_model}","{data.p_article}","{data.p_hsn}","{'\\"'.join(data.p_detailed.split('"'))}","{data.user}","{formatted_dt}"'''
+    values = f'''"{p_name}","{data.p_cat}","{p_make}","{data.p_part}","{data.p_model}","{data.p_article}","{data.p_hsn}","{p_detailed}","{data.user}","{formatted_dt}"'''
     table_name = "md_product"
     whr =  None
     flag = 1 if data.p_id>0 else 0
