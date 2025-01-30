@@ -1284,7 +1284,7 @@ async def fetch_permission(user_type_id:getMenu):
 async def check_product(wrd:getPhrase):
     select = "count(*) as count,prod_name,prod_desc,prod_make"
     schema = "md_product"
-    where = f"prod_name='{wrd.wrd}' group by prod_name"
+    where = f"prod_name='{wrd.wrd}' group by prod_name,prod_desc,prod_make"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
@@ -1296,7 +1296,7 @@ async def check_product(wrd:getPhrase):
 async def check_product(wrd:getPhrase):
     select = "count(*) as count,prod_name,prod_desc,prod_make"
     schema = "md_product"
-    where = f"prod_name like '%{wrd.wrd}%' group by prod_name"
+    where = f"prod_name like '%{wrd.wrd}%' group by prod_name,prod_desc,prod_make"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
