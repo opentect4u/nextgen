@@ -3640,7 +3640,7 @@ async def getMinReq(dt:GetStock):
     res_dt = {}
     select = f"st.sl_no,st.ref_no,st.qty,sum(r.qty) as return_qty"
     schema = "td_stock_new st, td_return_items r"
-    where = f"st.proj_id={dt.proj_id} and st.item_id={dt.prod_id} and st.in_out_flag=-1 and r.ref_no=CONCAT('RET-',st.ref_no)"
+    where = f"st.proj_id={dt.proj_id} and st.item_id={dt.prod_id} and st.in_out_flag=-1 and r.ref_no=CONCAT('REQ-',st.ref_no)"
     order = ""
     flag = 1
     result = await db_select(select, schema, where, order, flag)
