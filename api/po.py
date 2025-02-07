@@ -3647,9 +3647,9 @@ async def getMinReq(dt:GetStock):
     # return result
 
     res_dt = {}
-    select = f"distinct req.sl_no,req.req_no,r.approved_qty as qty_to_return"
-    schema = "td_requisition req, td_requisition_items r"
-    where = f"req.project_id={dt.proj_id} and r.item_id={dt.prod_id}"
+    select = f"distinct req.sl_no,req.req_no,r.approved_qty as qty_to_return,st.qty as stock_out_qty"
+    schema = "td_requisition req, td_requisition_items r,td_stock_new st"
+    where = f"req.project_id={dt.proj_id} and r.item_id={dt.prod_id} and st.ref_no=req.req_no"
     order = ""
     flag = 1
     result = await db_select(select, schema, where, order, flag)
