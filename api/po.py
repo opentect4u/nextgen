@@ -3656,81 +3656,95 @@ async def getMinReq(dt:GetStock):
     return result
 
 
+# @poRouter.post('/save_stock_return')
+# async def savestockreturn(dt:StockReturn):
+#     current_datetime = datetime.now()
+#     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+#     in_out_flag=1
+#     for i in dt.items:
+#             # =========================================
+
+#             select_stck = f"max(date) as max_dt"
+#             schema_stck = "td_stock_new"
+#             where_stck= f"proj_id='{dt.proj_id}' and item_id='{dt.item_id}'" 
+#             order_stck = ""
+#             flag_stck = 0 
+#             result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+
+#             select_stck1 = f"max(sl_no) as max_sl"
+#             schema_stck1 = "td_stock_new"
+#             where_stck1= f"proj_id='{dt.proj_id}' and item_id='{dt.item_id}'" 
+#             order_stck1 = ""
+#             flag_stck1 = 0 
+#             result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+
+#             print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
+
+#             if result_stck['msg']['max_dt'] and result_stck1['msg']['max_sl']:
+#                  select_stck2 = f"balance,count(balance) as cnt"
+#                  schema_stck2 = "td_stock_new"
+#                  where_stck2= f"proj_id='{dt.proj_id}' and item_id='{dt.item_id}' and date='{result_stck['msg']['max_dt']}' and sl_no='{result_stck1['msg']['max_sl']}'" 
+#                  order_stck2 = ""
+#                  flag_stck2 = 0 
+#                  result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
+#                  print(result_stck2)
+#                  qty = result_stck2['msg']['balance'] + i.ret_qty 
+#             else:
+#                  qty=i.ret_qty
+
+
+#             # =========================================
+#             flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
+#             val = f'"{dt.dt}","RET-{i.ref_no}",{dt.proj_id},{dt.item_id},{i.ret_qty},{in_out_flag},{qty},"{dt.user}","{formatted_dt}"'
+#             table = "td_stock_new"
+#             whr=f""
+#             flag2 =  0
+#             result3 = await db_Insert(table, flds, val, whr, flag2)
+
+#             flds11= f'ret_dt,ref_no,proj_id,item_id,qty,created_by,created_at'
+#             val11 = f'"{dt.dt}","RET-{i.ref_no}",{dt.proj_id},{dt.item_id},{i.ret_qty},"{dt.user}","{formatted_dt}"'
+#             table11 = "td_return_items"
+#             whr11=f""
+#             flag11 =  0
+#             result11 = await db_Insert(table11, flds11, val11, whr11, flag11)
+#             if(result3['suc']>0): 
+#                 stock_save = 1
+#                 res_dt2 = {"suc": 1, "msg": f"Updated Successfully "}
+
+#             else:
+#                 stock_save = 0
+
+#                 res_dt2= {"suc": 0, "msg": f"Error while inserting into stock"}
+   
+
+   
+#     if stock_save:
+#         res_dt = {"suc": 1, "msg": f"Action Successful!","msg2":res_dt2}
+#     else:
+#         res_dt = {"suc": 0, "msg": f"Error while saving!" ,"msg2":res_dt2}
+    
+#     return res_dt
+
 @poRouter.post('/save_stock_return')
 async def savestockreturn(dt:StockReturn):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    # fields= f'approve_flag="{id.status}",modified_by="{id.user}",rejection_note="{id.rej_note}",modified_at="{formatted_dt}"'
-    # values = f''
-    # table_name = "td_item_delivery_invoice"
-    # whr = f'invoice="{id.inv_no}" and po_no="{id.po_no}"'
-    # flag = 1 
-    # stock_save = 0
-    # result = await db_Insert(table_name, fields, values, whr, flag)
     in_out_flag=1
     for i in dt.items:
-            # =========================================
-
-            select_stck = f"max(date) as max_dt"
-            schema_stck = "td_stock_new"
-            where_stck= f"proj_id='{dt.proj_id}' and item_id='{dt.item_id}'" 
-            order_stck = ""
-            flag_stck = 0 
-            result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
-
-            select_stck1 = f"max(sl_no) as max_sl"
-            schema_stck1 = "td_stock_new"
-            where_stck1= f"proj_id='{dt.proj_id}' and item_id='{dt.item_id}'" 
-            order_stck1 = ""
-            flag_stck1 = 0 
-            result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
-
-            print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
-
-            if result_stck['msg']['max_dt'] and result_stck1['msg']['max_sl']:
-                 select_stck2 = f"balance,count(balance) as cnt"
-                 schema_stck2 = "td_stock_new"
-                 where_stck2= f"proj_id='{dt.proj_id}' and item_id='{dt.item_id}' and date='{result_stck['msg']['max_dt']}' and sl_no='{result_stck1['msg']['max_sl']}'" 
-                 order_stck2 = ""
-                 flag_stck2 = 0 
-                 result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
-                 print(result_stck2)
-                 qty = result_stck2['msg']['balance'] + i.ret_qty 
-            else:
-                 qty=i.ret_qty
-
-
-            # =========================================
-            flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
-            val = f'"{dt.dt}","RET-{i.ref_no}",{dt.proj_id},{dt.item_id},{i.ret_qty},{in_out_flag},{qty},"{dt.user}","{formatted_dt}"'
-            table = "td_stock_new"
-            whr=f""
-            flag2 =  0
-            result3 = await db_Insert(table, flds, val, whr, flag2)
-
             flds11= f'ret_dt,ref_no,proj_id,item_id,qty,created_by,created_at'
             val11 = f'"{dt.dt}","RET-{i.ref_no}",{dt.proj_id},{dt.item_id},{i.ret_qty},"{dt.user}","{formatted_dt}"'
             table11 = "td_return_items"
             whr11=f""
             flag11 =  0
             result11 = await db_Insert(table11, flds11, val11, whr11, flag11)
-            if(result3['suc']>0): 
-                stock_save = 1
+            if(result11['suc']>0): 
                 res_dt2 = {"suc": 1, "msg": f"Updated Successfully "}
 
             else:
-                stock_save = 0
-
                 res_dt2= {"suc": 0, "msg": f"Error while inserting into stock"}
    
 
-   
-    if stock_save:
-        res_dt = {"suc": 1, "msg": f"Action Successful!","msg2":res_dt2}
-    else:
-        res_dt = {"suc": 0, "msg": f"Error while saving!" ,"msg2":res_dt2}
-    
-    return res_dt
+    return res_dt2
 
 
 @poRouter.post('/check_po_list')
