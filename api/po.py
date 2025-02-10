@@ -3647,7 +3647,7 @@ async def getMinReq(dt:GetStock):
     # return result
 
     res_dt = {}
-    select = f"distinct req.sl_no,req.req_no,r.item_id,sum(r.approved_qty) as approved_qty,sum(st.qty) as stock_out_qty"
+    select = f"distinct req.sl_no,req.req_date,req.req_no,r.item_id,sum(r.approved_qty) as approved_qty,sum(st.qty) as stock_out_qty"
     schema = "td_requisition_items r left join td_requisition req on req.req_no = r.req_no left join td_stock_new st on req.req_no = st.ref_no "
     where = f"req.project_id={dt.proj_id} and r.item_id={dt.prod_id} and req.req_no=r.req_no group by st.ref_no"
     order = ""
