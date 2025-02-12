@@ -3630,7 +3630,7 @@ async def getMinReq(id:GetMinReq):
     select = "distinct r.sl_no,r.req_no,r.approve_flag,r.reason,r.intended_for,r.req_date,r.project_id,r.client_id,r.req_type,r.purpose,m.req_no as min_req_no"
     schema = "td_requisition r,td_min m"
     where = f"r.delete_flag='N' and r.req_no=m.req_no "
-    order = "ORDER BY r.modified_at,r.created_at DESC"
+    order = "ORDER BY r.created_by,r.modified_at DESC"
     flag = 1
     result = await db_select(select, schema, where, order, flag)
     return result
@@ -3648,7 +3648,7 @@ async def getMinReq(dt:GetStock):
 
     res_dt = {}
     
-    select = f"distinct req.sl_no,req.req_date,req.req_no,r.item_id,sum(r.approved_qty) as approved_qty,sum(r.cancelled_qty) as cancelled_qty,sum(st.qty) as stock_out_qty,(select sum(qty) from td_return_items where proj_id={dt.proj_id} and item_id={dt.prod_id} and ref_no like %r.req_no group by ref_no) as return_qty"
+    select = f"distinct req.sl_no,req.req_date,req.req_no,r.item_id,sum(r.approved_qty) as approved_qty,sum(r.cancelled_qty) as cancelled_qty,sum(st.qty) as stock_out_qty,(select sum(qty) from td_return_items where proj_id={dt.proj_id} and item_id={dt.prod_id} group by ref_no) as return_qty"
     schema = "td_requisition_items r left join td_requisition req on req.req_no = r.req_no left join td_stock_new st on req.req_no = st.ref_no "
     where = f"req.project_id={dt.proj_id} and r.item_id={dt.prod_id} and req.req_no=r.req_no group by st.ref_no"
     order = ""
