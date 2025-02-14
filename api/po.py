@@ -3544,9 +3544,9 @@ async def getVtoC(id:getVtoC):
     # print(id.id)
     res_dt = {}
 
-    select = "*"
-    schema = "td_vtoc_items"
-    where = f"del_no='{id.del_no}' and item_id={id.item_id}" 
+    select = "i.*,c.*"
+    schema = "td_vtoc_items i, td_vendor_to_client c"
+    where = f"i.del_no='{id.del_no}' and i.item_id={id.item_id} and c.del_no='{id.del_no}'" 
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
