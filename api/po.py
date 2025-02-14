@@ -3481,11 +3481,14 @@ async def addVtoC(data:DelVtoC):
    delNo = int(round(current_datetime.timestamp()))
 
 
-   fields= f'del_date="{data.del_dt}",remarks="{data.remarks}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'del_no,po_no,del_date,remarks,created_by,created_at'
+#    fields= f'del_date="{data.del_dt}",remarks="{data.remarks}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'del_no,po_no,del_date,remarks,created_by,created_at'
+   fields= f'del_no,po_no,del_date,remarks,created_by,created_at'
    values = f'"DEL-{delNo}","{data.po_no}","{data.del_dt}","{data.remarks}","{data.user}","{formatted_dt}"'
    table_name = "td_vendor_to_client"
-   whr = f'po_no="{data.po_no}"' if result1['msg']['count'] > 0 else None
-   flag = 1 if result1['msg']['count']>0 else 0
+#    whr = f'po_no="{data.po_no}"' if result1['msg']['count'] > 0 else None
+   whr =  None
+#    flag = 1 if result1['msg']['count']>0 else 0
+   flag =  0
    result = await db_Insert(table_name, fields, values, whr, flag)
    lastID=result["lastId"]
    stock_in = 1
