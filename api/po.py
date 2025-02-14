@@ -3544,9 +3544,9 @@ async def getVtoC(id:getVtoC):
     # print(id.id)
     res_dt = {}
 
-    select = "i.*,c.*"
-    schema = "td_vtoc_items i, td_vendor_to_client c"
-    where = f"i.del_no='{id.del_no}' and i.item_id={id.item_id} and c.del_no='{id.del_no}'" 
+    select = "i.*,c.*,p.prod_name"
+    schema = "td_vtoc_items i, td_vendor_to_client c,md_product p"
+    where = f"i.del_no='{id.del_no}' and i.item_id={id.item_id} and c.del_no='{id.del_no}' and p.sl_no=i.item_id" 
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
