@@ -254,6 +254,7 @@ class GetPhrase(BaseModel):
 class ItemVtoC(BaseModel):
     item_id:int
     rc_qty:int
+    mrn_qty:int
 
 class DelVtoC(BaseModel):
     po_no:str
@@ -3469,6 +3470,13 @@ async def addVtoC(data:DelVtoC):
    stock_out = -1
 
    for i in data.items:
+            flds111= f'del_no,item_id,qty,po_no'
+            val111 = f'"DEL-{delNo}",{i.item_id},{i.mrn_qty},"{data.po_no}"'
+            table111 = "td_vtoc_items"
+            whr111=f""
+            flag111 =  0
+            result111 = await db_Insert(table111, flds111, val111, whr111, flag111)
+   
             flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,created_by,created_at'
             val = f'"{data.del_dt}","DEL-{delNo}","{data.project_id}",{i.item_id},{i.rc_qty},{stock_in},"{data.user}","{formatted_dt}"'
             table = "td_stock_new"
