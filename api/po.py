@@ -699,7 +699,13 @@ async def getprojectpoc(id:GetPo):
 async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
-
+    select1='po_no'
+    schema1 = 'td_po_basic'
+    where1 = f"sl_no='{id.id}'"
+    flag1=1
+    result1 = await db_select(select, schema, where, order, flag)
+    print(result1['msg']['po_no'])
+    
     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name"
     schema = "td_po_items i,md_product p"
     where = f"i.po_sl_no='{id.id}' and i.item_id=p.sl_no" if id.id>0 else ""
