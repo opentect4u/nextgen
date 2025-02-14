@@ -723,9 +723,8 @@ async def getprojectpoc(id:GetPo):
     print('res=======================',result1['msg'][0]['po_no'])
     
     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name,sum(v.qty) as prev_mrn"
-    # schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_vtoc_items v on v.item_id=p.sl_no"
-    schema = "td_po_items i left join md_product p on i.item_id=p.sl_no "
-    where = f"i.po_sl_no='{id.id}' and v.po_no='{result1['msg'][0]['po_no']}' group by v.item_id" if id.id>0 else ""
+    schema = f"td_po_items i join md_product p on i.item_id=p.sl_no left join td_vtoc_items v on v.item_id=p.sl_no and v.po_no='{result1['msg'][0]['po_no']}'"
+    where = f"i.po_sl_no='{id.id}'  group by i.item_id" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
