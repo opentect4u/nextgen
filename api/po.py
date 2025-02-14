@@ -704,7 +704,7 @@ async def getprojectpoc(id:GetPo):
     where1 = f"sl_no='{id.id}'"
     flag1=1
     result1 = await db_select(select1, schema1, where1, "", flag1)
-    print(result1['msg']['po_no'])
+    print('res=======================',result1)
     
     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name"
     schema = "td_po_items i,md_product p"
