@@ -389,6 +389,7 @@ class DeleteVtoC(BaseModel):
     po_no:str
     id:int
     del_no:str
+    item_id:int
 
 class StockRetList(BaseModel):
     ref_no:str
@@ -3627,7 +3628,14 @@ async def deletetc(id:DeleteVtoC):
    table_name = "td_vendor_to_client"
    flag = 1 
    values=''
-   whr=f'po_no="{id.po_no}"'
+   whr=f'del_no="{id.del_no}"'
+   result = await db_Delete(table_name, whr)
+
+   fields=f''
+   table_name = "td_vtoc_items"
+   flag = 1 
+   values=''
+   whr=f'del_no="{id.del_no}" and item_id={id.item_id}'
    result = await db_Delete(table_name, whr)
  
    fields1=f''
@@ -3643,7 +3651,7 @@ async def deletetc(id:DeleteVtoC):
    table_name3 = "td_stock_new"
    flag3 = 1 
    values3=''
-   whr3=f'ref_no="{id.del_no}"'
+   whr3=f'ref_no="{id.del_no}" and item_id={id.item_id}'
    result3 = await db_Delete(table_name3, whr3)
 
 
