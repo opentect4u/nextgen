@@ -696,7 +696,7 @@ async def getprojectpoc(id:GetPo):
     # print(result, 'RESULT')
     return result
 
-poRouter.post('/getprevdelno')
+@poRouter.post('/getprevdelno')
 async def getprojectpoc(id:PrevDelNo):
     select1='del_no'
     schema1 = 'td_vtoc_items'
