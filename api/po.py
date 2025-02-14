@@ -118,6 +118,7 @@ class PoModel(BaseModel):
     manufacture_clearance_desc:Optional[Union[str,None]]=None
     payment_terms:Optional[list[payTerms]]
     bill_to:str
+    del_flag:str
     ship_to:Optional[Union[str,None]]=None
     warehouse_flag:Optional[Union[str,None]]=None
     po_notes:Optional[Union[str,None]]=None
@@ -946,8 +947,8 @@ async def addexistingpo(data:PoModel):
     #     payment_save=1 if result3['suc']>0 else 0
 
 
-    fields4= f'ship_to="{data.ship_to}",ware_house_flag="{data.warehouse_flag}",po_notes="{data.po_notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_sl_no,bill_to,ship_to,ware_house_flag,po_notes,created_by,created_at'
-    values4 = f'"{lastID}","{data.bill_to}","{data.ship_to}","{data.warehouse_flag}","{data.po_notes}","{data.user}","{formatted_dt}"'
+    fields4= f'ship_to="{data.ship_to}",ware_house_flag="{data.warehouse_flag}",del_flag="{data.del_flag}",po_notes="{data.po_notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_sl_no,bill_to,ship_to,ware_house_flag,po_notes,del_flag,created_by,created_at'
+    values4 = f'"{lastID}","{data.bill_to}","{data.ship_to}","{data.warehouse_flag}","{data.po_notes}","{data.del_flag}","{data.user}","{formatted_dt}"'
     table_name4 = "td_po_delivery"
     whr4 = f'po_sl_no="{data.sl_no}"' if data.sl_no > 0 else None
     flag4 = 1 if data.sl_no>0 else 0
@@ -1083,8 +1084,8 @@ async def addfreshpo(data:PoModel):
     #     payment_save=1 if result3['suc']>0 else 0
 
 
-    fields4= f'ship_to="{data.ship_to}",ware_house_flag="{data.warehouse_flag}",po_notes="{data.po_notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_sl_no,bill_to,ship_to,ware_house_flag,po_notes,created_by,created_at'
-    values4 = f'"{lastID}","{data.bill_to}","{data.ship_to}","{data.warehouse_flag}","{data.po_notes}","{data.user}","{formatted_dt}"'
+    fields4= f'ship_to="{data.ship_to}",ware_house_flag="{data.warehouse_flag}",del_flag="{data.del_flag}",po_notes="{data.po_notes}",modified_by="{data.user}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_sl_no,bill_to,ship_to,ware_house_flag,del_flag,po_notes,created_by,created_at'
+    values4 = f'"{lastID}","{data.bill_to}","{data.ship_to}","{data.warehouse_flag}","{data.del_flag}","{data.po_notes}","{data.user}","{formatted_dt}"'
     table_name4 = "td_po_delivery"
     whr4 = f'po_sl_no="{data.sl_no}"' if data.sl_no > 0 else None
     flag4 = 1 if data.sl_no>0 else 0
