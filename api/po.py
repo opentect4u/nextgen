@@ -377,6 +377,11 @@ class DelSearch(BaseModel):
 
 class VtoC(BaseModel):
     po_no:str
+
+
+class getVtoC(BaseModel):
+    del_no:str
+    item_id:int
 class VtoCDoc(BaseModel):
     del_sl_no:str
 
@@ -3534,14 +3539,14 @@ async def addVtoC(data:DelVtoC):
    return res_dt
 
 @poRouter.post('/get_vtoc')
-async def getVtoC(po_no:VtoC):
+async def getVtoC(id:getVtoC):
   
     # print(id.id)
     res_dt = {}
 
     select = "*"
-    schema = "td_vendor_to_client"
-    where = f"po_no='{po_no.po_no}'" 
+    schema = "td_vtoc_items"
+    where = f"del_no='{id.del_no}' and item_id={id.item_id}" 
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
