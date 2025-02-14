@@ -1265,7 +1265,7 @@ async def add_edit_permissions(data:Permission):
 
     fields= f"masters='{data.masters}', po='{data.purchase}',project='{data.projects}', purchase_req='{data.purchase_req}', mrn='{data.mrn}', requisition='{data.floor_req}', min='{data.min}',stock='{data.stock}', modified_at='{formatted_dt}'" if res_dt["msg"][0]["sl_no"] > 0 else f"user_id, masters, po, purchase_req, mrn, requisition, min, stock, project, created_by, created_at"
 
-    values = None if res_dt["msg"][0]["sl_no"] > 0 else f"{data.user_id}, '{data.masters}', '{data.purchase}','{data.purchase_req}', '{data.mrn}', '{data.floor_req}','{data.min}', '{data.projects}','{data.user}', '{formatted_dt}'"
+    values = None if res_dt["msg"][0]["sl_no"] > 0 else f"{data.user_id}, '{data.masters}', '{data.purchase}','{data.purchase_req}', '{data.mrn}', '{data.floor_req}','{data.min}','{data.stock}', '{data.projects}','{data.user}', '{formatted_dt}'"
 
     table_name = "td_permission"
 
