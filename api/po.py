@@ -704,11 +704,13 @@ async def getprojectpoc(id:GetPo):
     where1 = f"sl_no='{id.id}'"
     flag1=1
     result1 = await db_select(select1, schema1, where1, "", flag1)
-    print('res=======================',result1)
+    print('res=======================',result1['msg'][0]['po_no'])
     
-    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name"
-    schema = "td_po_items i,md_product p"
-    where = f"i.po_sl_no='{id.id}' and i.item_id=p.sl_no" if id.id>0 else ""
+    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name,sum(v.qty)"
+    schema = "td_po_items i,md_product p,td_vtoc_items v"
+    where = f"i.po_sl_no='{id.id}' and i.item_id=p.sl_no and v.po_no='{result1['msg'][0]['po_no']}' group by v.item_id" if id.id>0 else ""
+    # schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_vtoc_items v on v.item_id=i.sl_no left join td_item_delivery_invoice t on t.invoice=d.invoice"
+#     where = f"i.po_sl_no='{id.id}' and d.delete_flag='N'" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
