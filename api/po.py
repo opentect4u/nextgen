@@ -56,7 +56,9 @@ class payTerms(BaseModel):
     sl_no:Optional[int]=None
     stage:Optional[Union[str,None]]=None
     term:Optional[Union[str,None]]=None
-
+class PrevDelNo(BaseModel):
+    po_no:str
+    item_id:int
 class PoModel(BaseModel):
     sl_no:Optional[int]=None
     po_id:Optional[Union[str,None]]=None
@@ -694,6 +696,14 @@ async def getprojectpoc(id:GetPo):
     # print(result, 'RESULT')
     return result
 
+poRouter.post('/getprevdelno')
+async def getprojectpoc(id:PrevDelNo):
+    select1='del_no'
+    schema1 = 'td_vtoc_items'
+    where1 = f"po_no='{id.po_no}' and item_id={id.item_id}"
+    flag1=1
+    result1 = await db_select(select1, schema1, where1, "", flag1)
+    return result1
 
 @poRouter.post('/getpoitemfordirectdelivery')
 async def getprojectpoc(id:GetPo):
