@@ -1297,10 +1297,10 @@ async def fetch_permission(user_id:getData):
     return res_dt
 
 @masterRouter.post("/fetch_menus")
-async def fetch_permission(user_type_id:getMenu):
+async def fetch_permission(user_id:getMenu):
     select = "*"
     table = "td_permission"
-    where = f"user_id=(select sl_no from md_user where user_email='{user_type_id.email}')" 
+    where = f"user_id=(select sl_no from md_user where user_email='{user_id.email}')" 
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
