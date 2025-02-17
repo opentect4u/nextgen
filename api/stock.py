@@ -411,6 +411,14 @@ async def getprojectpoc(id:GetStock):
     result_tot = await db_select(select_tot, schema_tot, where_tot, order_tot, flag_tot)
     print("tot_stock=======",result_tot['msg']['tot_stock'])
 
+    select_can = f"sum(i.cancelled_qty) as can_stock"
+    schema_can = "td_requisition t,td_requisition_items i"
+    where_can = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.req_no=t.req_no"
+    order_can = ""
+    flag_can = 0 
+    result_can = await db_select(select_can, schema_can, where_can, order_can, flag_can)
+    print("can_stock=======",result_can['msg']['can_stock'])
+
     select2 = f"sum(qty) as del_stock"
     schema2 = "td_stock_new"
     where2 = f"item_id={id.prod_id} and proj_id ={id.proj_id} and in_out_flag=-1"
@@ -426,9 +434,9 @@ async def getprojectpoc(id:GetStock):
     flag =1 
     result = await db_select(select, schema, where, order, flag)
     if result1['suc']>0:
-       return {"result":result,"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock'] - result2['msg']['del_stock'] if result_tot['msg']['tot_stock'] and result2['msg']['del_stock'] else result_tot['msg']['tot_stock'] if result_tot['msg']['tot_stock'] else 0}
+       return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":result_can['msg']['can_stock'] if result_can['msg']['can_stock'] else 0,"tot_stock":result_tot['msg']['tot_stock'] - result2['msg']['del_stock'] if result_tot['msg']['tot_stock'] and result2['msg']['del_stock'] else result_tot['msg']['tot_stock'] if result_tot['msg']['tot_stock'] else 0}
     else:
-       return {"result":result,"req_stock":0,"tot_stock":0}
+       return {"result":result,"req_stock":0,"tot_stock":0,"can_stock":0}
     
 
 @stockRouter.post("/approve_transfer_items")
