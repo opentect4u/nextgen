@@ -434,8 +434,9 @@ async def getprojectpoc(id:GetStock):
     flag =1 
     result = await db_select(select, schema, where, order, flag)
     if result1['suc']>0:
+       print(result,result1,result2,result_tot,result_can)
        cancel_stock= result_can['msg']['can_stock'] if result_can['msg']['can_stock'] else 0
-       return {"result":result,"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock'] - result2['msg']['del_stock'] if result_tot['msg']['tot_stock'] and result2['msg']['del_stock'] else result_tot['msg']['tot_stock'] if result_tot['msg']['tot_stock'] else 0}
+       return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":cancel_stock ,"tot_stock":result_tot['msg']['tot_stock'] - result2['msg']['del_stock'] if result_tot['msg']['tot_stock'] and result2['msg']['del_stock'] else result_tot['msg']['tot_stock'] if result_tot['msg']['tot_stock'] else 0}
     else:
        return {"result":result,"req_stock":0,"tot_stock":0,"can_stock":0}
     
