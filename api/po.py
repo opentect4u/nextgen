@@ -2797,7 +2797,7 @@ async def get_requisition(data:GetPo):
 
 @poRouter.post('/req_item_dtls')
 async def req_item_dtl(data:ReqId):
-    select = "a.sl_no, a.last_req_id,a.approved_qty,a.balance, a.req_no, a.item_id, b.prod_name,b.part_no,b.model_no,b.article_no, a.rc_qty, a.req_qty, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id=c.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id='0') as warehouse_stock, c.project_id"
+    select = "a.sl_no, a.last_req_id,a.approved_qty,a.cancelled_qty,a.balance, a.req_no, a.item_id, b.prod_name,b.part_no,b.model_no,b.article_no, a.rc_qty, a.req_qty, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id=c.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=a.item_id and proj_id='0') as warehouse_stock, c.project_id"
     table = "td_requisition_items a left join md_product b on a.item_id=b.sl_no, td_requisition c"
     where = f"a.last_req_id=c.sl_no and a.last_req_id = {data.last_req_id}" if data.last_req_id>0 else f"a.last_req_id=c.sl_no"
     order = ""
