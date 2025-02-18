@@ -584,7 +584,7 @@ async def save_trans(data:GetApproveItems):
             flag1 = 0 
             result1= await db_select(select1, schema1, where1, order1, flag1)
             if data.status=='A':
-                fields= f"approve_flag='{i.approve_flag}',approved_by='{data.user}',approved_at='{formatted_dt}', approved_qty={i.qty}"
+                fields= f"approve_flag='{i.approve_flag}',approved_by='{data.user}',approved_at='{formatted_dt}'"
                 values = f''
                 table_name = "td_transfer_items"
                 whr=f"trans_no='{data.trans_no}' and sl_no={i.sl_no}"   
@@ -617,7 +617,7 @@ async def save_trans(data:GetApproveItems):
                     approved_qty = int(_res_dt['msg']['approved_qty']) + i.qty if int(_res_dt['msg']['approved_qty'])>0 else i.qty
                     # approve_flag = 'A'  if approved_qty == i.req_qty else 'H'
                     approve_flag = 'A'  
-                    fields1= f'balance={balance},modified_by="{data.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
+                    fields1= f'approved_qty={approved_qty},balance={balance},modified_by="{data.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
                     values1 = f''
                     table_name1 = "td_transfer_items"
                     whr1 = f'sl_no="{i.sl_no}"' 
@@ -713,7 +713,7 @@ async def save_trans(data:GetApproveItems):
 
                         # ======================================================
             else:
-                fields= f"cancel_flag='{i.approve_flag}',cancelled_by='{data.user}',cancelled_at='{formatted_dt}', cancelled_qty={i.qty}"
+                fields= f"cancel_flag='{i.approve_flag}',cancelled_by='{data.user}',cancelled_at='{formatted_dt}'"
                 values = f''
                 table_name = "td_transfer_items"
                 whr=f"trans_no='{data.trans_no}' and sl_no={i.sl_no}"   
@@ -744,9 +744,9 @@ async def save_trans(data:GetApproveItems):
                 if i.qty>0:
                     balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.qty
                     cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
-                    # approve_flag = 'A'  if approved_qty == i.req_qty else 'H'
-                    cancell_flag = 'A'  
-                    fields1= f'balance={balance},modified_by="{data.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
+                    cancel_flag = 'A'  if cancelled_qty == i.req_qty else 'H'
+                    # cancell_flag = 'A'  
+                    fields1= f'cancelled_qty={cancelled_qty},balance={balance},modified_by="{data.user}",modified_at="{formatted_dt}",cancelled_flag="{cancel_flag}"'
                     values1 = f''
                     table_name1 = "td_transfer_items"
                     whr1 = f'sl_no="{i.sl_no}"' 
