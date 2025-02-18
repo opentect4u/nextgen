@@ -702,6 +702,7 @@ async def save_trans(data:GetApproveItems):
                     whr_out=f""
                     flag2_out=  0
                     result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
+                    print(result3_out)
                     if(result3_out['suc']>0): 
                         stock_save = 1
                         res_dt2_out = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
