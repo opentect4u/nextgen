@@ -616,7 +616,7 @@ async def save_trans(data:GetApproveItems):
                     approved_qty = int(_res_dt['msg']['approved_qty']) + i.qty if int(_res_dt['msg']['approved_qty'])>0 else i.qty
                     # approve_flag = 'A'  if approved_qty == i.req_qty else 'H'
                     approve_flag = 'A'  
-                    fields1= f'approved_qty="{approved_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
+                    fields1= f'approved_qty="{approved_qty}",balance={balance},modified_by="{data.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
                     values1 = f''
                     table_name1 = "td_transfer_items"
                     whr1 = f'sl_no="{i.sl_no}"' 
@@ -745,7 +745,7 @@ async def save_trans(data:GetApproveItems):
                     cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
                     # approve_flag = 'A'  if approved_qty == i.req_qty else 'H'
                     cancell_flag = 'A'  
-                    fields1= f'cancelled_qty="{cancelled_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
+                    fields1= f'cancelled_qty="{cancelled_qty}",balance={balance},modified_by="{dta.user}",modified_at="{formatted_dt}",approve_flag="{approve_flag}"'
                     values1 = f''
                     table_name1 = "td_transfer_items"
                     whr1 = f'sl_no="{i.sl_no}"' 
