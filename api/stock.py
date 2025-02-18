@@ -744,7 +744,7 @@ async def save_trans(data:GetApproveItems):
                 if i.qty>0:
                     balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.qty
                     cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
-                    cancel_flag = 'A'  if cancelled_qty == i.req_qty else 'H'
+                    cancel_flag = 'A'  if cancelled_qty == i.qty else 'H'
                     # cancell_flag = 'A'  
                     fields1= f'cancelled_qty={cancelled_qty},balance={balance},modified_by="{data.user}",modified_at="{formatted_dt}",cancelled_flag="{cancel_flag}"'
                     values1 = f''
