@@ -923,8 +923,8 @@ async def save_trans(data:GetTrans):
 async def save_trans(data:GetPurItem):
     res_dt = {}
 
-    select = "*"
-    schema = "td_purchase_items"
+    select = "p.*,b.*"
+    schema = "td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_no"
     where = f"pur_no='{data.pur_no}'"
     order = ""
     flag =  1
