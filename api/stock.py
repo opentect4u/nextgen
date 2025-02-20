@@ -922,16 +922,16 @@ async def save_trans(data:GetTrans):
 @stockRouter.post("/get_purchase_req_items")
 async def save_trans(data:GetPurItem):
     res_dt = {}
-    select1 = "po_no"
-    schema1 = "td_po_basic"
-    where1 = f"pur_req='{data.pur_no}'"
-    order1 = ""
-    flag1 =  1
-    result1 = await db_select(select1, schema1, where1, order1, flag1)
+    # select1 = "po_no"
+    # schema1 = "td_po_basic"
+    # where1 = f"pur_req='{data.pur_no}'"
+    # order1 = ""
+    # flag1 =  1
+    # result1 = await db_select(select1, schema1, where1, order1, flag1)
 
 
-    select = "p.*,b.*,m.*"
-    schema = "td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join "
+    select = "p.*,b.*"
+    schema = "td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req "
     where = f"pur_no='{data.pur_no}'"
     order = ""
     flag =  1
