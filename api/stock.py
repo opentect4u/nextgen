@@ -942,7 +942,7 @@ async def save_trans(data:GetPurItem):
 
 
     select = "p.*,b.*,m.*"
-    schema = f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join td_item_delivery_details m"
+    schema = f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join td_item_delivery_invoice d on b.po_no=d.po_no left join td_item_delivery_details m on m.mrn_no=d.mrn_no"
     where = f"pur_no='{data.pur_no}' and m.mrn_no in ({mrn_dt})"
     order = ""
     flag =  1
