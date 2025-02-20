@@ -937,7 +937,7 @@ async def save_trans(data:GetPurItem):
     result2 = await db_select(select2, schema2, where2, order2, flag2)
     print('res====================',result2['msg'])
 
-    for i in result2['msg']:
+    for i in len(result2['msg']):
          mrn_dt+=f"'{i['mrn_no']}',"
 
 
