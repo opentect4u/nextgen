@@ -938,7 +938,7 @@ async def save_trans(data:GetPurItem):
     print('res====================',result2['msg'])
 
     for i in result2['msg']:
-         mrn_dt+=i['mrn_no']+','
+         mrn_dt+=f"'{i['mrn_no']}'+','"
 
 
     select = "p.*,b.*,m.*"
