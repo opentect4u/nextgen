@@ -938,7 +938,7 @@ async def save_trans(data:GetPurItem):
     print('res====================',result2['msg'])
 
     for i in len(result2['msg']):
-         mrn_dt.append(result2[i]['mrn_no'])
+         mrn_dt.append(result2['msg'][i]['mrn_no'])
 
 
     select = "p.*,b.*,m.*"
