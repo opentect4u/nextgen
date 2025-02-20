@@ -928,10 +928,10 @@ async def save_trans(data:GetPurItem):
     order1 = ""
     flag1 =  1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
-
+    
     select2 = "mrn_no"
     schema2 = "td_item_delivery_invoice"
-    where2 = f"po_no='{result1['msg'][0]['po_no']}'"
+    where2 = f"po_no='{result1['msg'][0]['po_no']}'" if result1['msg'] else f"po_no='0'"
     order2 = ""
     flag2 =  1
     result2 = await db_select(select2, schema2, where2, order2, flag2)
