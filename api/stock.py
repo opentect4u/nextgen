@@ -933,13 +933,13 @@ async def save_trans(data:GetPurItem):
     schema2 = "td_item_delivery_invoice"
     where2 = f"po_no='{result1['msg'][0]['po_no']}'"
     order2 = ""
-    flag2 =  0
+    flag2 =  1
     result2 = await db_select(select2, schema2, where2, order2, flag2)
     print('res====================',result2['msg'])
 
 
     select = "p.*,b.*,m.*"
-    schema = f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join td_item_delivery_details m where m.mrn_no = '{result2['msg']}'"
+    schema = f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join td_item_delivery_details m where m.mrn_no in {result2['msg']}"
     where = f"pur_no='{data.pur_no}'"
     order = ""
     flag =  1
