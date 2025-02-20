@@ -941,9 +941,9 @@ async def save_trans(data:GetPurItem):
          mrn_dt+=f"'{result2['msg'][i]['mrn_no']}'," if i != len(result2['msg'])-1 else f"'{result2['msg'][i]['mrn_no']}'"
 
 
-    select = "p.*,b.*,sum(m.rc_qty) tot_rc"
-    schema = f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join td_item_delivery_invoice d on b.po_no=d.po_no left join td_item_delivery_details m on m.mrn_no=d.mrn_no"
-    where = f"pur_no='{data.pur_no}' and m.mrn_no in ({mrn_dt}) group by m.item_id"
+    select = "p.*,b.*,sum(m.rc_qty) tot_rc" if mrn_dt else "p.*,b.*, 0 as tot_rc"
+    schema = f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join td_item_delivery_invoice d on b.po_no=d.po_no left join td_item_delivery_details m on m.mrn_no=d.mrn_no" if mrn_dt else f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req"
+    where = f"pur_no='{data.pur_no}' and m.mrn_no in ({mrn_dt}) group by m.item_id" if mrn_dt else f"pur_no='{data.pur_no}'"
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
