@@ -3279,12 +3279,12 @@ async def getprojectpoc(id:PoSearch):
 async def getprojectpoc(id:PoSearch):
     res_dt = {}
 
-    select = "r.pur_no,r.sl_no,r.project_id,d.proj_name,r.pur_date,i.item_id,p.prod_name,p.prod_make,p.part_no,r.created_by,r.created_at"
-    schema = '''td_purchase_items i left join  md_product p ON p.sl_no=i.item_id  left join td_purchase_req r on r.req_no = i.req_no left join td_project d on r.project_id = d.sl_no'''
+    select = "r.pur_no,r.sl_no,r.pur_proj,d.proj_name,r.pur_date,i.item_id,p.prod_name,p.prod_make,p.part_no,r.created_by,r.created_at"
+    schema = '''td_purchase_items i left join  md_product p ON p.sl_no=i.item_id  left join td_purchase_req r on r.req_no = i.req_no left join td_project d on r.pur_proj = d.sl_no'''
 
     where = ""
     if(id.project_id != 0 and id.project_id!=""):
-        where += f"r.project_id='{id.project_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+        where += f"r.pur_proj='{id.project_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.part_no != ''):
         where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.prod_id != ''):
@@ -3294,7 +3294,7 @@ async def getprojectpoc(id:PoSearch):
     if(id.to_dt != '' or id.from_dt != ''):
         where += f'''(r.pur_date BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
 
-    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(r.project_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and r.pur_date is not null)"
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(r.pur_proj IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and r.pur_date is not null)"
 
     order = "ORDER BY r.created_at DESC"
     
