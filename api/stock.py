@@ -920,10 +920,10 @@ async def save_trans(data:GetTrans):
     for i in result['msg']:
         res_dt.append(i)
     # res_dt.append(result['msg'])
-    select_w = "distinct t.pur_no,t.pur_date,t.intended,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id"
-    schema_w = "td_purchase_req t"
-    where_w = f"t.sl_no='{data.id}' and t.pur_proj=0"  if data.id>0 else f"t.pur_proj=0"
-    order_w = "ORDER BY t.created_at DESC"
+    select_w = "pur_no,pur_date,intended,created_by,created_at,sl_no"
+    schema_w = "td_purchase_req"
+    where_w = f"sl_no='{data.id}' and pur_proj=0"  if data.id>0 else f"pur_proj=0"
+    order_w = "ORDER BY created_at DESC"
     flag_w = 0 if data.id>0 else 1
     result_w = await db_select(select_w, schema_w, where_w, order_w, flag_w)
 
