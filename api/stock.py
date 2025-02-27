@@ -942,7 +942,7 @@ async def save_trans(data:GetTrans):
             flag = 0 if data.id>0 else 1
             result = await db_select(select, schema, where, order, flag)
             print(result, 'RESULT')
-            if result['msg'][0]['suc']==0 or result['msg'][0]['proj_id']!=0 or result['msg'][0]['proj_id']!='' :
+            if result['msg'][0]['suc']!=0 and result['msg'][0]['proj_id']!=0 and result['msg'][0]['proj_id']!='' :
                return result
             else:
                 select_w = "pur_no,pur_date,intended,created_by,created_at,sl_no"
