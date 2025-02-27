@@ -2013,11 +2013,11 @@ async def getprojectpoc(id:GetPurchaseMrn):
     res_dt = {}
     select1 = "sl_no"
     schema1 = "td_po_basic"
-    where1 = f"po_no='{id.po_no}' and d.delete_flag='N'" 
+    where1 = f"po_no='{id.po_no}'" 
     order1 = ""
     flag1 = 1 
     result1 = await db_select(select1, schema1, where1, order1, flag1)
-    # print(result, 'RESULT')
+    print(result, 'RESULT')
     # return result
 
 
