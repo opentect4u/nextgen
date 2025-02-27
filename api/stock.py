@@ -942,7 +942,18 @@ async def save_trans(data:GetTrans):
             flag = 0 if data.id>0 else 1
             result = await db_select(select, schema, where, order, flag)
             print(result, 'RESULT')
-            return result
+            if result['msg'][0]['proj_id']!=0:
+               return result
+            else:
+                select_w = "pur_no,pur_date,intended,created_by,created_at,sl_no"
+                schema_w = "td_purchase_req"
+                where_w = f"sl_no='{data.id}' and pur_proj=0"  if data.id>0 else f"pur_proj=0"
+                order_w = "ORDER BY created_at DESC"
+                flag_w = 0 if data.id>0 else 1
+                result_w = await db_select(select_w, schema_w, where_w, order_w, flag_w)
+
+                print(result_w['msg'], 'RESULT_w')
+                return result_w
 
 
 @stockRouter.post("/get_purchase_req_items")
