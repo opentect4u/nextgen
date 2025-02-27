@@ -2023,9 +2023,9 @@ async def getprojectpoc(id:GetPurchaseMrn):
 
     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id) as stock"
     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_item_delivery_invoice t on t.invoice=d.invoice"
-    where = f"i.po_sl_no='{result1['msg']['sl_no']}' and d.delete_flag='N'" if result1['msg']['sl_no']>0 else ""
+    where = f"i.po_sl_no='{result1['msg'][0]['sl_no']}' and d.delete_flag='N'" if result1['msg'][0]['sl_no']>0 else ""
     order = ""
-    flag = 1 if result1['msg']['sl_no']>0 else 0
+    flag = 1 if result1['msg'][0]['sl_no']>0 else 0
     result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
     return result
