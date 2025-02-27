@@ -56,6 +56,7 @@ class SavePur(BaseModel):
     purpose:str   
     items:list[PurchaseItems]
     user:str
+    intended:str
 
 class GetStock(BaseModel):
     proj_id:int
@@ -867,8 +868,8 @@ async def save_trans(data:SavePur):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
-    fields= f"pur_no,pur_date,pur_proj,pur_by,created_at,created_by"
-    values = f"'PR-{purno}','{data.pur_dt}','{data.project_id}', '{data.user}','{formatted_dt}','{data.user}'"
+    fields= f"pur_no,pur_date,pur_proj,pur_by,created_at,created_by,intended"
+    values = f"'PR-{purno}','{data.pur_dt}','{data.project_id}', '{data.user}','{formatted_dt}','{data.user}','{data.intended}'"
     table_name = "td_purchase_req"
     whr = ""
     flag = 0
@@ -909,7 +910,7 @@ async def save_trans(data:SavePur):
 async def save_trans(data:GetTrans):
     res_dt = {}
 
-    select = "t.pur_no,t.pur_date,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id"
+    select = "t.pur_no,t.pur_date,t.intended,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id"
     schema = "td_purchase_req t,td_project p"
     where = f"t.sl_no='{data.id}' and p.sl_no=t.pur_proj" if data.id>0 else f"p.sl_no=t.pur_proj"
     order = "ORDER BY t.created_at DESC"
