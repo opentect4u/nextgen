@@ -2017,7 +2017,7 @@ async def getprojectpoc(id:GetPurchaseMrn):
     order1 = ""
     flag1 = 1 
     result1 = await db_select(select1, schema1, where1, order1, flag1)
-    print(result, 'RESULT')
+    print(result1, 'RESULT')
     # return result
 
 
