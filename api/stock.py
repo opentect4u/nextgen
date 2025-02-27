@@ -935,7 +935,7 @@ async def save_trans(data:GetTrans):
 
             return res
     else:
-            select = "t.pur_no,t.pur_date,t.intended,t.created_by,t.created_at,t.sl_no,t.pur_proj"
+            select = "t.pur_no,t.pur_date,t.intended,t.created_by,t.created_at,t.sl_no,t.pur_proj as proj_id"
             schema = "td_purchase_req t"
             where = f"t.sl_no='{data.id}'"
             order = "ORDER BY t.created_at DESC"
