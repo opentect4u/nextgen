@@ -935,9 +935,9 @@ async def save_trans(data:GetTrans):
 
             return res
     else:
-            select = "t.pur_no,t.pur_date,t.intended,t.created_by,t.created_at,t.sl_no,t.pur_proj as proj_id"
-            schema = "td_purchase_req t"
-            where = f"t.sl_no='{data.id}'"
+            select = "t.pur_no,t.pur_date,t.intended,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id"
+            schema = "td_purchase_req t,td_project p"
+            where = f"t.sl_no='{data.id}' and p.sl_no=t.pur_proj"  if data.id>0 else f"p.sl_no=t.pur_proj"
             order = "ORDER BY t.created_at DESC"
             flag = 0 if data.id>0 else 1
             result = await db_select(select, schema, where, order, flag)
