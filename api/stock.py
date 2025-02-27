@@ -917,7 +917,9 @@ async def save_trans(data:GetTrans):
     flag = 0 if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
-    res_dt.append(result['msg'])
+    for i in result['msg']:
+        res_dt.append(i)
+    # res_dt.append(result['msg'])
     select_w = "t.pur_no,t.pur_date,t.intended,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id"
     schema_w = "td_purchase_req t,td_project p"
     where_w = f"t.sl_no='{data.id}' and t.pur_proj=0"  if data.id>0 else f"t.pur_proj=0"
@@ -926,7 +928,10 @@ async def save_trans(data:GetTrans):
     result_w = await db_select(select_w, schema_w, where_w, order_w, flag_w)
 
     print(result_w['msg'], 'RESULT_w')
-    res_dt.append(result_w['msg'])
+    for i in result_w['msg']:
+        res_dt.append(i)
+         
+    # res_dt.append(result_w['msg'])
     res = {"suc": 1, "msg": res_dt}
 
     return res
