@@ -3280,7 +3280,7 @@ async def getprojectpoc(id:PoSearch):
     res_dt = {}
 
     select = "r.pur_no,r.sl_no,r.pur_proj,d.proj_name,r.pur_date,i.item_id,p.prod_name,p.prod_make,p.part_no,r.created_by,r.created_at"
-    schema = '''td_purchase_items i left join  md_product p ON p.sl_no=i.item_id  left join td_purchase_req r on r.req_no = i.req_no left join td_project d on r.pur_proj = d.sl_no'''
+    schema = '''td_purchase_items i left join  md_product p ON p.sl_no=i.item_id  left join td_purchase_req r on r.pur_no = i.pur_no left join td_project d on r.pur_proj = d.sl_no'''
 
     where = ""
     if(id.project_id != 0 and id.project_id!=""):
