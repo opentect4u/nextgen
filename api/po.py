@@ -3557,8 +3557,8 @@ async def addVtoC(data:DelVtoC):
 
 
 #    fields= f'del_date="{data.del_dt}",remarks="{data.remarks}",modified_by="{data.user}",modified_at="{formatted_dt}"' if result1['msg']['count'] > 0 else f'del_no,po_no,del_date,remarks,created_by,created_at'
-   fields= f'del_no,po_no,del_date,remarks,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,om_manual,ws,tc,wc,ot,confirm,created_by,created_at'
-   values = f'"DEL-{delNo}","{data.po_no}","{data.del_dt}","{data.remarks}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.om_manual}","{data.ws}","{data.tc}","{data.wc}","{data.ot}","{data.confirm}","{data.user}","{formatted_dt}"'
+   fields= f'del_no,po_no,del_date,remarks,invoice,invoice_dt,lr_no,waybill,ic,og,dc,lr,wb,pl,om,om_manual,ws,tc,wc,confirm,created_by,created_at'
+   values = f'"DEL-{delNo}","{data.po_no}","{data.del_dt}","{data.remarks}","{data.invoice}","{data.invoice_dt}","{data.lr_no}","{data.waybill}","{data.ic}","{data.og}","{data.dc}","{data.lr}","{data.wb}","{data.pl}","{data.om}","{data.om_manual}","{data.ws}","{data.tc}","{data.wc}","{data.confirm}","{data.user}","{formatted_dt}"'
    table_name = "td_vendor_to_client"
 #    whr = f'po_no="{data.po_no}"' if result1['msg']['count'] > 0 else None
    whr =  None
