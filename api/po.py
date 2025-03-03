@@ -274,7 +274,6 @@ class DelVtoC(BaseModel):
     invoice_dt:str
     lr_no:str
     waybill:str
-    ot_desc:str
     ic:str
     og:str
     dc:str
@@ -286,7 +285,6 @@ class DelVtoC(BaseModel):
     ws:str
     tc:str
     wc:str
-    ot:str
     confirm:str
 
 
