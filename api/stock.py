@@ -212,6 +212,52 @@ async def save_trans(data:SaveTrans):
     
     return res_dt
 
+@stockRouter.post("/save_transfer_ptow")
+async def save_trans(data:SaveTrans):
+    res_dt = {}
+    print(data)
+    current_datetime = datetime.now()
+    tno = int(round(current_datetime.timestamp()))
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+
+    fields= f"trans_no,trans_dt,intended_for,client_id,from_proj_id,to_proj_id,purpose,created_by,created_at,req_by"
+    values = f"'TPW-{tno}', '{data.trans_dt}', '{data.intended_for}', {data.client_id},'{data.project_id}',{'0'},'{data.purpose}','{data.user}','{formatted_dt}','{data.user}'"
+    table_name = "td_transfer"
+    whr = ""
+    flag = 0
+    result = await db_Insert(table_name, fields, values, whr, flag)
+    lastID=result["lastId"]
+    #========================================================================================================
+    for i in data.items:
+                fields= f'trans_no,item_id,qty,created_by,created_at,approved_qty,balance'
+                values = f"'TPW-{tno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}',{'0'},'{i.qty}'"
+                table_name = "td_transfer_items"
+                whr=""
+                # flag1 = 1 if v.sl_no>0 else 0
+                flag1 = 1 if data.sl_no>0 else 0
+                result2 = await db_Insert(table_name, fields, values, whr, flag1)
+            
+
+                if(result2['suc']>0): 
+
+                    res_dt2 = {"suc": 1, "msg": f"Saved Successfully"}
+
+                else:
+                    res_dt2= {"suc": 0, "msg": f"Error while inserting"}
+            # else:
+            #     res_dt1= {"suc": 0, "msg": f"Error while updating item"}
+
+    #===========================================================================================================
+
+    if result['suc']>0 :
+                res_dt = {"suc": 1, "msg": f"Saved Successfully"}
+    else:
+                 res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
+            
+    
+    return res_dt
+
 
 @stockRouter.post("/get_twp")
 async def save_trans(data:GetTrans):
