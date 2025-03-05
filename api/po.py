@@ -3859,6 +3859,65 @@ async def savestockreturn(dt:StockReturn):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     in_out_flag=1
     for i in dt.items:
+            select = f"approved_qty"
+            schema = "td_requisition_items"
+            where = f"req_no={i.ref_no} and item_id={dt.item_id}"
+            order = ""
+            flag = 1
+            result_req = await db_select(select, schema, where, order, flag)
+            
+            net_qty = result_req['msg'][0]['approved_qty'] - i.ret_qty
+            if net_qty>0:
+                fields_req= f'approved_qty="{net_qty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+                values_req = f''
+                table_name_req = "td_requisition_items"
+                whr_req = f'req_no="{i.ref_no}"' 
+                flag_req = 1 
+                result_req1 = await db_Insert(table_name_req, fields_req, values_req, whr_req, flag_req)
+
+            else:
+                  fields_insert2= f'SELECT * FROM td_requisition_items WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
+                  table_names_insert2 = "td_requisition_items_delete"
+                  results_insert2 = await db_Insert(table_names_insert2, fields_insert2, None, None, 0, True)
+ 
+                  fields1=f''
+                  table_name1 = "td_requisition_items"
+                  flag1 = 1 
+                  values1=''
+                  whr1=f'req_no="{i.ref_no}" and item_id="{dt.item_id}"'
+                  result1 = await db_Delete(table_name1, whr1)
+
+                  fields_insert3= f'SELECT * FROM td_min WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
+                  table_names_insert3 = "td_min_delete"
+                  results_insert3 = await db_Insert(table_names_insert3, fields_insert3, None, None, 0, True)
+
+                  fields2=f''
+                  table_name2 = "td_min"
+                  flag2 = 1 
+                  values2=''
+                  whr2=f'req_no="{i.ref_no}" and item_id="{dt.item_id}"'
+                  result2 = await db_Delete(table_name2, whr2)
+
+                  select_res = f"approved_qty"
+                  schema_res = "td_requisition_items"
+                  where_res = f"req_no={i.ref_no} "
+                  order_res = ""
+                  flag_res = 1
+                  result_res = await db_select(select_res, schema_res, where_res, order_res, flag_res)
+                  if len(result_res['msg'])==1:
+                      fields_insert1= f'SELECT * FROM td_requisition WHERE req_no = "{i.ref_no}"'
+                      table_names_insert1 = "td_requisition_delete"
+                      results_insert1 = await db_Insert(table_names_insert1, fields_insert1, None, None, 0, True)
+
+                      fields=f''
+                      table_name = "td_requisition"
+                      flag = 1 
+                      values=''
+                      whr=f'req_no="{i.ref_no}"'
+                      result = await db_Delete(table_name, whr)
+
+                 
+
             flds11= f'ret_dt,ref_no,proj_id,item_id,qty,created_by,created_at'
             val11 = f'"{dt.dt}","RET-{i.ref_no}",{dt.proj_id},{dt.item_id},{i.ret_qty},"{dt.user}","{formatted_dt}"'
             table11 = "td_return_items"
