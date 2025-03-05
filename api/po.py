@@ -2808,7 +2808,7 @@ async def get_requisition(data:GetPo):
     select = "@a:=@a+1 serial_number,reason, req_no,intended_for,req_date, req_type,approve_flag,purpose,project_id,client_id, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_requisition,(SELECT @a:= 0) AS a"
-    where = f"sl_no='{data.id}' and delete_flag='N'" if data.id>0 else f"delete_flag='N'"
+    where = f"sl_no='{data.id}' and " if data.id>0 else f""
     order = "ORDER BY created_at DESC"
     flag = 0 if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
@@ -3187,19 +3187,15 @@ async def deletetc(id:deleteMrn):
    result1 = await db_Delete(table_name1, whr1)
 
 
+   fields1=f''
+   table_name1 = "td_min"
+   flag1 = 1 
+   values1=''
+   whr1=f'req_no="{id.id}"'
+   result1 = await db_Delete(table_name1, whr1)
 
-   fields3=f''
-   table_name3 = "td_stock_new"
-   flag3 = 1 
-   values3=''
-   whr3=f'ref_no="{id.id}"'
-   result3 = await db_Delete(table_name3, whr3)
 
 
-   if(result['suc']>0 and  result3['suc']>0 and result1['suc']>0):
-        res_dt = {"suc": 1, "msg": "Deleted successfully!"}
-   else:
-        res_dt = {"suc": 0, "msg": "Error while deleting!"}
        
    return res_dt
 
