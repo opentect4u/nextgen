@@ -3200,15 +3200,17 @@ async def deletetc(id:deleteMrn):
    table_names_insert3 = "td_min_delete"
    results_insert3 = await db_Insert(table_names_insert3, fields_insert3, None, None, 0, True)
 
-   fields1=f''
-   table_name1 = "td_min"
-   flag1 = 1 
-   values1=''
-   whr1=f'req_no="{id.id}"'
-   result1 = await db_Delete(table_name1, whr1)
+   fields2=f''
+   table_name2 = "td_min"
+   flag2 = 1 
+   values2=''
+   whr2=f'req_no="{id.id}"'
+   result2 = await db_Delete(table_name2, whr2)
 
-
-
+   if result1['suc']>0 and result['suc']>0 and result2['suc']>0:
+       res_dt={'suc':1,'msg':'Delete successfully'}
+   else:
+       res_dt={'suc':0,'msg':'Error while deleting'}
        
    return res_dt
 
