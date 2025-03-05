@@ -3886,7 +3886,7 @@ async def savestockreturn(dt:StockReturn):
                 flag_req2 = 1 
                 result_req2 = await db_Insert(table_name_req2, fields_req2, values_req2, whr_req2, flag_req2)
 
-                fields_replace= f'SELECT sl_no,item_id,opening_qty, {net_qty} issue_qty,req_no,purpose,notes,approve_status,created_by,created_at, modified_by, modified_at, deleted_by,deleted_at FROM td_min WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
+                fields_replace= f'SELECT sl_no,item_id,min_dt,opening_qty, {net_qty} issue_qty,req_no,purpose,notes,approve_status,created_by,created_at, modified_by, modified_at, deleted_by,deleted_at FROM td_min WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
                 table_name_replace = "td_min_delete"
                 result_replace= await db_Insert(table_name_replace, fields_replace, None, None, 0, True)
 
