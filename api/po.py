@@ -3861,7 +3861,7 @@ async def savestockreturn(dt:StockReturn):
     for i in dt.items:
             select = f"approved_qty"
             schema = "td_requisition_items"
-            where = f"req_no={i.ref_no} and item_id={dt.item_id}"
+            where = f"req_no='{i.ref_no}' and item_id='{dt.item_id}'"
             order = ""
             flag = 1
             result_req = await db_select(select, schema, where, order, flag)
