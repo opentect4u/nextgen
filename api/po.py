@@ -3866,7 +3866,7 @@ async def savestockreturn(dt:StockReturn):
             flag = 1
             result_req = await db_select(select, schema, where, order, flag)
             print(result_req['msg'])
-            net_qty = result_req['msg'][0]['approved_qty'] - i.ret_qty
+            net_qty = int(result_req['msg'][0]['approved_qty']) - i.ret_qty
             if net_qty>0:
                 fields_req= f'approved_qty="{net_qty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
                 values_req = f''
