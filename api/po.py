@@ -3172,12 +3172,22 @@ async def deletetc(id:deleteMrn):
    res_dt={}
    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
+   
+
+   fields_insert1= f'SELECT * FROM td_requisition WHERE req_no = "{id.id}"'
+   table_names_insert1 = "td_requisition_delete"
+   results_insert1 = await db_Insert(table_names_insert1, fields_insert1, None, None, 0, True)
+
    fields=f''
    table_name = "td_requisition"
    flag = 1 
    values=''
    whr=f'req_no="{id.id}"'
    result = await db_Delete(table_name, whr)
+
+   fields_insert2= f'SELECT * FROM td_requisition_items WHERE req_no = "{id.id}"'
+   table_names_insert2 = "td_requisition_items_delete"
+   results_insert2 = await db_Insert(table_names_insert2, fields_insert2, None, None, 0, True)
  
    fields1=f''
    table_name1 = "td_requisition_items"
@@ -3186,6 +3196,9 @@ async def deletetc(id:deleteMrn):
    whr1=f'req_no="{id.id}"'
    result1 = await db_Delete(table_name1, whr1)
 
+   fields_insert3= f'SELECT * FROM td_min WHERE req_no = "{id.id}"'
+   table_names_insert3 = "td_min_delete"
+   results_insert3 = await db_Insert(table_names_insert3, fields_insert3, None, None, 0, True)
 
    fields1=f''
    table_name1 = "td_min"
