@@ -3875,12 +3875,12 @@ async def savestockreturn(dt:StockReturn):
                 flag_req = 1 
                 result_req1 = await db_Insert(table_name_req, fields_req, values_req, whr_req, flag_req)
 
-                fields_req= f'issue_qty="{net_qty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
-                values_req = f''
-                table_name_req = "td_min"
-                whr_req = f'req_no="{i.ref_no}" and item_id="{dt.item_id}"' 
-                flag_req = 1 
-                result_req1 = await db_Insert(table_name_req, fields_req, values_req, whr_req, flag_req)
+                fields_req2= f'issue_qty="{net_qty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+                values_req2 = f''
+                table_name_req2 = "td_min"
+                whr_req2 = f'req_no="{i.ref_no}" and item_id="{dt.item_id}"' 
+                flag_req2 = 1 
+                result_req2 = await db_Insert(table_name_req2, fields_req2, values_req2, whr_req2, flag_req2)
 
             else:
                   fields_insert2= f'SELECT * FROM td_requisition_items WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
