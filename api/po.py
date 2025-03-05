@@ -2808,7 +2808,7 @@ async def get_requisition(data:GetPo):
     select = "@a:=@a+1 serial_number,reason, req_no,intended_for,req_date, req_type,approve_flag,purpose,project_id,client_id, created_by,created_at,modified_by,modified_at,sl_no"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_requisition,(SELECT @a:= 0) AS a"
-    where = f"sl_no='{data.id}' and " if data.id>0 else f""
+    where = f"sl_no='{data.id}'" if data.id>0 else f""
     order = "ORDER BY created_at DESC"
     flag = 0 if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
