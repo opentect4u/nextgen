@@ -3762,26 +3762,30 @@ async def getMinReq(id:GetMinReq):
     result = await db_select(select, schema, where, order, flag)
     return result
 
+# @poRouter.post('/get_stock_return')
+# async def getMinReq(dt:GetStock):
+#     res_dt = {}
+    
+#     select = f"distinct req.sl_no,req.req_date,req.req_no,r.item_id,sum(r.approved_qty) as approved_qty,sum(r.cancelled_qty) as cancelled_qty,sum(st.qty) as stock_out_qty,(select sum(qty) from td_return_items where proj_id={dt.proj_id} and item_id={dt.prod_id} group by ref_no) as return_qty"
+#     schema = "td_requisition_items r left join td_requisition req on req.req_no = r.req_no left join td_stock_new st on req.req_no = st.ref_no "
+#     where = f"req.project_id={dt.proj_id} and r.item_id={dt.prod_id} and req.req_no=r.req_no group by st.ref_no"
+#     order = ""
+#     flag = 1
+#     result = await db_select(select, schema, where, order, flag)
+#     return result
+
 @poRouter.post('/get_stock_return')
 async def getMinReq(dt:GetStock):
-    # res_dt = {}
-    # select = f"st.sl_no,st.ref_no,st.qty,sum(r.qty) as return_qty"
-    # schema = "td_stock_new st, td_return_items r"
-    # where = f"st.proj_id={dt.proj_id} and st.item_id={dt.prod_id} and st.in_out_flag=-1 and r.ref_no=CONCAT('RET-',st.ref_no)"
-    # order = ""
-    # flag = 1
-    # result = await db_select(select, schema, where, order, flag)
-    # return result
-
     res_dt = {}
     
-    select = f"distinct req.sl_no,req.req_date,req.req_no,r.item_id,sum(r.approved_qty) as approved_qty,sum(r.cancelled_qty) as cancelled_qty,sum(st.qty) as stock_out_qty,(select sum(qty) from td_return_items where proj_id={dt.proj_id} and item_id={dt.prod_id} group by ref_no) as return_qty"
+    select = f"distinct req.sl_no,req.req_date,req.req_no,r.item_id,sum(r.approved_qty) as approved_qty,sum(r.cancelled_qty) as cancelled_qty,sum(st.qty) as stock_out_qty"
     schema = "td_requisition_items r left join td_requisition req on req.req_no = r.req_no left join td_stock_new st on req.req_no = st.ref_no "
     where = f"req.project_id={dt.proj_id} and r.item_id={dt.prod_id} and req.req_no=r.req_no group by st.ref_no"
     order = ""
     flag = 1
     result = await db_select(select, schema, where, order, flag)
     return result
+
 
 
 # @poRouter.post('/save_stock_return')
