@@ -1062,8 +1062,8 @@ async def save_trans(data:GetPurItem):
 @stockRouter.post("/get_purchase_req_items_search")
 async def save_trans(data:GetPurItem):
 
-    select = "t.pur_no,t.pur_proj,i.item_id,p.prod_name,p.prod_make,p.part_no,p.article_no,p.model_no"
-    schema = f"td_purchase_req t left join td_purchase_items i on t.pur_no=i.pur_no left join md_product p on i.item_id=p.sl_no"
+    select = "t.pur_no,t.pur_proj,i.item_id,p.prod_name,tp.proj_name,p.prod_make,p.part_no,p.article_no,p.model_no"
+    schema = f"td_purchase_req t left join td_purchase_items i on t.pur_no=i.pur_no left join md_product p on i.item_id=p.sl_no left join td_project tp on t.pur_proj=tp.sl_no"
     where = f""
     order = ""
     flag =  1
