@@ -2761,8 +2761,8 @@ async def save_requisition(data:SaveReq):
     lastID=result["lastId"]
     #========================================================================================================
     for i in data.items:
-                fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,item_id,rc_qty,req_qty,created_by,created_at,balance,approved_qty'
-                values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}","{i.req_qty}",{"0"}'
+                fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,project_id,item_id,rc_qty,req_qty,created_by,created_at,balance,approved_qty'
+                values = f'"REQ-{reqNo}","{lastID}","{i.item_id}","{data.project_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}","{i.req_qty}",{"0"}'
                 table_name = "td_requisition_items"
                 whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
                 # flag1 = 1 if v.sl_no>0 else 0
@@ -2885,7 +2885,7 @@ async def req_item_dtls(data:MrnId):
 
 @poRouter.post('/get_item_dtls')
 async def get_item_dtls(data:ProjId):
-    select = f"b.sl_no,b.project_id,b.po_no,c.po_sl_no,c.quantity,c.item_id,p.prod_name,c.sl_no as po_item_no,d.mrn_no,d.rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id='0') as warehouse_stock"
+    select = f"b.sl_no,b.project_id,b.po_no,c.po_sl_no,c.quantity,c.item_id,p.prod_name,c.sl_no as po_item_no,d.mrn_no,d.rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id='0') as warehouse_stock,(select sum(req_qty) from td_requisition_items where project_id{data.Proj_id} and item_id=c.item_id) as tot_req"
     schema = "td_po_basic b LEFT JOIN td_po_items c on c.po_sl_no = b.sl_no left join md_product p on c.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=c.sl_no"
     where = f"b.project_id={data.Proj_id}"
     order = ""
