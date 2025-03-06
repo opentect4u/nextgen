@@ -1071,6 +1071,18 @@ async def save_trans(data:GetPurItem):
     print(result, 'RESULT')
     return result
 
+@stockRouter.post("/check_existing_purchase_req")
+async def save_trans(data:GetPurItem):
+
+    select = "count(pur_no) as cnt"
+    schema = f"td_po_basic"
+    where = f"pur_no='{data.pur_no}'"
+    order = ""
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
 
      
 
