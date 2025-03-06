@@ -137,6 +137,8 @@ class PoModel(BaseModel):
 
 class GetPo(BaseModel):
     id:int
+class GetPur(BaseModel):
+    id:str
 
 class GetPurchaseMrn(BaseModel):
     po_no:str
@@ -4005,6 +4007,46 @@ join (SELECT @a:= 0) AS a '''
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     return result
+
+
+@poRouter.post('/delete_pur_req')
+async def getprojectpoc(id:GetPur):
+    current_datetime = datetime.now()
+    res_dt={}
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+    
+
+    fields_insert1= f'SELECT * FROM td_purchase_req WHERE sl_no = "{id.id}"'
+    table_names_insert1 = "td_purchase_req_delete"
+    results_insert1 = await db_Insert(table_names_insert1, fields_insert1, None, None, 0, True)
+
+    fields=f''
+    table_name = "td_purchase_req"
+    flag = 1 
+    values=''
+    whr=f'pur_no="{id.id}"'
+    result = await db_Delete(table_name, whr)
+
+    fields_insert2= f'SELECT * FROM td_purchase_items WHERE pur_no = "{id.id}"'
+    table_names_insert2 = "td_purchase_items_delete"
+    results_insert2 = await db_Insert(table_names_insert2, fields_insert2, None, None, 0, True)
+    
+    fields1=f''
+    table_name1 = "td_purchase_items"
+    flag1 = 1 
+    values1=''
+    whr1=f'pur_no="{id.id}"'
+    result1 = await db_Delete(table_name1, whr1)
+
+  
+
+    if result1['suc']>0 and result['suc']>0 :
+        res_dt={'suc':1,'msg':'Deleted successfully!'}
+    else:
+        res_dt={'suc':0,'msg':'Error while deleting!'}
+        
+    return res_dt
 
 
     
