@@ -2762,9 +2762,9 @@ async def save_requisition(data:SaveReq):
     #========================================================================================================
     for i in data.items:
                 fields= f"req_qty={i.req_qty}" if data.sl_no>0 else f'req_no,last_req_id,project_id,item_id,rc_qty,req_qty,created_by,created_at,balance,approved_qty'
-                values = f'"REQ-{reqNo}","{lastID}","{data.project_id}","{i.item_id}",,"{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}","{i.req_qty}",{"0"}'
+                values = f'"REQ-{reqNo}","{lastID}","{data.project_id}","{i.item_id}","{i.rc_qty}","{i.req_qty}","{data.user}","{formatted_dt}","{i.req_qty}",{"0"}'
                 table_name = "td_requisition_items"
-                whr=f"item_id={i.item_id} and last_req_id={data.sl_no}"   if data.sl_no > 0 else ""
+                whr=f"item_id={i.item_id} and last_req_id={data.sl_no}" if data.sl_no > 0 else ""
                 # flag1 = 1 if v.sl_no>0 else 0
                 flag1 = 1 if data.sl_no>0 else 0
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
