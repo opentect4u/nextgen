@@ -4015,9 +4015,7 @@ async def getprojectpoc(id:GetPur):
     res_dt={}
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
-    
-
-    fields_insert1= f'SELECT * FROM td_purchase_req WHERE sl_no = "{id.id}"'
+    fields_insert1= f'SELECT * FROM td_purchase_req WHERE pur_no = "{id.id}"'
     table_names_insert1 = "td_purchase_req_delete"
     results_insert1 = await db_Insert(table_names_insert1, fields_insert1, None, None, 0, True)
 
