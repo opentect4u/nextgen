@@ -3904,7 +3904,7 @@ async def savestockreturn(dt:StockReturn):
                   flag1 = 1 
                   values1=''
                   whr1=f'req_no="{i.ref_no}" and item_id="{dt.item_id}"'
-                  result1 = await db_Delete(table_name1, whr1)
+                  result_req1 = await db_Delete(table_name1, whr1)
 
                   fields_insert3= f'SELECT * FROM td_min WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
                   table_names_insert3 = "td_min_delete"
@@ -3915,7 +3915,7 @@ async def savestockreturn(dt:StockReturn):
                   flag2 = 1 
                   values2=''
                   whr2=f'req_no="{i.ref_no}" and item_id="{dt.item_id}"'
-                  result2 = await db_Delete(table_name2, whr2)
+                  result_req2 = await db_Delete(table_name2, whr2)
 
                   select_res = f"approved_qty"
                   schema_res = "td_requisition_items"
@@ -3937,13 +3937,13 @@ async def savestockreturn(dt:StockReturn):
 
                  
 
-            flds11= f'ret_dt,ref_no,proj_id,item_id,qty,created_by,created_at'
-            val11 = f'"{dt.dt}","RET-{i.ref_no}",{dt.proj_id},{dt.item_id},{i.ret_qty},"{dt.user}","{formatted_dt}"'
-            table11 = "td_return_items"
-            whr11=f""
-            flag11 =  0
-            result11 = await db_Insert(table11, flds11, val11, whr11, flag11)
-            if(result11['suc']>0): 
+            # flds11= f'ret_dt,ref_no,proj_id,item_id,qty,created_by,created_at'
+            # val11 = f'"{dt.dt}","RET-{i.ref_no}",{dt.proj_id},{dt.item_id},{i.ret_qty},"{dt.user}","{formatted_dt}"'
+            # table11 = "td_return_items"
+            # whr11=f""
+            # flag11 =  0
+            # result11 = await db_Insert(table11, flds11, val11, whr11, flag11)
+            if(result_req1['suc']>0 and result_req2['suc']>0): 
                 res_dt2 = {"suc": 1, "msg": f"Updated Successfully "}
 
             else:
