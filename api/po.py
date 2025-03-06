@@ -2799,7 +2799,7 @@ async def save_requisition(data:SaveReq):
     return res_dt
 
 
-@poRouter.post('/get_requisition')
+@poRouter.post('/get_requisition1')
 async def get_requisition(data:GetPo):
     print('I am logging in!')
     print(data.id)
@@ -2810,6 +2810,23 @@ async def get_requisition(data:GetPo):
     schema = "td_requisition,(SELECT @a:= 0) AS a"
     where = f"sl_no='{data.id}'" if data.id>0 else f""
     order = "ORDER BY created_at DESC"
+    flag = 0 if data.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
+@poRouter.post('/get_requisition')
+async def get_requisition(data:GetPo):
+    print('I am logging in!')
+    print(data.id)
+    res_dt = {}
+    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
+    select = "@a:=@a+1 serial_number,r.reason, r.req_no,r.intended_for,r.req_date, r.req_type,r.approve_flag,r.purpose,r.project_id,r.client_id, r.created_by,r.created_at,r.modified_by,r.modified_at,r.sl_no,p.proj_name"
+    # select = "@a:=@a+1 serial_number, *"
+    schema = "td_requisition r,td_project p ,(SELECT @a:= 0) AS a"
+    where = f"r.sl_no='{data.id}' and r.project_id=p.sl_no" if data.id>0 else f" r.project_id=p.sl_no"
+    order = "ORDER BY r.created_at DESC"
     flag = 0 if data.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
