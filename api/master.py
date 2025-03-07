@@ -1390,8 +1390,17 @@ async def check_product(wrd:getPhrase):
     print(result_client, 'RESULT')
 
 
+    select_stock = "sum(qty*in_out_flag) as stock_cnt"
+    schema_stock = "td_stock_new"
+    where_stock = f""
+    order_stock = ""
+    flag_stock = 1 
+    result_stock = await db_select(select_stock, schema_stock, where_stock, order_stock, flag_stock)
+    print(result_stock, 'RESULT')
 
-    return {'project':result_project['msg'][0]['proj_cnt'],'po':result_po['msg'][0]['po_cnt'],'req':result_req['msg'][0]['req_cnt'],'mrn':result_mrn['msg'][0]['mrn_cnt'],'user':result_user['msg'][0]['user_cnt'],'vendor':result_vendor['msg'][0]['vendor_cnt'],'client':result_client['msg'][0]['client_cnt']}
+
+
+    return {'project':result_project['msg'][0]['proj_cnt'],'po':result_po['msg'][0]['po_cnt'],'req':result_req['msg'][0]['req_cnt'],'mrn':result_mrn['msg'][0]['mrn_cnt'],'user':result_user['msg'][0]['user_cnt'],'vendor':result_vendor['msg'][0]['vendor_cnt'],'client':result_client['msg'][0]['client_cnt'],'stock_cnt':result_stock['msg'][0]['stock_cnt']}
 
 
     # return result
