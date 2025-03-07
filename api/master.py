@@ -1406,7 +1406,7 @@ async def check_product(wrd:getPhrase):
     result_prod = await db_select(select_prod, schema_prod, where_prod, order_prod, flag_prod)
 
 
-    return {'project':result_project['msg'][0]['proj_cnt'],'po':result_po['msg'][0]['po_cnt'],'req':result_req['msg'][0]['req_cnt'],'mrn':result_mrn['msg'][0]['mrn_cnt'],'user':result_user['msg'][0]['user_cnt'],'vendor':result_vendor['msg'][0]['vendor_cnt'],'client':result_client['msg'][0]['client_cnt'],'stock_cnt':result_stock['msg'][0]['stock_cnt'],'products':result_project['msg']}
+    return {'project':result_project['msg'][0]['proj_cnt'],'po':result_po['msg'][0]['po_cnt'],'req':result_req['msg'][0]['req_cnt'],'mrn':result_mrn['msg'][0]['mrn_cnt'],'user':result_user['msg'][0]['user_cnt'],'vendor':result_vendor['msg'][0]['vendor_cnt'],'client':result_client['msg'][0]['client_cnt'],'stock_cnt':result_stock['msg'][0]['stock_cnt'],'products':result_prod['msg']}
 
 
     # return result
