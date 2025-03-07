@@ -121,6 +121,14 @@ async def getprojectpoc(id:GetStockOut):
         result_req = await db_select(select_req, schema_req, where_req, order_req, flag_req)
         print(result_req)
 
+        select_trans = f"i.approved_qty, i.approved_qty as copy_qty,r.trans_no as req_no,i.item_id,r.to_proj_id as proj_id,(select sum(qty) from td_stock_new st where st.item_id={i['item_id']} and st.proj_id={id.proj_id} and st.ref_no=r.trans_no) del_qty"
+        schema_trans = "td_transfer_items i,td_transfer r"
+        where_trans = f"i.item_id={i['item_id']} and r.to_proj_id={id.proj_id} and (i.approve_flag='A' || i.approve_flag='H') and i.trans_no=r.trans_no"
+        order_trans = ""
+        flag_trans = 1 
+        result_trans = await db_select(select_req, schema_req, where_req, order_req, flag_req)
+        print(result_req)
+
         select2 = f"sum(i.approved_qty) as qty,r.req_no as req_no"
         schema2 = "td_requisition_items i,td_requisition r"
         where2 = f"i.item_id={i['item_id']} and r.project_id={id.proj_id} and (i.approve_flag='A' || i.approve_flag='H') and i.req_no=r.req_no"
@@ -128,7 +136,7 @@ async def getprojectpoc(id:GetStockOut):
         flag2= 0 
         result2 = await db_select(select2, schema2, where2, order2, flag2)
         print(result2)
-        stock.append({"id":i['item_id'],"name":i['item_name'],"stock":result['msg']['balance'],"req_stock":result2['msg']['qty'],"req_list":result_req['msg'],})
+        stock.append({"id":i['item_id'],"name":i['item_name'],"stock":result['msg']['balance'],"req_stock":result2['msg']['qty'],"req_list":result_req['msg'],"trans_list":result_trans['msg']})
 
     return {'suc':1,'msg':stock}
 
