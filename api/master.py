@@ -1331,4 +1331,69 @@ async def check_product(wrd:getPhrase):
     print(result, 'RESULT')
     return result
 
+@masterRouter.post('/get_dashboard_data')
+async def check_product(wrd:getPhrase):
+    select_project = "count(*) as proj_cnt"
+    schema_project = "td_project"
+    where_project = f""
+    order_project = ""
+    flag_project = 1 
+    result_project = await db_select(select_project, schema_project, where_project, order_project, flag_project)
+    print(result_project, 'RESULT')
+
+    select_po = "count(*) as po_cnt"
+    schema_po = "td_po_basic"
+    where_po = f"po_status='P'"
+    order_po = ""
+    flag_po = 1 
+    result_po = await db_select(select_po, schema_po, where_po, order_po, flag_po)
+    print(result_po, 'RESULT')
+
+    select_req = "count(*) as req_cnt"
+    schema_req = "td_requisition"
+    where_req = f""
+    order_req = ""
+    flag_req = 1 
+    result_req = await db_select(select_req, schema_req, where_req, order_req, flag_req)
+    print(result_req, 'RESULT')
+
+    select_mrn = "count(*) as mrn_cnt"
+    schema_mrn = "td_item_delivery_invoice"
+    where_mrn = f"approve_flag='P'"
+    order_mrn = ""
+    flag_mrn = 1 
+    result_mrn = await db_select(select_mrn, schema_mrn, where_mrn, order_mrn, flag_mrn)
+    print(result_mrn, 'RESULT')
+
+    select_user = "count(*) as user_cnt"
+    schema_user = "md_user"
+    where_user = f""
+    order_user = ""
+    flag_user = 1 
+    result_user = await db_select(select_user, schema_user, where_user, order_user, flag_user)
+    print(result_user, 'RESULT')
+
+    select_vendor = "count(*) as vendor_cnt"
+    schema_vendor = "md_vendor"
+    where_vendor = f""
+    order_vendor = ""
+    flag_vendor = 1 
+    result_vendor = await db_select(select_vendor, schema_vendor, where_vendor, order_vendor, flag_vendor)
+    print(result_vendor, 'RESULT')
+
+    select_client = "count(*) as client_cnt"
+    schema_client = "md_client"
+    where_client = f""
+    order_client = ""
+    flag_client = 1 
+    result_client = await db_select(select_client, schema_client, where_client, order_client, flag_client)
+    print(result_client, 'RESULT')
+
+
+
+    return {'project':result_project['msg'][0]['proj_cnt'],'po':result_po['msg'][0]['po_cnt'],'req':result_req['msg'][0]['req_cnt'],'mrn':result_mrn['msg'][0]['mrn_cnt'],'user':result_user['msg'][0]['user_cnt'],'vendor':result_vendor['msg'][0]['vendor_cnt'],'client':result_client['msg'][0]['client_cnt']}
+
+
+    # return result
+
 
