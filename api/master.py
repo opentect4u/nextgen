@@ -1398,9 +1398,9 @@ async def check_product(wrd:getPhrase):
     result_stock = await db_select(select_stock, schema_stock, where_stock, order_stock, flag_stock)
     print(result_stock, 'RESULT')
     
-    select_prod = "p.prod_name,c.catg_name,p.part_no limit 4"
+    select_prod = "p.prod_name,c.catg_name,p.part_no "
     schema_prod = "md_product p,md_category c"
-    where_prod = f"p.prod_cat=c.sl_no"
+    where_prod = f"p.prod_cat=c.sl_no limit 4"
     order_prod = "order by p.created_by desc"
     flag_prod = 1 
     result_prod = await db_select(select_prod, schema_prod, where_prod, order_prod, flag_prod)
