@@ -419,11 +419,11 @@ async def save_trans(data:GetTrans):
     res_dt = {}
 
     select = "t.trans_no,t.trans_dt,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_id as to_projid,t.to_proj_id,t.from_proj_id,(select proj_name from td_project where sl_no=t.from_proj_id) as from_proj_name,(select proj_id from td_project where sl_no=t.from_proj_id) as from_projid"
-    schema = "td_transfer t,td_project p"
-    where = f"t.sl_no='{data.id}' and p.sl_no=t.to_proj_id" if data.id>0 else f"p.sl_no=t.to_proj_id"
+    table = "td_transfer t left join td_project p on p.sl_no=t.to_proj_id"
+    where = f"t.sl_no='{data.id}' " if data.id>0 else f""
     order = "ORDER BY t.created_at DESC"
     flag = 0 if data.id>0 else 1
-    result = await db_select(select, schema, where, order, flag)
+    result = await db_select(select, table, where, order, flag)
     print(result, 'RESULT')
     return result
 
