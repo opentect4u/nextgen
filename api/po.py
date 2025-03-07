@@ -3890,8 +3890,9 @@ async def savestockreturn(dt:StockReturn):
             result_req = await db_select(select, schema, where, order, flag)
             print(result_req['msg'])
             net_qty = int(result_req['msg'][0]['approved_qty']) - i.ret_qty
+            net_req_qty = int(result_req['msg'][0]['req_qty']) - i.ret_qty
             if net_qty>0:
-                fields_req= f'approved_qty="{net_qty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+                fields_req= f'approved_qty="{net_qty}",req_qty="{net_req_qty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
                 values_req = f''
                 table_name_req = "td_requisition_items"
                 whr_req = f'req_no="{i.ref_no}" and item_id="{dt.item_id}"' 
