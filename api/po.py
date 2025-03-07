@@ -3882,7 +3882,7 @@ async def savestockreturn(dt:StockReturn):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     in_out_flag=1
     for i in dt.items:
-            select = f"approved_qty"
+            select = f"approved_qty,req_qty"
             schema = "td_requisition_items"
             where = f"req_no='{i.ref_no}' and item_id='{dt.item_id}'"
             order = ""
