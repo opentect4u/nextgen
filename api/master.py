@@ -1401,7 +1401,7 @@ async def check_product(wrd:getPhrase):
     select_prod = "p.prod_name,c.catg_name,p.part_no"
     schema_prod = "md_product p,md_category c"
     where_prod = f"p.prod_cat=c.sl_no"
-    order_prod = "p.created_by desc"
+    order_prod = "order by p.created_by desc"
     flag_prod = 1 
     result_prod = await db_select(select_prod, schema_prod, where_prod, order_prod, flag_prod)
 
