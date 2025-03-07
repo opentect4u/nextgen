@@ -775,29 +775,29 @@ async def save_trans(data:GetApproveItems):
                     whr_out=f""
                     flag2_out=  0
                     result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
-                    if balance>0:
-                        select_stck = f"max(date) as max_dt"
-                        schema_stck = "td_stock_new"
-                        where_stck= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
-                        order_stck = ""
-                        flag_stck = 0 
-                        result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+                    # if balance>0:
+                    #     select_stck = f"max(date) as max_dt"
+                    #     schema_stck = "td_stock_new"
+                    #     where_stck= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
+                    #     order_stck = ""
+                    #     flag_stck = 0 
+                    #     result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
 
-                        select_stck1 = f"max(sl_no) as max_sl"
-                        schema_stck1 = "td_stock_new"
-                        where_stck1= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
-                        order_stck1 = ""
-                        flag_stck1 = 0 
-                        result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+                    #     select_stck1 = f"max(sl_no) as max_sl"
+                    #     schema_stck1 = "td_stock_new"
+                    #     where_stck1= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
+                    #     order_stck1 = ""
+                    #     flag_stck1 = 0 
+                    #     result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
                     
-                        flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
+                    #     flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
                         
-                        val_out= f'"{formatted_appr_dt}","{data.trans_no}","{data.from_proj_id}",{i.item_id},{i.qty},{stock_in},{balance},"{data.user}","{formatted_dt}"'
-                        table_out= "td_stock_new"
-                        whr_out=f""
-                        flag2_out=  0
-                        result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
-                    print(result3_out)
+                    #     val_out= f'"{formatted_appr_dt}","{data.trans_no}","{data.from_proj_id}",{i.item_id},{i.qty},{stock_in},{balance},"{data.user}","{formatted_dt}"'
+                    #     table_out= "td_stock_new"
+                    #     whr_out=f""
+                    #     flag2_out=  0
+                    #     result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
+                    # print(result3_out)
                     if(result3_out['suc']>0): 
                         stock_save = 1
                         res_dt2_out = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
