@@ -1397,10 +1397,16 @@ async def check_product(wrd:getPhrase):
     flag_stock = 1 
     result_stock = await db_select(select_stock, schema_stock, where_stock, order_stock, flag_stock)
     print(result_stock, 'RESULT')
+    
+    select_prod = "p.prod_name,c.catg_name,p.part_no"
+    schema_prod = "md_product p,md_category c"
+    where_prod = f"p.prod_cat=c.sl_no"
+    order_prod = "p.created_by desc"
+    flag_prod = 1 
+    result_prod = await db_select(select_prod, schema_prod, where_prod, order_prod, flag_prod)
 
 
-
-    return {'project':result_project['msg'][0]['proj_cnt'],'po':result_po['msg'][0]['po_cnt'],'req':result_req['msg'][0]['req_cnt'],'mrn':result_mrn['msg'][0]['mrn_cnt'],'user':result_user['msg'][0]['user_cnt'],'vendor':result_vendor['msg'][0]['vendor_cnt'],'client':result_client['msg'][0]['client_cnt'],'stock_cnt':result_stock['msg'][0]['stock_cnt']}
+    return {'project':result_project['msg'][0]['proj_cnt'],'po':result_po['msg'][0]['po_cnt'],'req':result_req['msg'][0]['req_cnt'],'mrn':result_mrn['msg'][0]['mrn_cnt'],'user':result_user['msg'][0]['user_cnt'],'vendor':result_vendor['msg'][0]['vendor_cnt'],'client':result_client['msg'][0]['client_cnt'],'stock_cnt':result_stock['msg'][0]['stock_cnt'],'products':result_project['msg']}
 
 
     # return result
