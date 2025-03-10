@@ -778,14 +778,7 @@ async def addclient(request: Request,client_data:str = Form(...)):
         if key.startswith("poc_doc[") :
             files.append(value)
             print('value=',value)
-    # print(data['c_name'])
-    # for file in poc_doc:
-    #     contents=await file.read()
-    #     with open(f"upload_file/upload_poc/{file.filename}", "wb")  as f:
-    #         f.write(contents)
-    
-    # print(poc_doc)
-    # return len(poc_doc)
+        print('files=',files)
 
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
