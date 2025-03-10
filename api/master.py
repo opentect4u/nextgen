@@ -771,13 +771,10 @@ async def addclient(request: Request,client_data:str = Form(...)):
     print('poc_doc_outside=',request)
     data = json.loads(client_data)
     form_data = await request.form()
-    print('form_data=',form_data.items())
     files = []
     for key, value in form_data.items():
-        print('key = ',key,'value=',value,'instance=',isinstance(value, UploadFile))
         if key.startswith("poc_doc[") :
             files.append(value)
-            print('value=',value)
 
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -813,10 +810,6 @@ async def addclient(request: Request,client_data:str = Form(...)):
         flag1 = 1 if c['sl_no']>0 else 0
         result = await db_Insert(table_name, fields, values, whr, flag1)
 
-        # if(result['suc']>0):
-        #     res_dt = {"suc": 1, "msg": f"Client saved successfully!" if c.sl_no==0 else f"Client updated successfully!"}
-        # else:
-        #     res_dt = {"suc": 0, "msg": f"Error while saving!" if c.sl_no==0 else f"Error while updating"}
 
     if(data['c_id'] > 0):
         poc_ids = ",".join(str(dt['sl_no']) for dt in data['c_poc'])
@@ -824,44 +817,23 @@ async def addclient(request: Request,client_data:str = Form(...)):
             del_table_name = 'md_client_poc'
             del_whr = f"client_id = {lastID} AND sl_no not in({poc_ids})"
             del_qry = await db_Delete(del_table_name, del_whr)
-            # print('poc_doc=',poc_doc)
 
         except:
             print('Error while delete md_client_poc')
-    # files = []
-    # if poc_doc is not None:
-    #     files = poc_doc
+   
     index = 0
     for c in data['c_poc']:
         fileName = ''
         print('files=',files)
-        # print('file=',files[index])
-
-        # file_path=''
         try:
-            # fileName = None if not poc_doc[index] else await uploadfileToLocal(poc_doc[index], UPLOAD_POC_FOLDER)
-            # print(poc_doc[index], '+++++++++++++++++++++++++++++')
-            # print(fileName, '-----------------------------------')
-            # if index < len(files) and files[index]:
-            #     fileName = await uploadfileToLocal(files[index], UPLOAD_POC_FOLDER)
-            #     if fileName:
-            #         fileName = f"upload_poc/{fileName}"
-            #  for file in files:
-                # print('file=',file)
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                # file_path = os.path.join(UPLOAD_POC_FOLDER, f"{timestamp}_{file}")
-                # file_path = file_path.replace('\\', '/')
             fileName = '' if not files[index] else  await uploadfileToLocal(files[index], UPLOAD_POC_FOLDER)
             print('file_name=',fileName)
-                # print(f"File saved to: {file_path}")
         except Exception as e:
-            # res = e.args
             print(e, '///////////////////////////////')
             fileName = ""
         finally:
             if fileName:
                  fileName = f"upload_poc/{fileName}"
-                #  fileName = f"{file_path}"
 
         fields= f'poc_name="{c['poc_name']}",poc_email="{c['poc_email']}",poc_designation="{c['poc_designation']}",poc_department="{c['poc_department']}",poc_direct_no="{c['poc_direct_no']}",poc_ext_no="{c['poc_ext_no']}", poc_ph_1="{c['poc_ph_1']}",poc_ph_2="{c['poc_ph_2']}",poc_location="{c['poc_location']}" {f", poc_file = '{fileName}'" if fileName != '' else ''},modified_by="{data['user']}",modified_at="{formatted_dt}"' if c['sl_no'] > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_location {f", poc_file" if fileName != '' else ''},created_by,created_at'
         values = f'"{lastID}","{c['poc_name']}","{c['poc_email']}","{c['poc_designation']}","{c['poc_department']}","{c['poc_direct_no']}","{c['poc_ext_no']}","{c['poc_ph_1']}","{c['poc_ph_2']}","{c['poc_location']}" {f", '{fileName}'" if fileName != '' else ''},"{data['user']}","{formatted_dt}"'
@@ -869,7 +841,6 @@ async def addclient(request: Request,client_data:str = Form(...)):
         whr =  f'sl_no="{c['sl_no']}"' if c['sl_no'] > 0 else None
         flag1 = 1 if c['sl_no']>0 else 0
         result = await db_Insert(table_name, fields, values, whr, flag1)
-        # return result
         if(result['suc']>0):
             res_dt = {"suc": 1, "msg": f"Client saved successfully!" if c['sl_no']==0 else f"Client updated successfully!"}
         else:
@@ -878,40 +849,7 @@ async def addclient(request: Request,client_data:str = Form(...)):
 
     return res_dt
 
-    # if(data.c_id==0):
-    #     lastID=result["lastId"]
-    #     if(result['suc']>0):
-    #         for c in data.c_poc:
-    #             fields= f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,created_by,created_at'
-    #             values = f'"{lastID}","{c.poc_name}","{c.poc_email}","{c.poc_designation}","{c.poc_department}","{c.poc_direct_no}","{c.poc_ext_no}","{c.poc_ph_1}","{c.poc_ph_2}","{data.user}","{formatted_dt}"'
-    #             table_name = "md_client_poc"
-    #             whr =  None
-    #             result = await db_Insert(table_name, fields, values, whr, flag)
-    #             if(result['suc']>0):
-    #                 res_dt = {"suc": 1, "msg": "Client saved successfully!"}
-    #             else:
-    #                 res_dt = {"suc": 0, "msg": "Error while saving!"}
-    #     else:
-    #         res_dt = {"suc": 0, "msg": "Error while saving!"}
-    # else:
-    #     print(flag)
-    #     fields=f'client_name="{data.c_name}",client_email="{data.c_email}",client_phone="{data.c_phone}",client_gst="{data.c_gst}",client_pan="{data.c_pan}",client_reg="{data.c_reg}",client_location="{data.c_location}",client_address="{data.c_address}",modified_by="{data.user}",modified_at="{formatted_dt}"'
-    #     whr=f'sl_no="{data.c_id}"'
-    #     result = await db_Insert(table_name, fields, values, whr, flag)
-    #     if(result['suc']>0):
-    #        for c in data.c_poc:
-    #             fields= f'poc_name="{c.poc_name}",poc_email="{c.poc_email}",poc_designation="{c.poc_designation}",poc_department="{c.poc_department}",poc_direct_no="{c.poc_direct_no}",poc_ext_no="{c.poc_ext_no}", poc_ph_1="{c.poc_ph_1}",poc_ph_2="{c.poc_ph_2}",modified_by="{data.user}",modified_at="{formatted_dt}"'
-    #             table_name = "md_client_poc"
-    #             whr = f'client_id="{data.c_id}"'
-    #             result = await db_Insert(table_name, fields, values, whr, flag)
-    #             if(result['suc']>0):
-    #                 res_dt = {"suc": 1, "msg": "Client updated successfully!"}
-    #             else:
-    #                 res_dt = {"suc": 0, "msg": "Error while updating!"}
-    #     else:
-    #         res_dt = {"suc": 0, "msg": "Error while updating!"}
-    # return res_dt
-
+    
 async def uploadfileToLocal(file, upPath):
     current_datetime = datetime.now()
     receipt = int(round(current_datetime.timestamp()))
