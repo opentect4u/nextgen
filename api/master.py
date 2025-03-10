@@ -835,6 +835,7 @@ async def addclient(request: Request,client_data:str = Form(...)):
     index = 0
     for c in data['c_poc']:
         fileName = ''
+        print('files=')
         # file_path=''
         try:
             # fileName = None if not poc_doc[index] else await uploadfileToLocal(poc_doc[index], UPLOAD_POC_FOLDER)
