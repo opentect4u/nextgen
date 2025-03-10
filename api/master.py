@@ -856,7 +856,7 @@ async def addclient(request: Request,client_data:str = Form(...)):
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 file_path = os.path.join(UPLOAD_POC_FOLDER, f"{timestamp}_{file}")
                 file_path = file_path.replace('\\', '/')
-                await uploadfileToLocal(file, file_path)
+                await uploadfileToLocal(file, UPLOAD_POC_FOLDER)
                 print(f"File saved to: {file_path}")
         except Exception as e:
             # res = e.args
