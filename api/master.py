@@ -772,6 +772,10 @@ async def addclient(request: Request,client_data:str = Form(...)):
     data = json.loads(client_data)
     form_data = await request.form()
     print('form_data=',form_data)
+    files = []
+    for key, value in form_data.items():
+        if key.startswith("poc_doc[") and isinstance(value, UploadFile):
+            files.append(value)
     # print(data['c_name'])
     # for file in poc_doc:
     #     contents=await file.read()
@@ -826,13 +830,13 @@ async def addclient(request: Request,client_data:str = Form(...)):
             del_table_name = 'md_client_poc'
             del_whr = f"client_id = {lastID} AND sl_no not in({poc_ids})"
             del_qry = await db_Delete(del_table_name, del_whr)
-            print('poc_doc=',poc_doc)
+            # print('poc_doc=',poc_doc)
 
         except:
             print('Error while delete md_client_poc')
-    files = []
-    if poc_doc is not None:
-        files = poc_doc
+    # files = []
+    # if poc_doc is not None:
+    #     files = poc_doc
     index = 0
     for c in data['c_poc']:
         fileName = ''
@@ -840,10 +844,15 @@ async def addclient(request: Request,client_data:str = Form(...)):
             # fileName = None if not poc_doc[index] else await uploadfileToLocal(poc_doc[index], UPLOAD_POC_FOLDER)
             # print(poc_doc[index], '+++++++++++++++++++++++++++++')
             # print(fileName, '-----------------------------------')
-            if index < len(files) and files[index]:
-                fileName = await uploadfileToLocal(files[index], UPLOAD_POC_FOLDER)
-                if fileName:
-                    fileName = f"upload_poc/{fileName}"
+            # if index < len(files) and files[index]:
+            #     fileName = await uploadfileToLocal(files[index], UPLOAD_POC_FOLDER)
+            #     if fileName:
+            #         fileName = f"upload_poc/{fileName}"
+             for file in files:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                file_path = os.path.join(UPLOAD_POC_FOLDER, f"{timestamp}_{file}")
+                await uploadfileToLocal(file, UPLOAD_POC_FOLDER)
+                print(f"File saved to: {file_path}")
         except Exception as e:
             # res = e.args
             print(e, '///////////////////////////////')
