@@ -765,8 +765,8 @@ async def deleteuser(id:deleteData):
 @masterRouter.post('/addclient')
 # poc_doc: Optional[List[UploadFile]] = File(None)
 # poc_doc:List[UploadFile] = File(...)
-async def addclient(client_data:str = Form(...), poc_doc: Optional[List[UploadFile]] = File(...)):
-    res_dt = {}
+async def addclient(client_data:str = Form(...), poc_doc: Optional[List[UploadFile]] = File(None)):
+    res_dt = {}  
     print('poc_doc_outside=',poc_doc)
     data = json.loads(client_data)
     # print(data['c_name'])
@@ -827,13 +827,20 @@ async def addclient(client_data:str = Form(...), poc_doc: Optional[List[UploadFi
 
         except:
             print('Error while delete md_client_poc')
+    files = []
+    if poc_doc is not None:
+        files = poc_doc
     index = 0
     for c in data['c_poc']:
         fileName = ''
         try:
-            fileName = None if not poc_doc[index] else await uploadfileToLocal(poc_doc[index], UPLOAD_POC_FOLDER)
-            print(poc_doc[index], '+++++++++++++++++++++++++++++')
-            print(fileName, '-----------------------------------')
+            # fileName = None if not poc_doc[index] else await uploadfileToLocal(poc_doc[index], UPLOAD_POC_FOLDER)
+            # print(poc_doc[index], '+++++++++++++++++++++++++++++')
+            # print(fileName, '-----------------------------------')
+            if index < len(files) and files[index]:
+                fileName = await uploadfileToLocal(files[index], UPLOAD_POC_FOLDER)
+                if fileName:
+                    fileName = f"upload_poc/{fileName}"
         except Exception as e:
             # res = e.args
             print(e, '///////////////////////////////')
