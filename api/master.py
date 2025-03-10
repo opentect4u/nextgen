@@ -835,7 +835,7 @@ async def addclient(request: Request,client_data:str = Form(...)):
     for c in data['c_poc']:
         fileName = ''
         print('files=',files)
-        print('file=',files[index])
+        # print('file=',files[index])
 
         # file_path=''
         try:
