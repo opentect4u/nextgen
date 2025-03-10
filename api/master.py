@@ -822,10 +822,11 @@ async def addclient(client_data:str = Form(...), poc_doc: Optional[List[UploadFi
             del_table_name = 'md_client_poc'
             del_whr = f"client_id = {lastID} AND sl_no not in({poc_ids})"
             del_qry = await db_Delete(del_table_name, del_whr)
+            print('poc_doc=',poc_doc)
+
         except:
             print('Error while delete md_client_poc')
     index = 0
-    print('poc_doc=',poc_doc)
     for c in data['c_poc']:
         fileName = ''
         try:
