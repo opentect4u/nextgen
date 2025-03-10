@@ -774,7 +774,7 @@ async def addclient(request: Request,client_data:str = Form(...)):
     print('form_data=',form_data.items())
     files = []
     for key, value in form_data.items():
-        print('key = ',key,'value=',value)
+        print('key = ',key,'value=',value,'instance=',isinstance(value, UploadFile))
         if key.startswith("poc_doc[") and isinstance(value, UploadFile):
             files.append(value)
             print('value=',value)
