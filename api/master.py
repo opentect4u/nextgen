@@ -778,7 +778,6 @@ async def addclient(request: Request,client_data:str = Form(...)):
         if key.startswith("poc_doc[") :
             files.append(value)
             print('value=',value)
-        print('files=',files)
 
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -835,7 +834,9 @@ async def addclient(request: Request,client_data:str = Form(...)):
     index = 0
     for c in data['c_poc']:
         fileName = ''
-        print('files=')
+        print('files=',files)
+        print('file=',files[index])
+
         # file_path=''
         try:
             # fileName = None if not poc_doc[index] else await uploadfileToLocal(poc_doc[index], UPLOAD_POC_FOLDER)
