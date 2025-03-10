@@ -836,7 +836,8 @@ async def addclient(client_data:str = Form(...), poc_doc: Optional[List[UploadFi
             print(e, '///////////////////////////////')
             fileName = ""
         finally:
-            fileName = f"upload_poc/{fileName}"
+            if fileName:
+                 fileName = f"upload_poc/{fileName}"
 
         fields= f'poc_name="{c['poc_name']}",poc_email="{c['poc_email']}",poc_designation="{c['poc_designation']}",poc_department="{c['poc_department']}",poc_direct_no="{c['poc_direct_no']}",poc_ext_no="{c['poc_ext_no']}", poc_ph_1="{c['poc_ph_1']}",poc_ph_2="{c['poc_ph_2']}",poc_location="{c['poc_location']}" {f", poc_file = '{fileName}'" if fileName != '' else ''},modified_by="{data['user']}",modified_at="{formatted_dt}"' if c['sl_no'] > 0 else f'client_id,poc_name,poc_email,poc_designation,poc_department,poc_direct_no,poc_ext_no,poc_ph_1,poc_ph_2,poc_location {f", poc_file" if fileName != '' else ''},created_by,created_at'
         values = f'"{lastID}","{c['poc_name']}","{c['poc_email']}","{c['poc_designation']}","{c['poc_department']}","{c['poc_direct_no']}","{c['poc_ext_no']}","{c['poc_ph_1']}","{c['poc_ph_2']}","{c['poc_location']}" {f", '{fileName}'" if fileName != '' else ''},"{data['user']}","{formatted_dt}"'
