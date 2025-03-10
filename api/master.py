@@ -851,6 +851,7 @@ async def addclient(request: Request,client_data:str = Form(...)):
             #     if fileName:
             #         fileName = f"upload_poc/{fileName}"
              for file in files:
+                print('filename',file['filename'])
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 file_path = os.path.join(UPLOAD_POC_FOLDER, f"{timestamp}_{file}")
                 await uploadfileToLocal(file, UPLOAD_POC_FOLDER)
