@@ -770,6 +770,8 @@ async def addclient(request: Request,client_data:str = Form(...)):
     res_dt = {}  
     print('poc_doc_outside=',request)
     data = json.loads(client_data)
+    form_data = await request.form()
+    print('form_data=',form_data)
     # print(data['c_name'])
     # for file in poc_doc:
     #     contents=await file.read()
