@@ -765,7 +765,7 @@ async def deleteuser(id:deleteData):
 @masterRouter.post('/addclient')
 # poc_doc: Optional[List[UploadFile]] = File(None)
 # poc_doc:List[UploadFile] = File(...)
-async def addclient(client_data:str = Form(...), poc_doc: Optional[List[UploadFile]] = File(None)):
+async def addclient(client_data:str = Form(...), poc_doc: Optional[List[UploadFile]] = File(...)):
     res_dt = {}
     print('poc_doc_outside=',poc_doc)
     data = json.loads(client_data)
