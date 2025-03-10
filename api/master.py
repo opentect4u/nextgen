@@ -825,7 +825,7 @@ async def addclient(client_data:str = Form(...), poc_doc: Optional[List[UploadFi
         except:
             print('Error while delete md_client_poc')
     index = 0
-    print(poc_doc)
+    print('poc_doc=',poc_doc)
     for c in data['c_poc']:
         fileName = ''
         try:
