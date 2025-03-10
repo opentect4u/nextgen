@@ -766,7 +766,7 @@ async def deleteuser(id:deleteData):
 # poc_doc: Optional[List[UploadFile]] = File(None)
 # poc_doc:List[UploadFile] = File(...)
 # async def addclient(request: Request,client_data:str = Form(...), poc_doc: Optional[List[UploadFile]] = File(None)):
-async def addclient(request: Request,client_data:str = Form(...), poc_doc: Optional[List[UploadFile]] = File(None)):
+async def addclient(request: Request,client_data:str = Form(...)):
     res_dt = {}  
     print('poc_doc_outside=',request)
     data = json.loads(client_data)
