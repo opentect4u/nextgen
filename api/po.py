@@ -3493,7 +3493,7 @@ async def getprojectpoc(id:DelSearch):
     if(id.invoice != ''):
         where += f"d.invoice like '%{id.invoice}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.prod_id != ''):
-        where += f"i.prod_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
     if(id.make != ''):
         where += f"p.prod_make like '%{id.make}%' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
     if(id.to_dt != '' or id.from_dt != ''):
