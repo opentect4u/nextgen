@@ -3066,7 +3066,7 @@ async def approvepo(id:approveReq):
                 if i.qty>0:
                     balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.req_qty - i.qty
                     cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
-                    req_qty = int(_res_dt1['msg']['req_qty']) - i.qty if int(_res_dt['msg']['req_qty'])>0 else i.qty
+                    req_qty = int(_res_dt1['msg']['req_qty']) - i.qty if int(_res_dt1['msg']['req_qty'])>0 else i.qty
                     cancel_flag = 'R'  if cancelled_qty == i.req_qty else 'H'
                     fields1= f'req_qty="{req_qty}",cancelled_qty="{cancelled_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{cancel_flag}"'
                     values1 = f''
