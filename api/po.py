@@ -3145,6 +3145,20 @@ async def checkinvoice(inv_no:CheckInvoice):
 
    return result1
 
+@poRouter.post('/checkinvoice_vtoc')
+async def checkinvoice(inv_no:CheckInvoice):
+   current_datetime = datetime.now()
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   select1 = "count(*) as count"
+   schema1 = "td_vendor_to_client"
+   where1 = f"invoice='{inv_no.inv_no}'"
+   order1 = ""
+   flag1 = 0 
+   result1 = await db_select(select1, schema1, where1, order1, flag1)
+   print(result1,'res')
+
+   return result1
+
 
 @poRouter.post('/deletemrn')
 async def deletetc(id:deleteMrn):
