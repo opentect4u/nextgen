@@ -962,7 +962,7 @@ async def save_trans(data:SavePur):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
-    fields= f"pur_no,pur_date,pur_proj,pur_by,created_at,created_by,intended" if data.sl_no==0 else f'pur_data="{data.pur_dt}",pur_proj="{data.project_id}",pur_by="{data.user}",modified_by="{data.user}",modified_at="{formatted_dt}"'
+    fields= f"pur_no,pur_date,pur_proj,pur_by,created_at,created_by,intended" if data.sl_no==0 else f'pur_date="{data.pur_dt}",pur_proj="{data.project_id}",pur_by="{data.user}",modified_by="{data.user}",modified_at="{formatted_dt}"'
     values = f"'PR-{purno}','{data.pur_dt}','{data.project_id}', '{data.user}','{formatted_dt}','{data.user}','{data.intended}'"
     table_name = "td_purchase_req"
     whr = "" if data.sl_no==0 else f'sl_no="{data.sl_no}"'
