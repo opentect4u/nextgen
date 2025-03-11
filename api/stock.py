@@ -970,8 +970,16 @@ async def save_trans(data:SavePur):
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=result["lastId"]
     #========================================================================================================
+    if(data.sl_no > 0):
+        item_id = ",".join(str(dt.sl_no) for dt in data.items)
+        try:
+            del_table_name = 'td_purchase_items'
+            del_whr = f"sl_no = {lastID} AND sl_no not in({item_id})"
+            del_qry = await db_Delete(del_table_name, del_whr)
+        except:
+            print('Error while delete md_vendor_deals')
     for i in data.items:
-                fields= f'pur_no,item_id,qty,created_by,created_at'
+                fields= f'pur_no,item_id,qty,created_by,created_at' if data.sl_no==0 else f'item_id={i.item_id},qty={i.qty},modified_by="{data.user}",modified_at="{formatted_dt}"'
                 values = f"'PR-{purno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}'"
                 table_name = "td_purchase_items"
                 whr=""
