@@ -966,7 +966,7 @@ async def save_trans(data:SavePur):
     values = f"'PR-{purno}','{data.pur_dt}','{data.project_id}', '{data.user}','{formatted_dt}','{data.user}','{data.intended}'"
     table_name = "td_purchase_req"
     whr = "" if data.sl_no==0 else f'sl_no="{data.sl_no}"'
-    flag = 0
+    flag = 0 if data.sl_no==0 else 1
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=result["lastId"]
     #========================================================================================================
