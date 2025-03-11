@@ -1012,7 +1012,7 @@ async def save_trans(data:SavePur):
 async def save_trans(data:GetTrans):
     res_dt = []
     if(data.id==0):
-            select = "t.pur_no,t.pur_date,t.intended,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id"
+            select = "t.pur_no,t.pur_date,t.intended,t.created_by,t.created_at,t.sl_no,p.proj_name,p.proj_name as proj_id,p.sl_no as p_id"
             schema = "td_purchase_req t,td_project p"
             where = f"t.sl_no='{data.id}' and p.sl_no=t.pur_proj"  if data.id>0 else f"p.sl_no=t.pur_proj"
             order = "ORDER BY t.created_at DESC"
