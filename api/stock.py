@@ -960,7 +960,12 @@ async def save_trans(data:SavePur):
     current_datetime = datetime.now()
     purno = int(round(current_datetime.timestamp()))
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-
+    select_fnd = "pur_no"
+    schema_fnd = "td_purchase_req"
+    where_fnd = f"sl_no='{data.sl_no}'"
+    order_fnd = ""
+    flag_fnd =  1
+    result_fnd = await db_select(select_fnd, schema_fnd, where_fnd, order_fnd, flag_fnd)
 
     fields= f"pur_no,pur_date,pur_proj,pur_by,created_at,created_by,intended" if data.sl_no==0 else f'pur_date="{data.pur_dt}",pur_proj="{data.project_id}",pur_by="{data.user}",modified_by="{data.user}",modified_at="{formatted_dt}"'
     values = f"'PR-{purno}','{data.pur_dt}','{data.project_id}', '{data.user}','{formatted_dt}','{data.user}','{data.intended}'"
@@ -972,9 +977,11 @@ async def save_trans(data:SavePur):
     #========================================================================================================
     if(data.sl_no > 0):
         item_id = ",".join(str(dt.sl_no) for dt in data.items)
+        print('item_id=',item_id,lastID)
+        pur = result_fnd['msg'][0]['pur_no']
         try:
             del_table_name = 'td_purchase_items'
-            del_whr = f"sl_no = {lastID} AND sl_no not in({item_id})"
+            del_whr = f"pur_no = '{pur}' AND sl_no not in({item_id})"
             del_qry = await db_Delete(del_table_name, del_whr)
         except:
             print('Error while delete md_vendor_deals')
