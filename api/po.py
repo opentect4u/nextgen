@@ -4127,7 +4127,7 @@ async def getprojectpoc(po_no:GetInvList):
     res_dt = {}
     select1 = "*"
     schema1 = "td_vendor_to_client"
-    where1 = f"po_no={po_no.po_no}"
+    where1 = f"po_no='{po_no.po_no}'"
     order1 = ""
     flag1 = 0
     result1 = await db_select(select1, schema1, where1, order1, flag1)
