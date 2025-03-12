@@ -1077,7 +1077,7 @@ async def save_trans(data:GetPurItemForPo):
     pur_no= ','.join(f"'{item}'" for item in dt.split(','))
     select1 = "*"
     schema1 = "td_purchase_items"
-    where1 = f"pur_req in '({pur_no})'"
+    where1 = f"pur_no in ({pur_no})"
     order1 = ""
     flag1 =  1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
