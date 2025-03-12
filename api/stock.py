@@ -983,6 +983,7 @@ async def save_trans(data:SavePur):
             del_table_name = 'td_purchase_items'
             del_whr = f"pur_no = '{pur}' AND sl_no not in({item_id})"
             del_qry = await db_Delete(del_table_name, del_whr)
+            print('deleted=',del_qry)
         except:
             print('Error while delete md_vendor_deals')
     for i in data.items:
