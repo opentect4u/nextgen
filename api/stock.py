@@ -1081,7 +1081,7 @@ async def save_trans(data:GetPurItemForPo):
 
 # Remove the outer square brackets to leave just the comma-separated quoted strings
     res = json_dump[1:-1]
-    print("pur_nooooooooooooooooooooooooooooooooooooooooooo", res)
+    print("pur_nooooooooooooooooooooooooooooooooooooooooooo", pur_no)
     select1 = "*"
     schema1 = "td_purchase_items"
     where1 = f"pur_req in '({res})'"
