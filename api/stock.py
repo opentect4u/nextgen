@@ -1079,7 +1079,7 @@ async def save_trans(data:GetPurItemForPo):
      if i > 0:
         result += ", "
     result += item
-    print('split=',result)
+    print('splitDt=',result)
     select1 = "*"
     schema1 = "td_purchase_items"
     where1 = f"pur_req in '({data})'"
