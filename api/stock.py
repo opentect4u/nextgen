@@ -1079,12 +1079,13 @@ async def save_trans(data:GetPurItemForPo):
      if i > 0:
         result += ", "
     result += item
+    print('split=',result)
     select1 = "*"
     schema1 = "td_purchase_items"
     where1 = f"pur_req in '({data})'"
     order1 = ""
     flag1 =  1
-    result = await db_select(select1, schema1, where1, order1, flag1)
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
     
     # select2 = "mrn_no"
     # schema2 = "td_item_delivery_invoice"
@@ -1105,7 +1106,7 @@ async def save_trans(data:GetPurItemForPo):
     # flag =  1
     # result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
-    return result
+    return result1
 
 @stockRouter.post("/get_purchase_req_items")
 async def save_trans(data:GetPurItem):
