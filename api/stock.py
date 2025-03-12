@@ -1074,7 +1074,7 @@ async def save_trans(data:GetTrans):
 async def save_trans(data:GetPurItemForPo):
     print("pur_nooooooooooooooooooooooooooooooooooooooooooo", str(data).split('=')[1].rstrip(','))
     dt = str(data).split('=')[1].rstrip(',').strip("'")
-    pur_no= ','.join(f"{item}" for item in dt.split(','))
+    pur_no= ','.join(f"'{item}'" for item in dt.split(','))
     select1 = "*"
     schema1 = "td_purchase_items"
     where1 = f"pur_req in '({pur_no})'"
