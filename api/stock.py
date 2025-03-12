@@ -991,7 +991,7 @@ async def save_trans(data:SavePur):
                 table_name = "td_purchase_items"
                 whr="" if i.sl_no==0 else f'sl_no="{i.sl_no}"'
                 # flag1 = 1 if v.sl_no>0 else 0
-                flag1 = 1 if data.sl_no>0 else 0
+                flag1 = 1 if i.sl_no>0 else 0
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
             
 
