@@ -9,7 +9,7 @@ from datetime import datetime
 import datetime as dt
 import random
 from models.utils import get_hashed_password, verify_password
-
+import ast
 
 stockRouter = APIRouter()
 
@@ -1072,7 +1072,16 @@ async def save_trans(data:GetTrans):
 
 @stockRouter.post("/get_purchase_req_items_for_po")
 async def save_trans(data:GetPurItemForPo):
-    pur_no =  ",".join(str(dt) for dt in data and str(dt).startswith("'PR-"))
+    key, value = data.split('=', 1)
+    key = key.strip()
+    value = value.strip()
+
+# Convert the extracted string list into a real Python list
+    pur_no_list = ast.literal_eval(value)
+
+# Join the values with commas
+    pur_no = ', '.join(pur_no_list)
+    # pur_no =  ",".join(str(dt) for dt in data and str(dt).startswith("'PR-"))
     # pur_no =  ",".join(data)
     print("pur_no=",data,pur_no)
     mrn_dt = ""
