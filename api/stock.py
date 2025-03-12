@@ -84,10 +84,9 @@ class GetTrans(BaseModel):
 
 class GetPurItem(BaseModel):
      pur_no:str
-class SearchPurForPo(BaseModel):
-     pur_no:str
+
 class GetPurItemForPo(BaseModel):
-     pur_no:list[SearchPurForPo]
+     pur_no:list
     #  pur_no:str
 
 class GetTransItem(BaseModel):
