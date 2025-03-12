@@ -1072,7 +1072,7 @@ async def save_trans(data:GetTrans):
 
 @stockRouter.post("/get_purchase_req_items_for_po")
 async def save_trans(data:GetPurItemForPo):
-    pur_no =  ",".join(str(dt) for dt in data)
+    pur_no =  ",".join(str(dt) for dt in data['pur_no'])
     print("pur_no=",pur_no)
     mrn_dt = ""
     select1 = "*"
