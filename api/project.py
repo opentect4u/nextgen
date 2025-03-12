@@ -294,7 +294,7 @@ async def getproject(id:GetProject):
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 
@@ -309,7 +309,7 @@ async def getprojectpoc(id:GetPoc):
     order = ""
     flag = 1 if id.id else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @projectRouter.post('/getprojectpocinfo')
@@ -323,7 +323,7 @@ async def getprojectpocinfo(id:GetPoc):
     order = ""
     flag = 1 if id.id else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @projectRouter.post('/get_proj_files')
@@ -335,7 +335,7 @@ async def getprojectpoc(id:GetPoc):
     whr = f"proj_id='{id.id}'"
     flg = 1
     file_res = await db_select(sel, sel_frm, whr, "", flg)
-    print(file_res, 'RESULT')
+    # print(file_res, 'RESULT')
     return file_res
 
 @projectRouter.post('/del_proj_files')
@@ -358,7 +358,7 @@ async def check_proj_id(proj_id:GetProjectId):
     order = ""
     flag = 1 if proj_id.id else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 
@@ -373,7 +373,7 @@ async def getprojectpocinfo(id:GetPoc):
     order = ""
     flag = 1 if id.id else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 

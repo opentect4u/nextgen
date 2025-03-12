@@ -572,7 +572,7 @@ async def getvendor(id:getData):
     order = "ORDER BY created_at DESC"
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @masterRouter.post('/getvendorbank')
@@ -587,7 +587,7 @@ async def getvendorbank(id:getData):
     # flag = 1 if id.id>0 else 0
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @masterRouter.post('/getvendordeals')
@@ -601,7 +601,7 @@ async def getvendordeals(id:getData):
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @masterRouter.post('/getvendordealsinfo')
@@ -615,7 +615,7 @@ async def getvendordealsinfo(id:getData):
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 @masterRouter.post('/deletevendor')
@@ -941,7 +941,7 @@ async def getvendorpoc(id:getData):
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    # print(result, 'RESULT')
     return result
 
 
