@@ -9,8 +9,7 @@ from datetime import datetime
 import datetime as dt
 import random
 from models.utils import get_hashed_password, verify_password
-import ast
-import re
+import json
 stockRouter = APIRouter()
 
 class Stock(BaseModel):
@@ -1074,11 +1073,12 @@ async def save_trans(data:GetTrans):
 @stockRouter.post("/get_purchase_req_items_for_po")
 async def save_trans(data:GetPurItemForPo):
     # pur_no = ['PR-1741327732', 'PR-1741756178']
-    pur_no = ','.join(f'"{item}"' for item in data)
-    print("pur_nooooooooooooooooooooooooooooooooooooooooooo", str(data).split('=')[1])
+    pur_no = json.loads(str(data).split('=')[1])
+    res = ','.join(f'"{item}"' for item in pur_no)
+    print("pur_nooooooooooooooooooooooooooooooooooooooooooo", res)
     select1 = "*"
     schema1 = "td_purchase_items"
-    where1 = f"pur_req in '({pur_no})'"
+    where1 = f"pur_req in '({res})'"
     order1 = ""
     flag1 =  1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
