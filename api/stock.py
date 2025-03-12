@@ -1075,33 +1075,33 @@ async def save_trans(data:GetPurItemForPo):
     pur_no =  ",".join(str(dt) for dt in data)
     print("pur_no=",pur_no)
     mrn_dt = ""
-    select1 = "po_no"
-    schema1 = "td_po_basic"
+    select1 = "*"
+    schema1 = "td_purchase_items"
     where1 = f"pur_req in '({pur_no})'"
     order1 = ""
     flag1 =  1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
     
-    select2 = "mrn_no"
-    schema2 = "td_item_delivery_invoice"
-    where2 = f"po_no='{result1['msg'][0]['po_no']}'" if result1['msg'] else f"po_no='0'"
-    order2 = ""
-    flag2 =  1
-    result2 = await db_select(select2, schema2, where2, order2, flag2)
-    print('res====================',result2['msg'])
+    # select2 = "mrn_no"
+    # schema2 = "td_item_delivery_invoice"
+    # where2 = f"po_no='{result1['msg'][0]['po_no']}'" if result1['msg'] else f"po_no='0'"
+    # order2 = ""
+    # flag2 =  1
+    # result2 = await db_select(select2, schema2, where2, order2, flag2)
+    # print('res====================',result2['msg'])
 
-    for i in range(0,len(result2['msg'])):
-         mrn_dt+=f"'{result2['msg'][i]['mrn_no']}'," if i != len(result2['msg'])-1 else f"'{result2['msg'][i]['mrn_no']}'"
+    # for i in range(0,len(result2['msg'])):
+    #      mrn_dt+=f"'{result2['msg'][i]['mrn_no']}'," if i != len(result2['msg'])-1 else f"'{result2['msg'][i]['mrn_no']}'"
 
 
-    select = "p.sl_no as item_sl,p.pur_no,p.item_id,p.qty,p.created_by,p.created_at,p.status,p.modified_at,p.modified_by,b.*,sum(m.rc_qty) tot_rc" if mrn_dt else "p.sl_no as item_sl,p.pur_no,p.item_id,p.qty,p.created_by,p.created_at,p.status,p.modified_at,p.modified_by,b.*, 0 as tot_rc"
-    schema = f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join td_item_delivery_invoice d on b.po_no=d.po_no left join td_item_delivery_details m on m.mrn_no=d.mrn_no" if mrn_dt else f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req"
-    where = f"pur_no in '({pur_no})' and m.mrn_no in ({mrn_dt}) group by m.item_id" if mrn_dt else f"pur_no in '({pur_no})'"
-    order = ""
-    flag =  1
-    result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
-    return result
+    # select = "p.sl_no as item_sl,p.pur_no,p.item_id,p.qty,p.created_by,p.created_at,p.status,p.modified_at,p.modified_by,b.*,sum(m.rc_qty) tot_rc" if mrn_dt else "p.sl_no as item_sl,p.pur_no,p.item_id,p.qty,p.created_by,p.created_at,p.status,p.modified_at,p.modified_by,b.*, 0 as tot_rc"
+    # schema = f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join td_item_delivery_invoice d on b.po_no=d.po_no left join td_item_delivery_details m on m.mrn_no=d.mrn_no" if mrn_dt else f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req"
+    # where = f"pur_no in '({pur_no})' and m.mrn_no in ({mrn_dt}) group by m.item_id" if mrn_dt else f"pur_no in '({pur_no})'"
+    # order = ""
+    # flag =  1
+    # result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result1
 
 @stockRouter.post("/get_purchase_req_items")
 async def save_trans(data:GetPurItem):
