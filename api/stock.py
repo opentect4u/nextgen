@@ -84,9 +84,10 @@ class GetTrans(BaseModel):
 
 class GetPurItem(BaseModel):
      pur_no:str
-
+class SearchPurForPo(BaseModel):
+     pur_no:str
 class GetPurItemForPo(BaseModel):
-     pur_no:list
+     pur_no:list[SearchPurForPo]
     #  pur_no:str
 
 class GetTransItem(BaseModel):
@@ -1073,7 +1074,7 @@ async def save_trans(data:GetTrans):
 
 @stockRouter.post("/get_purchase_req_items_for_po")
 async def save_trans(data:GetPurItemForPo):
-    print('split=',data.split('='))
+    print('split=',data)
     select1 = "*"
     schema1 = "td_purchase_items"
     where1 = f"pur_req in '({data})'"
