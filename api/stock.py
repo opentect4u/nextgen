@@ -975,6 +975,7 @@ async def save_trans(data:SavePur):
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=result["lastId"]
     #========================================================================================================
+    pur=''
     if(data.sl_no > 0):
         item_id = ",".join(str(dt.sl_no) for dt in data.items)
         print('item_id=',item_id,lastID)
