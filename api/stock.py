@@ -1072,25 +1072,16 @@ async def save_trans(data:GetTrans):
 
 @stockRouter.post("/get_purchase_req_items_for_po")
 async def save_trans(data:GetPurItemForPo):
-    key, value = data.split('=', 1)
-    key = key.strip()
-    value = value.strip()
-
-# Convert the extracted string list into a real Python list
-    pur_no_list = ast.literal_eval(value)
-
-# Join the values with commas
-    pur_no = ', '.join(pur_no_list)
-    # pur_no =  ",".join(str(dt) for dt in data and str(dt).startswith("'PR-"))
-    # pur_no =  ",".join(data)
+   
+    pur_no =  ",".join(str(dt) for dt in data and str(dt).startswith("'PR-"))
     print("pur_no=",data,pur_no)
     mrn_dt = ""
-    select1 = "*"
-    schema1 = "td_purchase_items"
-    where1 = f"pur_req in '({pur_no})'"
-    order1 = ""
-    flag1 =  1
-    result1 = await db_select(select1, schema1, where1, order1, flag1)
+    # select1 = "*"
+    # schema1 = "td_purchase_items"
+    # where1 = f"pur_req in '({pur_no})'"
+    # order1 = ""
+    # flag1 =  1
+    # result1 = await db_select(select1, schema1, where1, order1, flag1)
     
     # select2 = "mrn_no"
     # schema2 = "td_item_delivery_invoice"
@@ -1111,7 +1102,7 @@ async def save_trans(data:GetPurItemForPo):
     # flag =  1
     # result = await db_select(select, schema, where, order, flag)
     # print(result, 'RESULT')
-    return result1
+    return pur_no
 
 @stockRouter.post("/get_purchase_req_items")
 async def save_trans(data:GetPurItem):
