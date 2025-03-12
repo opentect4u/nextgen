@@ -1077,7 +1077,10 @@ async def save_trans(data:GetPurItemForPo):
     data_list = json.loads(pur_no)
 
 # Join the elements with commas, ensuring each element is wrapped in double quotes
-    res = ','.join(f'"{item}"' for item in data_list)
+    json_dump = json.dumps(data_list)
+
+# Remove the outer square brackets to leave just the comma-separated quoted strings
+    res = json_dump[1:-1]
     print("pur_nooooooooooooooooooooooooooooooooooooooooooo", res)
     select1 = "*"
     schema1 = "td_purchase_items"
