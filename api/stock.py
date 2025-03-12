@@ -986,10 +986,10 @@ async def save_trans(data:SavePur):
         except:
             print('Error while delete md_vendor_deals')
     for i in data.items:
-                fields= f'pur_no,item_id,qty,created_by,created_at' if data.sl_no==0 else f'item_id={i.item_id},qty={i.qty},modified_by="{data.user}",modified_at="{formatted_dt}"'
+                fields= f'pur_no,item_id,qty,created_by,created_at' if i.sl_no==0 else f'item_id={i.item_id},qty={i.qty},modified_by="{data.user}",modified_at="{formatted_dt}"'
                 values = f"'PR-{purno}','{i.item_id}','{i.qty}','{data.user}','{formatted_dt}'"
                 table_name = "td_purchase_items"
-                whr="" if data.sl_no==0 else f'sl_no="{i.sl_no}"'
+                whr="" if i.sl_no==0 else f'sl_no="{i.sl_no}"'
                 # flag1 = 1 if v.sl_no>0 else 0
                 flag1 = 1 if data.sl_no>0 else 0
                 result2 = await db_Insert(table_name, fields, values, whr, flag1)
