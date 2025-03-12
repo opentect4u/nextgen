@@ -1072,19 +1072,10 @@ async def save_trans(data:GetTrans):
 
 @stockRouter.post("/get_purchase_req_items_for_po")
 async def save_trans(data:GetPurItemForPo):
-    # pur_no = ['PR-1741327732', 'PR-1741756178']
-    pur_no = str(data).split('=')[1].strip()
-    data_list = json.loads(pur_no)
-
-# Join the elements with commas, ensuring each element is wrapped in double quotes
-    json_dump = json.dumps(data_list)
-
-# Remove the outer square brackets to leave just the comma-separated quoted strings
-    res = json_dump[1:-1]
-    print("pur_nooooooooooooooooooooooooooooooooooooooooooo", pur_no)
+    print("pur_nooooooooooooooooooooooooooooooooooooooooooo", data)
     select1 = "*"
     schema1 = "td_purchase_items"
-    where1 = f"pur_req in '({res})'"
+    where1 = f"pur_req in '({data})'"
     order1 = ""
     flag1 =  1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
