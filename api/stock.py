@@ -1072,7 +1072,7 @@ async def save_trans(data:GetTrans):
 
 @stockRouter.post("/get_purchase_req_items_for_po")
 async def save_trans(data:GetPurItemForPo):
-    print("pur_nooooooooooooooooooooooooooooooooooooooooooo", str(data).split('=')[1])
+    print("pur_nooooooooooooooooooooooooooooooooooooooooooo", str(data).split('=')[1].rstrip(','))
     select1 = "*"
     schema1 = "td_purchase_items"
     where1 = f"pur_req in '({data})'"
