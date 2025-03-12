@@ -86,8 +86,8 @@ class GetPurItem(BaseModel):
      pur_no:str
 
 class GetPurItemForPo(BaseModel):
-    #  pur_no:list
-     pur_no:str
+     pur_no:list
+    #  pur_no:str
 
 class GetTransItem(BaseModel):
      trans_no:str
@@ -1073,18 +1073,13 @@ async def save_trans(data:GetTrans):
 
 @stockRouter.post("/get_purchase_req_items_for_po")
 async def save_trans(data:GetPurItemForPo):
-   
-    matches = re.findall(r"PR-\d+", data)
-
-# Join the found elements with a comma
-    result = ', '.join(matches)
-    mrn_dt = ""
-    # select1 = "*"
-    # schema1 = "td_purchase_items"
-    # where1 = f"pur_req in '({pur_no})'"
-    # order1 = ""
-    # flag1 =  1
-    # result1 = await db_select(select1, schema1, where1, order1, flag1)
+    print(data.split('='))
+    select1 = "*"
+    schema1 = "td_purchase_items"
+    where1 = f"pur_req in '({data})'"
+    order1 = ""
+    flag1 =  1
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
     
     # select2 = "mrn_no"
     # schema2 = "td_item_delivery_invoice"
