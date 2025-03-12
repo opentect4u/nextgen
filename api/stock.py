@@ -10,7 +10,7 @@ import datetime as dt
 import random
 from models.utils import get_hashed_password, verify_password
 import ast
-
+import re
 stockRouter = APIRouter()
 
 class Stock(BaseModel):
@@ -1073,15 +1073,10 @@ async def save_trans(data:GetTrans):
 @stockRouter.post("/get_purchase_req_items_for_po")
 async def save_trans(data:GetPurItemForPo):
    
-    pur_no =  ",".join(str(dt) for dt in data)
-    print("pur_no=",data,pur_no)
-    parsed_data = ast.literal_eval(data)
+    matches = re.findall(r"PR-\d+", data)
 
-# Extract the list (second element of the tuple)
-    pur_no_list = parsed_data[1]
-
-# Join elements with a comma
-    result = ', '.join(pur_no_list)
+# Join the found elements with a comma
+    result = ', '.join(matches)
     mrn_dt = ""
     # select1 = "*"
     # schema1 = "td_purchase_items"
