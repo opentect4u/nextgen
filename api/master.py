@@ -769,7 +769,7 @@ async def deleteuser(id:deleteData):
 # async def addclient(request: Request,client_data:str = Form(...), poc_doc: Optional[List[UploadFile]] = File(None)):
 async def addclient(request: Request,client_data:str = Form(...)):
     res_dt = {}  
-    print('poc_doc_outside=',request)
+    # print('poc_doc_outside=',request)
     data = json.loads(client_data)
     form_data = await request.form()
     files = []

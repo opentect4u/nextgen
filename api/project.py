@@ -354,7 +354,7 @@ async def check_proj_id(proj_id:GetProjectId):
 
     select = "count(*) as count"
     schema = "td_project"
-    where = f"proj_id='{proj_id.id}'"
+    where = f"proj_id='{proj_id.id}' group_by proj_id"
     order = ""
     flag = 1 if proj_id.id else 0
     result = await db_select(select, schema, where, order, flag)
