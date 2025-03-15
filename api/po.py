@@ -1046,13 +1046,13 @@ async def addfreshpo(data:PoModel):
                     print('Error while delete td_po_items')
 
             # 
-            select = "sl_no,qty"
-            schema = "td_purchase_items"
-            where = f"pur_no='{data.pur_req}'"
-            order = ""
-            flag = 1 if data.pur_req else 0
-            result = await db_select(select, schema, where, order, flag)
-            print(result, 'RESULT=================================================')
+            select_pur = "sl_no,qty"
+            schema_pur = "td_purchase_items"
+            where_pur = f"pur_no='{data.pur_req}'"
+            order_pur = ""
+            flag_pur = 1 if data.pur_req else 0
+            result_pur = await db_select(select_pur, schema_pur, where_pur, order_pur, flag_pur)
+            print(result_pur, 'RESULT=================================================')
 
 
 
