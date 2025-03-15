@@ -270,9 +270,9 @@ async def addproject(dt:Project):
         if result1['suc'] and result2['suc']>0 :
             res_dt = {"suc": 1, "msg": f"Project saved successfully!" if dt.id==0 else  f"Project updated successfully!", "proj_id": dt.proj_id }
         else:
-            res_dt = {"suc": 0, "msg": "Error!"}
+            res_dt = {"suc": 0, "msg": result1}
     else:
-        res_dt = {"suc": 0, "msg": "Error!"}
+        res_dt = {"suc": 0, "msg": result1}
     
 
     return res_dt

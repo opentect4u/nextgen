@@ -1017,6 +1017,7 @@ async def addfreshpo(data:PoModel):
     print('---------------------------------------------------------------------')
     print(data)
     print('pur_req======================================================',data.pur_req)
+    pur_req_src = data.pur_req.split(',')
     item_save=0
     payment_save=0
     current_datetime = datetime.now()
@@ -1043,6 +1044,19 @@ async def addfreshpo(data:PoModel):
                     del_qry = await db_Delete(del_table_name, del_whr)
                 except:
                     print('Error while delete td_po_items')
+
+            # 
+            select = "sl_no,qty"
+            schema = "td_purchase_items"
+            where = f"pur_no='{data.pur_req}'"
+            order = ""
+            flag = 1 if data.pur_req else 0
+            result = await db_select(select, schema, where, order, flag)
+            print(result, 'RESULT=================================================')
+
+
+
+            # 
 
             for c in data.item_dtl:
                 fields1= f'item_id="{c.item_name}",quantity="{c.qty}",item_rt="{c.rate}",discount_percent="{c.disc_prtg}",discount="{c.disc}",unit_id="{c.unit}",cgst_id="{c.CGST}", sgst_id="{c.SGST}",igst_id="{c.IGST}",delivery_dt="{c.delivery_date}",delivery_to="{c.delivery_to}",currency="{c.currency}",modified_by="{data.user}",modified_at="{formatted_dt}"' if c.sl_no > 0 else f'po_sl_no,item_id,quantity,item_rt,discount,discount_percent,unit_id,cgst_id,sgst_id,igst_id,delivery_dt,delivery_to,currency,created_by,created_at'
