@@ -1072,6 +1072,7 @@ async def addfreshpo(data:PoModel):
                 ordered_qty = 0
                 
                 for pur_qty in result_pur['msg']:
+                    print('pur_qty============',pur_qty)
                     if pur_qty['item_id'] == c.sl_no:
                         if pur_qty['qty']<=sum_qty:
                             ordered_qty = pur_qty['qty']
