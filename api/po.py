@@ -1047,7 +1047,7 @@ async def addfreshpo(data:PoModel):
                     print('Error while delete td_po_items')
 
             # 
-            select_pur = "sl_no,qty"
+            select_pur = "sl_no,qty,item_id,pur_no"
             schema_pur = "td_purchase_items"
             where_pur = f"pur_no in ({pur})"
             order_pur = ""
@@ -1067,6 +1067,33 @@ async def addfreshpo(data:PoModel):
                 flag1 = 1 if c.sl_no>0 else 0
                 result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
                 item_save=1 if result1['suc']>0 else 0
+
+                sum_qty = c.qty
+                ordered_qty = 0
+                
+                for pur_qty in result_pur['msg']:
+                    if pur_qty['item_id'] == c.sl_no:
+                        if pur_qty['qty']<=sum_qty:
+                            ordered_qty = pur_qty['qty']
+                            sum_qty = sum_qty - pur_qty['qty']
+                            fields1= f'ordered_qty="{ordered_qty}"'
+                            values1 = f''
+                            table_name1 = "td_purchase_items"
+                            whr1=  f'item_id="{c.sl_no}" and pur_no="{pur_qty['pur_no']}"' if c.sl_no > 0 else None
+                            flag1 = 1 if c.sl_no>0 else 0
+                            result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                        else:
+                            ordered_qty = sum_qty
+                            sum_qty = 0
+                            fields1= f'ordered_qty="{ordered_qty}"'
+                            values1 = f''
+                            table_name1 = "td_purchase_items"
+                            whr1=  f'item_id="{c.sl_no}" and pur_no="{pur_qty['pur_no']}"' if c.sl_no > 0 else None
+                            flag1 = 1 if c.sl_no>0 else 0
+                            result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                    else:
+                        continue
+                        
         else:
             # fields1= f'po_sl_no,created_by,created_at'
             # values1 = f'"{lastID}","{data.user}","{formatted_dt}"'
