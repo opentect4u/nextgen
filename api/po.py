@@ -1018,7 +1018,7 @@ async def addfreshpo(data:PoModel):
     print(data)
     print('pur_req======================================================',data.pur_req)
     pur_req_src = data.pur_req.split(',')
-    pur = ','.join(str(x) for x in pur_req_src)
+    pur = ','.join(f'{x}' for x in pur_req_src)
     item_save=0
     payment_save=0
     current_datetime = datetime.now()
