@@ -1307,7 +1307,7 @@ async def check_product(wrd:getPhrase):
 
     select_po = "count(*) as po_cnt"
     schema_po = "td_po_basic"
-    where_po = f"po_status='P'"
+    where_po = f"po_status='U'"
     order_po = ""
     flag_po = 1 
     result_po = await db_select(select_po, schema_po, where_po, order_po, flag_po)
