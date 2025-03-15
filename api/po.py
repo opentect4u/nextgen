@@ -1047,7 +1047,7 @@ async def addfreshpo(data:PoModel):
                     print('Error while delete td_po_items')
 
             # 
-            select_pur = "sl_no,qty,item_id,pur_no"
+            select_pur = "sl_no,qty,item_id,pur_no,ordered_qty"
             schema_pur = "td_purchase_items"
             where_pur = f"pur_no in ({pur})"
             order_pur = ""
@@ -1077,6 +1077,7 @@ async def addfreshpo(data:PoModel):
                         if pur_qty['qty']<=sum_qty:
                             print('here')
                             ordered_qty = pur_qty['qty']
+                            ordered_qty = ordered_qty + pur_qty['ordered_qty']
                             sum_qty = sum_qty - pur_qty['qty']
                             fields1= f'ordered_qty={ordered_qty}'
                             values1 = f''
@@ -1088,6 +1089,7 @@ async def addfreshpo(data:PoModel):
 
                         else:
                             ordered_qty = sum_qty
+                            ordered_qty = ordered_qty + pur_qty['ordered_qty']
                             sum_qty = 0
                             fields1= f'ordered_qty="{ordered_qty}"'
                             values1 = f''
