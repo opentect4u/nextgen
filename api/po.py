@@ -1082,6 +1082,8 @@ async def addfreshpo(data:PoModel):
                             whr1=  f'item_id="{c.sl_no}" and pur_no="{pur_qty['pur_no']}"' if c.sl_no > 0 else None
                             flag1 = 1 if c.sl_no>0 else 0
                             result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                            print('result sum ===================================',result1)
+
                         else:
                             ordered_qty = sum_qty
                             sum_qty = 0
@@ -1091,6 +1093,8 @@ async def addfreshpo(data:PoModel):
                             whr1=  f'item_id="{c.sl_no}" and pur_no="{pur_qty['pur_no']}"' if c.sl_no > 0 else None
                             flag1 = 1 if c.sl_no>0 else 0
                             result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                            print('result sum 0 ===================================',result1)
+                            break
                     else:
                         continue
                         
