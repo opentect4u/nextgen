@@ -1049,7 +1049,7 @@ async def addfreshpo(data:PoModel):
             # 
             select_pur = "sl_no,qty"
             schema_pur = "td_purchase_items"
-            where_pur = f"pur_no in ({pur})"
+            where_pur = f"pur_no in ({data.pur_req})"
             order_pur = ""
             flag_pur = 1 if data.pur_req else 0
             result_pur = await db_select(select_pur, schema_pur, where_pur, order_pur, flag_pur)
