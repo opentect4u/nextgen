@@ -1096,7 +1096,6 @@ async def addfreshpo(data:PoModel):
                             flag1 = 1 if c.item_name>0 else 0
                             result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
                             print('result sum 0 ===================================',result1)
-                            break
                     else:
                         continue
                         
