@@ -1147,7 +1147,7 @@ async def save_trans(data:GetPurItem):
     # return result
 
     
-    select = "t.pur_no,t.pur_proj, GROUP_CONCAT(i.item_id) AS item_id,GROUP_CONCAT(p.prod_name) AS prod_name,tp.proj_name, GROUP_CONCAT(p.prod_make) AS prod_make,GROUP_CONCAT(p.part_no) AS part_no, GROUP_CONCAT(p.article_no) AS article_no,GROUP_CONCAT(p.model_no) AS model_no,sum(i.qty) as qty, sum(i.ordered.qty) as ordered_qty"
+    select = "t.pur_no,t.pur_proj, GROUP_CONCAT(i.item_id) AS item_id,GROUP_CONCAT(p.prod_name) AS prod_name,tp.proj_name, GROUP_CONCAT(p.prod_make) AS prod_make,GROUP_CONCAT(p.part_no) AS part_no, GROUP_CONCAT(p.article_no) AS article_no,GROUP_CONCAT(p.model_no) AS model_no,sum(i.qty) as qty, sum(i.ordered_qty) as ordered_qty"
     schema = f"td_purchase_req t left join td_purchase_items i on t.pur_no=i.pur_no left join md_product p on i.item_id=p.sl_no left join td_project tp on t.pur_proj=tp.sl_no GROUP BY t.pur_no, t.pur_proj, tp.proj_name"
     where = f""
     order = ""
