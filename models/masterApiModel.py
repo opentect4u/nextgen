@@ -6,7 +6,7 @@ async def db_select(select, schema, where, order, flag):
     whr = f"WHERE {where}" if where != '' else ''
     sql = f"SELECT {select} FROM {schema} {whr} {order}"
     res_dt = {}
-    print(sql)
+    print('SQL======',sql)
     try:
         conn = connect()
         cursor = conn.cursor()
@@ -44,7 +44,7 @@ async def db_Insert(table_name, fields, values, where, flag, selectInsert = Fals
         errMsg = "Data not updated !!"
     else:
         sql = f"INSERT INTO {table_name} ({fields}) VALUES ({values})" if(not selectInsert) else f"INSERT INTO {table_name} {fields}"
-        print(sql)
+        print('SQL =======',sql)
         msg = "Inserted Successfully !!"
         errMsg = "Data not inserted  !!"
 
@@ -67,7 +67,7 @@ async def db_Insert(table_name, fields, values, where, flag, selectInsert = Fals
     except mysql.connector.Error as err:
         # conn.close()
         # cursor.close()
-         print(err)
+         print('Error========',err)
          res_dt =  {"suc": 0, "msg": err, "lastId":0}
          
 
