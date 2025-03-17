@@ -39,7 +39,7 @@ async def db_Insert(table_name, fields, values, where, flag, selectInsert = Fals
 
     if (flag > 0):
         sql = f"UPDATE {table_name} SET {fields} {whr}"
-        print(sql)
+        print('SQL======',sql)
         msg = "Updated Successfully !!"
         errMsg = "Data not updated !!"
     else:

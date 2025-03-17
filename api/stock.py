@@ -1075,7 +1075,7 @@ async def save_trans(data:GetPurItemForPo):
     print("pur_nooooooooooooooooooooooooooooooooooooooooooo", str(data).split('=')[1].rstrip(','))
     dt = str(data).split('=')[1].rstrip(',').strip("'")
     pur_no= ','.join(f"'{item}'" for item in dt.split(','))
-    select1 = "sum(qty) as qty,item_id"
+    select1 = "sum(qty-ordered_qty) as qty,item_id"
     schema1 = "td_purchase_items"
     where1 = f"pur_no in ({pur_no}) group by item_id"
     order1 = ""
