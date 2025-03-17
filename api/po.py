@@ -1074,7 +1074,7 @@ async def addfreshpo(data:PoModel):
                 for pur_qty in result_pur['msg']:
                     print('pur_qty============',pur_qty,sum_qty,pur_qty['qty']<=sum_qty,c.sl_no,c.item_name,int(pur_qty['item_id']) == int(c.item_name))
                     if int(pur_qty['item_id']) == int(c.item_name):
-                        if pur_qty['qty']<=sum_qty:
+                        if pur_qty['qty']<=sum_qty and sum_qty>0:
                             print('here')
                             ordered_qty = pur_qty['qty']
                             ordered_qty = ordered_qty + int(pur_qty['ordered_qty'])
@@ -1087,7 +1087,7 @@ async def addfreshpo(data:PoModel):
                             result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
                             print('result sum ===================================',result1)
 
-                        else:
+                        elif pur_qty['qty']>sum_qty and sum_qty>0:
                             ordered_qty = sum_qty
                             ordered_qty = ordered_qty + int(pur_qty['ordered_qty'])
                             sum_qty = 0
