@@ -1147,7 +1147,7 @@ async def addfreshpo(data:PoModel):
 
     result2 = await db_Insert(table_name2, fields2, values2, whr2, flag2)
 
-    print(data.payment_terms,type(data.payment_terms))
+    # print(data.payment_terms,type(data.payment_terms))
     try:
         if type(data.payment_terms) is not None and len(data.payment_terms)>0:
             if(data.sl_no > 0):
@@ -1169,8 +1169,8 @@ async def addfreshpo(data:PoModel):
                 payment_save=1 if result3['suc']>0 else 0
         else:
                 payment_save=1
-    except:
-        print('Error')
+    except Exception as e:
+        print('Error2',e)
         payment_save=1
 
     # else:

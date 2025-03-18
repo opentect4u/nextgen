@@ -39,12 +39,12 @@ async def db_Insert(table_name, fields, values, where, flag, selectInsert = Fals
 
     if (flag > 0):
         sql = f"UPDATE {table_name} SET {fields} {whr}"
-        print('SQL======',sql)
+        # print('SQL======',sql)
         msg = "Updated Successfully !!"
         errMsg = "Data not updated !!"
     else:
         sql = f"INSERT INTO {table_name} ({fields}) VALUES ({values})" if(not selectInsert) else f"INSERT INTO {table_name} {fields}"
-        print('SQL =======',sql)
+        # print('SQL =======',sql)
         msg = "Inserted Successfully !!"
         errMsg = "Data not inserted  !!"
 
@@ -67,7 +67,7 @@ async def db_Insert(table_name, fields, values, where, flag, selectInsert = Fals
     except mysql.connector.Error as err:
         # conn.close()
         # cursor.close()
-         print('Error========',err)
+        #  print('Error========',err)
          res_dt =  {"suc": 0, "msg": err, "lastId":0}
          
 
@@ -81,7 +81,7 @@ async def db_Delete(table_name, where):
     errMsg = ''
     
     sql = f"DELETE FROM {table_name} WHERE {where}"
-    print(sql)
+    # print(sql)
     msg = "Deleted Successfully !!"
     errMsg = "Data not deleted  !!"
 
@@ -104,7 +104,7 @@ async def db_Delete(table_name, where):
     except mysql.connector.Error as err:
         # conn.close()
         # cursor.close()
-         print(err)
+        #  print(err)
          res_dt =  {"suc": 0, "msg": err}
          
 
