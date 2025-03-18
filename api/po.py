@@ -1094,7 +1094,7 @@ async def addfreshpo(data:PoModel):
                 result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
                 item_save=1 if result1['suc']>0 else 0
 
-                sum_qty = c.qty
+                sum_qty = int(c.qty)
                 ordered_qty = 0
                 
                 for pur_qty in result_pur['msg']:
