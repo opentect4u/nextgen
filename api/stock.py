@@ -1135,7 +1135,7 @@ async def save_trans(data:GetPurItem):
     print(result, 'RESULT')
     return result
 
-stockRouter.post("/get_purchase_req_items_for_edit")
+@stockRouter.post("/get_purchase_req_items_for_edit")
 async def save_trans(data:GetPurItem):
     mrn_dt = ""
     select1 = "po_no"
