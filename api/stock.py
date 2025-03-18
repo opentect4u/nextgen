@@ -1166,7 +1166,7 @@ async def save_trans(data:GetPurItem):
 async def save_trans(data:GetLog):
     select = "sl_no,po_no" 
     schema = f"td_po_basic" 
-    where = f"pur_no like 'PR-%{data.pur_no.rstrip('PR-')}%'" 
+    where = f"pur_req like 'PR-%{data.pur_no.rstrip('PR-')}%'" 
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
