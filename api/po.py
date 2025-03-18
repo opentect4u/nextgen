@@ -1040,8 +1040,8 @@ async def addexistingpo(data:PoModel):
 
 async def addfreshpo(data:PoModel):
     res_dt = {}
-    print('---------------------------------------------------------------------')
-    print(data)
+    # print('---------------------------------------------------------------------')
+    # print(data)
     print('pur_req======================================================',data.pur_req)
     pur_req_src = data.pur_req.split(',')
     pur = ','.join(f"'{x}'" for x in pur_req_src)
@@ -1059,7 +1059,7 @@ async def addfreshpo(data:PoModel):
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=data.sl_no if data.sl_no>0 else result["lastId"]
 
-    print(data.item_dtl,type(data.item_dtl))
+    # print(data.item_dtl,type(data.item_dtl))
     try:
         if type(data.item_dtl) is not None and len(data.item_dtl)>0:
 
@@ -1098,7 +1098,7 @@ async def addfreshpo(data:PoModel):
                 ordered_qty = 0
                 
                 for pur_qty in result_pur['msg']:
-                    print('pur_qty============',pur_qty,sum_qty,pur_qty['qty']<=sum_qty,c.sl_no,c.item_name,int(pur_qty['item_id']) == int(c.item_name))
+                    # print('pur_qty============',pur_qty,sum_qty,pur_qty['qty']<=sum_qty,c.sl_no,c.item_name,int(pur_qty['item_id']) == int(c.item_name))
                     if int(pur_qty['item_id']) == int(c.item_name):
                         if pur_qty['qty']<=sum_qty and sum_qty>0:
                             print('here')
@@ -1134,8 +1134,8 @@ async def addfreshpo(data:PoModel):
             # flag1 = 0
             # result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
             item_save=1 
-    except:
-        print('Error')
+    except Exception as e:
+        print('Error',e)
         item_save=1
    
           
