@@ -1105,7 +1105,7 @@ async def addfreshpo(data:PoModel):
                             ordered_qty = int(pur_qty['qty'])
                             ordered_qty = int(ordered_qty) + int(pur_qty['ordered_qty'])
                             sum_qty = int(sum_qty) - int(pur_qty['qty'])
-                            fields1= f'ordered_qty={ordered_qty}'
+                            fields1= f'ordered_qty={ordered_qty}' if data.sl_no<=0 else f'ordered_qty={int(sum_qty)}'
                             values1 = f''
                             table_name1 = "td_purchase_items"
                             whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
@@ -1117,7 +1117,7 @@ async def addfreshpo(data:PoModel):
                             ordered_qty = int(sum_qty)
                             ordered_qty = int(ordered_qty) + int(pur_qty['ordered_qty'])
                             sum_qty = 0
-                            fields1= f'ordered_qty={ordered_qty}'
+                            fields1= f'ordered_qty={ordered_qty}' if data.sl_no<=0 else f'ordered_qty={int(c.qty)}'
                             values1 = f''
                             table_name1 = "td_purchase_items"
                             whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
