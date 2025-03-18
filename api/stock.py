@@ -1112,6 +1112,7 @@ async def save_trans(data:GetPurItem):
     order1 = ""
     flag1 =  1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
+    print('result1 ===================================',result1)
     
     select2 = "mrn_no"
     schema2 = "td_item_delivery_invoice"
