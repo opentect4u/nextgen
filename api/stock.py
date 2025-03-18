@@ -1127,7 +1127,7 @@ async def save_trans(data:GetPurItem):
 
 
     select = "p.sl_no as item_sl,p.ordered_qty,p.pur_no,p.item_id,p.qty,p.created_by,p.created_at,p.status,p.modified_at,p.modified_by,b.po_no,sum(m.rc_qty) tot_rc" if mrn_dt else "p.sl_no as item_sl,p.pur_no,p.item_id,p.qty,p.ordered_qty,p.created_by,p.created_at,p.status,p.modified_at,p.modified_by,b.po_no, 0 as tot_rc"
-    schema = f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req left join td_item_delivery_invoice d on b.po_no=d.po_no left join td_item_delivery_details m on m.mrn_no=d.mrn_no" if mrn_dt else f"td_purchase_items p left join td_po_basic b on p.pur_no=b.pur_req"
+    schema = f" td_po_basic b left join td_purchase_items p on p.pur_no=b.pur_req left join td_item_delivery_invoice d on b.po_no=d.po_no left join td_item_delivery_details m on m.mrn_no=d.mrn_no" if mrn_dt else f" td_po_basic b left join td_purchase_items p  on p.pur_no=b.pur_req"
     where = f"pur_no='{data.pur_no}' and m.mrn_no in ({mrn_dt}) group by m.item_id" if mrn_dt else f"pur_no='{data.pur_no}'"
     order = ""
     flag =  1
