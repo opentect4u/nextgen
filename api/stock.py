@@ -1143,13 +1143,13 @@ async def save_trans(data:GetPurItem):
 @stockRouter.post("/get_purchase_req_items_for_edit")
 async def save_trans(data:GetPurItem):
     mrn_dt = ""
-    select1 = "po_no"
-    schema1 = "td_po_basic"
-    where1 = f"pur_req='{data.pur_no}'"
-    order1 = ""
-    flag1 =  1
-    result1 = await db_select(select1, schema1, where1, order1, flag1)
-    print('result1 ===================================',result1)
+    # select1 = "po_no"
+    # schema1 = "td_po_basic"
+    # where1 = f"pur_req='{data.pur_no}'"
+    # order1 = ""
+    # flag1 =  1
+    # result1 = await db_select(select1, schema1, where1, order1, flag1)
+    # print('result1 ===================================',result1)
    
 
     select = "distinct sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
@@ -1164,6 +1164,7 @@ async def save_trans(data:GetPurItem):
 
 @stockRouter.post("/get_order_log")
 async def save_trans(data:GetLog):
+    
     select = "b.sl_no,b.po_no,i.item_id,i.quantity,b.created_by,b.created_at,b.modified_by,b.modified_at" 
     schema = f"td_po_basic b join td_po_items i on i.po_sl_no=b.sl_no and i.item_id = {data.item_id}" 
     where = f"pur_req like '%{data.pur_no.lstrip('PR-')}%'" 
@@ -1176,9 +1177,10 @@ async def save_trans(data:GetLog):
 
 @stockRouter.post("/get_receive_log")
 async def save_trans(data:GetLog):
-    select = "b.sl_no,b.po_no,m.mrn_no,m.item_id,m.rc_qty,b.created_by,b.created_at,b.modified_by,b.modified_at" 
-    schema = f"td_po_basic b left join td_item_delivery_details m on b.po_no=m.po_no left join td_item_delivery_invoice i on m.mrn_no=i.mrn_no" 
-    where = f"pur_req like '%{data.pur_no.lstrip('PR-')}%' and m.item_id = {data.item_id}" 
+   
+    select = "m.mrn_no,m.item_id,m.rc_qty" 
+    schema = f" td_item_delivery_details m left join td_item_delivery_invoice i on m.mrn_no=i.mrn_no" 
+    where = f"m.po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') and m.item_id = {data.item_id}" 
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
