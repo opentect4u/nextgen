@@ -100,6 +100,11 @@ class ApproveItems(BaseModel):
     check: bool
 
 
+class GetLog(BaseModel):
+     pur_no:str
+     item_id:int
+
+
 class GetApproveItems(BaseModel):
      trans_no:str
      items:list[ApproveItems]
@@ -1148,6 +1153,18 @@ async def save_trans(data:GetPurItem):
    
 
     select = "distinct sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
+    schema = f"td_purchase_items " 
+    where = f"pur_no='{data.pur_no}'" 
+    order = ""
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
+
+@stockRouter.post("/get_order_log")
+async def save_trans(data:GetLog):
+    select = "distinct sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
     schema = f"td_purchase_items p" 
     where = f"pur_no='{data.pur_no}'" 
     order = ""
@@ -1155,6 +1172,7 @@ async def save_trans(data:GetPurItem):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
 
 @stockRouter.post("/get_purchase_req_items_search")
 async def save_trans(data:GetPurItem):
