@@ -1188,7 +1188,7 @@ async def save_trans(data:GetLog):
    
     select = "*" 
     schema = f"td_item_delivery_details" 
-    where =f"mrn_no = '{result1['msg'][0]['mrn_no']}' and item_id = {data.item_id}"
+    where =f"mrn_no = '{result1['msg'][0]['mrn_no']}' and prod_id = {data.item_id}"
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
