@@ -1177,10 +1177,18 @@ async def save_trans(data:GetLog):
 
 @stockRouter.post("/get_receive_log")
 async def save_trans(data:GetLog):
+
+    select1 = "mrn_no" 
+    schema1 = f"td_item_delivery_invoice" 
+    where1 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%')" 
+    order1 = ""
+    flag1 =  1
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
    
-    select = "m.mrn_no,m.item_id,m.rc_qty" 
-    schema = f" td_item_delivery_details m left join td_item_delivery_invoice i on m.mrn_no=i.mrn_no" 
-    where = f"m.po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') and m.item_id = {data.item_id}" 
+   
+    select = "*" 
+    schema = f"td_item_delivery_details" 
+    where =f"mrn_no = {result1['msg'][0]['mrn_no']} and item_id = {data.item_id}"
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
