@@ -1165,7 +1165,7 @@ async def save_trans(data:GetPurItem):
 @stockRouter.post("/get_order_log")
 async def save_trans(data:GetLog):
     select = "b.sl_no,b.po_no,i.item_id" 
-    schema = f"td_po_basic b join td_po_items i on i.po_sl_no=b.sl_no and i.sl_no = {data.item_id}" 
+    schema = f"td_po_basic b join td_po_items i on i.po_sl_no=b.sl_no and i.item_id = {data.item_id}" 
     where = f"pur_req like '%{data.pur_no.lstrip('PR-')}%'" 
     order = ""
     flag =  1
