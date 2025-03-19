@@ -1145,9 +1145,9 @@ async def save_trans(data:GetPurItem):
     mrn_dt = ""
  
 
-    select2 = "sum(quantity)"
+    select2 = "prod_id,sum(quantity)"
     schema2 = "td_item_delivery_details"
-    where2 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%')" 
+    where2 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
     order2 = ""
     flag2 =  1
     result2 = await db_select(select2, schema2, where2, order2, flag2)
