@@ -519,7 +519,7 @@ async def getprojectpoc(id:GetStock):
       
     #    cancel_stock= result_can['msg']['can_stock'] if result_can['msg']['can_stock'] else 0
     #    return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":cancel_stock ,"tot_stock":int(result_tot['msg']['tot_stock']) - result2['msg']['del_stock'] if int(result_tot['msg']['tot_stock']) and result2['msg']['del_stock'] else int(result_tot['msg']['tot_stock']) if int(result_tot['msg']['tot_stock']) else 0}
-       return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":0 ,"tot_stock": 0}
+       return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":0 ,"tot_stock": int(result_tot['msg']['tot_stock']) if result_tot else 0}
     else:
        return {"result":result,"req_stock":0,"tot_stock":0,"can_stock":0}
     
