@@ -1151,7 +1151,7 @@ async def save_trans(data:GetPurItem):
     result1 = await db_select(select1, schema1, where1, order1, flag1)
     print('result1 ===================================',result1)
 
-    select2 = "sum(qty)"
+    select2 = "sum(quantity)"
     schema2 = "td_item_delivery_details"
     where2 = f"po_no = '{result1['msg'][0]['po_no']}' group by prod_id"
     order2 = ""
