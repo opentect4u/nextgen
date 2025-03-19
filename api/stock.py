@@ -1160,23 +1160,23 @@ async def save_trans(data:GetPurItem):
     print('result1 ===================================',result2)
    
 
-    # select = f"sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,{result2} as tot_rc" 
-    # schema = f"td_purchase_items " 
-    # where = f"pur_no='{data.pur_no}'" 
-    # order = ""
-    # flag =  1
-    # result = await db_select(select, schema, where, order, flag)
-    # print(result, 'RESULT')
-    # return result
-
-    select = f"i.sl_no as item_sl,i.ordered_qty,i.pur_no,i.item_id,i.qty,i.created_by,i.created_at,i.status,i.modified_at,i.modified_by,sum(m.rc_qty) as tot_rc" 
-    schema = f"td_purchase_items i join td_item_delivery_details m on m.prod_id=i.item_id" 
-    where = f"i.pur_no='{data.pur_no}' and m.po_no = '{result1['msg'][0]['po_no']}'" 
+    select = f"sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,{result2['msg']} as tot_rc" 
+    schema = f"td_purchase_items " 
+    where = f"pur_no='{data.pur_no}'" 
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+    # select = f"i.sl_no as item_sl,i.ordered_qty,i.pur_no,i.item_id,i.qty,i.created_by,i.created_at,i.status,i.modified_at,i.modified_by,sum(m.rc_qty) as tot_rc" 
+    # schema = f"td_purchase_items i join td_item_delivery_details m on m.prod_id=i.item_id" 
+    # where = f"i.pur_no='{data.pur_no}' and m.po_no = '{result1['msg'][0]['po_no']}'" 
+    # order = ""
+    # flag =  1
+    # result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    # return result
 
 
 @stockRouter.post("/get_order_log")
