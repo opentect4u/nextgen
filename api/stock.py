@@ -477,7 +477,7 @@ async def getprojectpoc(id:GetStock):
     # print(id.id)
     res_dt = {}
     # select1 = f"sum(i.req_qty) as req_stock"
-    select1 = f"sum(i.req_qty) - sum(i.cancelled_qty) - i.balance as req_stock"
+    select1 = f"sum(i.req_qty) as req_stock"
     schema1 = "td_requisition t,td_requisition_items i"
     where1 = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.approve_flag='P' and i.req_no=t.req_no"
     order1 = ""
@@ -485,7 +485,7 @@ async def getprojectpoc(id:GetStock):
     result1 = await db_select(select1, schema1, where1, order1, flag1)
 
 
-    select_tot = f"sum(i.req_qty) - sum(i.cancelled_qty) - i.balance as tot_stock"
+    select_tot = f"sum(i.req_qty) as tot_stock"
     schema_tot = "td_requisition t,td_requisition_items i"
     where_tot = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.req_no=t.req_no"
     order_tot = ""
@@ -493,13 +493,13 @@ async def getprojectpoc(id:GetStock):
     result_tot = await db_select(select_tot, schema_tot, where_tot, order_tot, flag_tot)
     print("tot_stock=======",result_tot['msg']['tot_stock'])
 
-    select_can = f"sum(i.cancelled_qty) as can_stock"
-    schema_can = "td_requisition t,td_requisition_items i"
-    where_can = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.req_no=t.req_no"
-    order_can = ""
-    flag_can = 0 
-    result_can = await db_select(select_can, schema_can, where_can, order_can, flag_can)
-    print("can_stock=======",result_can['msg']['can_stock'])
+    # select_can = f"sum(i.cancelled_qty) as can_stock"
+    # schema_can = "td_requisition t,td_requisition_items i"
+    # where_can = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.req_no=t.req_no"
+    # order_can = ""
+    # flag_can = 0 
+    # result_can = await db_select(select_can, schema_can, where_can, order_can, flag_can)
+    # print("can_stock=======",result_can['msg']['can_stock'])
 
     select2 = f"sum(qty) as del_stock"
     schema2 = "td_stock_new"
@@ -516,9 +516,10 @@ async def getprojectpoc(id:GetStock):
     flag =1 
     result = await db_select(select, schema, where, order, flag)
     if result1['suc']>0:
-       print('result==',result,'result1==',result1,'result2==',result2,'result_tot==',result_tot,'result_can==',result_can)
-       cancel_stock= result_can['msg']['can_stock'] if result_can['msg']['can_stock'] else 0
-       return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":cancel_stock ,"tot_stock":int(result_tot['msg']['tot_stock']) - result2['msg']['del_stock'] if int(result_tot['msg']['tot_stock']) and result2['msg']['del_stock'] else int(result_tot['msg']['tot_stock']) if int(result_tot['msg']['tot_stock']) else 0}
+      
+    #    cancel_stock= result_can['msg']['can_stock'] if result_can['msg']['can_stock'] else 0
+    #    return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":cancel_stock ,"tot_stock":int(result_tot['msg']['tot_stock']) - result2['msg']['del_stock'] if int(result_tot['msg']['tot_stock']) and result2['msg']['del_stock'] else int(result_tot['msg']['tot_stock']) if int(result_tot['msg']['tot_stock']) else 0}
+       return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":0 ,"tot_stock":int(result_tot['msg']['tot_stock']) - result2['msg']['del_stock'] if int(result_tot['msg']['tot_stock']) and result2['msg']['del_stock'] else int(result_tot['msg']['tot_stock']) if int(result_tot['msg']['tot_stock']) else 0}
     else:
        return {"result":result,"req_stock":0,"tot_stock":0,"can_stock":0}
     
@@ -1142,9 +1143,6 @@ async def save_trans(data:GetPurItem):
 
 @stockRouter.post("/get_purchase_req_items_for_edit")
 async def save_trans(data:GetPurItem):
-    mrn_dt = ""
- 
-
     select2 = "prod_id,sum(quantity)"
     schema2 = "td_item_delivery_details"
     where2 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
@@ -1162,15 +1160,6 @@ async def save_trans(data:GetPurItem):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
-
-    # select = f"i.sl_no as item_sl,i.ordered_qty,i.pur_no,i.item_id,i.qty,i.created_by,i.created_at,i.status,i.modified_at,i.modified_by,sum(m.rc_qty) as tot_rc" 
-    # schema = f"td_purchase_items i join td_item_delivery_details m on m.prod_id=i.item_id" 
-    # where = f"i.pur_no='{data.pur_no}' and m.po_no = '{result1['msg'][0]['po_no']}'" 
-    # order = ""
-    # flag =  1
-    # result = await db_select(select, schema, where, order, flag)
-    # print(result, 'RESULT')
-    # return result
 
 
 @stockRouter.post("/get_order_log")
