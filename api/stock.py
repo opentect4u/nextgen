@@ -1143,18 +1143,35 @@ async def save_trans(data:GetPurItem):
 @stockRouter.post("/get_purchase_req_items_for_edit")
 async def save_trans(data:GetPurItem):
     mrn_dt = ""
-    # select1 = "po_no"
-    # schema1 = "td_po_basic"
-    # where1 = f"pur_req='{data.pur_no}'"
-    # order1 = ""
-    # flag1 =  1
-    # result1 = await db_select(select1, schema1, where1, order1, flag1)
-    # print('result1 ===================================',result1)
+    select1 = "po_no"
+    schema1 = "td_po_basic"
+    where1 = f"pur_req like '%{data.pur_no.lstrip('PR-')}%'"
+    order1 = ""
+    flag1 =  1
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+    print('result1 ===================================',result1)
+
+    select2 = "sum(qty)"
+    schema2 = "td_item_delivery_details"
+    where2 = f"po_no = '{result1['msg'][0]['po_no']}' group by prod_id"
+    order2 = ""
+    flag2 =  1
+    result2 = await db_select(select2, schema2, where2, order2, flag2)
+    print('result1 ===================================',result2)
    
 
-    select = "distinct sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
-    schema = f"td_purchase_items " 
-    where = f"pur_no='{data.pur_no}'" 
+    # select = f"sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,{result2} as tot_rc" 
+    # schema = f"td_purchase_items " 
+    # where = f"pur_no='{data.pur_no}'" 
+    # order = ""
+    # flag =  1
+    # result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    # return result
+
+    select = f"i.sl_no as item_sl,i.ordered_qty,i.pur_no,i.item_id,i.qty,i.created_by,i.created_at,i.status,i.modified_at,i.modified_by,sum(m.rc_qty) as tot_rc" 
+    schema = f"td_purchase_items i left join td_item_delivery_details m on m.prod_id=i.item_id" 
+    where = f"i.pur_no='{data.pur_no}' and m.po_no = '{result1['msg'][0]['po_no']}'" 
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
