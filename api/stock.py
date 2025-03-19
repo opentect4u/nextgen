@@ -1170,7 +1170,7 @@ async def save_trans(data:GetPurItem):
     # return result
 
     select = f"i.sl_no as item_sl,i.ordered_qty,i.pur_no,i.item_id,i.qty,i.created_by,i.created_at,i.status,i.modified_at,i.modified_by,sum(m.rc_qty) as tot_rc" 
-    schema = f"td_purchase_items i left join td_item_delivery_details m on m.prod_id=i.item_id" 
+    schema = f"td_purchase_items i join td_item_delivery_details m on m.prod_id=i.item_id" 
     where = f"i.pur_no='{data.pur_no}' and m.po_no = '{result1['msg'][0]['po_no']}'" 
     order = ""
     flag =  1
