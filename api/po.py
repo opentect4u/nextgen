@@ -3922,7 +3922,7 @@ async def getMinReq(id:GetMinReq):
 
     res_dt = {}
     select = "distinct r.sl_no,r.req_no,r.approve_flag,r.reason,r.intended_for,r.req_date,r.project_id,r.client_id,r.req_type,r.purpose,m.req_no as min_req_no,p.proj_name"
-    table = "td_requisition r join td_min m on r.req_no=m.req_no join td_project p on r.project_id=p.sl_no"
+    table = "td_requisition r join td_min m on r.req_no=m.req_no left join td_project p on r.project_id=p.sl_no"
     where = f""
     order = "ORDER BY r.req_date DESC"
     flag = 1
