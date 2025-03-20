@@ -1142,25 +1142,68 @@ async def save_trans(data:GetPurItem):
     print(result, 'RESULT')
     return result
 
-@stockRouter.post("/get_purchase_req_items_for_edit")
-async def save_trans(data:GetPurItem):
-    select2 = "prod_id,sum(quantity)"
-    schema2 = "td_item_delivery_details"
-    where2 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
-    order2 = ""
-    flag2 =  1
-    result2 = await db_select(select2, schema2, where2, order2, flag2)
-    print('result1 ===================================',result2)
+# @stockRouter.post("/get_purchase_req_items_for_edit")
+# async def save_trans(data:GetPurItem):
+#     select2 = "prod_id,sum(quantity)"
+#     schema2 = "td_item_delivery_details"
+#     where2 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
+#     order2 = ""
+#     flag2 =  1
+#     result2 = await db_select(select2, schema2, where2, order2, flag2)
+#     print('result1 ===================================',result2)
    
 
-    select = f"sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
-    schema = f"td_purchase_items " 
-    where = f"pur_no='{data.pur_no}'" 
-    order = ""
-    flag =  1
-    result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
-    return result
+#     select = f"sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
+#     schema = f"td_purchase_items " 
+#     where = f"pur_no='{data.pur_no}'" 
+#     order = ""
+#     flag =  1
+#     result = await db_select(select, schema, where, order, flag)
+#     print(result, 'RESULT')
+#     return result
+
+@stockRouter.post("/get_purchase_req_items_for_edit")
+async def save_trans(data:GetPurItem):
+     # Secure query using parameterized input
+        pur_no_value = data.pur_no.lstrip("PR-")
+
+        select2 = "prod_id, SUM(quantity) AS total_qty"
+        schema2 = "td_item_delivery_details"
+        where2 = """
+            po_no IN (
+                SELECT po_no FROM td_po_basic WHERE pur_req LIKE %s
+            )
+            GROUP BY prod_id
+        """
+        order2 = ""
+        flag2 = 1
+
+        result2 = await db_select(select2, schema2, where2, order2, flag2, params=(f"%{pur_no_value}%",))
+        print("Result1 ===================================", result2)
+
+        # Convert result2 to a dictionary for quick lookup
+        delivery_data = {row["prod_id"]: row["total_qty"] for row in result2} if result2 else {}
+
+        # Query for purchase items
+        select = """
+            sl_no AS item_sl, ordered_qty, pur_no, item_id, qty, 
+            created_by, created_at, status, modified_at, modified_by, 0 AS tot_rc
+        """
+        schema = "td_purchase_items"
+        where = "pur_no=%s"
+        order = ""
+        flag = 1
+
+        result = await db_select(select, schema, where, order, flag, params=(data.pur_no,))
+        print(result, "RESULT")
+
+        # Merge delivery quantity into purchase items based on item_id matching prod_id
+        for row in result:
+            row["tot_rc"] = delivery_data.get(row["item_id"], 0)  # Default to 0 if no match
+
+        print("Final Merged Result:", result)
+        return result
+
 
 
 @stockRouter.post("/get_order_log")
