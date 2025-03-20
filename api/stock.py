@@ -1153,23 +1153,23 @@ async def save_trans(data:GetPurItem):
     print('result1 ===================================',result2)
    
 
-    # select = f"sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
-    # schema = f"td_purchase_items " 
-    # where = f"pur_no='{data.pur_no}'" 
-    # order = ""
-    # flag =  1
-    # result = await db_select(select, schema, where, order, flag)
-    # print(result, 'RESULT')
-    # return result
-
-    select = f"p.sl_no as item_sl,p.ordered_qty,p.pur_no,p.item_id,p.qty,p.created_by,p.created_at,p.status,p.modified_at,p.modified_by,sum(m.qty) as tot_rc" 
-    schema = f"td_purchase_items p where p.item_id=m.prod_id" 
-    where = f"p.pur_no='{data.pur_no}' and m.po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
+    select = f"sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
+    schema = f"td_purchase_items " 
+    where = f"pur_no='{data.pur_no}'" 
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+    # select = f"p.sl_no as item_sl,p.ordered_qty,p.pur_no,p.item_id,p.qty,p.created_by,p.created_at,p.status,p.modified_at,p.modified_by,sum(m.qty) as tot_rc" 
+    # schema = f"td_purchase_items p where p.item_id=m.prod_id" 
+    # where = f"p.pur_no='{data.pur_no}' and m.po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
+    # order = ""
+    # flag =  1
+    # result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    # return result
 
 # @stockRouter.post("/get_purchase_req_items_for_edit")
 # async def save_trans(data:GetPurItem):
