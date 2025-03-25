@@ -1144,7 +1144,7 @@ async def save_trans(data:GetPurItem):
 
 @stockRouter.post("/get_purchase_req_items_for_edit")
 async def save_trans(data:GetPurItem):
-    select2 = "prod_id,sum(quantity) as total_received"
+    select2 = "prod_id,sum(quantity) as total_ordered,sum(rc_qty) as total_received"
     schema2 = "td_item_delivery_details"
     where2 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
     order2 = ""
@@ -1160,9 +1160,10 @@ async def save_trans(data:GetPurItem):
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
-    # delivery_data = {row['prod_id']: row['total_received'] for row in result2['msg']}
-    for row in result2['msg']:
-         print('row',row)
+    delivery_data = {row['prod_id']: row['total_received'] for row in result2['msg']}
+    print('delivery_data',delivery_data)
+    # for row in result2['msg']:
+    #      print('row',row)
 
 # Merge the total_received value into result based on item_id
     # for row in result:
