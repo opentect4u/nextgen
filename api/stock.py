@@ -1153,9 +1153,9 @@ async def save_trans(data:GetPurItem):
     print('result1 ===================================',result2)
    
 
-    select = f"sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
-    schema = f"td_purchase_items " 
-    where = f"pur_no='{data.pur_no}'" 
+    select = f"i.sl_no as item_sl,i.ordered_qty,i.pur_no,i.item_id,i.qty,i.created_by,i.created_at,i.status,i.modified_at,i.modified_by, sum(m.rc_qty) as tot_rc" 
+    schema = f"td_purchase_items i, td_item_delivery_details m" 
+    where = f"i.pur_no='{data.pur_no}' where mpo_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') " 
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
