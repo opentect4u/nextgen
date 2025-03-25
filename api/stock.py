@@ -1144,7 +1144,7 @@ async def save_trans(data:GetPurItem):
 
 @stockRouter.post("/get_purchase_req_items_for_edit")
 async def save_trans(data:GetPurItem):
-    select2 = "prod_id,sum(quantity)"
+    select2 = "prod_id,sum(quantity) as total_received"
     schema2 = "td_item_delivery_details"
     where2 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
     order2 = ""
