@@ -653,7 +653,7 @@ JOIN (
     FROM td_po_basic
     WHERE amend_flag = 'Y' AND po_no is NOT null
     GROUP BY SUBSTRING_INDEX(po_no,'-',1)
-) c ON c.po_no=b.po_no
+) c ON c.po_no=b.po_no or b.po_no is NULL
 '''
     where = f"b.sl_no='{id.id}' and b.po_status IN ('P','U','A','L','D')" if id.id>0 else "b.po_status IN ('P','U','A','L','D') OR (amend_flag = 'Y' AND parent_po_no IS NOT NULL)"
     order = "ORDER BY b.created_at DESC"
