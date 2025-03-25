@@ -1160,7 +1160,7 @@ async def save_trans(data:GetPurItem):
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
-    delivery_data = {row['prod_id']: row['total_received'] for row in result2}
+    delivery_data = {row['prod_id']: row['total_received'] for row in result2['msg']}
 
 # Merge the total_received value into result based on item_id
     for row in result:
