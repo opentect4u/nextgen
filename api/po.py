@@ -3561,7 +3561,7 @@ async def getprojectpoc(id:DelSearch):
     res_dt = {}
 
     select = "d.invoice,d.invoice_dt,d.del_no,d.po_no,pr.sl_no, b.sl_no as del_sl,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.item_id,p.prod_name,p.prod_make,p.part_no"
-    schema = '''td_vendor_to_client d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_vtoc_items i on i.del_no=d.del_no left join md_product p on i.item_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id '''
+    schema = '''td_vendor_to_client d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_vtoc_items i on i.del_no=d.del_no left join md_product p on i.item_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id
     
 #     JOIN (
 #    SELECT d.po_no
@@ -3573,7 +3573,7 @@ async def getprojectpoc(id:DelSearch):
 #     WHERE amend_flag = 'Y' AND po_no is NOT null
 #     GROUP BY SUBSTRING_INDEX(po_no,'-',1)
 # ) c ON c.po_no=b.po_no
-#     '''
+    '''
     where = ""
     if(id.project_id != 0 and id.project_id!=""):
         where += f"b.project_id={id.project_id} {"AND " if((id.vendor_id != 0 and id.vendor_id!="") or id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
