@@ -3163,7 +3163,7 @@ async def approvepo(id:approveReq):
             whr=f'req_no="{id.ref_no}"'
             result = await db_Delete(table_name, whr)
 
-            fields_insert2= f'SELECT * FROM td_requisition_items WHERE req_no = "{id.id}"'
+            fields_insert2= f'SELECT * FROM td_requisition_items WHERE req_no = "{id.ref_no}"'
             table_names_insert2 = "td_requisition_items_cancel"
             results_insert2 = await db_Insert(table_names_insert2, fields_insert2, None, None, 0, True)
             
@@ -3186,7 +3186,7 @@ async def approvepo(id:approveReq):
             result2 = await db_Delete(table_name2, whr2)
 
             if result1['suc']>0 and result['suc']>0 and result2['suc']>0:
-                res_dt={'suc':1,'msg':'Deleted successfully!'}
+                res_dt={'suc':1,'msg':'Cancelled successfully!'}
             else:
                 res_dt={'suc':0,'msg':'Error while deleting!'}
        
