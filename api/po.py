@@ -3070,13 +3070,6 @@ async def approvepo(id:approveReq):
 
             for i in id.items:
 
-                # flds= f'date,ref_no,proj_id,item_id,req_qty,qty,in_out_flag,balance,created_by,created_at'
-                # val = f'"{formatted_dt}","{id.ref_no}",{id.project_id},{i.item_id},{0},{i.req_qty},{id.in_out_flag}, "(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=id.project_id)-{i.req_qty}","{id.user}","{formatted_dt}"'
-                # table = "td_stock_new"
-                # whr=f""
-                # flag2 =  0
-                # result3 = await db_Insert(table, flds, val, whr, flag2)
-
                 select = "balance"
                 table = "td_requisition_items"
                 where = f"sl_no={i.sl_no}"
@@ -3159,7 +3152,7 @@ async def approvepo(id:approveReq):
 
             
 
-            fields_insert1= f'SELECT * FROM td_requisition WHERE req_no = "{id.id}"'
+            fields_insert1= f'SELECT * FROM td_requisition WHERE req_no = "{id.ref_no}"'
             table_names_insert1 = "td_requisition_cancel"
             results_insert1 = await db_Insert(table_names_insert1, fields_insert1, None, None, 0, True)
 
@@ -3167,7 +3160,7 @@ async def approvepo(id:approveReq):
             table_name = "td_requisition"
             flag = 1 
             values=''
-            whr=f'req_no="{id.id}"'
+            whr=f'req_no="{id.ref_no}"'
             result = await db_Delete(table_name, whr)
 
             fields_insert2= f'SELECT * FROM td_requisition_items WHERE req_no = "{id.id}"'
@@ -3178,10 +3171,10 @@ async def approvepo(id:approveReq):
             table_name1 = "td_requisition_items"
             flag1 = 1 
             values1=''
-            whr1=f'req_no="{id.id}"'
+            whr1=f'req_no="{id.ref_no}"'
             result1 = await db_Delete(table_name1, whr1)
 
-            fields_insert3= f'SELECT * FROM td_min WHERE req_no = "{id.id}"'
+            fields_insert3= f'SELECT * FROM td_min WHERE req_no = "{id.ref_no}"'
             table_names_insert3 = "td_min_cancel"
             results_insert3 = await db_Insert(table_names_insert3, fields_insert3, None, None, 0, True)
 
@@ -3189,7 +3182,7 @@ async def approvepo(id:approveReq):
             table_name2 = "td_min"
             flag2 = 1 
             values2=''
-            whr2=f'req_no="{id.id}"'
+            whr2=f'req_no="{id.ref_no}"'
             result2 = await db_Delete(table_name2, whr2)
 
             if result1['suc']>0 and result['suc']>0 and result2['suc']>0:
