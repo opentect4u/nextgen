@@ -3117,54 +3117,87 @@ async def approvepo(id:approveReq):
 
         else:
 
-            for i in id.items:
+            # for i in id.items:
 
-                select = "balance"
-                table = "td_requisition_items"
-                where = f"sl_no={i.sl_no}"
-                order = ""
-                flag = 0 
-                res_dt = await db_select(select,table,where,order,flag)
-                print('dfdfdfdf',res_dt['msg'])
+            #     select = "balance"
+            #     table = "td_requisition_items"
+            #     where = f"sl_no={i.sl_no}"
+            #     order = ""
+            #     flag = 0 
+            #     res_dt = await db_select(select,table,where,order,flag)
+            #     print('dfdfdfdf',res_dt['msg'])
 
-                _select = "cancelled_qty"
-                _table = "td_requisition_items"
-                _where = f"sl_no={i.sl_no}"
-                _order = ""
-                _flag = 0 
-                _res_dt = await db_select(_select,_table,_where,_order,_flag)
+            #     _select = "cancelled_qty"
+            #     _table = "td_requisition_items"
+            #     _where = f"sl_no={i.sl_no}"
+            #     _order = ""
+            #     _flag = 0 
+            #     _res_dt = await db_select(_select,_table,_where,_order,_flag)
 
-                _select1 = "req_qty"
-                _table1 = "td_requisition_items"
-                _where1 = f"sl_no={i.sl_no}"
-                _order1 = ""
-                _flag1 = 0 
-                _res_dt1 = await db_select(_select1,_table1,_where1,_order1,_flag1)
-                if i.qty>0:
-                    balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.req_qty - i.qty
-                    cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
-                    req_qty = int(_res_dt1['msg']['req_qty']) - i.qty if int(_res_dt1['msg']['req_qty'])>0 else i.qty
-                    cancel_flag = 'R'  if cancelled_qty == i.req_qty else 'H'
-                    fields1= f'req_qty="{req_qty}",cancelled_qty="{cancelled_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{cancel_flag}", deleted_by="{id.user}",deleted_at="{formatted_dt}"'
-                    values1 = f''
-                    table_name1 = "td_requisition_items"
-                    whr1 = f'sl_no="{i.sl_no}"' 
+            #     _select1 = "req_qty"
+            #     _table1 = "td_requisition_items"
+            #     _where1 = f"sl_no={i.sl_no}"
+            #     _order1 = ""
+            #     _flag1 = 0 
+            #     _res_dt1 = await db_select(_select1,_table1,_where1,_order1,_flag1)
+            #     if i.qty>0:
+            #         balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.req_qty - i.qty
+            #         cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
+            #         req_qty = int(_res_dt1['msg']['req_qty']) - i.qty if int(_res_dt1['msg']['req_qty'])>0 else i.qty
+            #         cancel_flag = 'R'  if cancelled_qty == i.req_qty else 'H'
+            #         fields1= f'req_qty="{req_qty}",cancelled_qty="{cancelled_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{cancel_flag}", deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+            #         values1 = f''
+            #         table_name1 = "td_requisition_items"
+            #         whr1 = f'sl_no="{i.sl_no}"' 
 
-                    flag2 = 1 
+            #         flag2 = 1 
 
-                    result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
+            #         result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
+            current_datetime = datetime.now()
+            res_dt={}
+            formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
+            
 
-                
+            fields_insert1= f'SELECT * FROM td_requisition WHERE req_no = "{id.id}"'
+            table_names_insert1 = "td_requisition_cancel"
+            results_insert1 = await db_Insert(table_names_insert1, fields_insert1, None, None, 0, True)
 
-                    if(result3['suc']>0): 
+            fields=f''
+            table_name = "td_requisition"
+            flag = 1 
+            values=''
+            whr=f'req_no="{id.id}"'
+            result = await db_Delete(table_name, whr)
 
-                        res_dt = {"suc": 1, "msg": f"Saved Successfully"}
+            fields_insert2= f'SELECT * FROM td_requisition_items WHERE req_no = "{id.id}"'
+            table_names_insert2 = "td_requisition_items_cancel"
+            results_insert2 = await db_Insert(table_names_insert2, fields_insert2, None, None, 0, True)
+            
+            fields1=f''
+            table_name1 = "td_requisition_items"
+            flag1 = 1 
+            values1=''
+            whr1=f'req_no="{id.id}"'
+            result1 = await db_Delete(table_name1, whr1)
 
-                    else:
-                        res_dt = {"suc": 0, "msg": f"Error while inserting "}
+            fields_insert3= f'SELECT * FROM td_min WHERE req_no = "{id.id}"'
+            table_names_insert3 = "td_min_cancel"
+            results_insert3 = await db_Insert(table_names_insert3, fields_insert3, None, None, 0, True)
 
-            res_dt = {"suc": 1, "msg": f"Action Successful!"}
+            fields2=f''
+            table_name2 = "td_min"
+            flag2 = 1 
+            values2=''
+            whr2=f'req_no="{id.id}"'
+            result2 = await db_Delete(table_name2, whr2)
+
+            if result1['suc']>0 and result['suc']>0 and result2['suc']>0:
+                res_dt={'suc':1,'msg':'Deleted successfully!'}
+            else:
+                res_dt={'suc':0,'msg':'Error while deleting!'}
+       
+
 
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!"}
@@ -3601,7 +3634,6 @@ async def getprojectpoc(id:DelSearch):
 async def advancedSearch(id:DelSearch):
     select = "d.invoice,d.invoice_dt,d.del_no,d.po_no,pr.sl_no, b.sl_no as del_sl,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.item_id,p.prod_name,p.prod_make,p.part_no"
     schema = '''td_vendor_to_client d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_vtoc_items i on i.del_no=d.del_no left join md_product p on i.item_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id
-    
     JOIN (
    SELECT d.po_no
     FROM td_po_basic d WHERE d.amend_flag = 'N' AND d.po_no is NOT null
