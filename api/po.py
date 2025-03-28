@@ -3597,6 +3597,44 @@ async def getprojectpoc(id:DelSearch):
     # return result
 
 
+@poRouter.post('/advanced_search_vtoc')
+async def advancedSearch(id:DelSearch):
+    select = "d.invoice,d.invoice_dt,d.del_no,d.po_no,pr.sl_no, b.sl_no as del_sl,pr.proj_name,b.vendor_id,v.vendor_name,i.sl_no item_delivery_no,i.item_id,p.prod_name,p.prod_make,p.part_no"
+    schema = '''td_vendor_to_client d left join td_po_basic b on b.po_no = d.po_no left join td_project pr on pr.sl_no = b.project_id left join td_vtoc_items i on i.del_no=d.del_no left join md_product p on i.item_id = p.sl_no left join md_vendor v on v.sl_no=b.vendor_id
+    
+    JOIN (
+   SELECT d.po_no
+    FROM td_po_basic d WHERE d.amend_flag = 'N' AND d.po_no is NOT null
+    HAVING (SELECT COUNT(*) FROM td_po_basic e WHERE e.po_no LIKE CONCAT(d.po_no, '%')) = 1
+    UNION
+    SELECT MAX(po_no) po_no
+    FROM td_po_basic
+    WHERE amend_flag = 'Y' AND po_no is NOT null
+    GROUP BY SUBSTRING_INDEX(po_no,'-',1)
+) c ON c.po_no=b.po_no
+    '''
+    where = ""
+    if(id.project_id != 0 and id.project_id!=""):
+        where += f"b.project_id={id.project_id} {"AND " if((id.vendor_id != 0 and id.vendor_id!="") or id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.vendor_id != 0 and id.vendor_id!=""):
+        where += f"b.vendor_id={id.vendor_id} {"AND " if(id.invoice != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.part_no != ''):
+        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.invoice != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.invoice != ''):
+        where += f"d.invoice like '%{id.invoice}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.prod_id != ''):
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.make != ''):
+        where += f"p.prod_make like '%{id.make}%' {"AND " if(id.to_dt != '' or id.from_dt != '') else ''}"
+    if(id.to_dt != '' or id.from_dt != ''):
+        where += f'''(d.invoice_dt BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
+
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and d.invoice IS NOT NULL AND i.item_id is not null and d.invoice_dt is not null)" 
+    order = "ORDER BY d.created_at DESC"
+    flag = 1
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
 
 
 
