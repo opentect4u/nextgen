@@ -819,52 +819,124 @@ async def save_trans(data:GetApproveItems):
 
                         # ======================================================
             else:
-                fields= f"cancel_flag='{i.approve_flag}',cancelled_by='{data.user}',cancelled_at='{formatted_dt}'"
-                values = f''
-                table_name = "td_transfer_items"
-                whr=f"trans_no='{data.trans_no}' and sl_no={i.sl_no}"   
+                # fields= f"cancel_flag='{i.approve_flag}',cancelled_by='{data.user}',cancelled_at='{formatted_dt}'"
+                # values = f''
+                # table_name = "td_transfer_items"
+                # whr=f"trans_no='{data.trans_no}' and sl_no={i.sl_no}"   
+                # flag1 = 1 
+                # result2 = await db_Insert(table_name, fields, values, whr, flag1)
+                # if result2['suc']>0:
+                #   res_dt = {"suc": 1, "msg": f"Successfully saved!"}
+                
+                # else:
+                #   res_dt = {"suc": 0, "msg": f"Error while saving!"}
+
+
+                # select = "balance"
+                # table = "td_transfer_items"
+                # where = f"sl_no={i.sl_no}"
+                # order = ""
+                # flag = 0 
+                # res_dt = await db_select(select,table,where,order,flag)
+                # print('dfdfdfdf',res_dt['msg'])
+
+                # _select = "cancelled_qty"
+                # _table = "td_transfer_items"
+                # _where = f"sl_no={i.sl_no}"
+                # _order = ""
+                # _flag = 0 
+                # _res_dt = await db_select(_select,_table,_where,_order,_flag)
+                # print('dfdfdfdf',_res_dt['msg'])
+                # if i.qty>0:
+                #     balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.qty
+                #     cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
+                #     cancel_flag = 'A'  if cancelled_qty == i.qty else 'H'
+                #     # cancell_flag = 'A'  
+                #     fields1= f'cancelled_qty={cancelled_qty},balance={balance},modified_by="{data.user}",modified_at="{formatted_dt}",cancel_flag="{cancel_flag}"'
+                #     values1 = f''
+                #     table_name1 = "td_transfer_items"
+                #     whr1 = f'sl_no="{i.sl_no}"' 
+
+                #     flag2 = 1 
+
+                #     result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
+                #     if result3['suc']>0:
+                #         res_dt = {"suc": 1, "msg": f"Successfully saved!"}
+                
+                #     else:
+                #         res_dt = {"suc": 0, "msg": f"Error while saving!"}
+
+            # for i in id.items:
+
+            #     select = "balance"
+            #     table = "td_requisition_items"
+            #     where = f"sl_no={i.sl_no}"
+            #     order = ""
+            #     flag = 0 
+            #     res_dt = await db_select(select,table,where,order,flag)
+            #     print('dfdfdfdf',res_dt['msg'])
+
+            #     _select = "cancelled_qty"
+            #     _table = "td_requisition_items"
+            #     _where = f"sl_no={i.sl_no}"
+            #     _order = ""
+            #     _flag = 0 
+            #     _res_dt = await db_select(_select,_table,_where,_order,_flag)
+
+            #     _select1 = "req_qty"
+            #     _table1 = "td_requisition_items"
+            #     _where1 = f"sl_no={i.sl_no}"
+            #     _order1 = ""
+            #     _flag1 = 0 
+            #     _res_dt1 = await db_select(_select1,_table1,_where1,_order1,_flag1)
+            #     if i.qty>0:
+            #         balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.req_qty - i.qty
+            #         cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
+            #         req_qty = int(_res_dt1['msg']['req_qty']) - i.qty if int(_res_dt1['msg']['req_qty'])>0 else i.qty
+            #         cancel_flag = 'R'  if cancelled_qty == i.req_qty else 'H'
+            #         fields1= f'req_qty="{req_qty}",cancelled_qty="{cancelled_qty}",balance={balance},modified_by="{id.user}",modified_at="{formatted_dt}",approve_flag="{cancel_flag}", deleted_by="{id.user}",deleted_at="{formatted_dt}"'
+            #         values1 = f''
+            #         table_name1 = "td_requisition_items"
+            #         whr1 = f'sl_no="{i.sl_no}"' 
+
+            #         flag2 = 1 
+
+            #         result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
+            # else:
+
+                current_datetime = datetime.now()
+                res_dt={}
+                formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+                    
+
+                fields_insert1= f'SELECT * FROM td_transfer WHERE trans_no = "{data.trans_no}"'
+                table_names_insert1 = "td_transfer_cancel"
+                results_insert1 = await db_Insert(table_names_insert1, fields_insert1, None, None, 0, True)
+
+                fields=f''
+                table_name = "td_transfer"
+                flag = 1 
+                values=''
+                whr=f'trans_no="{data.trans_no}"'
+                result = await db_Delete(table_name, whr)
+
+                fields_insert2= f'SELECT * FROM td_transfer_items WHERE trans_no = "{data.trans_no}"'
+                table_names_insert2 = "td_transfer_items_cancel"
+                results_insert2 = await db_Insert(table_names_insert2, fields_insert2, None, None, 0, True)
+                    
+                fields1=f''
+                table_name1 = "td_transfer_items"
                 flag1 = 1 
-                result2 = await db_Insert(table_name, fields, values, whr, flag1)
-                if result2['suc']>0:
-                  res_dt = {"suc": 1, "msg": f"Successfully saved!"}
+                values1=''
+                whr1=f'trans_no="{data.trans_no}"'
+                result1 = await db_Delete(table_name1, whr1)
+
                 
+                if result1['suc']>0 and result['suc']>0:
+                        res_dt={'suc':1,'msg':'Cancelled successfully!'}
                 else:
-                  res_dt = {"suc": 0, "msg": f"Error while saving!"}
-
-
-                select = "balance"
-                table = "td_transfer_items"
-                where = f"sl_no={i.sl_no}"
-                order = ""
-                flag = 0 
-                res_dt = await db_select(select,table,where,order,flag)
-                print('dfdfdfdf',res_dt['msg'])
-
-                _select = "cancelled_qty"
-                _table = "td_transfer_items"
-                _where = f"sl_no={i.sl_no}"
-                _order = ""
-                _flag = 0 
-                _res_dt = await db_select(_select,_table,_where,_order,_flag)
-                print('dfdfdfdf',_res_dt['msg'])
-                if i.qty>0:
-                    balance = int(res_dt['msg']['balance']) - i.qty if int(res_dt['msg']['balance'])>0 else i.qty
-                    cancelled_qty = int(_res_dt['msg']['cancelled_qty']) + i.qty if int(_res_dt['msg']['cancelled_qty'])>0 else i.qty
-                    cancel_flag = 'A'  if cancelled_qty == i.qty else 'H'
-                    # cancell_flag = 'A'  
-                    fields1= f'cancelled_qty={cancelled_qty},balance={balance},modified_by="{data.user}",modified_at="{formatted_dt}",cancel_flag="{cancel_flag}"'
-                    values1 = f''
-                    table_name1 = "td_transfer_items"
-                    whr1 = f'sl_no="{i.sl_no}"' 
-
-                    flag2 = 1 
-
-                    result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
-                    if result3['suc']>0:
-                        res_dt = {"suc": 1, "msg": f"Successfully saved!"}
-                
-                    else:
-                        res_dt = {"suc": 0, "msg": f"Error while saving!"}
+                        res_dt={'suc':0,'msg':'Error while deleting!'}
                  
     res_dt = {"suc": 1, "msg": res_dt2_out['msg']}
    
