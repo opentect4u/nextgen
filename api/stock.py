@@ -938,7 +938,7 @@ async def save_trans(data:GetApproveItems):
                 else:
                         res_dt={'suc':0,'msg':'Error while deleting!'}
                  
-    res_dt = {"suc": 1, "msg": res_dt2_out['msg']}
+    res_dt = {"suc": 1, "msg": "Action Successful!"}
    
     return res_dt
 
