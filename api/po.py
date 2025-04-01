@@ -2901,7 +2901,7 @@ async def get_requisition(data:GetPo):
     print(data.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number,r.reason, r.req_no,r.intended_for,r.req_date, r.req_type,r.approve_flag,r.purpose,r.project_id,r.client_id, r.created_by,r.created_at,r.modified_by,r.modified_at,r.sl_no,p.proj_name"
+    select = "@a:=@a+1 serial_number,r.reason, r.req_no,r.intended_for,r.req_date, r.req_type,r.approve_flag,r.purpose,r.project_id,r.client_id, r.created_by,r.created_at,r.modified_by,r.modified_at,r.sl_no,p.proj_name,p.proj_id"
     # select = "@a:=@a+1 serial_number, *"
     table = "td_requisition r left join td_project p on r.project_id=p.sl_no ,(SELECT @a:= 0) AS a"
     where = f"r.sl_no='{data.id}' " if data.id>0 else f""
