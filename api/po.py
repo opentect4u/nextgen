@@ -1050,7 +1050,7 @@ async def addfreshpo(data:PoModel):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     req_no=f'REQ-{data.po_no}' if data.po_type=='P' else f''
-    fields= f'po_date="{data.po_date}",po_status="{data.po_status}",po_issue_date="{data.po_issue_date}",po_type="{data.po_type}",project_id="{data.project_id}",po_id="{data.po_id}",vendor_id="{data.vendor_id}",vend_ref="{data.vend_ref}",modified_by="{data.user}",pur_req="{data.pur_req}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_date,po_type,project_id,po_id,vendor_id,vend_ref,po_status,po_issue_date,pur_req,created_by,created_at'
+    fields= f'po_date="{data.po_date if data.po_date is not None else 'NULL'}",po_status="{data.po_status}",po_issue_date="{data.po_issue_date}",po_type="{data.po_type}",project_id="{data.project_id}",po_id="{data.po_id}",vendor_id="{data.vendor_id}",vend_ref="{data.vend_ref}",modified_by="{data.user}",pur_req="{data.pur_req}",modified_at="{formatted_dt}"' if data.sl_no > 0 else f'po_date,po_type,project_id,po_id,vendor_id,vend_ref,po_status,po_issue_date,pur_req,created_by,created_at'
     values = f'"{data.po_date}","{data.po_type}","{data.project_id}","{data.po_id}","{data.vendor_id}","{data.vend_ref}","{data.po_status}","{data.po_issue_date}","{data.pur_req}","{data.user}","{formatted_dt}"'
     table_name = "td_po_basic"
     whr = f'sl_no="{data.sl_no}"' if data.sl_no > 0 else None
