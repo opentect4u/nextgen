@@ -1229,7 +1229,7 @@ async def addfreshpo(data:PoModel):
             print('nextYear',nextYear)
             print('max_form_no',max_form_no)
 
-            po_no = f"NGAPL/{proj_id}/{max_form_no['msg']['max_form']}/{currYear}-{nextYear}"
+            po_no = f"NGAPL/{proj_id}/{max_form_no['msg']['max_form']}/{currYear[2:]}-{nextYear}"
 
             pfields= f'po_no="{po_no}"'
             pvalues = None
