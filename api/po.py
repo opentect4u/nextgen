@@ -1221,10 +1221,13 @@ async def addfreshpo(data:PoModel):
             print('proj_id',result_id['msg'][0]['proj_id'])
             proj_id = result_id['msg'][0]['proj_id'] if data.project_id else 'GEN'
             proj_id_len = len(proj_id)+8
+            print('proj_id2',proj_id)
+            print('proj_id_len',proj_id_len)
 
-            max_form_no = await db_select("LPAD(MAX(cast(SUBSTRING(po_no, 12, 5) as decimal))+1, 5, '0') max_form", "td_po_basic",None, "", 0)
+            max_form_no = await db_select(f"LPAD(MAX(cast(SUBSTRING(po_no, {proj_id_len}, 5) as decimal))+1, 5, '0') max_form", "td_po_basic",None, "", 0)
             nextYear = int(currYear[2:])+1
             print('nextYear',nextYear)
+            print('max_form_no',max_form_no)
 
             po_no = f"NGAPL/{proj_id}/{max_form_no['msg']['max_form']}/{currYear}-{nextYear}"
 
@@ -1234,7 +1237,7 @@ async def addfreshpo(data:PoModel):
             pwhr = f'sl_no="{lastID}"'
             pflag = 1
             po_save = await db_Insert(ptable_name, pfields, pvalues, pwhr, pflag)
-    except:
+    except Exception as e:
         print('Error While saving PO Number')
     ''' END '''
 
