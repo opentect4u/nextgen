@@ -1224,7 +1224,7 @@ async def addfreshpo(data:PoModel):
             print('proj_id2',proj_id)
             print('proj_id_len',proj_id_len)
 
-            max_form_no = await db_select(f"LPAD(MAX(cast(SUBSTRING(po_no, {proj_id_len}, 5) as decimal))+1, 5, '0') max_form", "td_po_basic",None, "", 0)
+            max_form_no = await db_select(f"LPAD(MAX(cast(SUBSTRING(po_no, {proj_id_len}, 5) as decimal))+1, 5, '0') max_form", "td_po_basic","", "", 0)
             nextYear = int(currYear[2:])+1
             print('nextYear',nextYear)
             print('max_form_no',max_form_no)
