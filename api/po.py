@@ -1220,7 +1220,9 @@ async def addfreshpo(data:PoModel):
             currYear = current_datetime.strftime("%Y")
             print('proj_id',result_id['msg'][0]['proj_id'])
             proj_id = result_id['msg'][0]['proj_id'] if data.project_id else 'GEN'
-            max_form_no = await db_select("IF(MAX(SUBSTRING(po_no, -5)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -5) as unsigned))+1, 5, '0'), '00001') max_form", "td_po_basic", f"SUBSTRING(po_no, 3, 4) = {currYear}", "", 0)
+            proj_id_len = len(proj_id)+8
+
+            max_form_no = await db_select("LPAD(MAX(cast(SUBSTRING(po_no, 12, 5) as decimal))+1, 5, '0') max_form", "td_po_basic",None, "", 0)
             nextYear = int(currYear[2:])+1
             print('nextYear',nextYear)
 
