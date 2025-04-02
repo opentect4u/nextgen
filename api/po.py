@@ -1220,7 +1220,7 @@ async def addfreshpo(data:PoModel):
             currYear = current_datetime.strftime("%Y")
             # print('proj_id',result_id['msg'][0]['proj_id'])
             print('result_id',result_id)
-            proj_id = result_id['msg'][0]['proj_id'] if data.project_id else 'GEN'
+            proj_id = result_id['msg'][0]['proj_id'] if data.project_id!='0' else 'GEN'
             proj_id_len = len(proj_id)+8
             print('proj_id2',proj_id)
             print('proj_id_len',proj_id_len)
