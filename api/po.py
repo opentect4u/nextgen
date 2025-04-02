@@ -1227,11 +1227,12 @@ async def addfreshpo(data:PoModel):
             print('proj_id_len',proj_id_len)
 
             max_form_no = await db_select(f"IF(MAX(SUBSTRING(po_no, -11, 5)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -11, 5) as decimal))+1, 5, '0'),'00001') max_form", "td_po_basic","", "", 0)
-            nextYear = int(currYear[2:])+1 if currMon>=4 and currMon<=12 else int(currYear[2:])
-            currYear = int(currYear[2:]) if currMon>=4 and currMon<=12 else int(currYear[2:])-1
+            nextYear = int(currYear[2:])+1 if int(currMon)>=4 and int(currMon)<=12 else int(currYear[2:])
+            currYear = int(currYear[2:]) if int(currMon)>=4 and int(currMon)<=12 else int(currYear[2:])-1
             print('nextYear',nextYear)
             print('max_form_no',max_form_no)
-
+            currYear=str(currYear)
+            nextYear=str(nextYear)
             po_no = f"NGAPL/{proj_id}/{max_form_no['msg']['max_form']}/{currYear}-{nextYear}"
 
             pfields= f'po_no="{po_no}"'
