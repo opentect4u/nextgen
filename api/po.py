@@ -1219,7 +1219,7 @@ async def addfreshpo(data:PoModel):
             # po_save = await db_Insert(ptable_name, pfields, pvalues, pwhr, pflag)
             currYear = current_datetime.strftime("%Y")
             proj_id = result_id['msg'][0]['proj_id'] if data.project_id else 'GEN'
-            max_form_no = await db_select("IF(MAX(SUBSTRING(po_no, -5)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -5) as unsigned))+1, 5, '0'), '000001') max_form", "td_po_basic", f"SUBSTRING(po_no, 3, 4) = {currYear}", "", 0)
+            max_form_no = await db_select("IF(MAX(SUBSTRING(po_no, -5)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -5) as unsigned))+1, 5, '0'), '00001') max_form", "td_po_basic", f"SUBSTRING(po_no, 3, 4) = {currYear}", "", 0)
             nextYear = currYear[2:]+1
             po_no = f"NGAPL/{proj_id}/{max_form_no['msg']['max_form']}/{currYear}-{nextYear}"
             pfields= f'po_no="{po_no}"'
