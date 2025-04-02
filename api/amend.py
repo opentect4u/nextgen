@@ -71,11 +71,14 @@ join (SELECT @a:= 0) AS a '''
 async def addpoamend(data:GetPo):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    am_po_no = await db_select(f"CONCAT((SELECT po_no FROM td_po_basic WHERE sl_no = {data.id}), '-', IF(LENGTH(po_no)-LENGTH(replace(po_no,'-',''))> 1, MAX(SUBSTRING_INDEX(po_no, '-', -1))+1, 1)) am_po", "td_po_basic", f"SUBSTRING_INDEX(po_no, '-', 2) = (SELECT po_no FROM td_po_basic WHERE sl_no = {data.id})", "", 0)
+    parent_po = await db_select("po_no","td_po_basic", f"sl_no = {data.id}","",0)
+    am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}%'","",0)
+    am_po_no = f'{parent_po['msg']['po_no']}-{am_po_row['msg']['po_no']}'
+    # am_po_no = await db_select(f"CONCAT((SELECT po_no FROM td_po_basic WHERE sl_no = {data.id}), '-', IF(LENGTH(po_no)-LENGTH(replace(po_no,'-',''))> 1, MAX(SUBSTRING_INDEX(po_no, '-', -1))+1, 1)) am_po", "td_po_basic", f"SUBSTRING_INDEX(po_no, '-', 2) = (SELECT po_no FROM td_po_basic WHERE sl_no = {data.id})", "", 0)
 
     print('am_po_no',am_po_no)
     
-    fields= f'''SELECT NULL sl_no, po_id, "{am_po_no['msg']['am_po']}" po_no, po_date, po_type, po_issue_date, project_id, vendor_id, vend_ref, 'P' po_status, 'Y' fresh_flag, 0 active_step, po_no parent_po_no, 'Y' amend_flag, amend_note, pur_req, created_by, "{formatted_dt}" created_at, NULL modified_by, NULL modified_at FROM td_po_basic WHERE sl_no = {data.id}'''
+    fields= f'''SELECT NULL sl_no, po_id, "{am_po_no}" po_no, po_date, po_type, po_issue_date, project_id, vendor_id, vend_ref, 'P' po_status, 'Y' fresh_flag, 0 active_step, po_no parent_po_no, 'Y' amend_flag, amend_note, pur_req, created_by, "{formatted_dt}" created_at, NULL modified_by, NULL modified_at FROM td_po_basic WHERE sl_no = {data.id}'''
     table_name = "td_po_basic"
     po_save = await db_Insert(table_name, fields, None, None, 0, True)
     lastID=po_save["lastId"]
