@@ -71,7 +71,7 @@ join (SELECT @a:= 0) AS a '''
 async def addpoamend(data:GetPo):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    am_po_no = await db_select(f"CONCAT((SELECT po_no FROM td_po_basic WHERE sl_no = {data.id}), '-', IF(INSTR(po_no, '-') > 0, MAX(SUBSTRING_INDEX(po_no, '-', -1))+1, 1)) am_po", "td_po_basic", f"SUBSTRING_INDEX(po_no, '-', 1) = (SELECT po_no FROM td_po_basic WHERE sl_no = {data.id})", "", 0)
+    am_po_no = await db_select(f"CONCAT((SELECT po_no FROM td_po_basic WHERE sl_no = {data.id}), '-', IF(len(po_no)-len(replace(po_no,'-',''))> 1, MAX(SUBSTRING_INDEX(po_no, '-', -1))+1, 1)) am_po", "td_po_basic", f"SUBSTRING_INDEX(po_no, '-', 1) = (SELECT po_no FROM td_po_basic WHERE sl_no = {data.id})", "", 0)
 
     print('am_po_no',am_po_no)
     
