@@ -1060,6 +1060,13 @@ async def addfreshpo(data:PoModel):
     lastID=data.sl_no if data.sl_no>0 else result["lastId"]
 
     # print(data.item_dtl,type(data.item_dtl))
+    select_id = "proj_id"
+    schema_id = "td_project"
+    where_id = f"sl_no ='{data.project_id}'"
+    order_id = ""
+    flag_id = 1 
+    result_id = await db_select(select_id, schema_id, where_id, order_id, flag_id)
+    
     try:
         if type(data.item_dtl) is not None and len(data.item_dtl)>0:
 
@@ -1201,9 +1208,20 @@ async def addfreshpo(data:PoModel):
     ''' FOR FINAL SAVE '''
     try:
         if(data.final_save > 0 and lastID > 0):
+            # currYear = current_datetime.strftime("%Y")
+            # max_form_no = await db_select("IF(MAX(SUBSTRING(po_no, -6)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -6) as unsigned))+1, 6, '0'), '000001') max_form", "td_po_basic", f"SUBSTRING(po_no, 1, 4) = {currYear}", "", 0)
+            # po_no = f"{currYear}{max_form_no['msg']['max_form']}"
+            # pfields= f'po_no="{po_no}"'
+            # pvalues = None
+            # ptable_name = "td_po_basic"
+            # pwhr = f'sl_no="{lastID}"'
+            # pflag = 1
+            # po_save = await db_Insert(ptable_name, pfields, pvalues, pwhr, pflag)
             currYear = current_datetime.strftime("%Y")
-            max_form_no = await db_select("IF(MAX(SUBSTRING(po_no, -6)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -6) as unsigned))+1, 6, '0'), '000001') max_form", "td_po_basic", f"SUBSTRING(po_no, 1, 4) = {currYear}", "", 0)
-            po_no = f"{currYear}{max_form_no['msg']['max_form']}"
+            proj_id = result_id['msg'][0]['proj_id'] if data.project_id else 'GEN'
+            max_form_no = await db_select("IF(MAX(SUBSTRING(po_no, -5)) > 0, LPAD(MAX(cast(SUBSTRING(po_no, -5) as unsigned))+1, 5, '0'), '000001') max_form", "td_po_basic", f"SUBSTRING(po_no, 3, 4) = {currYear}", "", 0)
+            nextYear = currYear[2:]+1
+            po_no = f"NGAPL/{proj_id}/{max_form_no['msg']['max_form']}/{currYear}-{nextYear}"
             pfields= f'po_no="{po_no}"'
             pvalues = None
             ptable_name = "td_po_basic"
