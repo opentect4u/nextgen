@@ -1218,7 +1218,7 @@ async def addfreshpo(data:PoModel):
             # pflag = 1
             # po_save = await db_Insert(ptable_name, pfields, pvalues, pwhr, pflag)
             currYear = current_datetime.strftime("%Y")
-            print('proj_id',result_id['msg'][0]['proj_id'])
+            # print('proj_id',result_id['msg'][0]['proj_id'])
             proj_id = result_id['msg'][0]['proj_id'] if data.project_id else 'GEN'
             proj_id_len = len(proj_id)+8
             print('proj_id2',proj_id)
