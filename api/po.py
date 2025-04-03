@@ -1035,7 +1035,7 @@ async def addexistingpo(data:PoModel):
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating","po_sl_no": lastID}
 
-    print(result,result2,result4)
+    print('result',result,'result2',result2,'result4',result4)
   
     return res_dt
 
