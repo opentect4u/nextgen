@@ -4311,16 +4311,16 @@ async def getprojectpoc(po_no:GetInvList):
 @poRouter.post('/get_parent_po_date')
 async def getParentPoDate(po_no:GetInvList):
     res_dt = {}
-    select1 = "*"
-    schema1 = "parent_po_no"
+    select1 = "parent_po_no"
+    schema1 = "td_po_basic"
     where1 = f"po_no='{po_no.po_no}'"
     order1 = ""
     flag1 = 1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
     print(result1, 'RESULT1')
     
-    select2 = "*"
-    schema2 = "po_issue_date"
+    select2 = "po_issue_date"
+    schema2 = "td_po_basic"
     where2 = f"po_no='{result1['msg'][0]['parent_po_no']}'" if result1['msg'] else f"po_no='{po_no.po_no}'"
     order2 = ""
     flag2 = 1
