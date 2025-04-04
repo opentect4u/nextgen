@@ -4325,9 +4325,9 @@ async def getParentPoDate(po_no:GetInvList):
     order2 = ""
     flag2 = 1
     result2 = await db_select(select2, schema2, where2, order2, flag2)
-    print(result1, 'RESULT1')
+    print(result2, 'RESULT1')
     
-    return result1
+    return result2
 
 
 
