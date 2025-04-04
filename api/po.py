@@ -4188,6 +4188,7 @@ async def savestockreturn(dt:StockReturn):
                   order_res = ""
                   flag_res = 1
                   result_res = await db_select(select_res, schema_res, where_res, order_res, flag_res)
+                  print('result_res',result_res)
                   if len(result_res['msg'])==1:
                       fields_insert1= f'SELECT * FROM td_requisition WHERE req_no = "{i.ref_no}"'
                       table_names_insert1 = "td_requisition_delete"
