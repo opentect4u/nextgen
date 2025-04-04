@@ -4184,7 +4184,7 @@ async def savestockreturn(dt:StockReturn):
 
                   select_res = f"approved_qty"
                   schema_res = "td_requisition_items"
-                  where_res = f"req_no={i.ref_no} "
+                  where_res = f"req_no='{i.ref_no}' "
                   order_res = ""
                   flag_res = 1
                   result_res = await db_select(select_res, schema_res, where_res, order_res, flag_res)
