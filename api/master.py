@@ -156,6 +156,7 @@ class Permission(BaseModel):
     floor_req: str
     min: str
     stock: str
+    user_perm:str
     user: str
    
 pass_alphabets=[
@@ -1227,9 +1228,9 @@ async def add_edit_permissions(data:Permission):
     print(res_dt["msg"][0]["sl_no"])
     
 
-    fields= f"masters='{data.masters}', po='{data.purchase}',approve_po='{data.approve_po}',project='{data.projects}', purchase_req='{data.purchase_req}', mrn='{data.mrn}', requisition='{data.floor_req}', min='{data.min}',stock='{data.stock}', modified_at='{formatted_dt}'" if res_dt["msg"][0]["sl_no"] > 0 else f"user_id, masters, po, purchase_req, mrn, requisition, min, stock, project, created_by, created_at"
+    fields= f"masters='{data.masters}', po='{data.purchase}',approve_po='{data.approve_po}',project='{data.projects}', purchase_req='{data.purchase_req}', mrn='{data.mrn}', requisition='{data.floor_req}', min='{data.min}',stock='{data.stock}',user_perm='{data.user_perm}', modified_at='{formatted_dt}'" if res_dt["msg"][0]["sl_no"] > 0 else f"user_id, masters, po, purchase_req, mrn, requisition, min, stock,user_perm, project, created_by, created_at"
 
-    values = None if res_dt["msg"][0]["sl_no"] > 0 else f"{data.user_id}, '{data.masters}', '{data.purchase}','{data.purchase_req}', '{data.mrn}', '{data.floor_req}','{data.min}','{data.stock}', '{data.projects}','{data.user}', '{formatted_dt}'"
+    values = None if res_dt["msg"][0]["sl_no"] > 0 else f"{data.user_id}, '{data.masters}', '{data.purchase}','{data.purchase_req}', '{data.mrn}', '{data.floor_req}','{data.min}','{data.stock}','{data.user_perm}', '{data.projects}','{data.user}', '{formatted_dt}'"
 
     table_name = "td_permission"
 
