@@ -4321,7 +4321,7 @@ async def getParentPoDate(po_no:GetInvList):
     
     select2 = "*"
     schema2 = "po_issue_date"
-    where2 = f"po_no='{result1['msg'][0]['parent_po_no']}'"
+    where2 = f"po_no='{result1['msg'][0]['parent_po_no']}'" if result1['msg'] else f"po_no='{po_no.po_no}'"
     order2 = ""
     flag2 = 1
     result2 = await db_select(select2, schema2, where2, order2, flag2)
