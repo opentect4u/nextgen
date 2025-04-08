@@ -80,7 +80,7 @@ async def addpoamend(data:GetPo):
 
     print('am_po_no',am_po_no)
     
-    fields= f'''SELECT NULL sl_no, po_id, "{am_po_no}" po_no, "{po_dt}" po_date, po_type, po_issue_date, project_id, vendor_id, vend_ref, 'P' po_status, 'Y' fresh_flag, 0 active_step, po_no parent_po_no, 'Y' amend_flag, amend_note, pur_req, created_by, "{formatted_dt}" created_at, NULL modified_by, NULL modified_at FROM td_po_basic WHERE sl_no = {data.id}'''
+    fields= f'''SELECT NULL sl_no, po_id, "{am_po_no}" po_no, "{po_dt}" po_date, po_type,  "{po_dt}" po_issue_date, project_id, vendor_id, vend_ref, 'P' po_status, 'Y' fresh_flag, 0 active_step, po_no parent_po_no, 'Y' amend_flag, amend_note, pur_req, created_by, "{formatted_dt}" created_at, NULL modified_by, NULL modified_at FROM td_po_basic WHERE sl_no = {data.id}'''
     table_name = "td_po_basic"
     po_save = await db_Insert(table_name, fields, None, None, 0, True)
     lastID=po_save["lastId"]
