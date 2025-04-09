@@ -4341,6 +4341,20 @@ async def getParentPoDate(po_no:GetInvList):
     return result2
 
 
+@poRouter.post('/get_po_for_cancel')
+async def getParentPoDate(po_no:GetInvList):
+    res_dt = {}
+    select1 = "*"
+    schema1 = "td_po_basic"
+    where1 = f"po_no not in (select po_no from td_item_delivery_invoice)" if po_no.po_no=='' else f"po_no='{po_no.po_no}'"
+    order1 = ""
+    flag1 = 1
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+    print(result1, 'RESULT1')
+    
+    return result1
+
+
 
 
     
