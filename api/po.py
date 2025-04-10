@@ -869,6 +869,25 @@ async def approvepo(id:approvePO):
   
     return res_dt
 
+
+@poRouter.post('/cancelpo')
+async def approvepo(id:approvePO):
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    fields= f'po_status="{id.status}",modified_by="{id.user}",modified_at="{formatted_dt}"'
+    values = f''
+    table_name = "td_po_basic"
+    whr = f'sl_no="{id.id}"' if id.id > 0 else None
+    flag = 1 if id.id>0 else 0
+
+    result = await db_Insert(table_name, fields, values, whr, flag)
+    if result['suc']:
+        res_dt = {"suc": 1, "msg": f"Action Successful!"}
+    else:
+        res_dt = {"suc": 0, "msg": f"Error while saving!"}
+  
+    return res_dt
+
 @poRouter.post('/addpocomments')
 async def addpocomments(id:getComments):
     current_datetime = datetime.now()
