@@ -893,7 +893,7 @@ async def approvepo(id:approvePO):
     pur_req_list = str(result1['msg'][0]['pur_req']).split(',')
     print(pur_req_list, 'RESULT')
 
-    select = "item_id"
+    select = "item_id,qty"
     schema = "td_po_items"
     where = f"po_sl_no='{id.id}'" if id.id>0 else ""
     order = ""
@@ -902,6 +902,26 @@ async def approvepo(id:approvePO):
 
     items = result2['msg']
     print(items, 'ITEMS')
+
+    for pur_req in pur_req_list:
+        for item in items:
+
+            select = "ordered_qty"
+            schema = "purchase_req_items"
+            where = f"pur_no='{pur_req}' and item_id={item['item_id']}" if id.id>0 else ""
+            order = ""
+            flag = 1 if id.id>0 else 0
+            result_pur = await db_select(select, schema, where, order, flag)
+
+            qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['qty'])
+
+            fields= f'item_id="{item["item_id"]}",quantity="{qty}"'
+            values = f''
+            table_name = "purchase_req_items"
+            whr = f'po_no="{pur_req}"' if pur_req > 0 else None
+            flag = 1 if pur_req>0 else 0
+            result3 = await db_Insert(table_name, fields, values, whr, flag)
+
 
 
     if result['suc']:
