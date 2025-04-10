@@ -913,7 +913,7 @@ async def approvepo(id:approvePO):
             flag = 1 if id.id>0 else 0
             result_pur = await db_select(select, schema, where, order, flag)
 
-            qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['qty'])
+            qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity'])
 
             fields= f'item_id="{item["item_id"]}",quantity="{qty}"'
             values = f''
