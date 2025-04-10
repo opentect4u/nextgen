@@ -890,7 +890,7 @@ async def approvepo(id:approvePO):
     order = ""
     flag = 1 if id.id>0 else 0
     result1 = await db_select(select, schema, where, order, flag)
-    print(result1['msg']['pur_req'], 'RESULT')
+    print(result1['msg'][0]['pur_req'], 'RESULT')
     if result['suc']:
         res_dt = {"suc": 1, "msg": f"Action Successful!"}
     else:
