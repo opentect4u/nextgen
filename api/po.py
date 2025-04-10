@@ -923,6 +923,7 @@ async def approvepo(id:approvePO):
                     whr = f'po_no="{pur_req}"' 
                     flag = 1 
                     result3 = await db_Insert(table_name, fields, values, whr, flag)
+                    print(result3)
 
 
 
