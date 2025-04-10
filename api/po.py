@@ -915,6 +915,7 @@ async def approvepo(id:approvePO):
             print(result_pur)
             if len(result_pur['msg']):
                     qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity'])
+                    print(qty)
 
                     fields= f'item_id="{item["item_id"]}",quantity={qty}'
                     values = f''
