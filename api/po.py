@@ -919,7 +919,7 @@ async def approvepo(id:approvePO):
             fields= f'item_id="{item["item_id"]}",quantity={qty}'
             values = f''
             table_name = "td_purchase_items"
-            whr = f'po_no="{pur_req}"' if pur_req > 0 else None
+            whr = f'po_no="{pur_req}"' 
             flag = 1 
             result3 = await db_Insert(table_name, fields, values, whr, flag)
 
