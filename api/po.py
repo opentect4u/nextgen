@@ -862,12 +862,6 @@ async def approvepo(id:approvePO):
     flag = 1 if id.id>0 else 0
     result = await db_Insert(table_name, fields, values, whr, flag)
 
-    select = "*"
-    schema = "td_po_basic"
-    where = f"sl_no='{id.id}'" if id.id>0 else ""
-    order = ""
-    flag = 1 if id.id>0 else 0
-    result = await db_select(select, schema, where, order, flag)
 
     print(result, 'RESULT')
 
@@ -888,8 +882,15 @@ async def approvepo(id:approvePO):
     table_name = "td_po_basic"
     whr = f'sl_no="{id.id}"' if id.id > 0 else None
     flag = 1 if id.id>0 else 0
-
     result = await db_Insert(table_name, fields, values, whr, flag)
+    
+    select = "*"
+    schema = "td_po_basic"
+    where = f"sl_no='{id.id}'" if id.id>0 else ""
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result1 = await db_select(select, schema, where, order, flag)
+    print(result1['msg'], 'RESULT')
     if result['suc']:
         res_dt = {"suc": 1, "msg": f"Action Successful!"}
     else:
