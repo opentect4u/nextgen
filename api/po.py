@@ -893,7 +893,7 @@ async def approvepo(id:approvePO):
     pur_req_list = str(result1['msg'][0]['pur_req']).split(',')
     print(pur_req_list, 'RESULT')
 
-    select = "item_id,qty"
+    select = "item_id,quantity"
     schema = "td_po_items"
     where = f"po_sl_no='{id.id}'" if id.id>0 else ""
     order = ""
