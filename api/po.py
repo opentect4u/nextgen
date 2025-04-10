@@ -915,7 +915,7 @@ async def approvepo(id:approvePO):
 
             qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity'])
 
-            fields= f'item_id="{item["item_id"]}",quantity="{qty}"'
+            fields= f'item_id="{item["item_id"]}",quantity={qty}'
             values = f''
             table_name = "purchase_req_items"
             whr = f'po_no="{pur_req}"' if pur_req > 0 else None
