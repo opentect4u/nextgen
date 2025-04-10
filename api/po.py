@@ -3466,6 +3466,49 @@ JOIN (
     return result
 
 
+@poRouter.post('/advanced_search_po_cancel')
+async def getprojectpoc(id:PoSearch):
+   
+    res_dt = {}
+
+    select = "b.po_no,b.sl_no,b.fresh_flag,b.po_status,b.amend_flag,b.project_id,b.vendor_id,v.vendor_name,d.proj_name,b.po_issue_date,i.item_id,p.prod_name,p.prod_make,p.part_no,b.created_by,b.created_at"
+    schema = '''td_po_basic b left join td_po_items i on b.sl_no = i.po_sl_no
+left join md_product p ON p.sl_no=i.item_id left join md_vendor v on b.vendor_id=v.sl_no left join td_project d on b.project_id = d.sl_no
+JOIN (
+   SELECT d.po_no
+    FROM td_po_basic d WHERE d.amend_flag = 'N' AND d.po_no is NOT null
+    HAVING (SELECT COUNT(*) FROM td_po_basic e WHERE e.po_no LIKE CONCAT(d.po_no, '%')) = 1
+    UNION
+    SELECT MAX(po_no) po_no
+    FROM td_po_basic
+    WHERE amend_flag = 'Y' AND po_no is NOT null
+    GROUP BY SUBSTRING_INDEX(po_no,'-',1)
+) c ON c.po_no=b.po_no
+
+
+'''
+    where = ""
+    if(id.project_id != 0 and id.project_id != ""):
+        where += f"b.project_id='{id.project_id}' {"AND " if(id.vendor_id != '' or id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.vendor_id != 0 and id.vendor_id != ""):
+        where += f"b.vendor_id='{id.vendor_id}' {"AND " if(id.part_no != '' or id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.part_no != ''):
+        where += f"p.part_no like '%{id.part_no}%' {"AND " if(id.prod_id != '' or id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.prod_id != ''):
+        where += f"i.item_id='{id.prod_id}' {"AND " if(id.to_dt != '' or id.from_dt != '' or id.make!='') else ''}"
+    if(id.make!= ''):
+         where += f"p.prod_make like '%{id.make}%' {"AND " if(id.to_dt != '' or id.from_dt !='') else ''}"
+    if(id.to_dt != '' or id.from_dt != ''):
+        where += f'''(b.po_issue_date BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
+
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null)"
+    
+    order = "ORDER BY b.created_at DESC"
+    flag = 1
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
+
 
 # @poRouter.post('/advanced_search_requisition')
 # async def getprojectpoc(id:PoSearch):
