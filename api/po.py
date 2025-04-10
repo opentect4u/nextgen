@@ -890,7 +890,20 @@ async def approvepo(id:approvePO):
     order = ""
     flag = 1 if id.id>0 else 0
     result1 = await db_select(select, schema, where, order, flag)
-    print(str(result1['msg'][0]['pur_req']).split(','), 'RESULT')
+    pur_req_list = str(result1['msg'][0]['pur_req']).split(',')
+    print(pur_req_list, 'RESULT')
+
+    select = "item_id"
+    schema = "td_po_items"
+    where = f"po_sl_no='{id.id}'" if id.id>0 else ""
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result2 = await db_select(select, schema, where, order, flag)
+
+    items = result2['msg']
+    print(items, 'ITEMS')
+
+
     if result['suc']:
         res_dt = {"suc": 1, "msg": f"Action Successful!"}
     else:
