@@ -4344,7 +4344,7 @@ async def getParentPoDate(po_no:GetInvList):
 @poRouter.post('/get_po_for_cancel')
 async def getParentPoDate(po_no:GetInvList):
     res_dt = {}
-    select1 = "@a:=@a+1 serial_number,b.po_no,b.vend_ref,b.pur_req,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,b.project_id,p.proj_name,p.proj_id,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no,b.fresh_flag,b.amend_flag,b.amend_not"
+    select1 = "@a:=@a+1 serial_number,b.po_no,b.vend_ref,b.pur_req,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,b.project_id,p.proj_name,p.proj_id,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no,b.fresh_flag,b.amend_flag,b.amend_note"
     schema1 = "td_po_basic b join md_vendor v ON v.sl_no=b.vendor_id left join td_project p ON p.sl_no=b.project_id, (SELECT @a:= 0) AS a"
     where1 = f"b.po_no not in (select po_no from td_item_delivery_invoice)" if po_no.po_no=='' else f"b.po_no='{po_no.po_no}'"
     order1 = ""
