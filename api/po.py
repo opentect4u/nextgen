@@ -1021,9 +1021,9 @@ async def approvepo(id:approvePO):
                     result_pur = await db_select(select, schema, where, order, flag)
                     print(result_pur)
                     if len(result_pur['msg']):
-                            qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity'])
+                            qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity']) if int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity']) > 0 else 0
                             print(qty)
-                            approved_qty = int(result_pur['msg'][0]['approved_ord_qty']) - int(item['quantity']) if result_pur['msg'][0]['approved_ord_qty'] else 0
+                            approved_qty = int(result_pur['msg'][0]['approved_ord_qty']) - int(item['quantity']) if result_pur['msg'][0]['approved_ord_qty'] - int(item['quantity'])>0 else 0
 
                             fields= f'ordered_qty={qty}' if result1['msg'][0]['po_status'] == 'A' else f'ordered_qty={qty},approved_ord_qty={approved_qty}'
                             values = f''
