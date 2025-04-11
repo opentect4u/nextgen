@@ -919,7 +919,7 @@ async def approvepo(id:approvePO):
                         qty = int(result_pur['msg'][0]['approved_ord_qty']) + int(item['quantity'])
                         print(qty)
 
-                        fields= f'item_id="{item["item_id"]}",approved_ord_qty={qty}'
+                        fields= f'approved_ord_qty={qty}'
                         values = f''
                         table_name = "td_purchase_items"
                         whr = f'pur_no="{pur_req}"' 
@@ -986,7 +986,7 @@ async def approvepo(id:approvePO):
                             print(qty)
                             approved_qty = int(result_pur['msg'][0]['approved_ord_qty']) - int(item['quantity']) if result_pur['msg'][0]['approved_ord_qty'] else 0
 
-                            fields= f'item_id="{item["item_id"]}",ordered_qty={qty}' if result1['msg'][0]['po_status'] == 'A' else f'item_id="{item["item_id"]}",ordered_qty={qty},approved_ord_qty={approved_qty}'
+                            fields= f'ordered_qty={qty}' if result1['msg'][0]['po_status'] == 'A' else f'ordered_qty={qty},approved_ord_qty={approved_qty}'
                             values = f''
                             table_name = "td_purchase_items"
                             whr = f'pur_no="{pur_req}"' 
