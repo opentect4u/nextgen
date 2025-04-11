@@ -908,7 +908,7 @@ async def approvepo(id:approvePO):
         for pur_req in pur_req_list:
             for item in items:
 
-                select = "approved_ord_qty,qty"
+                select = "approved_ord_qty,qty,ordered_qty"
                 schema = "td_purchase_items"
                 where = f"pur_no='{pur_req}' and item_id={item['item_id']}" if id.id>0 else ""
                 order = ""
@@ -919,7 +919,7 @@ async def approvepo(id:approvePO):
                         # qty = int(result_pur['msg'][0]['approved_ord_qty']) + int(item['quantity'])
                         # print(qty)
 
-                        pur_qty = int(result_pur['msg'][0]['qty']) 
+                        pur_qty = int(result_pur['msg'][0]['ordered_qty']) 
                         appr_qty =  int(result_pur['msg'][0]['approved_ord_qty']) 
                         sum_qty = int(item['quantity'])
 
