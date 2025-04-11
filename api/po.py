@@ -1009,26 +1009,38 @@ async def approvepo(id:approvePO):
 
             items = result2['msg']
             print(items, 'ITEMS')
+            pur_req_src = str(result1['msg'][0]['pur_req']).split(',')
+            pur = ','.join(f"'{x}'" for x in pur_req_src)
 
-            for pur_req in pur_req_list:
-                for item in items:
+            # for pur_req in pur_req_list:
+            #     for item in items:
+            # for pur_req in pur_req_list:
+            for item in items:
 
-                    select = "ordered_qty,approved_ord_qty"
+                    select = "pur_no,ordered_qty,approved_ord_qty,item_id"
                     schema = "td_purchase_items"
-                    where = f"pur_no='{pur_req}' and item_id={item['item_id']}" if id.id>0 else ""
+                    where = f"pur_no in ({pur})" if id.id>0 else ""
                     order = ""
                     flag = 1 if id.id>0 else 0
                     result_pur = await db_select(select, schema, where, order, flag)
                     print(result_pur)
-                    if len(result_pur['msg']):
-                            qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity']) if int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity']) > 0 else 0
-                            print(qty)
-                            approved_qty = int(result_pur['msg'][0]['approved_ord_qty']) - int(item['quantity']) if result_pur['msg'][0]['approved_ord_qty'] - int(item['quantity'])>0 else 0
+                    item_qty = int(item['quantity'])
 
+                    for pur in result_pur['msg']:
+                        if pur['item_id'] == item['item_id']:
+                            # qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity']) if int(pur['ordered_qty']) - int(item['quantity']) > 0 else 0
+                            # print(qty)
+                            # approved_qty = int(result_pur['msg'][0]['approved_ord_qty']) - int(item['quantity']) if result_pur['msg'][0]['approved_ord_qty'] - int(item['quantity'])>0 else 0
+                            qty = int(pur['ordered_qty']) - int(item_qty) if int(pur['ordered_qty']) - int(item_qty) > 0 else 0
+                            approved_qty = int(pur['approved_ord_qty']) - int(item_qty) if int(pur['approved_ord_qty']) - int(item_qty)>0 else 0
+                            if result1['msg'][0]['po_status'] == 'A':
+                                item_qty = item_qty - int(pur['approved_qty']) if item_qty - int(pur['approved_qty'])>0 else 0
+                            else:
+                                item_qty = item_qty - int(pur['ordered_qty']) if item_qty - int(pur['ordered_qty'])>0 else 0
                             fields= f'ordered_qty={qty}' if result1['msg'][0]['po_status'] == 'A' else f'ordered_qty={qty},approved_ord_qty={approved_qty}'
                             values = f''
                             table_name = "td_purchase_items"
-                            whr = f'pur_no="{pur_req}" and item_id={item["item_id"]}' 
+                            whr = f'pur_no="{pur['pur_no']}" and item_id={item["item_id"]}' 
                             flag = 1 
                             result3 = await db_Insert(table_name, fields, values, whr, flag)
                             print(result3)
