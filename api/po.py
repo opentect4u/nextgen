@@ -916,8 +916,8 @@ async def approvepo(id:approvePO):
                 result_pur = await db_select(select, schema, where, order, flag)
                 print(result_pur)
                 if len(result_pur['msg']):
-                        qty = int(result_pur['msg'][0]['approved_ord_qty']) + int(item['quantity'])
-                        print(qty)
+                        # qty = int(result_pur['msg'][0]['approved_ord_qty']) + int(item['quantity'])
+                        # print(qty)
 
                         pur_qty = int(result_pur['msg'][0]['qty']) 
                         appr_qty =  int(result_pur['msg'][0]['approved_ord_qty']) 
