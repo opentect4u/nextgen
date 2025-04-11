@@ -1023,12 +1023,11 @@ async def approvepo(id:approvePO):
             result_pur = await db_select(select, schema, where, order, flag)
             print(result_pur)
             for item in items:
-
-                  
                     item_qty = int(item['quantity'])
-
                     for pur in result_pur['msg']:
+                        print(pur, 'PUR')
                         if pur['item_id'] == item['item_id']:
+
                             # qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity']) if int(pur['ordered_qty']) - int(item['quantity']) > 0 else 0
                             # print(qty)
                             # approved_qty = int(result_pur['msg'][0]['approved_ord_qty']) - int(item['quantity']) if result_pur['msg'][0]['approved_ord_qty'] - int(item['quantity'])>0 else 0
@@ -1038,6 +1037,8 @@ async def approvepo(id:approvePO):
                                 item_qty = item_qty - int(pur['approved_qty']) if item_qty - int(pur['approved_qty'])>0 else 0
                             else:
                                 item_qty = item_qty - int(pur['ordered_qty']) if item_qty - int(pur['ordered_qty'])>0 else 0
+
+                            print(pur['pur_no'],item_qty,qty,approved_qty)
                             fields= f'ordered_qty={qty}' if result1['msg'][0]['po_status'] == 'A' else f'ordered_qty={qty},approved_ord_qty={approved_qty}'
                             values = f''
                             table_name = "td_purchase_items"
