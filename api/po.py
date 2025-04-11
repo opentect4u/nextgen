@@ -908,7 +908,7 @@ async def approvepo(id:approvePO):
         for pur_req in pur_req_list:
             for item in items:
 
-                select = "approved_ord_qty"
+                select = "approved_ord_qty,qty"
                 schema = "td_purchase_items"
                 where = f"pur_no='{pur_req}' and item_id={item['item_id']}" if id.id>0 else ""
                 order = ""
@@ -919,7 +919,21 @@ async def approvepo(id:approvePO):
                         qty = int(result_pur['msg'][0]['approved_ord_qty']) + int(item['quantity'])
                         print(qty)
 
-                        fields= f'approved_ord_qty={qty}'
+                        pur_qty = int(result_pur['msg'][0]['qty']) 
+                        appr_qty =  int(result_pur['msg'][0]['approved_ord_qty']) 
+                        sum_qty = int(item['quantity'])
+
+                        if (pur_qty- appr_qty)<=sum_qty and sum_qty>0:
+                                        approved_ord_qty = pur_qty - appr_qty
+                                        approved_ord_qty = approved_ord_qty + appr_qty 
+                                        sum_qty = sum_qty - pur_qty -appr_qty
+                        elif (pur_qty -appr_qty)>sum_qty and sum_qty>0:
+                                        approved_ord_qty = sum_qty
+                                        approved_ord_qty = approved_ord_qty + appr_qty
+                                        sum_qty = 0
+                        
+
+                        fields= f'approved_ord_qty={approved_ord_qty}'
                         values = f''
                         table_name = "td_purchase_items"
                         whr = f'pur_no="{pur_req}" and item_id={item["item_id"]}' 
@@ -937,6 +951,31 @@ async def approvepo(id:approvePO):
   
     return res_dt
 
+
+#  if (int(pur_qty['qty'] - int(pur_qty['ordered_qty']))<=int(sum_qty)) and int(sum_qty)>0:
+#                                         ordered_qty = int(pur_qty['qty']) - int(pur_qty['ordered_qty'])
+#                                         ordered_qty = int(ordered_qty) + int(pur_qty['ordered_qty']) 
+#                                         sum_qty = int(sum_qty) - (int(pur_qty['qty']) - int(pur_qty['ordered_qty']))
+#                                         fields1= f'ordered_qty={ordered_qty}'
+#                                         values1 = f''
+#                                         table_name1 = "td_purchase_items"
+#                                         whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
+#                                         flag1 = 1 if int(c.item_name)>0 else 0
+#                                         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+#                                         print('result sum ===================================',result1)
+
+#                                     elif (int(pur_qty['qty'] - int(pur_qty['ordered_qty']))>int(sum_qty)) and int(sum_qty)>0:
+#                                         ordered_qty = int(sum_qty)
+#                                         ordered_qty = int(ordered_qty) + int(pur_qty['ordered_qty'])
+#                                         sum_qty = 0
+#                                         fields1= f'ordered_qty={ordered_qty}' 
+#                                         values1 = f''
+#                                         table_name1 = "td_purchase_items"
+#                                         whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
+#                                         flag1 = 1 if int(c.item_name)>0 else 0
+#                                         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+#                                         print('result sum 0 ===================================',result1)
+                                
 
 @poRouter.post('/cancelpo')
 async def approvepo(id:approvePO):
