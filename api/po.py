@@ -1015,15 +1015,16 @@ async def approvepo(id:approvePO):
             # for pur_req in pur_req_list:
             #     for item in items:
             # for pur_req in pur_req_list:
+            select = "pur_no,ordered_qty,approved_ord_qty,item_id"
+            schema = "td_purchase_items"
+            where = f"pur_no in ({pur})" if id.id>0 else ""
+            order = ""
+            flag = 1 if id.id>0 else 0
+            result_pur = await db_select(select, schema, where, order, flag)
+            print(result_pur)
             for item in items:
 
-                    select = "pur_no,ordered_qty,approved_ord_qty,item_id"
-                    schema = "td_purchase_items"
-                    where = f"pur_no in ({pur})" if id.id>0 else ""
-                    order = ""
-                    flag = 1 if id.id>0 else 0
-                    result_pur = await db_select(select, schema, where, order, flag)
-                    print(result_pur)
+                  
                     item_qty = int(item['quantity'])
 
                     for pur in result_pur['msg']:
