@@ -1248,6 +1248,7 @@ async def save_trans(data:GetPurItem):
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
+    delivery_data = {}
     if result2['msg']:
       delivery_data = {row['prod_id']: int(row['total_received']) for row in result2['msg']}
     if result3['msg']:
