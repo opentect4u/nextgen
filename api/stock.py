@@ -1216,9 +1216,17 @@ async def save_trans(data:GetPurItem):
 
 @stockRouter.post("/get_purchase_req_items_for_edit")
 async def save_trans(data:GetPurItem):
-    select2 = "prod_id,sum(quantity) as total_ordered,sum(rc_qty) as total_received"
-    schema2 = "td_item_delivery_details"
-    where2 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
+    # select2 = "prod_id,sum(quantity) as total_ordered,sum(rc_qty) as total_received"
+    # schema2 = "td_item_delivery_details"
+    # where2 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by prod_id" 
+    # order2 = ""
+    # flag2 =  1
+    # result2 = await db_select(select2, schema2, where2, order2, flag2)
+    # print('result1 ===================================',result2)
+
+    select2 = "d.prod_id as prod_id,sum(d.quantity) as total_ordered,sum(d.rc_qty) as total_received"
+    schema2 = "td_item_delivery_details d left join td_item_delivery_invoice i on d.mrn_no=i.mrn_no"
+    where2 = f"d.po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') group by d.prod_id and i.approve_flag='A'" 
     order2 = ""
     flag2 =  1
     result2 = await db_select(select2, schema2, where2, order2, flag2)
