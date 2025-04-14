@@ -3688,7 +3688,7 @@ JOIN (
     if(id.to_dt != '' or id.from_dt != ''):
         where += f'''(b.po_issue_date BETWEEN "{f'{id.from_dt}' if(id.from_dt != '') else ''}" and "{f'{id.to_dt}' if(id.to_dt != '') else ''}") '''
 
-    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null) and po_no not in (select po_no from td_item_delivery_invoice)"
+    where = f"{f'({where}) AND ' if(where != '') else ''}" + f"(b.project_id IS NOT NULL AND b.vendor_id IS NOT NULL AND p.part_no IS NOT NULL and i.item_id is not null and b.po_issue_date is not null) and b.po_no not in (select po_no from td_item_delivery_invoice)"
     
     order = "ORDER BY b.created_at DESC"
     flag = 1
