@@ -1225,7 +1225,7 @@ async def save_trans(data:GetPurItem):
     print('result1 ===================================',result2)
    
 
-    select = f"sl_no as item_sl,ordered_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
+    select = f"sl_no as item_sl,ordered_qty,approved_ord_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
     schema = f"td_purchase_items" 
     where = f"pur_no='{data.pur_no}'" 
     order = ""
