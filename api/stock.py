@@ -1233,7 +1233,7 @@ async def save_trans(data:GetPurItem):
     print('result1 ===================================',result2)
 
     select3 = "d.item_id as prod_id,sum(d.qty) as total_ordered,sum(d.qty) as total_received"
-    schema3 = "td_vtoc_items d left join td_vendor_client i on d.del_no=i.del_no"
+    schema3 = "td_vtoc_items d left join td_vendor_to_client i on d.del_no=i.del_no"
     where3 = f"d.po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%')  group by d.prod_id" 
     order3 = ""
     flag3 =  1
