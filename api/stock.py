@@ -1231,6 +1231,14 @@ async def save_trans(data:GetPurItem):
     flag2 =  1
     result2 = await db_select(select2, schema2, where2, order2, flag2)
     print('result1 ===================================',result2)
+
+    select3 = "d.item_id as prod_id,sum(d.qty) as total_ordered,sum(d.qty) as total_received"
+    schema3 = "td_vtoc_items d left join td_vendor_client i on d.del_no=i.del_no"
+    where3 = f"d.po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%')  group by d.prod_id" 
+    order3 = ""
+    flag3 =  1
+    result3 = await db_select(select3, schema3, where3, order3, flag3)
+    print('result1 ===================================',result3)
    
 
     select = f"sl_no as item_sl,ordered_qty,approved_ord_qty,pur_no,item_id,qty,created_by,created_at,status,modified_at,modified_by,0 as tot_rc" 
@@ -1240,7 +1248,9 @@ async def save_trans(data:GetPurItem):
     flag =  1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
+    
     delivery_data = {row['prod_id']: int(row['total_received']) for row in result2['msg']}
+    delivery_data = {row['prod_id']: int(row['total_received']) for row in result3['msg']}
     print('delivery_data',delivery_data)
     # for row in result2['msg']:
     #      print('row',row)
