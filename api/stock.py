@@ -1321,7 +1321,7 @@ async def save_trans(data:GetLog):
 
     select1 = "mrn_no" 
     schema1 = f"td_item_delivery_invoice" 
-    where1 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%')" 
+    where1 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') and approve_flag='A'" 
     order1 = ""
     flag1 =  1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
