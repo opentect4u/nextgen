@@ -1252,13 +1252,13 @@ async def save_trans(data:GetPurItem):
       delivery_data = {row['prod_id']: int(row['total_received']) for row in result2['msg']}
     if result3['msg']:
       delivery_data = {row['prod_id']: int(row['total_received']) for row in result3['msg']}
-    print('delivery_data',delivery_data)
+    # print('delivery_data',delivery_data)
     # for row in result2['msg']:
     #      print('row',row)
 
 # Merge the total_received value into result based on item_id
     for row in result['msg']:
-       row['tot_rc'] = delivery_data.get(row['item_id'], 0) 
+       row['tot_rc'] = delivery_data.get(row['item_id'], 0) if delivery_data else 0
     return result
 
     # select = f"p.sl_no as item_sl,p.ordered_qty,p.pur_no,p.item_id,p.qty,p.created_by,p.created_at,p.status,p.modified_at,p.modified_by,sum(m.qty) as tot_rc" 
