@@ -1346,11 +1346,12 @@ async def save_trans(data:GetLog):
     result2 = await db_select(select2, schema2, where2, order2, flag2)
 
     select3 = "del_flag" 
-    schema3 = f"td_po_items" 
+    schema3 = f"td_po_delivery" 
     where3 = f"po_sl_no ='{result2['msg'][0]['sl_no']}'" if result2['msg'] else f""
     order3 = ""
     flag3 =  1
     result3 = await db_select(select3, schema3, where3, order3, flag3)
+    print(result3)
 
    
     if result3['msg'][0]['del_flag'] != '3':
