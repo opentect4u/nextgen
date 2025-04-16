@@ -1362,7 +1362,7 @@ async def save_trans(data:GetLog):
         result = await db_select(select, schema, where, order, flag)
         print(result, 'RESULT')
     else:
-        select = "*" 
+        select = "po_no,del_no as mrn_no,item_id as prod_id,qty as rc_qty" 
         schema = f"td_vtoc_items" 
         where =f"del_no in (select mrn_no from td_item_delivery_invoice where po_no in  (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%' and approve_flag='A')) and prod_id = {data.item_id}"
         order = ""
