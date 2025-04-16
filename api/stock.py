@@ -1331,21 +1331,44 @@ async def save_trans(data:GetLog):
 @stockRouter.post("/get_receive_log")
 async def save_trans(data:GetLog):
 
-    select1 = "mrn_no" 
+    select1 = "mrn_no,po_no" 
     schema1 = f"td_item_delivery_invoice" 
     where1 = f"po_no in (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%') and approve_flag='A'" 
     order1 = ""
     flag1 =  1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
+    
+    select2 = "sl_no" 
+    schema2 = f"td_po_basic" 
+    where2 = f"po_no ='{result1['msg'][0]['po_no']}'" if result1['msg'] else f""
+    order2 = ""
+    flag2 =  1
+    result2 = await db_select(select2, schema2, where2, order2, flag2)
+
+    select3 = "del_flag" 
+    schema3 = f"td_po_items" 
+    where3 = f"po_sl_no ='{result2['msg'][0]['sl_no']}'" if result2['msg'] else f""
+    order3 = ""
+    flag3 =  1
+    result3 = await db_select(select3, schema3, where3, order3, flag3)
+
    
-   
-    select = "*" 
-    schema = f"td_item_delivery_details" 
-    where =f"mrn_no in (select mrn_no from td_item_delivery_invoice where po_no in  (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%' and approve_flag='A')) and prod_id = {data.item_id}"
-    order = ""
-    flag =  1
-    result = await db_select(select, schema, where, order, flag)
-    print(result, 'RESULT')
+    if result3['msg'][0]['del_flag'] != '3':
+        select = "*" 
+        schema = f"td_item_delivery_details" 
+        where =f"mrn_no in (select mrn_no from td_item_delivery_invoice where po_no in  (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%' and approve_flag='A')) and prod_id = {data.item_id}"
+        order = ""
+        flag =  1
+        result = await db_select(select, schema, where, order, flag)
+        print(result, 'RESULT')
+    else:
+        select = "*" 
+        schema = f"td_vtoc_items" 
+        where =f"del_no in (select mrn_no from td_item_delivery_invoice where po_no in  (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%' and approve_flag='A')) and prod_id = {data.item_id}"
+        order = ""
+        flag =  1
+        result = await db_select(select, schema, where, order, flag)
+        print(result, 'RESULT')
     return result
 
 
