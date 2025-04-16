@@ -1365,7 +1365,7 @@ async def save_trans(data:GetLog):
     else:
         select = "i.po_no,i.del_no as invoice,i.item_id as prod_id,i.qty as rc_qty,v.created_by,v.created_at,v.modified_by,v.modified_at" 
         schema = f"td_vtoc_items i, td_vendor_to_client v" 
-        where =f"v.del_no=i.del_no and del_no in (select del_no from td_vtoc_items where po_no in  (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%' and po_status='A')) and item_id = {data.item_id}"
+        where =f"v.del_no=i.del_no and i.del_no in (select del_no from td_vtoc_items where po_no in  (select po_no from td_po_basic where pur_req like '%{data.pur_no.lstrip('PR-')}%' and po_status='A')) and i.item_id = {data.item_id}"
         order = ""
         flag =  1
         result = await db_select(select, schema, where, order, flag)
