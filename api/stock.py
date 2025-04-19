@@ -661,7 +661,7 @@ async def getprojectpoc(id:GetStock):
     # where1 = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.approve_flag='P' and i.req_no=t.req_no"
     where1 = f"t.project_id ={id.proj_id} and i.req_no=t.req_no"
     order1 = ""
-    flag1 = 01
+    flag1 = 1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
 
 
