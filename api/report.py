@@ -79,7 +79,7 @@ async def getprojectpoc(id:Itemwise):
     # result['msg'].append({'warehouse_stock':result1['msg'][0]['warehouse_stock']})
     # return result
     for i in result['msg']:
-        i['warehouse_stock'] = result1['msg'][0]['warehouse_stock']
+        i['warehouse_stock'] = result1['msg'][0]['warehouse_stock'] if len(result1) else 0
 
     if len(result['msg']):
        return result
