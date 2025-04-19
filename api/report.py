@@ -74,6 +74,7 @@ async def getprojectpoc(id:Itemwise):
     order1 = ""
     flag1 = 1 
     result1 = await db_select(select1, schema1, where1, order1, flag1)
+    print(result1)
     # return result1
     # result['msg'].append({'warehouse_stock':result1['msg'][0]['warehouse_stock']})
     # return result
