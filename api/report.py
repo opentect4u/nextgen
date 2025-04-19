@@ -48,15 +48,37 @@ async def getprojectpoc(id:Allstock):
 
 @reportRouter.post('/itemwise')
 async def getprojectpoc(id:Itemwise):
+    # res_dt = {}
+
+    # select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag)  project_stock,(SELECT SUM(qty*in_out_flag) FROM td_stock_new where item_id={id.item_id} and proj_id = 0) as warehouse_stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
+    # schema = "td_stock_new st, md_product p,td_project pr,(SELECT @a:= 0) AS a"
+    # where = f"st.item_id ={id.item_id} and pr.sl_no=st.proj_id and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.proj_id"
+    # order = ""
+    # flag = 1 
+    # result = await db_select(select, schema, where, order, flag)
+    # return result
+
+
     res_dt = {}
 
-    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag)  project_stock,(SELECT SUM(qty*in_out_flag) FROM td_stock_new where item_id={id.item_id} and proj_id = 0) as warehouse_stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
+    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag)  project_stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
     schema = "td_stock_new st, md_product p,td_project pr,(SELECT @a:= 0) AS a"
-    where = f"st.item_id ={id.item_id} and (pr.sl_no=st.proj_id or st.proj_id=0) and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.proj_id"
+    where = f"st.item_id ={id.item_id} and pr.sl_no=st.proj_id and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.proj_id"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
+
+    select1 = f"SUM(qty*in_out_flag) as warehouse_stock "
+    schema1 = "td_stock_new st, md_product p"
+    where1 = f"st.item_id ={id.item_id} and st.proj_id = 0 and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.proj_id"
+    order1 = ""
+    flag1 = 1 
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+    # return result1
+    result['msg'].append({'warehouse_stock':result1['msg'][0]['warehouse_stock']})
     return result
+    # for i in result['msg']:
+
 
     res_dt = {}
 
