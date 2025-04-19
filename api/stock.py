@@ -651,6 +651,59 @@ async def getprojectpoc(id:GetStock):
 #     return res_dt
 
 
+@stockRouter.post('/get_logical_stock_req_all')
+async def getprojectpoc(id:GetStock):
+    # print(id.id)
+    res_dt = {}
+    # select1 = f"sum(i.req_qty) as req_stock"
+    select1 = f"sum(i.req_qty) as req_stock"
+    schema1 = "td_requisition t,td_requisition_items i"
+    # where1 = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.approve_flag='P' and i.req_no=t.req_no"
+    where1 = f"t.project_id ={id.proj_id} and i.req_no=t.req_no"
+    order1 = ""
+    flag1 = 0 
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+
+
+    select_tot = f"sum(i.req_qty) as tot_stock"
+    schema_tot = "td_requisition t,td_requisition_items i"
+    where_tot = f"t.project_id ={id.proj_id} and i.req_no=t.req_no"
+    order_tot = ""
+    flag_tot = 0 
+    result_tot = await db_select(select_tot, schema_tot, where_tot, order_tot, flag_tot)
+    print("tot_stock=======",result_tot['msg']['tot_stock'])
+
+    # select_can = f"sum(i.cancelled_qty) as can_stock"
+    # schema_can = "td_requisition t,td_requisition_items i"
+    # where_can = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.req_no=t.req_no"
+    # order_can = ""
+    # flag_can = 0 
+    # result_can = await db_select(select_can, schema_can, where_can, order_can, flag_can)
+    # print("can_stock=======",result_can['msg']['can_stock'])
+
+    select2 = f"sum(qty) as del_stock"
+    schema2 = "td_stock_new"
+    where2 = f"proj_id ={id.proj_id} and in_out_flag=-1 and ref_no not like '%TP%'"
+    order2 = ""
+    flag2 = 0 
+    result2 = await db_select(select2, schema2, where2, order2, flag2)
+    print(result2)
+
+    select = f"(SELECT SUM(qty*in_out_flag) td_stock_new where proj_id = {id.proj_id} and proj_id!=0) project_stock, (SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where  proj_id = 0) as warehouse_stock, sum(req_qty*in_out_flag) req_qty"
+    schema = "td_stock_new"
+    where = f"proj_id ={id.proj_id}"
+    order = ""
+    flag =1 
+    result = await db_select(select, schema, where, order, flag)
+    if result1['suc']>0:
+      
+    #    cancel_stock= result_can['msg']['can_stock'] if result_can['msg']['can_stock'] else 0
+    #    return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":cancel_stock ,"tot_stock":int(result_tot['msg']['tot_stock']) - result2['msg']['del_stock'] if int(result_tot['msg']['tot_stock']) and result2['msg']['del_stock'] else int(result_tot['msg']['tot_stock']) if int(result_tot['msg']['tot_stock']) else 0}
+       return {"project_stock":result['msg'][0]['project_stock'],"warehouse_stock":result['msg'][0]['warehouse_stock'],"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock'] if result_tot else 0,"del_stock":result2['msg']['del_stock'] if result2 else 0}
+    else:
+       return {"result":result,"req_stock":0,"tot_stock":0,"can_stock":0}
+
+
 
 @stockRouter.post("/approve_transfer_items")
 async def save_trans(data:GetApproveItems):
