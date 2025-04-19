@@ -661,7 +661,7 @@ async def getprojectpoc(id:GetStock):
     # where1 = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.approve_flag='P' and i.req_no=t.req_no"
     where1 = f"t.project_id ={id.proj_id} and i.req_no=t.req_no"
     order1 = ""
-    flag1 = 0 
+    flag1 = 01
     result1 = await db_select(select1, schema1, where1, order1, flag1)
 
 
@@ -669,7 +669,7 @@ async def getprojectpoc(id:GetStock):
     schema_tot = "td_requisition t,td_requisition_items i"
     where_tot = f"t.project_id ={id.proj_id} and i.req_no=t.req_no"
     order_tot = ""
-    flag_tot = 0 
+    flag_tot = 1 
     result_tot = await db_select(select_tot, schema_tot, where_tot, order_tot, flag_tot)
     print("tot_stock=======",result_tot['msg']['tot_stock'])
 
@@ -685,7 +685,7 @@ async def getprojectpoc(id:GetStock):
     schema2 = "td_stock_new"
     where2 = f"proj_id ={id.proj_id} and in_out_flag=-1 and ref_no not like '%TP%'"
     order2 = ""
-    flag2 = 0 
+    flag2 = 1
     result2 = await db_select(select2, schema2, where2, order2, flag2)
     print(result2)
 
