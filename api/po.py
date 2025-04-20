@@ -39,7 +39,7 @@ poRouter = APIRouter()
 class prodDetails(BaseModel):
     sl_no:Optional[int]=None
     item_name:Optional[Union[int,str,None]]=None
-    qty:Optional[Union[int,str,None]]=None
+    qty:Optional[Union[int,str,float,None]]=None
     rate:Optional[Union[float,str,None]]=None
     disc:Optional[Union[float,str,None]]=None
     disc_prtg:Optional[Union[float,str,int,None]]=None
