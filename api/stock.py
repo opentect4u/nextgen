@@ -46,7 +46,7 @@ class SaveTrans(BaseModel):
 class PurchaseItems(BaseModel):
     sl_no:int
     item_id:int
-    qty:int
+    qty:float
     error:int
 class SavePur(BaseModel):
     sl_no:int
