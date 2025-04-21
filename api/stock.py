@@ -656,7 +656,7 @@ async def getprojectpoc(id:GetStock):
     # print(id.id)
     # SELECT sum(st.qty*st.in_out_flag) as stock,st.item_id,p.prod_name,(r.req_qty) as req_qty FROM td_stock_new st left join td_requisition_items r on r.project_id=st.proj_id left join md_product p on st.item_id=p.sl_no where st.proj_id=8 group by st.item_id;
     res_dt = {}
-    select = f"SELECT sum(st.qty*st.in_out_flag) as stock,st.item_id,p.prod_name,(r.req_qty) as req_qty"
+    select = f"sum(st.qty*st.in_out_flag) as stock,st.item_id,p.prod_name,(r.req_qty) as req_qty"
     schema = "td_stock_new st left join td_requisition_items r on r.project_id=st.proj_id left join md_product p on st.item_id=p.sl_no"
     where = f"st.proj_id=8 group by st.item_id"
     order = ""
