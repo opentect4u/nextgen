@@ -656,8 +656,8 @@ async def getprojectpoc(id:GetStock):
     # print(id.id)
     res_dt = {}
     select = f"sum(st.qty*st.in_out_flag) as stock,st.item_id,sum(r.req_qty) as req_qty"
-    schema = "td_stock_new st,td_requisition_items r"
-    where = f"st.proj_id ={id.proj_id} and r.project_id ={id.proj_id} and st.item_id = r.item_id and r.req_no=st.ref_no"
+    schema = "td_stock_new st left join td_requisition_items r on st.item_id = r.item_id"
+    where = f"st.proj_id ={id.proj_id} and r.project_id ={id.proj_id}"
     order = ""
     flag =1 
     result = await db_select(select, schema, where, order, flag)
