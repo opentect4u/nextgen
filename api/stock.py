@@ -671,7 +671,7 @@ async def getprojectpoc(id:GetStock):
     order_tot = ""
     flag_tot = 1 
     result_tot = await db_select(select_tot, schema_tot, where_tot, order_tot, flag_tot)
-    print("tot_stock=======",result_tot['msg']['tot_stock'])
+    print("tot_stock=======",result_tot['msg'][0]['tot_stock'])
 
     # select_can = f"sum(i.cancelled_qty) as can_stock"
     # schema_can = "td_requisition t,td_requisition_items i"
@@ -699,7 +699,7 @@ async def getprojectpoc(id:GetStock):
       
     #    cancel_stock= result_can['msg']['can_stock'] if result_can['msg']['can_stock'] else 0
     #    return {"result":result,"req_stock":result1['msg']['req_stock'],"cancel_stock":cancel_stock ,"tot_stock":int(result_tot['msg']['tot_stock']) - result2['msg']['del_stock'] if int(result_tot['msg']['tot_stock']) and result2['msg']['del_stock'] else int(result_tot['msg']['tot_stock']) if int(result_tot['msg']['tot_stock']) else 0}
-       return {"project_stock":result['msg'][0]['project_stock'],"warehouse_stock":result['msg'][0]['warehouse_stock'],"req_stock":result1['msg']['req_stock'],"tot_stock":result_tot['msg']['tot_stock'] if result_tot else 0,"del_stock":result2['msg']['del_stock'] if result2 else 0}
+       return {"project_stock":result['msg'][0]['project_stock'],"warehouse_stock":result['msg'][0]['warehouse_stock'],"req_stock":result1['msg'][0]['req_stock'],"tot_stock":result_tot['msg'][0]['tot_stock'] if result_tot else 0,"del_stock":result2['msg'][0]['del_stock'] if result2 else 0}
     else:
        return {"result":result,"req_stock":0,"tot_stock":0,"can_stock":0}
 
