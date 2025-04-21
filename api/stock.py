@@ -661,6 +661,7 @@ async def getprojectpoc(id:GetStock):
     order = ""
     flag =1 
     result = await db_select(select, schema, where, order, flag)
+    return result
     
      
    
