@@ -656,9 +656,15 @@ async def getprojectpoc(id:GetStock):
     # print(id.id)
     # SELECT sum(st.qty*st.in_out_flag) as stock,st.item_id,p.prod_name,(r.req_qty) as req_qty FROM td_stock_new st left join td_requisition_items r on r.project_id=st.proj_id left join md_product p on st.item_id=p.sl_no where st.proj_id=8 group by st.item_id;
     res_dt = {}
-    select = f"sum(st.qty*st.in_out_flag) as stock,(select sum(st.qty) from td_stock_new where in_out_flag=-1 and proj_id={id.proj_id}) as del_stock,st.item_id,p.prod_name,(r.req_qty) as req_qty"
-    schema = "td_stock_new st left join td_requisition_items r on r.project_id=st.proj_id left join md_product p on st.item_id=p.sl_no"
-    where = f"st.proj_id={id.proj_id} group by st.item_id"
+    # select = f"sum(st.qty*st.in_out_flag) as stock,(select sum(st.qty) from td_stock_new where in_out_flag=-1 and proj_id={id.proj_id}) as del_stock,st.item_id,p.prod_name,(r.req_qty) as req_qty"
+    # schema = "td_stock_new st left join td_requisition_items r on r.project_id=st.proj_id left join md_product p on st.item_id=p.sl_no"
+    # where = f"st.proj_id={id.proj_id} group by st.item_id"
+    # order = ""
+    # flag =1 
+    # result = await db_select(select, schema, where, order, flag)
+    select = f" st.item_id,p.prod_name,SUM(st.qty * st.in_out_flag) AS stock,COALESCE(SUM(CASE WHEN st2.in_out_flag = -1 THEN st2.qty ELSE 0 END), 0) AS del_stock,r.req_qty"
+    where = f"st.proj_id={id.proj_id} group by st.item_id, p.prod_name, r.req_qty"
+    schema = f" td_stock_new st LEFT JOIN td_stock_new st2 ON st2.item_id = st.item_id AND st2.in_out_flag = -1 AND st2.proj_id = st.proj_id LEFT JOIN td_requisition_items r ON r.project_id = st.proj_id AND r.item_id = st.item_id LEFT JOIN md_product p ON st.item_id = p.sl_no"
     order = ""
     flag =1 
     result = await db_select(select, schema, where, order, flag)
