@@ -1145,7 +1145,7 @@ async def save_trans(data:GetTrans):
             print(result_w['msg'], 'RESULT_w')
             for i in result_w['msg']:
                 res_dt.append(i)
-            res = {"suc": 1, "msg": sorted(res_dt['msg'], key=lambda k: k.get('created_at', 0), reverse=True)}
+            res = {"suc": 1, "msg": res_dt}
 
             return res
     else:
