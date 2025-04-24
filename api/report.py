@@ -230,9 +230,10 @@ async def getprojectpoc(id:mrnprojreport):
 #       AND d2.rc_qty = d.rc_qty
 # );
 
-    select = f"DISTINCT i.item_id, i.quantity, d.rc_qty FROM td_po_items i JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND pb.vendor_id = 65 JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no WHERE EXISTS ( SELECT 1 FROM td_po_items i2 JOIN td_item_delivery_details d2 ON i2.item_id = d2.prod_id WHERE i2.item_id = i.item_id AND i2.quantity = i.quantity  AND d2.rc_qty = d.rc_qty)"
-    schema = ""
-    where = f""
+    # select = f"DISTINCT i.item_id, i.quantity, d.rc_qty FROM td_po_items i JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND pb.vendor_id = 65 JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no WHERE EXISTS ( SELECT 1 FROM td_po_items i2 JOIN td_item_delivery_details d2 ON i2.item_id = d2.prod_id WHERE i2.item_id = i.item_id AND i2.quantity = i.quantity  AND d2.rc_qty = d.rc_qty)"
+    select = f"DISTINCT i.item_id, i.quantity, d.rc_qty"
+    schema = "td_po_items i JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND pb.vendor_id = 65 JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no"
+    where = f"EXISTS ( SELECT 1 FROM td_po_items i2 JOIN td_item_delivery_details d2 ON i2.item_id = d2.prod_id WHERE i2.item_id = i.item_id AND i2.quantity = i.quantity  AND d2.rc_qty = d.rc_qty)"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
