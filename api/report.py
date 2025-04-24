@@ -30,6 +30,11 @@ class GetStockOut(BaseModel):
 class AllItemwise(BaseModel):
     dt:str
 
+class mrnprojreport(BaseModel):
+    dt:str
+    proj_id:int
+    vendor_id:int
+
 
 
 @reportRouter.post('/allstock')
@@ -187,6 +192,47 @@ async def getprojectpoc(id:AllItemwise):
     select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag)  project_stock,(SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where proj_id = 0 and item_id=st.item_id)  as warehouse_stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
     schema = "td_stock_new st, md_product p,td_project pr,(SELECT @a:= 0) AS a"
     where = f"pr.sl_no=st.proj_id and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.item_id"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
+
+@reportRouter.post('/mrnprojreport')
+async def getprojectpoc(id:AllItemwise):
+    res_dt = {}
+
+#     -- Get distinct quantity values from PO items
+# SELECT DISTINCT i.item_id, i.quantity, d.rc_qty
+# FROM td_po_items i
+# JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND pb.vendor_id = 65
+# JOIN td_item_delivery_details d 
+#     ON i.item_id = d.prod_id 
+#    AND d.po_no = pb.po_no
+# WHERE i.quantity = d.rc_qty
+
+# UNION
+
+# -- Also get other valid distinct pairs if needed
+# SELECT DISTINCT i.item_id, i.quantity, d.rc_qty
+# FROM td_po_items i
+# JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND pb.vendor_id = 65
+# JOIN td_item_delivery_details d 
+#     ON i.item_id = d.prod_id 
+#    AND d.po_no = pb.po_no
+# WHERE EXISTS (
+#     SELECT 1 
+#     FROM td_po_items i2 
+#     JOIN td_item_delivery_details d2 
+#       ON i2.item_id = d2.prod_id 
+#     WHERE i2.item_id = i.item_id 
+#       AND i2.quantity = i.quantity 
+#       AND d2.rc_qty = d.rc_qty
+# );
+
+    select = f"DISTINCT i.item_id, i.quantity, d.rc_qty FROM td_po_items i JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND pb.vendor_id = 65 JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no WHERE EXISTS ( SELECT 1 FROM td_po_items i2 JOIN td_item_delivery_details d2 ON i2.item_id = d2.prod_id WHERE i2.item_id = i.item_id AND i2.quantity = i.quantity  AND d2.rc_qty = d.rc_qty);"
+    schema = ""
+    where = f""
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
