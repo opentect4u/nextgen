@@ -199,7 +199,7 @@ async def getprojectpoc(id:AllItemwise):
 
 
 @reportRouter.post('/mrnprojreport')
-async def getprojectpoc(id:AllItemwise):
+async def getprojectpoc(id:mrnprojreport):
     res_dt = {}
 
 #     -- Get distinct quantity values from PO items
