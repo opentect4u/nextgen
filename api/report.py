@@ -263,7 +263,7 @@ async def getprojectpoc(id:mrnpur):
   
     select = f"i.item_id, i.quantity, p.approved_ord_qty, d.rc_qty, d.mrn_no, d.invoice,pr.prod_name"
     schema = f"td_po_items i LEFT JOIN td_purchase_items p ON i.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr on pr.sl_no=i.item_id LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%')"
-    where = f"WHERE i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%')"
+    where = f"i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%')"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
