@@ -263,6 +263,7 @@ async def getprojectpoc(id:mrnprojreport):
 # );
 
     # select = f"DISTINCT i.item_id, i.quantity, d.rc_qty FROM td_po_items i JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND pb.vendor_id = 65 JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no WHERE EXISTS ( SELECT 1 FROM td_po_items i2 JOIN td_item_delivery_details d2 ON i2.item_id = d2.prod_id WHERE i2.item_id = i.item_id AND i2.quantity = i.quantity  AND d2.rc_qty = d.rc_qty)"
+    print(criteria,'criteria')
     select = f"DISTINCT i.item_id, p.prod_name,pb.po_no, i.quantity, d.rc_qty,d.mrn_no,d.invoice,pb.pur_req,v.vendor_name,concat(pd.proj_name,' (ID:',pd.proj_id,')') as proj_name" if id.type=='P' else f"DISTINCT i.item_id, p.prod_name, i.quantity, d.rc_qty,d.mrn_no,d.invoice,pb.pur_req,'Warehouse' as proj_name,v.vendor_name"
     
     schema = f"td_po_items i JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND {criteria} LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no LEFT JOIN md_product p on i.item_id=p.sl_no LEFT JOIN td_project pd on pb.project_id=pd.sl_no LEFT JOIN md_vendor v on pb.vendor_id=v.sl_no" if id.type=='P' else f"td_po_items i JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND {criteria} LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no LEFT JOIN md_product p on i.item_id=p.sl_no LEFT JOIN md_vendor v on pb.vendor_id=v.sl_no"
