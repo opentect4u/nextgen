@@ -227,6 +227,9 @@ async def getprojectpoc(id:mrnprojreport):
                     criteria = f"pb.vendor_id = {id.vendor_id} and project_id!=0 and pb.po_no='{id.po_no}'"
                 elif id.proj_id:    
                     criteria = f"pb.project_id={id.proj_id} and pb.po_no='{id.po_no}'"
+                else:
+                    criteria = f"pb.po_no='{id.po_no}'"
+
             else:
                 if id.vendor_id:
                     criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id=0 and pb.po_no='{id.po_no}'"
