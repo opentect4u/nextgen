@@ -34,6 +34,7 @@ class mrnprojreport(BaseModel):
     type:str
     proj_id:int
     vendor_id:int
+    po_no:str
 
 class mrnpur(BaseModel):
     pur_no:str
@@ -205,17 +206,30 @@ async def getprojectpoc(id:AllItemwise):
 @reportRouter.post('/mrnprojreport')
 async def getprojectpoc(id:mrnprojreport):
     res_dt = {}
-
-    if id.type == 'P':
-        if id.vendor_id and id.proj_id:
-            criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id={id.proj_id}"
-        elif id.vendor_id:
-            criteria = f"pb.vendor_id = {id.vendor_id} and project_id!=0"
-        elif id.proj_id:    
-            criteria = f"pb.project_id={id.proj_id}"
+    if id.po_no=='':
+            if id.type == 'P':
+                if id.vendor_id and id.proj_id:
+                    criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id={id.proj_id}"
+                elif id.vendor_id:
+                    criteria = f"pb.vendor_id = {id.vendor_id} and project_id!=0"
+                elif id.proj_id:    
+                    criteria = f"pb.project_id={id.proj_id}"
+            else:
+                if id.vendor_id:
+                    criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id=0"
     else:
-        if id.vendor_id:
-            criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id=0"
+            if id.type == 'P':
+                if id.vendor_id and id.proj_id:
+                    criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id={id.proj_id} and pb.po_no='{id.po_no}'"
+                elif id.vendor_id:
+                    criteria = f"pb.vendor_id = {id.vendor_id} and project_id!=0 and pb.po_no='{id.po_no}'"
+                elif id.proj_id:    
+                    criteria = f"pb.project_id={id.proj_id} and pb.po_no='{id.po_no}'"
+            else:
+                if id.vendor_id:
+                    criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id=0 and pb.po_no='{id.po_no}'"
+                else:
+                    criteria = f"pb.po_no='{id.po_no}'"
 
 
 #     -- Get distinct quantity values from PO items
