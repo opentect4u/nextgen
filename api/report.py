@@ -206,7 +206,7 @@ async def getprojectpoc(id:AllItemwise):
 @reportRouter.post('/mrnprojreport')
 async def getprojectpoc(id:mrnprojreport):
     res_dt = {}
-    if id.po_no=='':
+    if id.po_no=='0':
             if id.type == 'P':
                 if id.vendor_id and id.proj_id:
                     criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id={id.proj_id}"
