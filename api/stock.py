@@ -662,7 +662,7 @@ async def getprojectpoc(id:GetStock):
     # order = ""
     # flag =1 
     # result = await db_select(select, schema, where, order, flag)
-    select = f" st.item_id,p.prod_name,SUM(st.qty * st.in_out_flag) AS stock,COALESCE(ds.del_stock, 0)AS del_stock,COALESCE(rq.req_qty, 0) AS req_qty"
+    select = f" st.item_id,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ')SUM(st.qty * st.in_out_flag) AS stock,COALESCE(ds.del_stock, 0)AS del_stock,COALESCE(rq.req_qty, 0) AS req_qty"
     where = f"st.proj_id={id.proj_id} group by st.item_id, p.prod_name,ds.del_stock, rq.req_qty"
     schema = f"td_stock_new st LEFT JOIN  (SELECT item_id, proj_id, SUM(qty) AS del_stock FROM td_stock_new WHERE in_out_flag = -1 GROUP BY item_id, proj_id) ds ON ds.item_id = st.item_id AND ds.proj_id = st.proj_id LEFT JOIN (SELECT item_id, project_id, SUM(req_qty) AS req_qty FROM td_requisition_items GROUP BY item_id, project_id) rq ON rq.project_id = st.proj_id AND rq.item_id = st.item_id LEFT JOIN  md_product p ON st.item_id = p.sl_no"
     order = ""
