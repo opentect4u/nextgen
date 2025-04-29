@@ -71,7 +71,7 @@ async def getprojectpoc(id:Itemwise):
 
     res_dt = {}
 
-    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag)  project_stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
+    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag)  project_stock,st.item_id,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') prod_name,st.proj_id,pr.proj_name "
     schema = "td_stock_new st, md_product p,td_project pr,(SELECT @a:= 0) AS a"
     where = f"st.item_id ={id.item_id} and pr.sl_no=st.proj_id and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.proj_id"
     order = ""
@@ -194,7 +194,7 @@ async def getprojectpoc(id:GetStockOut):
 async def getprojectpoc(id:AllItemwise):
     res_dt = {}
 
-    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag)  project_stock,(SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where proj_id = 0 and item_id=st.item_id)  as warehouse_stock,st.item_id,p.prod_name,st.proj_id,pr.proj_name "
+    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag)  project_stock,(SELECT SUM(qty*in_out_flag) project_stock FROM td_stock_new where proj_id = 0 and item_id=st.item_id)  as warehouse_stock,st.item_id,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') prod_name,st.proj_id,pr.proj_name "
     schema = "td_stock_new st, md_product p,td_project pr,(SELECT @a:= 0) AS a"
     where = f"pr.sl_no=st.proj_id and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.item_id"
     order = ""
