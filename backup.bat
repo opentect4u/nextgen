@@ -1,8 +1,10 @@
 @echo off
 REM Set the username, password, database name, and output file path
 SET USERNAME=root
-SET PASSWORD=root
-SET DBNAME=pup
+SET PASSWORD=NxtGen#953*
+SET DBNAME=nextgen
+
+
 
 :: Set the date and time variable
 for /f "tokens=2 delims==" %%i in ('wmic os get localdatetime /value') do set datetime=%%i
