@@ -14,6 +14,7 @@ from typing import Optional, Annotated, Union
 import os
 
 import logging
+from decimal import Decimal, ROUND_HALF_UP
 
 UPLOAD_FOLDER = "upload_file/upload_tc"
 UPLOAD_FOLDER2 = "upload_file/upload_mdcc"
@@ -1323,36 +1324,39 @@ async def addfreshpo(data:PoModel):
 
 
                 for pur_qty in result_pur['msg']:
-                         if int(pur_qty['item_id']) == int(c.item_name):
-        # Convert all to float for accurate decimal math
-                            total_qty = float(pur_qty['qty'])
-                            already_ordered = float(pur_qty['ordered_qty'])
-                            sum_qty = float(sum_qty)  # ensure it's float in case it's not
-
-                            remaining_qty = total_qty - already_ordered
-                            print(f"Remaining Qty: {remaining_qty}")
-
-                            if remaining_qty <= sum_qty and sum_qty > 0:
+                        if int(pur_qty['item_id']) == int(c.item_name):
+                            remaining_qty = Decimal(str(pur_qty['qty'])) - Decimal(str(pur_qty['ordered_qty']))
+                            remaining_qty = remaining_qty.quantize(Decimal('0.000'), rounding=ROUND_HALF_UP)
+                            sum_qty_decimal = Decimal(str(sum_qty)).quantize(Decimal('0.000'), rounding=ROUND_HALF_UP)
+                            already_ordered = Decimal(str(pur_qty['ordered_qty'])).quantize(Decimal('0.000'))
+        
+                            if remaining_qty <= sum_qty_decimal and sum_qty_decimal > Decimal('0.000'):
                                 ordered_qty = already_ordered + remaining_qty
-                                sum_qty -= remaining_qty
-                            elif remaining_qty > sum_qty and sum_qty > 0:
-                                ordered_qty = already_ordered + sum_qty
-                                sum_qty = 0
+                                sum_qty_decimal -= remaining_qty
+
+                            elif remaining_qty > sum_qty_decimal and sum_qty_decimal > Decimal('0.000'):
+                                ordered_qty = already_ordered + sum_qty_decimal
+                                remaining_qty = sum_qty_decimal  # assign how much is actually added
+                                sum_qty_decimal = Decimal('0.000')
+
                             else:
-                                continue  # skip if sum_qty is 0 or negative
+                                continue  # skip update if conditions not met
 
-                            # Optional: round only for display or DB format, not during calculation
-                            print(f"sum_qty: {sum_qty:.3f}, ordered_qty: {ordered_qty:.3f}, already_ordered: {already_ordered:.3f}, added: {ordered_qty - already_ordered:.3f}")
+                            ordered_qty = ordered_qty.quantize(Decimal('0.000'), rounding=ROUND_HALF_UP)
+                            sum_qty = float(sum_qty_decimal)  # update sum_qty back to float if used elsewhere
 
-                            fields1 = f'ordered_qty={ordered_qty:.3f}'  # Ensure 3-decimal precision in DB
-                            whr1 = f'item_id="{c.item_name}" and pur_no="{pur_qty["pur_no"]}"'
+                            print(
+                                f"sum_qty: {sum_qty:.3f}, ordered_qty: {ordered_qty:.3f}, "
+                                f"already_ordered: {already_ordered:.3f}, added: {remaining_qty:.3f}"
+                            )
+
+                            fields1 = f'ordered_qty={ordered_qty}'
+                            whr1 = f'item_id="{c.item_name}" and pur_no="{pur_qty["pur_no"]}"' if int(c.item_name) > 0 else None
                             flag1 = 1 if int(c.item_name) > 0 else 0
 
                             result1 = await db_Insert("td_purchase_items", fields1, '', whr1, flag1)
-                            print('result:', result1)
-
-               
-                        
+                            print('DB Update Result:', result1)
+                            
         else:
             # fields1= f'po_sl_no,created_by,created_at'
             # values1 = f'"{lastID}","{data.user}","{formatted_dt}"'
