@@ -1324,10 +1324,10 @@ async def addfreshpo(data:PoModel):
                 for pur_qty in result_pur['msg']:
                                
                                 if int(pur_qty['item_id']) == int(c.item_name):
-                                    if (int(pur_qty['qty'] - int(pur_qty['ordered_qty']))<=int(sum_qty)) and int(sum_qty)>0:
-                                        ordered_qty = int(pur_qty['qty']) - int(pur_qty['ordered_qty'])
-                                        ordered_qty = int(ordered_qty) + int(pur_qty['ordered_qty']) 
-                                        sum_qty = int(sum_qty) - (int(pur_qty['qty']) - int(pur_qty['ordered_qty']))
+                                    if (float(pur_qty['qty'] - float(pur_qty['ordered_qty']))<=float(sum_qty)) and float(sum_qty)>0:
+                                        ordered_qty = float(pur_qty['qty']) - float(pur_qty['ordered_qty'])
+                                        ordered_qty = float(ordered_qty) + float(pur_qty['ordered_qty']) 
+                                        sum_qty = float(sum_qty) - (float(pur_qty['qty']) - float(pur_qty['ordered_qty']))
                                         fields1= f'ordered_qty={ordered_qty}'
                                         values1 = f''
                                         table_name1 = "td_purchase_items"
@@ -1336,9 +1336,9 @@ async def addfreshpo(data:PoModel):
                                         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
                                         print('result sum ===================================',result1)
 
-                                    elif (int(pur_qty['qty'] - int(pur_qty['ordered_qty']))>int(sum_qty)) and int(sum_qty)>0:
-                                        ordered_qty = int(sum_qty)
-                                        ordered_qty = int(ordered_qty) + int(pur_qty['ordered_qty'])
+                                    elif (float(pur_qty['qty'] - float(pur_qty['ordered_qty']))>float(sum_qty)) and float(sum_qty)>0:
+                                        ordered_qty = float(sum_qty)
+                                        ordered_qty = float(ordered_qty) + float(pur_qty['ordered_qty'])
                                         sum_qty = 0
                                         fields1= f'ordered_qty={ordered_qty}' 
                                         values1 = f''
