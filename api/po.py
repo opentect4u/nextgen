@@ -1293,9 +1293,36 @@ async def addfreshpo(data:PoModel):
 
                 sum_qty = int(c.qty)
                 ordered_qty = 0
-                if data.sl_no==0:
-                            for pur_qty in result_pur['msg']:
-                                # print('pur_qty============',pur_qty,sum_qty,pur_qty['qty']<=sum_qty,c.sl_no,c.item_name,int(pur_qty['item_id']) == int(c.item_name))
+                # if data.sl_no==0:
+                #             for pur_qty in result_pur['msg']:
+                               
+                #                 if int(pur_qty['item_id']) == int(c.item_name):
+                #                     if (int(pur_qty['qty'] - int(pur_qty['ordered_qty']))<=int(sum_qty)) and int(sum_qty)>0:
+                #                         ordered_qty = int(pur_qty['qty']) - int(pur_qty['ordered_qty'])
+                #                         ordered_qty = int(ordered_qty) + int(pur_qty['ordered_qty']) 
+                #                         sum_qty = int(sum_qty) - (int(pur_qty['qty']) - int(pur_qty['ordered_qty']))
+                #                         fields1= f'ordered_qty={ordered_qty}'
+                #                         values1 = f''
+                #                         table_name1 = "td_purchase_items"
+                #                         whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
+                #                         flag1 = 1 if int(c.item_name)>0 else 0
+                #                         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                #                         print('result sum ===================================',result1)
+
+                #                     elif (int(pur_qty['qty'] - int(pur_qty['ordered_qty']))>int(sum_qty)) and int(sum_qty)>0:
+                #                         ordered_qty = int(sum_qty)
+                #                         ordered_qty = int(ordered_qty) + int(pur_qty['ordered_qty'])
+                #                         sum_qty = 0
+                #                         fields1= f'ordered_qty={ordered_qty}' 
+                #                         values1 = f''
+                #                         table_name1 = "td_purchase_items"
+                #                         whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
+                #                         flag1 = 1 if int(c.item_name)>0 else 0
+                #                         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                #                         print('result sum 0 ===================================',result1)
+
+                for pur_qty in result_pur['msg']:
+                               
                                 if int(pur_qty['item_id']) == int(c.item_name):
                                     if (int(pur_qty['qty'] - int(pur_qty['ordered_qty']))<=int(sum_qty)) and int(sum_qty)>0:
                                         ordered_qty = int(pur_qty['qty']) - int(pur_qty['ordered_qty'])
