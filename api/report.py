@@ -46,7 +46,7 @@ class mrnpur(BaseModel):
 async def getprojectpoc(id:Allstock):
     res_dt = {}
 
-    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag) stock,st.item_id,p.prod_name "
+    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag) stock,st.item_id,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') prod_name"
     schema = "td_stock_new st, md_product p,(SELECT @a:= 0) AS a"
     where = f"st.proj_id ={id.project_id} and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.item_id"
     order = ""
