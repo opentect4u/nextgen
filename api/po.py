@@ -1328,7 +1328,7 @@ async def addfreshpo(data:PoModel):
                          if remaining_qty <= float(sum_qty) and float(sum_qty) > 0:
                             ordered_qty = float(pur_qty['ordered_qty']) + float(remaining_qty)
                             sum_qty = float(sum_qty) - float(remaining_qty)
-                            print(sum_qty,ordered_qty,'qty1=================')
+                            print(sum_qty,float(pur_qty['ordered_qty']) + float(remaining_qty),float(pur_qty['ordered_qty']), float(remaining_qty),ordered_qty,'qty1=================')
                             fields1 = f'ordered_qty={float(ordered_qty)}'
                             whr1 = f'item_id="{c.item_name}" and pur_no="{pur_qty["pur_no"]}"' if int(c.item_name) > 0 else None
                             flag1 = 1 if int(c.item_name) > 0 else 0
@@ -1340,7 +1340,7 @@ async def addfreshpo(data:PoModel):
 
                             ordered_qty = float(sum_qty) + float(pur_qty['ordered_qty'])
                             sum_qty = 0
-                            print(sum_qty,ordered_qty,'qty2=================')
+                            print(sum_qty,float(pur_qty['ordered_qty']) + float(remaining_qty),float(pur_qty['ordered_qty']), float(remaining_qty),ordered_qty,'qty2=================')
                             fields1 = f'ordered_qty={float(ordered_qty)}'
                             whr1 = f'item_id="{c.item_name}" and pur_no="{pur_qty["pur_no"]}"' if int(c.item_name) > 0 else None
                             flag1 = 1 if int(c.item_name) > 0 else 0
