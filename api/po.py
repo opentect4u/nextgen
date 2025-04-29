@@ -1322,31 +1322,51 @@ async def addfreshpo(data:PoModel):
                 #                         print('result sum 0 ===================================',result1)
 
                 for pur_qty in result_pur['msg']:
-                               
-                                if int(pur_qty['item_id']) == int(c.item_name):
-                                    if ((float(pur_qty['qty']) - float(pur_qty['ordered_qty']))<=float(sum_qty)) and float(sum_qty)>0:
-                                        ordered_qty = float(pur_qty['qty']) - float(pur_qty['ordered_qty'])
-                                        ordered_qty = float(ordered_qty) + float(pur_qty['ordered_qty']) 
-                                        sum_qty = float(sum_qty) - (float(pur_qty['qty']) - float(pur_qty['ordered_qty']))
-                                        fields1= f'ordered_qty={ordered_qty}'
-                                        values1 = f''
-                                        table_name1 = "td_purchase_items"
-                                        whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
-                                        flag1 = 1 if int(c.item_name)>0 else 0
-                                        result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
-                                        print('result sum ===================================',result1)
+                    if int(pur_qty['item_id']) == int(c.item_name):
+                         remaining_qty = float(pur_qty['qty']) - float(pur_qty['ordered_qty'])
 
-                                    elif ((float(pur_qty['qty'] )- float(pur_qty['ordered_qty']))>float(sum_qty)) and float(sum_qty)>0:
-                                        ordered_qty = float(sum_qty)
-                                        ordered_qty = float(ordered_qty) + float(pur_qty['ordered_qty'])
-                                        sum_qty = 0
-                                        fields1= f'ordered_qty={ordered_qty}' 
-                                        values1 = f''
-                                        table_name1 = "td_purchase_items"
-                                        whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
-                                        flag1 = 1 if int(c.item_name)>0 else 0
-                                        result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
-                                        print('result sum 0 ===================================',result1)
+                         if remaining_qty <= float(sum_qty) and float(sum_qty) > 0:
+                            ordered_qty = float(pur_qty['ordered_qty']) + remaining_qty
+                            sum_qty = float(sum_qty) - remaining_qty
+                            fields1 = f'ordered_qty={ordered_qty}'
+                            whr1 = f'item_id="{c.item_name}" and pur_no="{pur_qty["pur_no"]}"' if int(c.item_name) > 0 else None
+                            flag1 = 1 if int(c.item_name) > 0 else 0
+                            result1 = await db_Insert("td_purchase_items", fields1, '', whr1, flag1)
+                            print('result sum ===================================', result1)
+
+                         elif remaining_qty > float(sum_qty) and float(sum_qty) > 0:
+                            ordered_qty = float(sum_qty) + float(pur_qty['ordered_qty'])
+                            sum_qty = 0
+                            fields1 = f'ordered_qty={ordered_qty}'
+                            whr1 = f'item_id="{c.item_name}" and pur_no="{pur_qty["pur_no"]}"' if int(c.item_name) > 0 else None
+                            flag1 = 1 if int(c.item_name) > 0 else 0
+                            result1 = await db_Insert("td_purchase_items", fields1, '', whr1, flag1)
+                            print('result sum 0 ===================================', result1)
+                                                
+                                # if int(pur_qty['item_id']) == int(c.item_name):
+                                #     if ((float(pur_qty['qty']) - float(pur_qty['ordered_qty']))<=float(sum_qty)) and float(sum_qty)>0:
+                                #         ordered_qty = float(pur_qty['qty']) - float(pur_qty['ordered_qty'])
+                                #         ordered_qty = float(ordered_qty) + float(pur_qty['ordered_qty']) 
+                                #         sum_qty = float(sum_qty) - (float(pur_qty['qty']) - float(pur_qty['ordered_qty']))
+                                #         fields1= f'ordered_qty={ordered_qty}'
+                                #         values1 = f''
+                                #         table_name1 = "td_purchase_items"
+                                #         whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
+                                #         flag1 = 1 if int(c.item_name)>0 else 0
+                                #         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                                #         print('result sum ===================================',result1)
+
+                                #     elif ((float(pur_qty['qty'] )- float(pur_qty['ordered_qty']))>float(sum_qty)) and float(sum_qty)>0:
+                                #         ordered_qty = float(sum_qty)
+                                #         ordered_qty = float(ordered_qty) + float(pur_qty['ordered_qty'])
+                                #         sum_qty = 0
+                                #         fields1= f'ordered_qty={ordered_qty}' 
+                                #         values1 = f''
+                                #         table_name1 = "td_purchase_items"
+                                #         whr1=  f'item_id="{c.item_name}" and pur_no="{pur_qty['pur_no']}"' if int(c.item_name) > 0 else None
+                                #         flag1 = 1 if int(c.item_name)>0 else 0
+                                #         result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                                #         print('result sum 0 ===================================',result1)
                                 
                         
         else:
