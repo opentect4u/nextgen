@@ -16,7 +16,7 @@ class Stock(BaseModel):
     sl_no:int
     item_id:int
     stock_dt:str
-    stock:int
+    stock:Union[float,int]
     user:str
 class getData(BaseModel):
     id:int
@@ -28,11 +28,11 @@ class CheckItem(BaseModel):
 class TransferItems(BaseModel):
     sl_no:int
     item_id:int
-    qty:int
+    qty:Union[float,int]
     error:int
 class StockOutData(BaseModel):
      id:int
-     stock_out:int
+     stock_out:Union[float,int]
      req_no:str
 class SaveTrans(BaseModel):
     sl_no:int
@@ -95,7 +95,7 @@ class ApproveItems(BaseModel):
     sl_no: int
     item_id: int
     prod_name: str
-    qty: int
+    qty: Union[float,int]
     approve_flag: str
     check: bool
 
