@@ -920,9 +920,9 @@ async def approvepo(id:approvePO):
                         # qty = int(result_pur['msg'][0]['approved_ord_qty']) + int(item['quantity'])
                         # print(qty)
 
-                        pur_qty = int(result_pur['msg'][0]['ordered_qty']) 
-                        appr_qty =  int(result_pur['msg'][0]['approved_ord_qty']) 
-                        sum_qty = int(item['quantity'])
+                        pur_qty = float(result_pur['msg'][0]['ordered_qty']) 
+                        appr_qty =  float(result_pur['msg'][0]['approved_ord_qty']) 
+                        sum_qty = float(item['quantity'])
 
                         if (pur_qty- appr_qty)<=sum_qty and sum_qty>0:
                                         approved_ord_qty = pur_qty - appr_qty
@@ -1323,8 +1323,8 @@ async def addfreshpo(data:PoModel):
                 #                         print('result sum 0 ===================================',result1)
 
                 for pur_qty in result_pur['msg']:
-                               
-                                if pur_qty['item_id'] == c.item_name:
+                                print(type(pur_qty['qty']),type(pur_qty['ordered_qty']),type(sum_qty))
+                                if int(pur_qty['item_id']) == int(c.item_name):
                                     if pur_qty['qty'] - pur_qty['ordered_qty']<=sum_qty and sum_qty>0:
                                         ordered_qty = pur_qty['qty'] - pur_qty['ordered_qty']
                                         ordered_qty = ordered_qty + pur_qty['ordered_qty']
