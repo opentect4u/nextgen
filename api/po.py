@@ -221,8 +221,8 @@ class MrnItem(BaseModel):
     sl_no:int
     item_id:int
     prod_id:int
-    quantity:int
-    rc_qty:int
+    quantity:Union[float,int]
+    rc_qty:Union[float,int]
     sl:str
     remarks:str
     name:str
