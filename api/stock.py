@@ -10,6 +10,8 @@ import datetime as dt
 import random
 from models.utils import get_hashed_password, verify_password
 import json
+from decimal import Decimal, ROUND_HALF_UP
+
 stockRouter = APIRouter()
 
 class Stock(BaseModel):
@@ -1044,7 +1046,7 @@ async def save_stock_out(data:StockOutList):
             flag_stck2 = 0 
             result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
             stock_out=-1
-            qty = result_stck2['msg']['balance'] - i.stock_out
+            qty = Decimal(result_stck2['msg']['balance']) - Decimal(i.stock_out)
 
             flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
             val_out= f'"{formatted_dt}","{i.req_no}","{data.proj_id}",{i.id},{i.stock_out},{stock_out},{qty},"{data.user}","{formatted_dt}"'
