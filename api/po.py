@@ -370,7 +370,7 @@ class CheckInvoice(BaseModel):
     inv_no:str
 class MrnApproveItems(BaseModel):
     item_id:int
-    rc_qty:int
+    rc_qty:Union[float,int]
 
 class approveMRN(BaseModel):
     inv_no:str
