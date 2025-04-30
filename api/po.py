@@ -267,8 +267,8 @@ class GetPhrase(BaseModel):
 
 class ItemVtoC(BaseModel):
     item_id:int
-    rc_qty:int
-    mrn_qty:int
+    rc_qty:Union[float,int]
+    mrn_qty:Union[float,int]
 
 class DelVtoC(BaseModel):
     po_no:str
@@ -298,8 +298,8 @@ class DelVtoC(BaseModel):
 class minList(BaseModel):
     sl_no:int
     item_id:int
-    quantity:int
-    issue_qty:int
+    quantity:Union[float,int]
+    issue_qty:Union[float,int]
     purpose:str
     notes:str
     name:str
@@ -316,15 +316,15 @@ class ProjId(BaseModel):
 class ReqItems(BaseModel):
     sl_no:int
     item_id:int
-    rc_qty:int
-    req_qty:int
-    stock:int
+    rc_qty:Union[float,int]
+    req_qty:Union[float,int]
+    stock:Union[float,int]
 
 class ReqItemsAppr(BaseModel):
     sl_no:int
     item_id:int
-    qty:int
-    req_qty:int
+    qty:Union[float,int]
+    req_qty:Union[float,int]
 
 class GetMinReq(BaseModel):
     id:int
@@ -420,7 +420,7 @@ class DeleteVtoC(BaseModel):
 
 class StockRetList(BaseModel):
     ref_no:str
-    ret_qty:int
+    ret_qty:Union[float,int]
 
 class StockReturn(BaseModel):
     proj_id:int
@@ -1024,7 +1024,7 @@ async def approvepo(id:approvePO):
             result_pur = await db_select(select, schema, where, order, flag)
             print(result_pur)
             for item in items:
-                    item_qty = int(item['quantity'])
+                    item_qty = item['quantity']
                     for pur in result_pur['msg']:
                         print(pur, 'PUR')
                         if pur['item_id'] == item['item_id']:
@@ -1032,12 +1032,12 @@ async def approvepo(id:approvePO):
                             # qty = int(result_pur['msg'][0]['ordered_qty']) - int(item['quantity']) if int(pur['ordered_qty']) - int(item['quantity']) > 0 else 0
                             # print(qty)
                             # approved_qty = int(result_pur['msg'][0]['approved_ord_qty']) - int(item['quantity']) if result_pur['msg'][0]['approved_ord_qty'] - int(item['quantity'])>0 else 0
-                            qty = int(pur['ordered_qty']) - int(item_qty) if int(pur['ordered_qty']) - int(item_qty) > 0 else 0
-                            approved_qty = int(pur['approved_ord_qty']) - int(item_qty) if int(pur['approved_ord_qty']) - int(item_qty)>0 else 0
+                            qty = pur['ordered_qty'] - item_qty if pur['ordered_qty'] - item_qty > 0 else 0
+                            approved_qty = pur['approved_ord_qty'] - item_qty if pur['approved_ord_qty'] - item_qty>0 else 0
                             if result1['msg'][0]['po_status'] == 'A':
-                                item_qty = item_qty - int(pur['approved_qty']) if item_qty - int(pur['approved_qty'])>0 else 0
+                                item_qty = item_qty - pur['approved_qty'] if item_qty - pur['approved_qty']>0 else 0
                             else:
-                                item_qty = item_qty - int(pur['ordered_qty']) if item_qty - int(pur['ordered_qty'])>0 else 0
+                                item_qty = item_qty - pur['ordered_qty'] if item_qty - pur['ordered_qty']>0 else 0
 
                             print(pur['pur_no'],item_qty,qty,approved_qty)
                             fields= f'ordered_qty={qty}' if result1['msg'][0]['po_status'] == 'A' else f'ordered_qty={qty},approved_ord_qty={approved_qty}'
