@@ -1327,13 +1327,15 @@ async def addfreshpo(data:PoModel):
                                 if int(pur_qty['item_id']) == int(c.item_name):
                                     if Decimal(pur_qty['qty']) - Decimal(pur_qty['ordered_qty'])<=Decimal(sum_qty) and Decimal(sum_qty)>0:
                                         ordered_qty = Decimal(pur_qty['qty']) - Decimal(pur_qty['ordered_qty'])
-                                        print(type(ordered_qty),type(pur_qty['ordered_qty']))
+                                        
+                                        print('111111',type(ordered_qty),type(pur_qty['ordered_qty']),ordered_qty)
                                         ordered_qty = Decimal(ordered_qty) + Decimal(pur_qty['ordered_qty'])
-                                        print(type(ordered_qty),type(pur_qty['ordered_qty']))
+                                       
+                                        print('11111',type(ordered_qty),type(pur_qty['ordered_qty']),ordered_qty)
 
                                         sum_qty = Decimal(sum_qty) - Decimal(pur_qty['qty']) - Decimal(pur_qty['ordered_qty'])
-                                        print('sum_qty',sum_qty)
-                                        print('ordered_qty',ordered_qty)
+                                        print('sum_qty1111',sum_qty)
+                                        print('ordered_qty1111',ordered_qty)
                                         fields1= f'ordered_qty={ordered_qty}'
                                         values1 = f''
                                         table_name1 = "td_purchase_items"
@@ -1344,14 +1346,14 @@ async def addfreshpo(data:PoModel):
 
                                     elif Decimal(pur_qty['qty']) - Decimal(pur_qty['ordered_qty'])>Decimal(sum_qty) and Decimal(sum_qty)>0:
                                         ordered_qty = Decimal(sum_qty)
-                                        print(type(ordered_qty),type(pur_qty['ordered_qty']))
+                                        print('222222',type(ordered_qty),type(pur_qty['ordered_qty']),ordered_qty)
 
-                                        ordered_qty = ordered_qty + pur_qty['ordered_qty']
-                                        print(type(ordered_qty),type(pur_qty['ordered_qty']))
+                                        ordered_qty = Decimal(ordered_qty) + Decimal(pur_qty['ordered_qty'])
+                                        print('222222',type(ordered_qty),type(pur_qty['ordered_qty']),ordered_qty)
 
                                         sum_qty = 0.000
-                                        print('sum_qty',sum_qty)
-                                        print('ordered_qty',ordered_qty)
+                                        print('sum_qty2222',sum_qty)
+                                        print('ordered_qty2222',ordered_qty)
                                         fields1= f'ordered_qty={ordered_qty}' 
                                         values1 = f''
                                         table_name1 = "td_purchase_items"
