@@ -4524,7 +4524,7 @@ async def savestockreturn(dt:StockReturn):
             order_cnt = ""
             flag_cnt = 1
             result_cnt = await db_select(select_cnt, schema_cnt, where_cnt, order_cnt, flag_cnt)
-            print(dt.items)
+            print(item for item in dt.items)
             count = sum(1 for item in dt.items if item["ref_no"] == i.ref_no)
             print(result_req['msg'])
             net_qty = Decimal(result_req['msg'][0]['approved_qty']) - Decimal(i.ret_qty)
