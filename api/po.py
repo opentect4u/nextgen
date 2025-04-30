@@ -1325,9 +1325,12 @@ async def addfreshpo(data:PoModel):
                 for pur_qty in result_pur['msg']:
                                 print(type(pur_qty['qty']),type(pur_qty['ordered_qty']),type(sum_qty))
                                 if int(pur_qty['item_id']) == int(c.item_name):
-                                    if pur_qty['qty'] - pur_qty['ordered_qty']<=sum_qty and sum_qty>0:
+                                    if pur_qty['qty'] - pur_qty['ordered_qty']<=float(sum_qty) and float(sum_qty)>0:
                                         ordered_qty = pur_qty['qty'] - pur_qty['ordered_qty']
+                                        print(type(ordered_qty),type(pur_qty['ordered_qty']))
                                         ordered_qty = ordered_qty + pur_qty['ordered_qty']
+                                        print(type(ordered_qty),type(pur_qty['ordered_qty']))
+
                                         sum_qty = sum_qty - pur_qty['qty'] - pur_qty['ordered_qty']
                                         print('sum_qty',sum_qty)
                                         print('ordered_qty',ordered_qty)
@@ -1341,8 +1344,12 @@ async def addfreshpo(data:PoModel):
 
                                     elif pur_qty['qty'] - pur_qty['ordered_qty']>sum_qty and sum_qty>0:
                                         ordered_qty = sum_qty
+                                        print(type(ordered_qty),type(pur_qty['ordered_qty']))
+
                                         ordered_qty = ordered_qty + pur_qty['ordered_qty']
-                                        sum_qty = 0
+                                        print(type(ordered_qty),type(pur_qty['ordered_qty']))
+
+                                        sum_qty = 0.000
                                         print('sum_qty',sum_qty)
                                         print('ordered_qty',ordered_qty)
                                         fields1= f'ordered_qty={ordered_qty}' 
