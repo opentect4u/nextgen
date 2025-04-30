@@ -4404,7 +4404,7 @@ async def getMinReq(dt:GetStock):
     
 #     return res_dt
 
-@poRouter.post('/save_stock_return')
+@poRouter.post('/save_stock_return1')
 async def savestockreturn(dt:StockReturn):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -4417,8 +4417,8 @@ async def savestockreturn(dt:StockReturn):
             flag = 1
             result_req = await db_select(select, schema, where, order, flag)
             print(result_req['msg'])
-            net_qty = int(result_req['msg'][0]['approved_qty']) - i.ret_qty
-            net_req_qty = int(result_req['msg'][0]['req_qty']) - i.ret_qty
+            net_qty = Decimal(result_req['msg'][0]['approved_qty']) - Decimal(i.ret_qty)
+            net_req_qty = Decimal(result_req['msg'][0]['req_qty']) - Decimal(i.ret_qty)
             if net_qty>0:
                 fields_req= f'approved_qty="{net_qty}",req_qty="{net_req_qty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
                 values_req = f''
@@ -4473,6 +4473,116 @@ async def savestockreturn(dt:StockReturn):
                   result_res = await db_select(select_res, schema_res, where_res, order_res, flag_res)
                   print('result_res',result_res)
                   if len(result_res['msg'])==1:
+                      fields_insert1= f'SELECT * FROM td_requisition WHERE req_no = "{i.ref_no}"'
+                      table_names_insert1 = "td_requisition_delete"
+                      results_insert1 = await db_Insert(table_names_insert1, fields_insert1, None, None, 0, True)
+
+                      fields=f''
+                      table_name = "td_requisition"
+                      flag = 1 
+                      values=''
+                      whr=f'req_no="{i.ref_no}"'
+                      result = await db_Delete(table_name, whr)
+
+                 
+
+            # flds11= f'ret_dt,ref_no,proj_id,item_id,qty,created_by,created_at'
+            # val11 = f'"{dt.dt}","RET-{i.ref_no}",{dt.proj_id},{dt.item_id},{i.ret_qty},"{dt.user}","{formatted_dt}"'
+            # table11 = "td_return_items"
+            # whr11=f""
+            # flag11 =  0
+            # result11 = await db_Insert(table11, flds11, val11, whr11, flag11)
+            if(result_req1['suc']>0 and result_req2['suc']>0): 
+                res_dt2 = {"suc": 1, "msg": f"Updated Successfully "}
+
+            else:
+                res_dt2= {"suc": 0, "msg": f"Error while inserting into stock"}
+   
+
+    return res_dt2
+
+
+
+
+@poRouter.post('/save_stock_return')
+async def savestockreturn(dt:StockReturn):
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    in_out_flag=1
+   
+    for i in dt.items:
+            select = f"approved_qty,req_qty"
+            schema = "td_requisition_items"
+            where = f"req_no='{i.ref_no}' and item_id='{dt.item_id}'"
+            order = ""
+            flag = 1
+            result_req = await db_select(select, schema, where, order, flag)
+
+            select_cnt = f"approved_qty,req_qty"
+            schema_cnt = "td_requisition_items"
+            where_cnt = f"req_no='{i.ref_no}'"
+            order_cnt = ""
+            flag_cnt = 1
+            result_cnt = await db_select(select_cnt, schema_cnt, where_cnt, order_cnt, flag_cnt)
+            count = sum(1 for item in dt.items if item.get("ref_no") == i.ref_no)
+            print(result_req['msg'])
+            net_qty = Decimal(result_req['msg'][0]['approved_qty']) - Decimal(i.ret_qty)
+            net_req_qty = Decimal(result_req['msg'][0]['req_qty']) - Decimal(i.ret_qty)
+            if net_qty>0:
+                fields_req= f'approved_qty="{net_qty}",req_qty="{net_req_qty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+                values_req = f''
+                table_name_req = "td_requisition_items"
+                whr_req = f'req_no="{i.ref_no}" and item_id="{dt.item_id}"' 
+                flag_req = 1 
+                result_req1 = await db_Insert(table_name_req, fields_req, values_req, whr_req, flag_req)
+
+                fields_replace= f'SELECT sl_no, last_req_id,req_no,item_id,rc_qty,req_qty,approved_qty, {net_qty} cancelled_qty,balance,approve_flag,cancel_flag,created_by,created_at, modified_by, modified_at, deleted_by,deleted_at FROM td_requisition_items WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
+                table_name_replace = "td_requisition_items_delete"
+                result_replace= await db_Insert(table_name_replace, fields_replace, None, None, 0, True)
+
+                fields_req2= f'issue_qty="{net_qty}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
+                values_req2 = f''
+                table_name_req2 = "td_min"
+                whr_req2 = f'req_no="{i.ref_no}" and item_id="{dt.item_id}"' 
+                flag_req2 = 1 
+                result_req2 = await db_Insert(table_name_req2, fields_req2, values_req2, whr_req2, flag_req2)
+
+                fields_replace= f'SELECT sl_no,item_id,min_dt,opening_qty, {net_qty} issue_qty,req_no,purpose,notes,approve_status,created_by,created_at, modified_by, modified_at, deleted_by,deleted_at FROM td_min WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
+                table_name_replace = "td_min_delete"
+                result_replace= await db_Insert(table_name_replace, fields_replace, None, None, 0, True)
+
+            else:
+                  fields_insert2= f'SELECT * FROM td_requisition_items WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
+                  table_names_insert2 = "td_requisition_items_delete"
+                  results_insert2 = await db_Insert(table_names_insert2, fields_insert2, None, None, 0, True)
+ 
+                  fields1=f''
+                  table_name1 = "td_requisition_items"
+                  flag1 = 1 
+                  values1=''
+                  whr1=f'req_no="{i.ref_no}" and item_id="{dt.item_id}"'
+                  result_req1 = await db_Delete(table_name1, whr1)
+
+                  
+                  fields_insert3= f'SELECT * FROM td_min WHERE req_no = "{i.ref_no}" and item_id="{dt.item_id}"'
+                  table_names_insert3 = "td_min_delete"
+                  results_insert3 = await db_Insert(table_names_insert3, fields_insert3, None, None, 0, True)
+
+                  fields2=f''
+                  table_name2 = "td_min"
+                  flag2 = 1 
+                  values2=''
+                  whr2=f'req_no="{i.ref_no}" and item_id="{dt.item_id}"'
+                  result_req2 = await db_Delete(table_name2, whr2)
+
+                  select_res = f"approved_qty"
+                  schema_res = "td_requisition_items"
+                  where_res = f"req_no='{i.ref_no}' "
+                  order_res = ""
+                  flag_res = 1
+                  result_res = await db_select(select_res, schema_res, where_res, order_res, flag_res)
+                  print('result_res',result_res)
+                  if len(result_res['msg'])==count:
                       fields_insert1= f'SELECT * FROM td_requisition WHERE req_no = "{i.ref_no}"'
                       table_names_insert1 = "td_requisition_delete"
                       results_insert1 = await db_Insert(table_names_insert1, fields_insert1, None, None, 0, True)
