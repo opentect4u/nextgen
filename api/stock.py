@@ -1430,6 +1430,18 @@ async def save_trans(data:GetPurItem):
     print(result, 'RESULT')
     return result
 
+@stockRouter.post("/stock_levels_by_date")
+async def save_trans(data:GetPurItem):
+
+    select = "date,sum(qty*in_out_flag) as qty"
+    schema = f"td_stock_new"
+    where = f"group by date"
+    order = ""
+    flag =  1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
+
 
      
 
