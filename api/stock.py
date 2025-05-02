@@ -1434,8 +1434,8 @@ async def save_trans(data:GetPurItem):
 async def save_trans(data:GetPurItem):
 
     select = "date,sum(qty*in_out_flag) as qty"
-    schema = f"td_stock_new"
-    where = f"group by date"
+    schema = f"td_stock_new group by date"
+    where = f""
     order = ""
     flag =  1
     result = await db_select(select, schema, where, order, flag)
