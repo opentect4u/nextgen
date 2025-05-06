@@ -201,7 +201,7 @@ class srcGetByItem(BaseModel):
     item:str
 
 class getDoc(BaseModel):
-    id:int
+    id:str
     item:str
 
 class deleteDoc(BaseModel):
