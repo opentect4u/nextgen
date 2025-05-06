@@ -752,7 +752,7 @@ async def getprojectpoc(id:GetPoForTc):
     res_dt = {}
 
     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name,d.rc_qty"
-    schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d d.item_id=i.item_id"
+    schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.item_id"
     where = f"i.po_sl_no='{id.id}' and d.po_no='{id.po_no}'" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
