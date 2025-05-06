@@ -1817,7 +1817,7 @@ async def gettcbypo(id:getDoc):
     res_dt = {}
     select = "*"
     schema = "test_cert_doc"
-    where = f"po_no='{id.id}' and item_id='{id.item}' and delete_flag='N'" if id.id>0 else f""
+    where = f"po_no='{id.id}' and item_id='{id.item}' and delete_flag='N'" if id.id else f""
     order = "ORDER BY created_at DESC"
     flag = 1
     result = await db_select(select, schema, where, order, flag)
