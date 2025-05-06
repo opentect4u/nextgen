@@ -183,9 +183,9 @@ class GetTc(BaseModel):
     id:int
     po_no:str
     item:int
-    quantity:int
-    tc_quantity:int
-    rc_quantity:int
+    quantity:Union[int,str]
+    tc_quantity:Union[int,str]
+    rc_quantity:Union[int,str]
     user:str
 
 class GetMdcc(BaseModel):
