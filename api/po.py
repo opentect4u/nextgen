@@ -751,7 +751,7 @@ async def getprojectpoc(id:GetPoForTc):
     # print(id.id)
     res_dt = {}
 
-    select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name,d.rc_qty,tc.tc_qty"
+    select = "distinct i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.item_rt,i.discount_percent,i.discount,p.prod_name,d.rc_qty,tc.tc_qty"
     schema = f"td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on i.item_id=d.prod_id and d.po_no='{id.po_no}' LEFT JOIN (SELECT item AS tc_item_id,SUM(tc_qty) AS tc_qty FROM td_test_cert WHERE po_no = '{id.po_no}' GROUP BY po_no, item ) tc ON i.item_id = tc.tc_item_id AND i.po_sl_no = '{id.id}'"
     where = f"i.po_sl_no='{id.id}'" if id.id>0 else ""
     order = ""
