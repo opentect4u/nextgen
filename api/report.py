@@ -286,8 +286,8 @@ async def getprojectpoc(id:stockoutreport):
 
     select = f"st.date,st.item_id,st.qty,st.created_by,p.prod_name,p.part_no,p.article_no,p.model_no,p.prod_desc,st.in_out_flag,st.ref_no,st.proj_id,pr.proj_name"
     schema = "td_stock_new st, md_product p,td_project pr"
-    where = f"st.item_id=p.sl_no and st.proj_id=pr.sl_no and '{id.dt}'>=st.date and st.in_out_flag=-1 and ref_no like '%REQ%'" if id .type=='P' else f"st.item_id=p.sl_no and st.proj_id=0 and '{id.dt}'>=st.date and st.in_out_flag=-1 and ref_no like '%REQ%'"
-    where = f""
+    where = f"st.item_id=p.sl_no and st.proj_id=pr.sl_no and '{id.dt}'>=st.date " if id .type=='P' else f"st.item_id=p.sl_no and st.proj_id=0 and '{id.dt}'>=st.date "
+    where = f"st.in_out_flag=-1 and ref_no like '%REQ%'"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
