@@ -39,7 +39,10 @@ class mrnprojreport(BaseModel):
 class mrnpur(BaseModel):
     pur_no:str
     
-
+class stockoutreport(BaseModel):
+    type:str
+    proj_id:int
+    
 
 
 @reportRouter.post('/allstock')
@@ -270,6 +273,20 @@ async def getprojectpoc(id:mrnpur):
     select = f" i.item_id, i.quantity,p.approved_ord_qty,SUM(d.rc_qty) AS rc_qty,GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice, pr.prod_name"
     schema = f" td_po_items i LEFT JOIN td_purchase_items p ON i.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr ON pr.sl_no = i.item_id LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic     WHERE pur_req LIKE '%{id.pur_no}%')"
     where = f" i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%') GROUP BY i.item_id, i.quantity, p.approved_ord_qty, pr.prod_name"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
+
+@reportRouter.post('/stockoutreport')
+async def getprojectpoc(id:stockoutreport):
+    res_dt = {}
+
+    select = f"st.date,st.item_id,st.qty,st.created_by,p.prod_name,p.part_no,p.article_no,p.model_no,p.prod_desc,st.in_out_flag,st.ref_no,st.proj_id,pr.proj_name"
+    schema = "td_stock_new st, md_product p,td_project pr"
+    where = f"st.item_id=p.sl_no and st.proj_id=pr.sl_no and '{id.dt}'>=st.date and st.in_out_flag=-1 and ref_no like '%REQ%'" if id .type=='P' else f"st.item_id=p.sl_no and st.proj_id=0 and '{id.dt}'>=st.date and st.in_out_flag=-1 and ref_no like '%REQ%'"
+    where = f""
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
