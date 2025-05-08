@@ -42,6 +42,7 @@ class mrnpur(BaseModel):
 class stockoutreport(BaseModel):
     type:str
     proj_id:int
+    dt:str
     
 
 
