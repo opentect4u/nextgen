@@ -291,4 +291,5 @@ async def getprojectpoc(id:stockoutreport):
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
+    print(result)
     return result
