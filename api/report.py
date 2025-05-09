@@ -284,7 +284,7 @@ async def getprojectpoc(id:mrnpur):
 async def getprojectpoc(id:stockoutreport):
     # res_dt = {}
 
-    select = f"st.date,st.item_id,st.balance,st.qty,st.created_by,concat(p.prod_name,'(Part No.:',p.part_no,', Article No.:',p.article_no,', Model No.:',p.model_no,', Make:',p.prod_make,', Description:',p.prod_desc,')') as prod_name,st.in_out_flag,st.ref_no,st.proj_id,pr.proj_name,st.created_at" if id.type=='P' else f"st.date,dy.balance,st.item_id,st.qty,st.created_by,concat(p.prod_name,'(Part No.:',p.part_no,', Article No.:',p.article_no,', Model No.:',p.model_no,', Make:',p.prod_make,', Description:',p.prod_desc,')') as prod_name,st.in_out_flag,st.ref_no,0 as proj_id,'Warehouse' as proj_name,st.created_at"
+    select = f"st.date,st.item_id,st.balance,st.qty,st.created_by,concat(p.prod_name,'(Part No.:',p.part_no,', Article No.:',p.article_no,', Model No.:',p.model_no,', Make:',p.prod_make,', Description:',p.prod_desc,')') as prod_name,st.in_out_flag,st.ref_no,st.proj_id,pr.proj_name,st.created_at" if id.type=='P' else f"st.date,st.balance,st.item_id,st.qty,st.created_by,concat(p.prod_name,'(Part No.:',p.part_no,', Article No.:',p.article_no,', Model No.:',p.model_no,', Make:',p.prod_make,', Description:',p.prod_desc,')') as prod_name,st.in_out_flag,st.ref_no,0 as proj_id,'Warehouse' as proj_name,st.created_at"
     schema = "td_stock_new st left join md_product p on st.item_id=p.sl_no left join td_project pr on st.proj_id=pr.sl_no" if id.type=='P' else "td_stock_new st left join md_product p on st.item_id=p.sl_no and st.proj_id=0"
    
     where = f"st.in_out_flag=-1 and ref_no like '%REQ%' and st.date>='{id.dt}'" if id.type == 'W' else f"st.in_out_flag=-1 and ref_no like '%REQ%' and st.proj_id={id.proj_id} and st.date>='{id.dt}'"
