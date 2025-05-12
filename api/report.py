@@ -302,7 +302,7 @@ async def getprojectpoc(id:stockoutreport):
 async def getprojectpoc(id:MatVal):
     # res_dt = {}
 
-    select = f"b.po_no,b.sl_no,i.item_id,i.quantity,i.discount,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,i.item_rt,d.mrn_no,d.prod_id,d.rc_qty,st.qty, (select qty from td_stock_new where proj_id={id.proj_id} and item_id=st.item_id and in_out_flag=-1) stock_out_qty,concat(p.prod_name,'(Part No.:',p.part_no,', Article No.:',p.article_no,', Model No.:',p.model_no,', Make:',p.prod_make,', Description:',p.prod_desc,')') as prod_name"
+    select = f"b.po_no,b.sl_no,i.item_id,i.quantity,i.discount,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,i.item_rt,d.mrn_no,d.prod_id,d.rc_qty,st.qty, (select qty from td_stock_new where proj_id={id.proj_id} and item_id=st.item_id and in_out_flag=-1) stock_out_qty,concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as prod_name"
     schema = '''td_po_basic b 
     left join td_po_items i on b.sl_no=i.po_sl_no 
     join td_item_delivery_details d on d.po_no=b.po_no and d.prod_id=i.item_id 
