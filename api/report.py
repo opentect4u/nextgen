@@ -302,7 +302,7 @@ async def getprojectpoc(id:MatVal):
     # res_dt = {}
 
     select = f"po_no,sl_no"
-    schema = f"proj_id={id.proj_id}"
+    schema = f"project_id={id.proj_id}"
    
     where = f"td_po_basic"
     order = ""
