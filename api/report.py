@@ -43,6 +43,9 @@ class stockoutreport(BaseModel):
     type:str
     proj_id:int
     dt:str
+
+class MatVal(BaseModel):
+    proj_id:int
     
 
 
@@ -288,6 +291,20 @@ async def getprojectpoc(id:stockoutreport):
     schema = "td_stock_new st left join md_product p on st.item_id=p.sl_no left join td_project pr on st.proj_id=pr.sl_no" if id.type=='P' else "td_stock_new st left join md_product p on st.item_id=p.sl_no and st.proj_id=0"
    
     where = f"st.in_out_flag=-1 and ref_no like '%REQ%' and st.date>='{id.dt}'" if id.type == 'W' else f"st.in_out_flag=-1 and ref_no like '%REQ%' and st.proj_id={id.proj_id} and st.date>='{id.dt}'"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    print(result)
+    return result
+
+@reportRouter.post('/matvalmrn')
+async def getprojectpoc(id:MatVal):
+    # res_dt = {}
+
+    select = f"po_no,sl_no"
+    schema = f"proj_id={id.proj_id}"
+   
+    where = f"td_po_basic"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
