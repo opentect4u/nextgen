@@ -60,6 +60,10 @@ class payTerms(BaseModel):
 class PrevDelNo(BaseModel):
     po_no:str
     item_id:int
+
+class PurNo(BaseModel):
+    pur_no:str
+
 class PoModel(BaseModel):
     sl_no:Optional[int]=None
     po_id:Optional[Union[str,None]]=None
@@ -4738,6 +4742,20 @@ async def getParentPoDate(po_no:GetInvList):
     select1 = "@a:=@a+1 serial_number,b.po_no,b.vend_ref,b.pur_req,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,b.project_id,p.proj_name,p.proj_id,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no,b.fresh_flag,b.amend_flag,b.amend_note"
     schema1 = "td_po_basic b join md_vendor v ON v.sl_no=b.vendor_id left join td_project p ON p.sl_no=b.project_id, (SELECT @a:= 0) AS a"
     where1 = f"b.po_no not in (select po_no from td_item_delivery_invoice) and b.po_no not in (select po_no from td_vendor_to_client)" if po_no.po_no=='' else f"b.po_no='{po_no.po_no}'"
+    order1 = ""
+    flag1 = 1
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+    print(result1, 'RESULT1')
+    
+    return result1
+
+
+@poRouter.post('/get_pur_by')
+async def getParentPoDate(pur_no:PurNo):
+    res_dt = {}
+    select1 = "pur_by"
+    schema1 = "td_purchase_req"
+    where1 = f"pur_no='{pur_no.pur_no}'"
     order1 = ""
     flag1 = 1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
