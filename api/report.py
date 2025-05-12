@@ -301,10 +301,10 @@ async def getprojectpoc(id:stockoutreport):
 async def getprojectpoc(id:MatVal):
     # res_dt = {}
 
-    select = f"po_no,sl_no"
-    schema = f"td_po_basic"
+    select = f"b.po_no,b.sl_no,i.item_id,i.quantity"
+    schema = f"td_po_basic b left join td_po_items i on b.sl_no=i.po_sl_no"
    
-    where = f"project_id={id.proj_id}"
+    where = f"b.project_id={id.proj_id} and b.po_no is not null"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
