@@ -271,7 +271,7 @@ async def getprojectpoc(id:mrnpur):
     # select = f"i.item_id, i.quantity, p.approved_ord_qty, d.rc_qty, d.mrn_no, d.invoice,pr.prod_name"
     # schema = f"td_po_items i LEFT JOIN td_purchase_items p ON i.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr on pr.sl_no=i.item_id LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%')"
     # where = f"i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%')"
-    select = f" i.item_id, i.quantity,p.approved_ord_qty,SUM(d.rc_qty) AS rc_qty,GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice, concat(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,',  Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') as prod_name"
+    select = f" i.item_id, i.quantity,p.approved_ord_qty,SUM(d.rc_qty) AS rc_qty,GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice,DATE_FORMAT(d.invoice_date,'%d/%m/%Y'), concat(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,',  Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') as prod_name"
     schema = f" td_po_items i LEFT JOIN td_purchase_items p ON i.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr ON pr.sl_no = i.item_id LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic     WHERE pur_req LIKE '%{id.pur_no}%')"
     where = f" i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%') GROUP BY i.item_id, i.quantity, p.approved_ord_qty, pr.prod_name"
     order = ""
