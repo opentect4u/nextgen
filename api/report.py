@@ -306,7 +306,8 @@ async def getprojectpoc(id:MatVal):
     schema = '''td_po_basic b 
     left join td_po_items i on b.sl_no=i.po_sl_no 
     join td_item_delivery_details d on d.po_no=b.po_no and d.prod_id=i.item_id 
-    join td_stock_new st on st.item_id=d.prod_id and st.ref_no=d.mrn_no left join md_product pd left join pd.sl_no=i.item_id'''
+    join td_stock_new st on st.item_id=d.prod_id and st.ref_no=d.mrn_no 
+    left join md_product pd left join pd.sl_no=i.item_id'''
    
     where = f"b.project_id={id.proj_id} and b.po_no is not null"
     order = ""
