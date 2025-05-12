@@ -302,9 +302,9 @@ async def getprojectpoc(id:MatVal):
     # res_dt = {}
 
     select = f"po_no,sl_no"
-    schema = f"project_id={id.proj_id}"
+    schema = f"td_po_basic"
    
-    where = f"td_po_basic"
+    where = f"project_id={id.proj_id}"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
