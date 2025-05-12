@@ -302,7 +302,7 @@ async def getprojectpoc(id:MatVal):
     # res_dt = {}
 
     select = f"b.po_no,b.sl_no,i.item_id,i.quantity,i.discount,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,d.mrn_no,d.prod_id"
-    schema = f"td_po_basic b left join td_po_items i on b.sl_no=i.po_sl_no left join td_item_delivery_details d on d.po_no=b.po_nof and d.prod_id=i.item_id"
+    schema = f"td_po_basic b left join td_po_items i on b.sl_no=i.po_sl_no left join td_item_delivery_details d on d.po_no=b.po_no and d.prod_id=i.item_id"
    
     where = f"b.project_id={id.proj_id} and b.po_no is not null"
     order = ""
