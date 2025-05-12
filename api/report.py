@@ -302,7 +302,8 @@ async def getprojectpoc(id:stockoutreport):
 async def getprojectpoc(id:MatVal):
     # res_dt = {}
 
-    select = f"b.po_no,b.sl_no,i.item_id,i.quantity,i.discount,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,i.item_rt,(i.item_rt-i.discount)*i.quantity as net_unit_price,d.mrn_no,d.prod_id,d.rc_qty,st.qty, (select qty from td_stock_new where proj_id={id.proj_id} and item_id=st.item_id and in_out_flag=-1) stock_out_qty,concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as prod_name"
+    select = f"b.po_no,b.sl_no,i.item_id,i.quantity,i.discount,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,i.item_rt,(i.item_rt-i.discount)*i.quantity as net_unit_price,d.mrn_no,d.prod_id,d.rc_qty,st.qty, (select qty from td_stock_new where proj_id={id.proj_id} and item_id=st.item_id and in_out_flag=-1) stock_out_qty,concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as prod_name, SUM(d.rc_qty) AS total_rc_qty,
+    SUM(st.qty) AS total_qty"
     schema = '''td_po_basic b 
     left join td_po_items i on b.sl_no=i.po_sl_no 
     left join md_product pd on pd.sl_no=i.item_id
@@ -310,7 +311,7 @@ async def getprojectpoc(id:MatVal):
     join td_stock_new st on st.item_id=d.prod_id and st.ref_no=d.mrn_no 
     '''
    
-    where = f"b.project_id={id.proj_id} and b.po_no is not null"
+    where = f"b.project_id={id.proj_id} and b.po_no is not null GROUP BY b.po_no,b.sl_no,i.item_id,i.quantity,i.discount,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,i.item_rt,d.mrn_no,d.prod_id,d.rc_qty, st.qty,pd.prod_name,pd.part_no,pd.article_no,pd.model_no,pd.prod_make,pd.prod_desc"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
