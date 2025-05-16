@@ -4763,6 +4763,19 @@ async def getParentPoDate(pur_no:PurNo):
     
     return result1
 
+@poRouter.post('/get_fresh_flag')
+async def getParentPoDate(po_no:GetPurchaseMrn):
+    res_dt = {}
+    select1 = "fresh_flag"
+    schema1 = "td_po_basic"
+    where1 = f"po_no='{po_no.po_no}'"
+    order1 = ""
+    flag1 = 1
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+    print(result1, 'RESULT1')
+    
+    return result1
+
 
 
 
