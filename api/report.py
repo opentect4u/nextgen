@@ -322,8 +322,8 @@ async def getprojectpoc(id:MatVal):
 
 @reportRouter.post('/pr_ord_create')
 async def getprojectpoc(id:mrnpur):
-    select = f"@a:=@a+1 serial_number,pur.ordered_qty,pur.approved_ord_qty,(pur.ordered_qty-pur.approved_qty) as free_qty,pur.item_id,concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as prod_name,(select GROUP_CONCAT(po_no),GROUP_CONCAT(if(po_status='P','In Progress',if(po_status='U','Pending','Approved'))) from td_po_basic where pur_req like '%{id.pur_no}%') as po_no"
-    schema = f'''md_product pd left join td_purchase_items pur on pd.sl_no=pur.item_id ,(SELECT @a:= 0) AS a
+    select = f" @a:=@a+1 AS serial_number,pur.ordered_qty,pur.approved_ord_qty,(pur.ordered_qty - pur.approved_qty) AS free_qty, pur.item_id,CONCAT(pd.prod_name,'(Part No.:', pd.part_no,', Article No.:', pd.article_no,', Model No.:', pd.model_no,', Make:', pd.prod_make,', Description:', pd.prod_desc, ')') AS prod_name,GROUP_CONCAT(po.po_no ORDER BY po.po_no ASC SEPARATOR ', ') AS po_no, GROUP_CONCAT(CASE WHEN po.po_status = 'P' THEN 'In Progress'  WHEN po.po_status = 'U' THEN 'Pending'   ELSE 'Approved' END ORDER BY po.po_no ASC SEPARATOR ', ') AS po_status"
+    schema = f'''td_purchase_items pur left join md_product pd on pd.sl_no = pur.item_id left join td_po_basic po on FIND_IN_SET(po.po_no, pur.pur_req) > 0 cross join (SELECT @a := 0) AS a
     '''
     where = f"pur.pur_no='{id.pur_no}'"
     order = ""
