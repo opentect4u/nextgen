@@ -322,7 +322,7 @@ async def getprojectpoc(id:MatVal):
 
 @reportRouter.post('/pr_ord_create')
 async def getprojectpoc(id:mrnpur):
-    select = f"@a:=@a+1 serial_number,pur.ordered_qty,pur.approved_ord_qty,pur.item_id,concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as prod_name,GROUP_CONCAT(select po_no from td_po_basic where pur_req like '%{id.pur_no}%') as po_no"
+    select = f"@a:=@a+1 serial_number,pur.ordered_qty,pur.approved_ord_qty,pur.item_id,concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as prod_name,(GROUP_CONCAT(select po_no from td_po_basic where pur_req like '%{id.pur_no}%')) as po_no"
     schema = f'''md_product pd left join td_purchase_items pur on pd.sl_no=pur.item_id ,(SELECT @a:= 0) AS a
     '''
     where = f"pur.pur_no='{id.pur_no}'"
