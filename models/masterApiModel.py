@@ -44,7 +44,7 @@ async def db_Insert(table_name, fields, values, where, flag, selectInsert = Fals
         errMsg = "Data not updated !!"
     else:
         sql = f"INSERT INTO {table_name} ({fields}) VALUES ({values})" if(not selectInsert) else f"INSERT INTO {table_name} {fields}"
-        # print('SQL =======',sql)
+        print('SQL =======',sql)
         msg = "Inserted Successfully !!"
         errMsg = "Data not inserted  !!"
 
