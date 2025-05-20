@@ -323,7 +323,7 @@ async def getprojectpoc(id:MatVal):
 @reportRouter.post('/pr_ord_create')
 async def getprojectpoc(id:mrnpur):
     select = f" @a:=@a+1 AS serial_number,pur.pur_no,pur.qty,pur.ordered_qty,pur.approved_ord_qty,(pur.qty - pur.ordered_qty) AS free_qty, pur.item_id,proj.proj_name,proj.proj_id,CONCAT(pd.prod_name,'(Part No.:', pd.part_no,', Article No.:', pd.article_no,', Model No.:', pd.model_no,', Make:', pd.prod_make,', Description:', pd.prod_desc, ')') AS prod_name,(select group_concat(po_no,if(po_status='P','(In Progress)',if(po_status='U','(Approval Pending)','(Approved)'))) from td_po_basic where pur_req like '%{id.pur_no}%') as po_no"
-    schema = f'''td_purchase_req req left join td_purchase_items pur on req.pur_no=pur.pur_no left join md_product pd on pd.sl_no = pur.item_id left join td_project proj on pur.pur_proj=proj.sl_no left join td_po_basic po on FIND_IN_SET(po.po_no, pur.pur_no) > 0 cross join (SELECT @a := 0) AS a
+    schema = f'''td_purchase_req req left join td_purchase_items pur on req.pur_no=pur.pur_no left join md_product pd on pd.sl_no = pur.item_id left join td_project proj on req.pur_proj=proj.sl_no left join td_po_basic po on FIND_IN_SET(po.po_no, pur.pur_no) > 0 cross join (SELECT @a := 0) AS a
     '''
     where = f"pur.pur_no='{id.pur_no}'"
     order = ""
