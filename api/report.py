@@ -329,7 +329,7 @@ async def getprojectpoc(id:MatVal):
     schema = f'''td_po_basic b 
     left join td_po_items i on b.sl_no=i.po_sl_no 
     left join md_product pd on pd.sl_no=i.item_id
-    join td_stock_new st on st.item_id=i.item_id and st.ref_no like '%REQ%' and st.in_out_flag=-1 and st.proj_id='{id.proj_id}'
+    join td_stock_new st on st.item_id=i.item_id and st.ref_no like '%REQ%' and st.in_out_flag=-1 and st.proj_id='{id.proj_id}',
     (SELECT @a:= 0) AS a
     '''
    
