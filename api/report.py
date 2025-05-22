@@ -272,9 +272,9 @@ async def getprojectpoc(id:mrnprojreport):
 @reportRouter.post('/mrnpurreq')
 async def getprojectpoc(id:mrnpur):
   
-    select = f"@a:=@a+1 serial_number, i.item_id, sum(i.quantity) as quantity,p.approved_ord_qty,COALESCE(SUM(d.rc_qty),'Not Received') AS rc_qty,GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice,GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt,'%d/%m/%Y')) invoice_dt, concat(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,',  Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') as prod_name"
+    select = f"@a:=@a+1 serial_number, i.item_id, i.quantity,p.approved_ord_qty,COALESCE(SUM(d.rc_qty),'Not Received') AS rc_qty,GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice,GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt,'%d/%m/%Y')) invoice_dt, concat(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,',  Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') as prod_name"
     schema = f" td_purchase_items p LEFT JOIN td_po_items i ON i.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr ON pr.sl_no = i.item_id LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic     WHERE pur_req LIKE '%{id.pur_no}%') left join td_item_delivery_invoice inv on inv.mrn_no=d.mrn_no,(SELECT @a:= 0) AS a"
-    where = f" i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%') GROUP BY i.item_id, p.approved_ord_qty, pr.prod_name"
+    where = f" i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%') GROUP BY i.item_id, i.quantity,p.approved_ord_qty, pr.prod_name"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
@@ -331,7 +331,7 @@ async def getprojectpoc(id:MatVal):
 async def getprojectpoc(id:MatVal):
     # res_dt = {}
 
-    select = f"@a:=@a+1 serial_number,b.po_no,b.sl_no,i.item_id,i.quantity,i.discount,i.currency,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,i.item_rt,(i.item_rt-i.discount)*st.qty as net_unit_price, if(i.igst_id>0,(i.item_rt-i.discount)*st.qty*i.igst_id/100, ((i.item_rt - i.discount) * st.qty * i.cgst_id / 100) + ((i.item_rt - i.discount) * st.qty * i.sgst_id / 100)) as total_gst, IF(i.igst_id > 0,( i.item_rt - i.discount ) * st.qty * i.igst_id / 100+((i.item_rt-i.discount)*st.qty), ( ((i.item_rt - i.discount ) * st.qty * i.cgst_id / 100)+((i.item_rt-i.discount)*st.qty) ) + (( (i.item_rt - i.discount ) * st.qty * i.sgst_id / 100 ))) AS total,st.qty, (select qty from td_stock_new where proj_id={id.proj_id} and item_id=st.item_id and in_out_flag=-1 and ref_no like '%REQ%') stock_out_qty,concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as prod_name"
+    select = f"@a:=@a+1 serial_number,b.po_no,b.sl_no,i.item_id,i.quantity,i.discount,i.currency,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,i.item_rt,(i.item_rt-i.discount)*st.qty as net_unit_price, if(i.igst_id>0,(i.item_rt-i.discount)*st.qty*i.igst_id/100, ((i.item_rt - i.discount) * st.qty * i.cgst_id / 100) + ((i.item_rt - i.discount) * st.qty * i.sgst_id / 100)) as total_gst, IF(i.igst_id > 0,( i.item_rt - i.discount ) * st.qty * i.igst_id / 100+((i.item_rt-i.discount)*st.qty), ( ((i.item_rt - i.discount ) * st.qty * i.cgst_id / 100)+((i.item_rt-i.discount)*st.qty) ) + (( (i.item_rt - i.discount ) * st.qty * i.sgst_id / 100 ))) AS total,st.qty, (select sum(qty) as qty from td_stock_new where proj_id={id.proj_id} and item_id=st.item_id and in_out_flag=-1 and ref_no like '%REQ%' group by st.item_id) stock_out_qty,concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as prod_name"
     schema = f'''td_po_basic b 
     left join td_po_items i on b.sl_no=i.po_sl_no 
     left join md_product pd on pd.sl_no=i.item_id
