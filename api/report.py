@@ -272,22 +272,22 @@ async def getprojectpoc(id:mrnprojreport):
 @reportRouter.post('/mrnpurreq')
 async def getprojectpoc(id:mrnpur):
   
-    # select = f"@a:=@a+1 serial_number, i.item_id, sum(i.quantity) as quantity,p.approved_ord_qty,COALESCE(SUM(d.rc_qty),'Not Received') AS rc_qty,GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice,GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt,'%d/%m/%Y')) invoice_dt, concat(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,',  Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') as prod_name"
-    # schema = f" td_purchase_items p LEFT JOIN td_po_items i ON i.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr ON pr.sl_no = i.item_id LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic     WHERE pur_req LIKE '%{id.pur_no}%') left join td_item_delivery_invoice inv on inv.mrn_no=d.mrn_no,(SELECT @a:= 0) AS a"
-    # where = f" i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%') GROUP BY i.item_id, p.approved_ord_qty, pr.prod_name"
-    # order = ""
-    # flag = 1 
-    # result = await db_select(select, schema, where, order, flag)
-    # return result
-
-
-    select = f"@a:=@a+1 AS serial_number,t1.item_id,t1.total_po_quantity AS quantity,p.approved_ord_qty,COALESCE(SUM(d.rc_qty),'Not Received') AS rc_qty, GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice, GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt,'%d/%m/%Y')) AS invoice_dt,CONCAT(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,', Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') AS prod_name"
-    schema = f"(SELECT i.item_id,SUM(i.quantity) AS total_po_quantity,i.po_sl_no FROM td_po_items i "
-    where = f"i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%')  GROUP BY i.item_id) AS t1 LEFT JOIN td_purchase_items p ON t1.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr ON pr.sl_no = t1.item_id LEFT JOIN td_item_delivery_details d ON t1.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic WHERE pur_req LIKE '%PR-1747891204%') LEFT JOIN  td_item_delivery_invoice inv ON inv.mrn_no = d.mrn_no, (SELECT @a:= 0) AS a"
+    select = f"@a:=@a+1 serial_number, i.item_id, sum(i.quantity) as quantity,p.approved_ord_qty,COALESCE(SUM(d.rc_qty),'Not Received') AS rc_qty,GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice,GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt,'%d/%m/%Y')) invoice_dt, concat(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,',  Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') as prod_name"
+    schema = f" td_purchase_items p LEFT JOIN td_po_items i ON i.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr ON pr.sl_no = i.item_id LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic     WHERE pur_req LIKE '%{id.pur_no}%') left join td_item_delivery_invoice inv on inv.mrn_no=d.mrn_no,(SELECT @a:= 0) AS a"
+    where = f" i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%') GROUP BY i.item_id, p.approved_ord_qty, pr.prod_name"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
     return result
+
+
+    # select = f"@a:=@a+1 AS serial_number,t1.item_id,t1.total_po_quantity AS quantity,p.approved_ord_qty,COALESCE(SUM(d.rc_qty),'Not Received') AS rc_qty, GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice, GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt,'%d/%m/%Y')) AS invoice_dt,CONCAT(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,', Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') AS prod_name"
+    # schema = f"(SELECT i.item_id,SUM(i.quantity) AS total_po_quantity,i.po_sl_no FROM td_po_items i "
+    # where = f"i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%')  GROUP BY i.item_id) AS t1 LEFT JOIN td_purchase_items p ON t1.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr ON pr.sl_no = t1.item_id LEFT JOIN td_item_delivery_details d ON t1.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic WHERE pur_req LIKE '%PR-1747891204%') LEFT JOIN  td_item_delivery_invoice inv ON inv.mrn_no = d.mrn_no, (SELECT @a:= 0) AS a"
+    # order = ""
+    # flag = 1 
+    # result = await db_select(select, schema, where, order, flag)
+    # return result
 
 
 @reportRouter.post('/stockoutreport')
