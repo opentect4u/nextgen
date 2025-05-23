@@ -1111,7 +1111,7 @@ async def edit_user(
     # user_dept: str = Form(...),
     # user_desig:str = Form(...),
     user_phone:str = Form(...),
-    file: Optional[UploadFile] = File(None),
+    file: Optional[Union[UploadFile,str,None]] = File(None),
     user_email:str = Form(...),
     # modified_by:str = Form(...) 
     ):
