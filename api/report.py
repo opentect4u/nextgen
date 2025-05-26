@@ -358,3 +358,16 @@ async def getprojectpoc(id:mrnpur):
     result = await db_select(select, schema, where, order, flag)
     print(result)
     return result
+
+
+@reportRouter.post('/pending_ord_create')
+async def getprojectpoc(id:mrnpur):
+    select = f" @a:=@a+1 AS serial_number, req.pur_no, sum(pur.qty) qty, sum(pur.ordered_qty) ordered_qty,sum(pur.approved_ord_qty) as approved_ord_qty"
+    schema = f'''td_purchase_req req left join td_purchase_items pur on req.pur_no=pur.pur_no cross join (SELECT @a := 0) AS a
+    '''
+    where = f"group by pur.pur_no'"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    print(result)
+    return result
