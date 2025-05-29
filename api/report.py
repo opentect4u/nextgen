@@ -224,6 +224,8 @@ async def getprojectpoc(id:mrnprojreport):
             else:
                 if id.vendor_id:
                     criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id=0"
+                else:
+                    criteria = f"pb.project_id=0"
     else:
             print('inside !0')
             if id.type == 'P':
@@ -242,6 +244,7 @@ async def getprojectpoc(id:mrnprojreport):
                     criteria = f"pb.vendor_id = {id.vendor_id} and pb.project_id=0 and pb.po_no='{id.po_no}'"
                 else:
                     criteria = f"pb.po_no='{id.po_no}' and pb.project_id=0"
+                    
 
 
 
@@ -257,6 +260,9 @@ async def getprojectpoc(id:mrnprojreport):
     
     schema = f"td_po_items i LEFT JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND {criteria} LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no LEFT JOIN md_product p on i.item_id=p.sl_no LEFT JOIN td_project pd on pb.project_id=pd.sl_no LEFT JOIN md_vendor v on pb.vendor_id=v.sl_no LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id left join td_item_delivery_invoice inv on d.mrn_no=inv.mrn_no group by i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty, pb.pur_req, v.vendor_name,pb.po_no" if id.type=='P' else f"td_po_items i LEFT JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND {criteria} LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no LEFT JOIN md_product p on i.item_id=p.sl_no LEFT JOIN md_vendor v on pb.vendor_id=v.sl_no LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id left join td_item_delivery_invoice inv on d.mrn_no=inv.mrn_no group by i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty, pb.pur_req, v.vendor_name,pb.po_no"
     where = f""
+
+
+    # SELECT DISTINCT i.item_id,GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt,'%d/%m/%Y')),concat(p.prod_name,'(Make:',p.prod_make,', Part No.:',p.part_no,',  Article No.:',p.article_no,', Model No.:',p.model_no,', Description:',p.prod_desc,')') as prod_name, SUM(d.rc_qty) AS rc_qty, GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,GROUP_CONCAT(DISTINCT d.invoice) AS invoice,pi.approved_ord_qty,pb.pur_req,'Warehouse' as proj_name,v.vendor_name FROM td_po_items i LEFT JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND pb.po_no='NGAPL/GEN/00001/25-26' and pb.project_id=0 LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no LEFT JOIN md_product p on i.item_id=p.sl_no LEFT JOIN md_vendor v on pb.vendor_id=v.sl_no LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id left join td_item_delivery_invoice inv on d.mrn_no=inv.mrn_no WHERE EXISTS ( SELECT 1 FROM td_po_items i2 JOIN td_item_delivery_details d2 ON i2.item_id = d2.prod_id WHERE i2.item_id = i.item_id AND i2.quantity = i.quantity  AND d2.rc_qty = d.rc_qty) group by i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty, pb.pur_req, v.vendor_name,pb.po_no;
 
 
 # Final query construction
