@@ -406,7 +406,7 @@ async def adddepartment(dt:getMaster):
         else:
             res_dt = {"suc": 0, "msg": result['msg']}
 
-        await user_log_update(dt.user,'N','md_department',formatted_dt)
+        await user_log_update(dt.user,'N','md_department',formatted_dt,result['last_id'])
     else:
         print(flag)
         fields=f'dept_name="{dt.name}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
@@ -416,7 +416,7 @@ async def adddepartment(dt:getMaster):
             res_dt = {"suc": 1, "msg": "Department updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": result['msg']}
-        await user_log_update(dt.user,'E','md_department',formatted_dt)
+        await user_log_update(dt.user,'E','md_department',formatted_dt,dt.id)
 
     return res_dt
 
