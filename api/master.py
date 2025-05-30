@@ -3,6 +3,7 @@ from typing import Optional, Union, Annotated
 from enum import Enum
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from api.db_log import user_log_update
 import uvicorn
 from models.masterApiModel import db_select, db_Insert, db_Delete
 from datetime import datetime
@@ -404,6 +405,8 @@ async def adddepartment(dt:getMaster):
             res_dt = {"suc": 1, "msg": "Department saved successfully!"}
         else:
             res_dt = {"suc": 0, "msg": result['msg']}
+
+        await user_log_update(dt.user,'N','md_department',formatted_dt)
     else:
         print(flag)
         fields=f'dept_name="{dt.name}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
@@ -413,6 +416,8 @@ async def adddepartment(dt:getMaster):
             res_dt = {"suc": 1, "msg": "Department updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": result['msg']}
+        await user_log_update(dt.user,'E','md_department',formatted_dt)
+
     return res_dt
 
 @masterRouter.post('/getdept')
