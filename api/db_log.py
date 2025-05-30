@@ -1,17 +1,17 @@
 from models.masterApiModel import db_Insert
 async def user_log_update(user_id,flag,table_nm,time,id):
     if flag == 'N':
-        activity = 'inserted'
+        activity = 'inserted into'
     elif flag == 'E':
         activity = 'updated'
     elif flag == 'D':
-        activity = 'deleted'
+        activity = 'deleted from'
     elif flag == 'I':
         activity = 'logged in'
     else:
         activity = 'logged out'
         
-    narration = f'{user_id} has {activity} to {table_nm} on {time} (ID:{id}) ' if flag !='I' and flag!='O' else f'user_id has {activity} on {time}'
+    narration = f'{user_id} has {activity} {table_nm} on {time} (ID:{id}) ' if flag !='I' and flag!='O' else f'user_id has {activity} on {time}'
     fields= f'user_id,activity_flag,table_nm,activity_dt,narration'
     values = f'"{user_id}","{flag}","{table_nm}","{time}","{narration}"'
     table_name = "td_user_log"

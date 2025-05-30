@@ -278,6 +278,8 @@ async def addcategory(dt:getGst):
             res_dt = {"suc": 1, "msg": "GST saved successfully!"}
         else:
             res_dt = {"suc": 0, "msg": "Error while saving!"}
+        await user_log_update(dt.user,'N','md_gst',formatted_dt,result['lastId'])
+    
     else:
         print(flag)
         fields=f'gst_type="{dt.gst_type}",gst_rate="{dt.gst_rate}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
@@ -287,6 +289,8 @@ async def addcategory(dt:getGst):
             res_dt = {"suc": 1, "msg": "GST updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": "Error while updating!"}
+        await user_log_update(dt.user,'E','md_gst',formatted_dt,dt.gst_id)
+        
     return res_dt
 
 @masterRouter.post('/getgst')
