@@ -303,9 +303,9 @@ async def getprojectpoc(id:stockoutreport):
     # res_dt = {}
 
     select = f"@a:=@a+1 serial_number,DATE_FORMAT(st.date,'%d/%m/%Y') as date,st.item_id,st.balance,st.qty,st.created_by,concat(p.prod_name,'(Part No.:',p.part_no,', Article No.:',p.article_no,', Model No.:',p.model_no,', Make:',p.prod_make,', Description:',p.prod_desc,')') as prod_name,st.in_out_flag,st.ref_no,st.proj_id,pr.proj_name,st.created_at" if id.type=='P' else f"DATE_FORMAT(st.date,'%d/%m/%Y') as date,st.balance,st.item_id,st.qty,st.created_by,concat(p.prod_name,'(Part No.:',p.part_no,', Article No.:',p.article_no,', Model No.:',p.model_no,', Make:',p.prod_make,', Description:',p.prod_desc,')') as prod_name,st.in_out_flag,st.ref_no,0 as proj_id,'Warehouse' as proj_name,st.created_at"
-    schema = "td_stock_new st left join md_product p on st.item_id=p.sl_no left join td_project pr on st.proj_id=pr.sl_no,(SELECT @a:= 0) AS a" if id.type=='P' else "td_stock_new st left join md_product p on st.item_id=p.sl_no and st.proj_id=0,(SELECT @a:= 0) AS a"
+    schema = "td_stock_new st left join md_product p on st.item_id=p.sl_no left join td_project pr on st.proj_id=pr.sl_no,(SELECT @a:= 0) AS a" if id.type=='P' else "td_stock_new st left join md_product p on st.item_id=p.sl_no,(SELECT @a:= 0) AS a"
    
-    where = f"st.in_out_flag=-1 and ref_no like '%REQ%' and st.date>='{id.dt}'" if id.type == 'W' else f"st.in_out_flag=-1 and ref_no like '%REQ%' and st.proj_id={id.proj_id} and st.date>='{id.dt}'"
+    where = f"st.in_out_flag=-1 and st.proj_id=0 and ref_no like '%REQ%' and st.date>='{id.dt}'" if id.type == 'W' else f"st.in_out_flag=-1 and ref_no like '%REQ%' and st.proj_id={id.proj_id} and st.date>='{id.dt}'"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
