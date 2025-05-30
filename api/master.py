@@ -257,6 +257,7 @@ async def deletecategory(id:deleteData):
                 res_dt = {"suc": 1, "msg": "Category deleted successfully!"}
         else:
                 res_dt = {"suc": 0, "msg": "Error while deleting!"}
+        
    else:
             res_dt = {"suc": 0, "msg": "Item cannot be deleted, it is already in use!"}
        
@@ -325,6 +326,9 @@ async def deletecategory(id:deleteData):
         res_dt = {"suc": 1, "msg": "GST deleted successfully!"}
    else:
         res_dt = {"suc": 0, "msg": "Error while deleting!"}
+
+   await user_log_update(id.user,'D','md_gst',formatted_dt,id.id)
+    
        
    return res_dt
 
@@ -395,6 +399,9 @@ async def deleteunit(id:deleteData):
         res_dt = {"suc": 1, "msg": "Unit deleted successfully!"}
    else:
         res_dt = {"suc": 0, "msg": "Error while deleting!"}
+
+   await user_log_update(id.user,'D','md_unit',formatted_dt,id.id)
+    
    return res_dt
 @masterRouter.post('/adddept')
 async def adddepartment(dt:getMaster):
@@ -470,7 +477,11 @@ async def deletedept(id:deleteData):
                 res_dt = {"suc": 1, "msg": "Department deleted successfully!"}
         else:
                 res_dt = {"suc": 0, "msg": "Error while deleting!"}
+
+        await user_log_update(id.user,'D','md_department',formatted_dt,id.id)
+        
         return res_dt
+    
    else:
          res_dt = {"suc": 0, "msg": "Item cannot be deleted, it is already in use!"} 
    return res_dt
