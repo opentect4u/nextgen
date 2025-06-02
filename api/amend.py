@@ -20,9 +20,8 @@ amendRouter = APIRouter()
 class GetPo(BaseModel):
     id:int
 
-@amendRouter.post('/getamendproject')
+@amendRouter.post('/getamendproject1')
 async def getamendprojectpoc(id:GetPo):
-    # print(id.id)
     res_dt = {}
 
     select = "@a:=@a+1 serial_number,b.amend_flag,b.parent_po_no,b.po_no,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,p.proj_id,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no,b.fresh_flag"
@@ -34,6 +33,35 @@ join (SELECT @a:= 0) AS a
 JOIN (
    SELECT d.po_no
     FROM td_po_basic d WHERE d.amend_flag = 'N' AND d.po_no is NOT null
+    HAVING (SELECT COUNT(*) FROM td_po_basic e WHERE e.po_no LIKE CONCAT(d.po_no, '%')) = 1
+    UNION
+    SELECT MAX(po_no) po_no
+    FROM td_po_basic
+    WHERE amend_flag = 'Y' AND po_no is NOT null
+    GROUP BY SUBSTRING_INDEX(po_no,'-',1)
+) c ON c.po_no=b.po_no
+
+'''
+    where = f"b.sl_no='{id.id}' and b.po_status IN ('P','U','A') AND amend_flag = 'Y'" if id.id>0 else "b.po_status IN ('P','U','A') AND amend_flag = 'Y'"
+    order = "ORDER BY b.created_at DESC"
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
+
+@amendRouter.post('/getamendproject')
+async def getamendprojectpoc(id:GetPo):
+    res_dt = {}
+
+    select = "@a:=@a+1 serial_number,b.amend_flag,b.parent_po_no,b.po_no,b.po_id,b.po_date,b.po_type as type,b.po_issue_date,b.po_status,IF(b.po_status='P','In progress', IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) po_status_val, IF(b.po_type='P','Project-Specific', IF(b.po_type='G', 'General','')) po_type,b.project_id,p.proj_name,p.proj_id,b.vendor_id,b.created_by,b.created_at,b.created_by,b.created_at,b.modified_by,b.modified_at,v.vendor_name,b.sl_no,b.fresh_flag"
+    schema = '''td_po_basic b
+left join td_project p ON p.sl_no=b.project_id
+join md_vendor v ON v.sl_no=b.vendor_id
+join (SELECT @a:= 0) AS a 
+
+JOIN (
+   SELECT d.po_no
+    FROM td_po_basic d WHERE d.po_no is NOT null
     HAVING (SELECT COUNT(*) FROM td_po_basic e WHERE e.po_no LIKE CONCAT(d.po_no, '%')) = 1
     UNION
     SELECT MAX(po_no) po_no
