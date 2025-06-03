@@ -111,14 +111,7 @@ async def addpoamend(data:GetPo):
     # am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}-%'","",0) if amend_flag['msg']['amend_flag']=='N' else await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{joined_string}-%'","",0)
     am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}-%'","",0) 
     print(am_po_row['msg']['po_no'], '-----------------------')
-    # if amend_flag['msg']['amend_flag']=='Y':
-    #     txt = str(parent_po['msg']['po_no'])
-    #     x = txt.split("-")
-    #     joined_string = "-".join(x[:-1])
-    #     print('joined string',joined_string)
     am_po_no = f'{parent_po['msg']['po_no']}-{str(am_po_row['msg']['po_no']).split('.')[0]}' if amend_flag['msg']['amend_flag']=='N' else f'{joined_string}-{str(am_po_row['msg']['po_no']).split('.')[0]}'
-    # am_po_no = await db_select(f"CONCAT((SELECT po_no FROM td_po_basic WHERE sl_no = {data.id}), '-', IF(LENGTH(po_no)-LENGTH(replace(po_no,'-',''))> 1, MAX(SUBSTRING_INDEX(po_no, '-', -1))+1, 1)) am_po", "td_po_basic", f"SUBSTRING_INDEX(po_no, '-', 2) = (SELECT po_no FROM td_po_basic WHERE sl_no = {data.id})", "", 0)
-
     print('am_po_no',am_po_no)
     
     fields= f'''SELECT NULL sl_no, po_id, "{am_po_no}" po_no, "{po_dt}" po_date, po_type,  "{po_dt}" po_issue_date, project_id, vendor_id, vend_ref, 'P' po_status, 'Y' fresh_flag, 0 active_step, po_no parent_po_no, 'Y' amend_flag, amend_note, pur_req, created_by, "{formatted_dt}" created_at, NULL modified_by, NULL modified_at FROM td_po_basic WHERE sl_no = {data.id}'''
@@ -159,11 +152,17 @@ async def addpoamend(data:GetPo):
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     po_dt = current_datetime.strftime("%Y-%m-%d")
     amend_flag = await db_select("amend_flag","td_po_basic", f"sl_no = {data.id}","",0)
+    parent_po = await db_select("po_no","td_po_basic", f"sl_no = {data.id}","",0) 
 
-    parent_po = await db_select("po_no","td_po_basic", f"sl_no = {data.id}","",0) if amend_flag['msg']['amend_flag']=='N' else await db_select("parent_po_no as po_no","td_po_basic", f"sl_no = {data.id}","",0)
-    am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}-%'","",0)
+    if amend_flag['msg']['amend_flag']=='Y':
+        txt = str(parent_po['msg']['po_no'])
+        x = txt.split("-")
+        joined_string = "-".join(x[:-1])
+        print('joined string',joined_string,amend_flag)
+    # am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}-%'","",0) if amend_flag['msg']['amend_flag']=='N' else await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{joined_string}-%'","",0)
+    am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}-%'","",0) 
     print(am_po_row['msg']['po_no'], '-----------------------')
-    am_po_no = f'{parent_po['msg']['po_no']}-{str(am_po_row['msg']['po_no']).split('.')[0]}'
+    am_po_no = f'{parent_po['msg']['po_no']}-{str(am_po_row['msg']['po_no']).split('.')[0]}' if amend_flag['msg']['amend_flag']=='N' else f'{joined_string}-{str(am_po_row['msg']['po_no']).split('.')[0]}'
     # am_po_no = await db_select(f"CONCAT((SELECT po_no FROM td_po_basic WHERE sl_no = {data.id}), '-', IF(LENGTH(po_no)-LENGTH(replace(po_no,'-',''))> 1, MAX(SUBSTRING_INDEX(po_no, '-', -1))+1, 1)) am_po", "td_po_basic", f"SUBSTRING_INDEX(po_no, '-', 2) = (SELECT po_no FROM td_po_basic WHERE sl_no = {data.id})", "", 0)
 
     print('am_po_no',am_po_no)
