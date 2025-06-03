@@ -100,7 +100,9 @@ async def addpoamend(data:GetPo):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     po_dt = current_datetime.strftime("%Y-%m-%d")
-    parent_po = await db_select("po_no","td_po_basic", f"sl_no = {data.id}","",0)
+    amend_flag = await db_select("amend_flag","td_po_basic", f"sl_no = {data.id}","",0)
+
+    parent_po = await db_select("po_no","td_po_basic", f"sl_no = {data.id}","",0) if amend_flag['msg']['amend_flag']=='N' else await db_select("parent_po_no as po_no","td_po_basic", f"sl_no = {data.id}","",0)
     am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}-%'","",0)
     print(am_po_row['msg']['po_no'], '-----------------------')
     am_po_no = f'{parent_po['msg']['po_no']}-{str(am_po_row['msg']['po_no']).split('.')[0]}'
