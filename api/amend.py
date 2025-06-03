@@ -152,5 +152,5 @@ async def addpoamend(data:GetPo):
     # am_po_no = await db_select(f"CONCAT((SELECT po_no FROM td_po_basic WHERE sl_no = {data.id}), '-', IF(LENGTH(po_no)-LENGTH(replace(po_no,'-',''))> 1, MAX(SUBSTRING_INDEX(po_no, '-', -1))+1, 1)) am_po", "td_po_basic", f"SUBSTRING_INDEX(po_no, '-', 2) = (SELECT po_no FROM td_po_basic WHERE sl_no = {data.id})", "", 0)
 
     print('am_po_no',am_po_no)
-    return am_po_no
+    return am_po_no,am_po_row
 
