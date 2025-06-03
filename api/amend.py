@@ -108,7 +108,7 @@ async def addpoamend(data:GetPo):
         x = txt.split("-")
         joined_string = "-".join(x[:-1])
         print('joined string',joined_string,amend_flag)
-    am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}-%'","",0) if amend_flag['msg']['amend_flag']=='N' else await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{joined_string}%'","",0)
+    am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}-%'","",0) if amend_flag['msg']['amend_flag']=='N' else await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{joined_string}-%'","",0)
     print(am_po_row['msg']['po_no'], '-----------------------')
     # if amend_flag['msg']['amend_flag']=='Y':
     #     txt = str(parent_po['msg']['po_no'])
