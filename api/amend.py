@@ -104,7 +104,7 @@ async def addpoamend(data:GetPo):
     parent_po = await db_select("po_no","td_po_basic", f"sl_no = {data.id}","",0) 
     am_po_row = await db_select("ifnull(MAX(SUBSTRING_INDEX(po_no, '-', -1))+1,1) po_no","td_po_basic", f"po_no like '{parent_po['msg']['po_no']}-%'","",0)
     print(am_po_row['msg']['po_no'], '-----------------------')
-    if amend_flag=='Y':
+    if amend_flag['msg']['amend_flag']=='Y':
         txt = str(parent_po['msg']['po_no'])
         x = txt.split("-")
         joined_string = "-".join(x[:-1])
