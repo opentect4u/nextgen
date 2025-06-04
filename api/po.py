@@ -4775,20 +4775,22 @@ async def getParentPoDate(proj_no:ProjNo):
     order1 = ""
     flag1 = 1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
+    if len(result1['msg']):
+        select2 = "proj_manager"
+        schema2 = "td_project_assign"
+        where2 = f"proj_id='{result1['msg'][0]['proj_id']}'"
+        order2 = ""
+        flag2 = 1
+        result2 = await db_select(select2, schema2, where2, order2, flag2)
 
-    select2 = "proj_manager"
-    schema2 = "td_project_assign"
-    where2 = f"proj_id='{result1['msg'][0]['proj_id']}'"
-    order2 = ""
-    flag2 = 1
-    result2 = await db_select(select2, schema2, where2, order2, flag2)
-
-    select3 = "user_email"
-    schema3 = "md_user"
-    where3 = f"sl_no='{result2['msg'][0]['proj_manager']}'"
-    order3 = ""
-    flag3 = 1
-    result3 = await db_select(select3, schema3, where3, order3, flag3)
+        select3 = "user_email"
+        schema3 = "md_user"
+        where3 = f"sl_no='{result2['msg'][0]['proj_manager']}'"
+        order3 = ""
+        flag3 = 1
+        result3 = await db_select(select3, schema3, where3, order3, flag3)
+    else:
+        result3=result1
     
     return result3
 
