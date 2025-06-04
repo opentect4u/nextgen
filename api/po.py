@@ -60,6 +60,21 @@ class payTerms(BaseModel):
 class PrevDelNo(BaseModel):
     po_no:str
     item_id:int
+class SiemensData(BaseModel):
+    po_no:str
+    proj_id:str
+    prod_id:str
+    order_qty:int
+    approved_qty:int
+    po_issue_dt:str
+    po_approve_dt:str
+    sie_sale_ord:str
+    customer_no:str
+    net_price:float
+    total_price:float
+
+class SiemensInput(BaseModel):
+    items:list[SiemensData]
 
 class PurNo(BaseModel):
     pur_no:str
@@ -4807,6 +4822,20 @@ async def getParentPoDate(po_no:GetPurchaseMrn):
     
     return result1
 
+@poRouter.post('/get_fresh_flag')
+async def getParentPoDate(items:SiemensInput):
+    for c in items.items:
+                fields1= f'po_no,proj_id,prod_id,order_qty,approved_qty,po_issue_dt,po_approve_dt,sie_sale_ord,customer_no,net_price,total_price'
+                values1 = f'"{c.po_no}","{c.prod_id}","{c.order_qty}","{c.approved_qty}","{c.po_issue_dt}","{c.po_approve_dt}","{c.sie_sale_ord}","{c.customer_no}","{c.net_price}","{c.total_price}"'
+                table_name1 = "td_siemens_log"
+                whr1=   None
+                flag1 = 1 if c.sl_no>0 else 0
+                result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                item_save=1 if result1['suc']>0 else 0
+    if item_save ==  1:
+        return {'suc':1,'msg':'Saved Successfully!!'}
+    else:
+        return {'suc':0,'msg':'Error saving!!'}
 
 
 
