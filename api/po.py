@@ -64,6 +64,9 @@ class PrevDelNo(BaseModel):
 class PurNo(BaseModel):
     pur_no:str
 
+class ProjNo(BaseModel):
+    proj_no:str
+
 class PoModel(BaseModel):
     sl_no:Optional[int]=None
     po_id:Optional[Union[str,None]]=None
@@ -4762,6 +4765,32 @@ async def getParentPoDate(pur_no:PurNo):
     print(result1, 'RESULT1')
     
     return result1
+
+@poRouter.post('/get_proj_by')
+async def getParentPoDate(proj_no:ProjNo):
+    res_dt = {}
+    select1 = "proj_id"
+    schema1 = "td_project"
+    where1 = f"sl_no='{proj_no.proj_no}'"
+    order1 = ""
+    flag1 = 1
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+
+    select2 = "proj_manager"
+    schema2 = "td_project_assign"
+    where2 = f"proj_id='{result1['msg'][0]['proj_no']}'"
+    order2 = ""
+    flag2 = 1
+    result2 = await db_select(select2, schema2, where2, order2, flag2)
+
+    select3 = "user_email"
+    schema3 = "md_user"
+    where3 = f"sl_no='{result2['msg'][0]['proj_manager']}'"
+    order3 = ""
+    flag3 = 1
+    result3 = await db_select(select3, schema3, where3, order3, flag3)
+    
+    return result3
 
 @poRouter.post('/get_fresh_flag')
 async def getParentPoDate(po_no:GetPurchaseMrn):
