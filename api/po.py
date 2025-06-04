@@ -4778,7 +4778,7 @@ async def getParentPoDate(proj_no:ProjNo):
 
     select2 = "proj_manager"
     schema2 = "td_project_assign"
-    where2 = f"proj_id='{result1['msg'][0]['proj_no']}'"
+    where2 = f"proj_id='{result1['msg'][0]['proj_id']}'"
     order2 = ""
     flag2 = 1
     result2 = await db_select(select2, schema2, where2, order2, flag2)
