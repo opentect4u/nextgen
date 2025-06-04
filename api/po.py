@@ -4822,7 +4822,7 @@ async def getParentPoDate(po_no:GetPurchaseMrn):
     
     return result1
 
-@poRouter.post('/get_fresh_flag')
+@poRouter.post('/post_siemens')
 async def getParentPoDate(items:SiemensInput):
     for c in items.items:
                 fields1= f'po_no,proj_id,prod_id,order_qty,approved_qty,po_issue_dt,po_approve_dt,sie_sale_ord,customer_no,net_price,total_price'
