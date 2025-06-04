@@ -4829,7 +4829,7 @@ async def getParentPoDate(items:SiemensInput):
                 values1 = f'"{c.po_no}","{c.prod_id}","{c.order_qty}","{c.approved_qty}","{c.po_issue_dt}","{c.po_approve_dt}","{c.sie_sale_ord}","{c.customer_no}","{c.net_price}","{c.total_price}"'
                 table_name1 = "td_siemens_log"
                 whr1=   None
-                flag1 = 1 if c.sl_no>0 else 0
+                flag1 =  0
                 result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
                 item_save=1 if result1['suc']>0 else 0
     if item_save ==  1:
