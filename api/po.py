@@ -4831,6 +4831,7 @@ async def getParentPoDate(items:SiemensInput):
                 whr1=None
                 flag1 =  0
                 result1 = await db_Insert(table_name1, fields1, values1, whr1, flag1)
+                print(result1)
                 item_save=1 if result1['suc']>0 else 0
     if item_save ==  1:
         return {'suc':1,'msg':'Saved Successfully!!'}
