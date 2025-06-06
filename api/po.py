@@ -4874,7 +4874,7 @@ async def getcategory(id:GetRows):
     schema = "td_siemens_details d join td_project pr on d.proj_id=pr.sl_no,(SELECT @a:= 0) AS a"
     where = f"d.sl_no='{id.id}'" if id.id>0 else f""
     order = ""
-    flag = 0 if id.id>0 else 1
+    flag = 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
