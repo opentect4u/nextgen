@@ -4868,9 +4868,7 @@ async def getcategory(id:GetRows):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
-    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number, d.sl_no,d.po_no, CONCAT(pr.proj_name,'(ID: ',pr.proj_id,')'), 'A' as po_status,'Siemens' as vendor_name"
-    # select = "@a:=@a+1 serial_number, *"
+    select = "@a:=@a+1 serial_number, d.sl_no,d.po_no, CONCAT(pr.proj_name,'(ID: ',pr.proj_id,')') as proj_name, 'A' as po_status,'Siemens' as vendor_name"
     schema = "td_siemens_details d join td_project pr on d.proj_id=pr.sl_no,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f""
     order = ""
