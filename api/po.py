@@ -4850,8 +4850,8 @@ async def getParentPoDate(items:SiemensInput):
                     result = await db_Insert(table_name, fields, values, whr, flag)
                     print(result)
 
-                fields1= f'po_no,order_dt,line_no,proj_id,mfn,customer_article_no,delivery_no,prod_id,order_qty,approved_qty,shipped_qty,po_issue_dt,status,po_approve_dt,shipped_dt,sie_sale_ord,customer_no,net_price,total_price,list_price'
-                values1 = f'"{c.po_no}","{c.order_dt}",{c.line_no},"{c.proj_id}","{c.mfn}","{c.customer_article_no}","{c.delivery_no}","{c.prod_id}",{c.order_qty},{c.approved_qty},{c.shipped_qty},"{c.po_issue_dt}","{c.status}","{c.po_approve_dt}","{c.shipped_dt}","{c.sie_sale_ord}","{c.customer_no}",{c.net_price},{c.total_price},{c.list_price}'
+                fields1= f'po_no,order_dt,line_no,proj_id,mfn,customer_article_no,delivery_no,prod_id,order_qty,approved_qty,shipped_qty,po_issue_dt,status,po_approve_dt,shipped_dt,sie_sale_ord,customer_no,net_price,total_price,list_price,parent_id'
+                values1 = f'"{c.po_no}","{c.order_dt}",{c.line_no},"{c.proj_id}","{c.mfn}","{c.customer_article_no}","{c.delivery_no}","{c.prod_id}",{c.order_qty},{c.approved_qty},{c.shipped_qty},"{c.po_issue_dt}","{c.status}","{c.po_approve_dt}","{c.shipped_dt}","{c.sie_sale_ord}","{c.customer_no}",{c.net_price},{c.total_price},{c.list_price},{result['lastId']}'
                 table_name1 = "td_siemens_log"
                 whr1=None
                 flag1 =  0
