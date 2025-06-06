@@ -4878,6 +4878,20 @@ async def getcategory(id:GetRows):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@poRouter.post('/getsiemensrow')
+async def getcategory(id:GetRows):
+    print('I am logging in!')
+    print(id.id)
+    res_dt = {}
+    select = "*"
+    schema = "td_siemens_log"
+    where = f"parent_id='{id.id}'"
+    order = ""
+    flag = 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
     
 
   
