@@ -63,8 +63,13 @@ class PrevDelNo(BaseModel):
 class SiemensData(BaseModel):
     po_no:str
     proj_id:str
+    line_no:int
+    mfn:str
     prod_id:str
+    customer_article_no:str
+    delivery_no:str
     order_qty:int
+    shipped_qty:int
     approved_qty:int
     po_issue_dt:str
     po_approve_dt:str
@@ -72,6 +77,9 @@ class SiemensData(BaseModel):
     customer_no:str
     net_price:float
     total_price:float
+    status:str
+    shipped_dt:str
+    list_price:float
 
 class SiemensInput(BaseModel):
     items:list[SiemensData]
@@ -4825,8 +4833,8 @@ async def getParentPoDate(po_no:GetPurchaseMrn):
 @poRouter.post('/post_siemens')
 async def getParentPoDate(items:SiemensInput):
     for c in items.items:
-                fields1= f'po_no,proj_id,prod_id,order_qty,approved_qty,po_issue_dt,po_approve_dt,sie_sale_ord,customer_no,net_price,total_price'
-                values1 = f'"{c.po_no}","{c.proj_id}","{c.prod_id}",{c.order_qty},{c.approved_qty},"{c.po_issue_dt}","{c.po_approve_dt}","{c.sie_sale_ord}","{c.customer_no}",{c.net_price},{c.total_price}'
+                fields1= f'po_no,line_no,proj_id,mfn,customer_article_no,delivery_no,prod_id,order_qty,approved_qty,shipped_qty,po_issue_dt,status,po_approve_dt,shipped_dt,sie_sale_ord,customer_no,net_price,total_price,list_price'
+                values1 = f'"{c.po_no}",{c.line_no},"{c.proj_id}","{c.mfn}","{c.customer_article_no}","{c.delivery_no}","{c.prod_id}",{c.order_qty},{c.approved_qty},{c.shipped_qty},"{c.po_issue_dt}","{c.status}","{c.po_approve_dt}","{c.shipped_dt}","{c.sie_sale_ord}","{c.customer_no}",{c.net_price},{c.total_price},{c.shipped_price}'
                 table_name1 = "td_siemens_log"
                 whr1=None
                 flag1 =  0
