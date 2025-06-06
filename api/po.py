@@ -86,6 +86,7 @@ class SiemensData(BaseModel):
 
 class SiemensInput(BaseModel):
     items:list[SiemensData]
+    user:str
 
 class PurNo(BaseModel):
     pur_no:str
@@ -4836,12 +4837,13 @@ async def getParentPoDate(po_no:GetPurchaseMrn):
 @poRouter.post('/post_siemens')
 async def getParentPoDate(items:SiemensInput):
     print(items.items)
-    
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     count = 0
     for c in items.items:
                 if count == 0:
-                    fields= f'po_no,proj_id'
-                    values = f'"{c.po_no}","{c.proj_id}"'
+                    fields= f'po_no,proj_id,created_by,created_at'
+                    values = f'"{c.po_no}","{c.proj_id}","{items.user}","{formatted_dt}"'
                     table_name = "td_siemens_details"
                     whr=None
                     flag =  0
@@ -4868,7 +4870,7 @@ async def getcategory(id:GetRows):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
-    select = "@a:=@a+1 serial_number, d.sl_no,d.po_no, pr.proj_name,pr.proj_id, 'A' as po_status,'Siemens' as vendor_name"
+    select = "@a:=@a+1 serial_number, d.sl_no,d.po_no,d.created_by, pr.proj_name,pr.proj_id, 'A' as po_status,'Siemens' as vendor_name"
     schema = "td_siemens_details d join td_project pr on d.proj_id=pr.sl_no,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f""
     order = ""
