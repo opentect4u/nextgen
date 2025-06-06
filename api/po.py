@@ -4835,12 +4835,11 @@ async def getParentPoDate(po_no:GetPurchaseMrn):
 async def getParentPoDate(items:SiemensInput):
     fields= f'po_no,proj_id'
     values = f'"{items.items[0]['po_no']}","{items.items[0]['proj_id']}"'
-    table_name = "td_siemens"
+    table_name = "td_siemens_detail"
     whr=None
     flag =  0
     result = await db_Insert(table_name, fields, values, whr, flag)
     print(result)
-    # item_save=1 if result1['suc']>0 else 0
     for c in items.items:
                 fields1= f'po_no,order_dt,line_no,proj_id,mfn,customer_article_no,delivery_no,prod_id,order_qty,approved_qty,shipped_qty,po_issue_dt,status,po_approve_dt,shipped_dt,sie_sale_ord,customer_no,net_price,total_price,list_price'
                 values1 = f'"{c.po_no}","{c.order_dt}",{c.line_no},"{c.proj_id}","{c.mfn}","{c.customer_article_no}","{c.delivery_no}","{c.prod_id}",{c.order_qty},{c.approved_qty},{c.shipped_qty},"{c.po_issue_dt}","{c.status}","{c.po_approve_dt}","{c.shipped_dt}","{c.sie_sale_ord}","{c.customer_no}",{c.net_price},{c.total_price},{c.list_price}'
