@@ -52,7 +52,9 @@ class prodDetails(BaseModel):
     delivery_date:Optional[Union[str,None]]=None
     delivery_to:Optional[Union[str,None]]=None
     currency:Optional[Union[str,None]]=None
-     
+
+class GetRows(BaseModel):
+    id:int  
 class payTerms(BaseModel):
     sl_no:Optional[int]=None
     stage:Optional[Union[str,None]]=None
@@ -4861,7 +4863,21 @@ async def getParentPoDate(items:SiemensInput):
         return {'suc':0,'msg':'Error saving!!'}
 
 
-
+@poRouter.post('/getsiemens')
+async def getcategory(id:GetRows):
+    print('I am logging in!')
+    print(id.id)
+    res_dt = {}
+    # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
+    select = "@a:=@a+1 serial_number, po_no, proj_id"
+    # select = "@a:=@a+1 serial_number, *"
+    schema = "td_siemens_details,(SELECT @a:= 0) AS a"
+    where = f"sl_no='{id.id}'" if id.id>0 else f""
+    order = ""
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    print(result, 'RESULT')
+    return result
     
 
   
