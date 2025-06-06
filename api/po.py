@@ -4869,7 +4869,7 @@ async def getcategory(id:GetRows):
     print(id.id)
     res_dt = {}
     # SELECT @a:=@a+1 serial_number, busi_act_name FROM md_busi_act, (SELECT @a:= 0) AS a
-    select = "@a:=@a+1 serial_number, po_no, proj_id, 'A' as po_status"
+    select = "@a:=@a+1 serial_number, po_no, proj_id as proj_name, 'A' as po_status"
     # select = "@a:=@a+1 serial_number, *"
     schema = "td_siemens_details,(SELECT @a:= 0) AS a"
     where = f"sl_no='{id.id}'" if id.id>0 else f""
