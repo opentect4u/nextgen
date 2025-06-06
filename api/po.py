@@ -4833,6 +4833,7 @@ async def getParentPoDate(po_no:GetPurchaseMrn):
 
 @poRouter.post('/post_siemens')
 async def getParentPoDate(items:SiemensInput):
+    print(items.items)
     fields= f'po_no,proj_id'
     values = f'"{items.items[0]['po_no']}","{items.items[0]['proj_id']}"'
     table_name = "td_siemens_details"
