@@ -4835,7 +4835,7 @@ async def getParentPoDate(po_no:GetPurchaseMrn):
 async def getParentPoDate(items:SiemensInput):
     fields= f'po_no,proj_id'
     values = f'"{items.items[0]['po_no']}","{items.items[0]['proj_id']}"'
-    table_name = "td_siemens_detail"
+    table_name = "td_siemens_details"
     whr=None
     flag =  0
     result = await db_Insert(table_name, fields, values, whr, flag)
