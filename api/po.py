@@ -4892,6 +4892,17 @@ async def getcategory(id:GetRows):
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
     return result
+
+@poRouter.post('/check_duplicate_po')
+async def checkduplicate(id:GetPur):
+    select = "count(*)"
+    schema = "td_siemens_details"
+    where =  f'po_no="{id.id}"'
+    order = ""
+    flag = 1
+    result = await db_select(select,schema,where,order,flag)
+    print(result)
+    return result
     
 
   
