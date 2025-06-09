@@ -4895,7 +4895,7 @@ async def getcategory(id:GetRows):
 
 @poRouter.post('/check_duplicate_po')
 async def checkduplicate(id:GetPur):
-    select = "count(*)"
+    select = "count(*) as cnt"
     schema = "td_siemens_details"
     where =  f'po_no="{id.id}"'
     order = ""
