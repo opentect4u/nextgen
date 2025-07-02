@@ -805,7 +805,6 @@ async def save_trans(data:GetApproveItems):
                     flag_stck = 0 
                     result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
                     
-                    # print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
 
 
                     select_stck2 = f"balance"
