@@ -4061,7 +4061,7 @@ async def approvepo(id:approveMRN):
             
                 print(result_stck,result_stck1)
             
-            if result_stck['msg']['max_sl']:
+            if result_stck1['msg']['max_sl']:
                  select_stck2 = f"balance,count(balance) as cnt"
                  schema_stck2 = "td_stock_new"
                  where_stck2= f"proj_id=(SELECT project_id FROM td_po_basic WHERE po_no='{id.po_no}') and item_id='{i.item_id}' and date='{result_stck['msg']['max_dt']}' and sl_no='{result_stck1['msg']['max_sl']}'" 
