@@ -4038,12 +4038,12 @@ async def approvepo(id:approveMRN):
        for i in id.items:
             # =========================================
 
-            select_stck = f"max(date) as max_dt"
-            schema_stck = "td_stock_new"
-            where_stck= f"proj_id=(SELECT project_id FROM td_po_basic WHERE po_no='{id.po_no}') and item_id='{i.item_id}'" 
-            order_stck = ""
-            flag_stck = 0 
-            result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+            # select_stck = f"max(date) as max_dt"
+            # schema_stck = "td_stock_new"
+            # where_stck= f"proj_id=(SELECT project_id FROM td_po_basic WHERE po_no='{id.po_no}') and item_id='{i.item_id}'" 
+            # order_stck = ""
+            # flag_stck = 0 
+            # result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
 
             select_stck1 = f"max(sl_no) as max_sl"
             schema_stck1 = "td_stock_new"
@@ -4052,6 +4052,13 @@ async def approvepo(id:approveMRN):
             flag_stck1 = 0 
             result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
 
+            select_stck = f"max(date) as max_dt"
+            schema_stck = "td_stock_new"
+            where_stck= f"proj_id=(SELECT project_id FROM td_po_basic WHERE po_no='{id.po_no}') and item_id='{i.item_id}' and sl_no={result_stck1['msg']['max_sl']}" 
+            order_stck = ""
+            flag_stck = 0 
+            result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+            
             print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
 
             if result_stck['msg']['max_dt'] and result_stck1['msg']['max_sl']:
