@@ -734,12 +734,12 @@ async def save_trans(data:GetApproveItems):
 
                 # ======================================================
 
-                    select_stck = f"max(date) as max_dt"
-                    schema_stck = "td_stock_new"
-                    where_stck= f"proj_id='{data.to_proj_id}' and item_id='{i.item_id}'" 
-                    order_stck = ""
-                    flag_stck = 0 
-                    result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+                    # select_stck = f"max(date) as max_dt"
+                    # schema_stck = "td_stock_new"
+                    # where_stck= f"proj_id='{data.to_proj_id}' and item_id='{i.item_id}'" 
+                    # order_stck = ""
+                    # flag_stck = 0 
+                    # result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
 
                     select_stck1 = f"max(sl_no) as max_sl"
                     schema_stck1 = "td_stock_new"
@@ -747,7 +747,8 @@ async def save_trans(data:GetApproveItems):
                     order_stck1 = ""
                     flag_stck1 = 0 
                     result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
-
+                      
+                    
                     print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
 
                     if result_stck['msg']['max_dt'] and result_stck1['msg']['max_sl']:
@@ -776,12 +777,12 @@ async def save_trans(data:GetApproveItems):
 
                         res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
                     
-                    select_stck = f"max(date) as max_dt"
-                    schema_stck = "td_stock_new"
-                    where_stck= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
-                    order_stck = ""
-                    flag_stck = 0 
-                    result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+                    # select_stck = f"max(date) as max_dt"
+                    # schema_stck = "td_stock_new"
+                    # where_stck= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}'" 
+                    # order_stck = ""
+                    # flag_stck = 0 
+                    # result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
 
                     select_stck1 = f"max(sl_no) as max_sl"
                     schema_stck1 = "td_stock_new"
@@ -790,6 +791,13 @@ async def save_trans(data:GetApproveItems):
                     flag_stck1 = 0 
                     result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
 
+                    select_stck = f"max(date) as max_dt"
+                    schema_stck = "td_stock_new"
+                    where_stck= f"proj_id='{data.from_proj_id}' and item_id='{i.item_id}' and sl_no={result_stck1['msg']['max_sl']}" 
+                    order_stck = ""
+                    flag_stck = 0 
+                    result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+                    
                     print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
 
 
@@ -1022,12 +1030,12 @@ async def save_stock_out(data:StockOutList):
         formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
         
         for i in data.items:
-            select_stck = f"max(date) as max_dt"
-            schema_stck = "td_stock_new"
-            where_stck= f"proj_id='{data.proj_id}' and item_id='{i.id}'" 
-            order_stck = ""
-            flag_stck = 0 
-            result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+            # select_stck = f"max(date) as max_dt"
+            # schema_stck = "td_stock_new"
+            # where_stck= f"proj_id='{data.proj_id}' and item_id='{i.id}'" 
+            # order_stck = ""
+            # flag_stck = 0 
+            # result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
 
             select_stck1 = f"max(sl_no) as max_sl"
             schema_stck1 = "td_stock_new"
@@ -1036,6 +1044,13 @@ async def save_stock_out(data:StockOutList):
             flag_stck1 = 0 
             result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
 
+            select_stck = f"max(date) as max_dt"
+            schema_stck = "td_stock_new"
+            where_stck= f"proj_id='{data.proj_id}' and item_id='{i.id}' and sl_no = {result_stck1['msg']['max_sl']}" 
+            order_stck = ""
+            flag_stck = 0 
+            result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+            
             print(result_stck['msg']['max_dt'],result_stck1['msg']['max_sl'])
 
 
