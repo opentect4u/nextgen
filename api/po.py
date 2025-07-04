@@ -755,7 +755,7 @@ async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
 
-    select =  "d.po_no,i.mrn_no,i.approve_flag,i.invoice,i.created_by"
+    select =  "i.parent_id as sl_no,d.po_no,i.mrn_no,i.approve_flag,i.invoice,i.created_by"
     schema = '''td_siemens_details d left join td_item_delivery_invoice i on i.po_no=d.po_no'''
     where = f""
     order = ""
