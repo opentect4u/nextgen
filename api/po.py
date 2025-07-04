@@ -2308,6 +2308,22 @@ async def getitemforedit(id:GetPo):
     # print(result, 'RESULT')
     return result
 
+
+@poRouter.post('/getsiemensitemforedit')
+async def getitemforedit(id:GetPo):
+
+    # print(id.id)
+    res_dt = {}
+
+    select = f"i.sl_no,i.parent_id as po_sl_no,i.prod_id as item_id,i.approved_qty as quantity,p.prod_name,p.part_no,p.model_no,p.article_no,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.prod_id and proj_id=b.proj_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.prod_id and proj_id='0') as warehouse_stock"
+    schema = "td_siemens_log i, td_siemens_details b, md_product p"
+    where = f"i.prod_id=p.sl_no and i.parent_id=b.sl_no and i.parent_id='{id.id}'" if id.id>0 else ""
+    order = ""
+    flag = 1 if id.id>0 else 0
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
+
 @poRouter.post('/deletecustomerdel')
 async def deletecustomerdel(po_no:DeleteDelivery):
         current_datetime = datetime.now()
