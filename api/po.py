@@ -755,16 +755,9 @@ async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
 
-    select =  "distinct @a:=@a+1 serial_number,b.po_no ,b.sl_no as po_id,t.latest_po_issue_dt as po_date,b.proj_id,p.proj_name,b.sl_no, (select count(*) from td_item_delivery_invoice where po_no = b.po_no) as invoice_count,inv.approve_flag,inv.invoice,inv.mrn_no"
-    schema = '''td_siemens_details b left join (
-  SELECT parent_id, MAX(po_issue_dt) AS latest_po_issue_dt
-  FROM td_siemens_log
-  GROUP BY parent_id
-) t ON b.sl_no = t.parent_id
-left join td_project p ON p.sl_no=b.proj_id
-left join td_item_delivery_invoice inv on b.po_no = inv.po_no
-join (SELECT @a:= 0) AS a '''
-    where = f"b.sl_no='{id.id}'" if id.id>0 else ""
+    select =  "d.po_no,i.mrn_no,i.approve_flag,i.invoice,i.created_by"
+    schema = '''td_siemens_details d left join td_item_delivery_invoice i on i.po_no=d.po_no'''
+    where = f""
     order = ""
     flag = 0 if id.id>0 else 1
     result = await db_select(select, schema, where, order, flag)
