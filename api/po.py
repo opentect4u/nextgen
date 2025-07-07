@@ -3319,7 +3319,7 @@ async def req_item_dtls(data:MrnId):
 @poRouter.post('/get_received_items_siemens')
 async def req_item_dtls(data:MrnId):
     select = "i.sl_no,i.parent_id as po_sl_no,i.prod_id,i.approved_qty as quantity,p.prod_name,p.part_no,p.article_no,p.model_no,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,t.approve_flag,t.invoice_dt,d.mrn_no,d.created_at,d.created_by"
-    schema = "td_siemens_log i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_item_delivery_invoice t on d.invoice=t.invoice "
+    schema = "td_siemens_log i left join md_product p on i.prod_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_item_delivery_invoice t on d.invoice=t.invoice "
     where = f"i.parent_id='{data.id}' and d.invoice='{data.invoice}' and d.delete_flag='N'" 
     order = ""
     flag = 1 
