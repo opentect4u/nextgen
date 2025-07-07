@@ -3178,7 +3178,7 @@ async def item_dtls(data:ProjId):
     flag2 = 1 
     res_dt2 = await db_select(select2,table2,where2,order2,flag2)
 
-    res_dt = res_dt1 + res_dt2
+    res_dt = [res_dt1, res_dt2]
     return res_dt
 
 @poRouter.post("/item_dtls_trans")
@@ -3386,7 +3386,7 @@ async def get_item_dtls(data:ProjId):
     flag2= 1 
     result2 = await db_select(select2, schema2, where2, order2, flag2)
 
-    result = result1+result2
+    result = [result1, result2]
         
     return result
 
