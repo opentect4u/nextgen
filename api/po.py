@@ -3380,7 +3380,7 @@ async def get_item_dtls(data:ProjId):
     result1 = await db_select(select1, schema1, where1, order1, flag1)
 
     select2 = f"b.sl_no,b.proj_id as project_id,b.po_no,c.parent_id as po_sl_no,c.approved_qty as quantity,c.prod_id as item_id,p.prod_name,c.sl_no as po_item_no,d.mrn_no,d.rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.prod_id and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.prod_id and proj_id='0') as warehouse_stock"
-    schema2 = "td_siemens_details b LEFT JOIN td_siemens_log c on c.parent_id = b.sl_no left join md_product p on c.prod_id=p.sl_no left join td_item_delivery_details d on d.item_id=c.prod_id"
+    schema2 = "td_siemens_details b LEFT JOIN td_siemens_log c on c.parent_id = b.sl_no left join md_product p on c.prod_id=p.sl_no left join td_item_delivery_details d on d.prod_id=c.prod_id"
     where2 = f"b.proj_id={data.Proj_id}"
     order2 = ""
     flag2= 1 
