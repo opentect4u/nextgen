@@ -2162,8 +2162,25 @@ async def adddelivery(data:getDelivery):
     
     for i in data.items:
         if i.rc_qty>0:
+                select1 = "count(*) as count"
+                schema1 = "td_item_delivery_details"
+                where1 = f"item_id='{i.item_id}'"
+                order1 = ""
+                flag1 = 0 
+                result1 = await db_select(select1, schema1, where1, order1, flag1)
+
+                select2 = "count(*) as rows"
+                schema2 = "td_item_delivery_details"
+                where2 = f""
+                order2 = ""
+                flag2 = 0 
+                result2 = await db_select(select2, schema2, where2, order2, flag2)
+
+                limit = i.item_id if result1['msg'][0]['count']==0 else result2['msg'][0]['rows']+1
+
+
                 fields= f'mrn_no,invoice,del_last_id,prod_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
-                values = f'"MRN-{data.invoice}","{data.invoice}","{lastID}","{i.prod_id}","{i.item_id}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}","{data.po_no}","{data.user}","{formatted_dt}"'
+                values = f'"MRN-{data.invoice}","{data.invoice}","{lastID}","{i.prod_id}","{limit}","{i.rc_qty}","{i.quantity}","{i.sl}","{i.remarks}","{data.po_no}","{data.user}","{formatted_dt}"'
                 table_name = "td_item_delivery_details"
                 whr=f""
                 flag1 =  0
