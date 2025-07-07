@@ -3386,7 +3386,7 @@ async def get_item_dtls(data:ProjId):
     flag2= 1 
     result2 = await db_select(select2, schema2, where2, order2, flag2)
 
-    result = {'suc':1,'msg':result1['msg']+result2['msg']}
+    result = {'suc':1,'msg':result1['msg']+result2['msg'],'sql':result2}
         
     return result
 
