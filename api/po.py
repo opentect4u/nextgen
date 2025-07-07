@@ -2176,6 +2176,7 @@ async def adddelivery(data:getDelivery):
                 flag2 = 0 
                 result2 = await db_select(select2, schema2, where2, order2, flag2)
                 # print(res)
+                print(result1,result2)
 
                 limit = i.item_id if result1['msg']['count']==0 else result2['msg']['rows']+1
 
