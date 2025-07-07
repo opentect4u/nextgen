@@ -3172,7 +3172,7 @@ async def item_dtls(data:ProjId):
 
 
     select2 = f"c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.rc_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(req_qty) from td_requisition_items where project_id={data.Proj_id} and item_id=d.item_id) as tot_req,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1 and ref_no not like '%T%') as tot_del"
-    table2 = "td_siemens_details a, md_product c LEFT JOIN td_siemens_log d ON c.sl_no=d.prod_id LEFT JOIN td_item_delivery_details b ON d.sl_no=b.item_id"
+    table2 = "td_siemens_details a, md_product c LEFT JOIN td_siemens_log d ON c.sl_no=d.prod_id LEFT JOIN td_item_delivery_details b ON d.sl_no=b.prod_id"
     where2 = f"a.po_no=b.po_no and a.project_id={data.Proj_id} group by prod_id"
     order2 = ""
     flag2 = 1 
