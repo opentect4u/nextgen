@@ -3315,6 +3315,17 @@ async def req_item_dtls(data:MrnId):
     result = await db_select(select, schema, where, order, flag)
     return result
 
+
+@poRouter.post('/get_received_items_siemens')
+async def req_item_dtls(data:MrnId):
+    select = "i.sl_no,i.parent_id as po_sl_no,i.prod_id,i.approved_qty as quantity,p.prod_name,p.part_no,p.article_no,p.model_no,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,t.approve_flag,t.invoice_dt,d.mrn_no,d.created_at,d.created_by"
+    schema = "td_siemens_log i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_item_delivery_invoice t on d.invoice=t.invoice "
+    where = f"i.parent_id='{data.id}' and d.invoice='{data.invoice}' and d.delete_flag='N'" 
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
 # @poRouter.post('/get_item_dtls')
 # async def get_item_dtls(data:ProjId):
 #     select = "b.sl_no,b.project_id,b.po_no,c.po_sl_no,c.quantity,c.item_id,p.prod_name,c.sl_no as po_item_no,d.mrn_no,d.rc_qty"
