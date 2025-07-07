@@ -4197,6 +4197,87 @@ async def approvepo(id:approveMRN):
     return res_dt
 
 
+@poRouter.post('/approvemrnsiemens')
+async def approvepo(id:approveMRN):
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    fields= f'approve_flag="{id.status}",modified_by="{id.user}",rejection_note="{id.rej_note}",modified_at="{formatted_dt}"'
+    values = f''
+    table_name = "td_item_delivery_invoice"
+    whr = f'invoice="{id.inv_no}" and po_no="{id.po_no}"'
+    flag = 1 
+    stock_save = 0
+    result = await db_Insert(table_name, fields, values, whr, flag)
+
+    if id.status == 'A':
+       for i in id.items:
+            # =========================================
+
+            # select_stck = f"max(date) as max_dt"
+            # schema_stck = "td_stock_new"
+            # where_stck= f"proj_id=(SELECT project_id FROM td_po_basic WHERE po_no='{id.po_no}') and item_id='{i.item_id}'" 
+            # order_stck = ""
+            # flag_stck = 0 
+            # result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+
+            select_stck1 = f"max(sl_no) as max_sl"
+            schema_stck1 = "td_stock_new"
+            where_stck1= f"proj_id=(SELECT proj_id FROM td_siemens_details WHERE po_no='{id.po_no}') and item_id='{i.item_id}'" 
+            order_stck1 = ""
+            flag_stck1 = 0 
+            result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+            if result_stck1['msg']['max_sl']:
+                select_stck = f"max(date) as max_dt"
+                schema_stck = "td_stock_new"
+                where_stck= f"proj_id=(SELECT proj_id FROM td_siemens_details WHERE po_no='{id.po_no}') and item_id='{i.item_id}' and sl_no={result_stck1['msg']['max_sl']}" 
+                order_stck = ""
+                flag_stck = 0 
+                result_stck= await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
+            
+                print(result_stck,result_stck1)
+            
+            if result_stck1['msg']['max_sl']:
+                 select_stck2 = f"balance,count(balance) as cnt"
+                 schema_stck2 = "td_stock_new"
+                 where_stck2= f"proj_id=(SELECT proj_id FROM td_siemens_details WHERE po_no='{id.po_no}') and item_id='{i.item_id}' and date='{result_stck['msg']['max_dt']}' and sl_no='{result_stck1['msg']['max_sl']}'" 
+                 order_stck2 = ""
+                 flag_stck2 = 0 
+                 result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
+                 print(result_stck2)
+                 qty = result_stck2['msg']['balance'] + i.rc_qty 
+            else:
+                 qty=i.rc_qty
+
+
+            # =========================================
+            flds= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
+            val = f'"{id.invoice_dt}","MRN-{id.inv_no}",(SELECT proj_id FROM td_siemens_details WHERE po_no="{id.po_no}"),{i.item_id},{i.rc_qty},{id.in_out_flag},{qty},"{id.user}","{formatted_dt}"'
+            table = "td_stock_new"
+            whr=f""
+            flag2 =  0
+            result3 = await db_Insert(table, flds, val, whr, flag2)
+            if(result3['suc']>0): 
+                stock_save = 1
+                res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
+            else:
+                stock_save = 0
+
+                res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
+    else:
+       stock_save =1
+       res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+
+   
+    if result['suc'] and stock_save:
+        res_dt = {"suc": 1, "msg": f"Action Successful!","msg2":res_dt2}
+    else:
+        res_dt = {"suc": 0, "msg": f"Error while saving!" ,"msg2":res_dt2}
+  
+    return res_dt
+
+
+
 
 
       #     flds= f'date,ref_no,proj_id,po_item_id,item_id,qty,in_out_flag,created_by,created_at'
