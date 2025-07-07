@@ -3151,7 +3151,7 @@ async def addmin(data:GetPo):
    return result
 
 
-@poRouter.post("/item_dtls")
+@poRouter.post("/item_dtls1")
 async def item_dtls(data:ProjId):
     select = f"c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.rc_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(req_qty) from td_requisition_items where project_id={data.Proj_id} and item_id=d.item_id) as tot_req,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1 and ref_no not like '%T%') as tot_del"
     table = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_item_delivery_details b ON d.sl_no=b.item_id"
@@ -3159,6 +3159,26 @@ async def item_dtls(data:ProjId):
     order = ""
     flag = 1 
     res_dt = await db_select(select,table,where,order,flag)
+    return res_dt
+
+@poRouter.post("/item_dtls")
+async def item_dtls(data:ProjId):
+    select1 = f"c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.rc_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(req_qty) from td_requisition_items where project_id={data.Proj_id} and item_id=d.item_id) as tot_req,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1 and ref_no not like '%T%') as tot_del"
+    table1 = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_item_delivery_details b ON d.sl_no=b.item_id"
+    where1 = f"a.po_no=b.po_no and a.project_id={data.Proj_id} group by prod_id"
+    order1 = ""
+    flag1 = 1 
+    res_dt1 = await db_select(select1,table1,where1,order1,flag1)
+
+
+    select2 = f"c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.rc_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(req_qty) from td_requisition_items where project_id={data.Proj_id} and item_id=d.item_id) as tot_req,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1 and ref_no not like '%T%') as tot_del"
+    table2 = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_item_delivery_details b ON d.sl_no=b.item_id"
+    where2 = f"a.po_no=b.po_no and a.project_id={data.Proj_id} group by prod_id"
+    order2 = ""
+    flag2 = 1 
+    res_dt2 = await db_select(select2,table2,where2,order2,flag2)
+
+    res_dt = res_dt1 + res_dt2
     return res_dt
 
 @poRouter.post("/item_dtls_trans")
@@ -3339,7 +3359,7 @@ async def req_item_dtls(data:MrnId):
         
 #     return result
 
-@poRouter.post('/get_item_dtls')
+@poRouter.post('/get_item_dtls1')
 async def get_item_dtls(data:ProjId):
     select = f"b.sl_no,b.project_id,b.po_no,c.po_sl_no,c.quantity,c.item_id,p.prod_name,c.sl_no as po_item_no,d.mrn_no,d.rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id='0') as warehouse_stock"
     schema = "td_po_basic b LEFT JOIN td_po_items c on c.po_sl_no = b.sl_no left join md_product p on c.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=c.sl_no"
@@ -3347,9 +3367,29 @@ async def get_item_dtls(data:ProjId):
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
-
         
     return result
+
+@poRouter.post('/get_item_dtls')
+async def get_item_dtls(data:ProjId):
+    select1 = f"b.sl_no,b.project_id,b.po_no,c.po_sl_no,c.quantity,c.item_id,p.prod_name,c.sl_no as po_item_no,d.mrn_no,d.rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id='0') as warehouse_stock"
+    schema1 = "td_po_basic b LEFT JOIN td_po_items c on c.po_sl_no = b.sl_no left join md_product p on c.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=c.sl_no"
+    where1 = f"b.project_id={data.Proj_id}"
+    order1 = ""
+    flag1 = 1 
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+
+    select2 = f"b.sl_no,b.proj_id as project_id,b.po_no,c.parent_id as po_sl_no,c.approved_qty as quantity,c.prod_id as item_id,p.prod_name,c.sl_no as po_item_no,d.mrn_no,d.rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.prod_id and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.prod_id and proj_id='0') as warehouse_stock"
+    schema2 = "td_siemens_details b LEFT JOIN td_siemens_log c on c.parent_id = b.sl_no left join md_product p on c.prod_id=p.sl_no left join td_item_delivery_details d on d.item_id=c.prod_id"
+    where2 = f"b.proj_id={data.Proj_id}"
+    order2 = ""
+    flag2= 1 
+    result2 = await db_select(select2, schema2, where2, order2, flag2)
+
+    result = result1+result2
+        
+    return result
+
 
 
 @poRouter.post("/item_req_dtls")
