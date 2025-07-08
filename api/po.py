@@ -733,6 +733,35 @@ JOIN (
     return result
 
 
+@poRouter.post('/getsiemensfordelivery')
+async def getprojectpoc(id:GetPo):
+    # print(id.id)
+    res_dt = {}
+
+    select = " distinct @a:=@a+1 serial_number,b.po_no,'A' as po_status,'Siemens' as vendor_name,p.proj_name,p.proj_id,b.po_id,b.proj_id,p.proj_name, (select count(*) from td_item_delivery_invoice where po_no = b.po_no) as invoice_count"
+    schema = '''td_siemens_details b
+left join td_project p ON p.sl_no=b.project_id
+join (SELECT @a:= 0) AS a 
+JOIN (
+   SELECT d.po_no
+    FROM td_siemens_details d WHERE d.po_no is NOT null
+    HAVING (SELECT COUNT(*) FROM td_siemens_details e WHERE e.po_no LIKE CONCAT(d.po_no, '%')) = 1
+    UNION
+    SELECT MAX(po_no) po_no
+    FROM td_siemens_details
+    WHERE po_no is NOT null
+    GROUP BY SUBSTRING_INDEX(po_no,'-',1)
+) c ON c.po_no=b.po_no
+
+'''
+    where = f"b.sl_no='{id.id}'" if id.id>0 else ""
+    order = ""
+    flag = 0 if id.id>0 else 1
+    result = await db_select(select, schema, where, order, flag)
+    # print(result, 'RESULT')
+    return result
+
+
 @poRouter.post('/getdeliveryapproval')
 async def getprojectpoc(id:GetPo):
     # print(id.id)
