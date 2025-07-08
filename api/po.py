@@ -738,7 +738,7 @@ async def getprojectpoc(id:GetPo):
     # print(id.id)
     res_dt = {}
 
-    select = " distinct @a:=@a+1 serial_number,b.po_no,'A' as po_status,'Siemens' as vendor_name,p.proj_name,p.proj_id,b.proj_id,p.proj_name, (select count(*) from td_item_delivery_invoice where po_no = b.po_no) as invoice_count,b.created_by,b.created_at"
+    select = " distinct @a:=@a+1 serial_number,b.po_no,'A' as po_status,'Siemens' as vendor_name,p.proj_name,p.proj_id,b.proj_id,p.proj_name, (select count(*) from td_item_delivery_invoice where po_no = b.po_no) as invoice_count,b.created_by,b.created_at,b.sl_no"
     schema = '''td_siemens_details b
 left join td_project p ON p.sl_no=b.proj_id
 join (SELECT @a:= 0) AS a 
