@@ -2169,7 +2169,7 @@ async def adddelivery(data:getDelivery):
                 flag1 = 0 
                 result1 = await db_select(select1, schema1, where1, order1, flag1)
 
-                select2 = "count(*) as rows"
+                select2 = "count(*) as row_count"
                 schema2 = "td_item_delivery_details"
                 where2 = ""
                 order2 = ""
@@ -2178,7 +2178,7 @@ async def adddelivery(data:getDelivery):
                 # print(res)
                 print(result1,result2)
 
-                limit = i.item_id if result1['msg']['count']==0 else int(result2['msg']['rows'])+1
+                limit = i.item_id if result1['msg']['count']==0 else int(result2['msg']['row_count'])+1
 
 
                 fields= f'mrn_no,invoice,del_last_id,prod_id,item_id,rc_qty,quantity,sl,remarks,po_no,created_by,created_at'
