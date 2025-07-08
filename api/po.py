@@ -2171,7 +2171,7 @@ async def adddelivery(data:getDelivery):
 
                 select2 = "count(*) as rows"
                 schema2 = "td_item_delivery_details"
-                where2 = f""
+                where2 = ""
                 order2 = ""
                 flag2 = 0 
                 result2 = await db_select(select2, schema2, where2, order2, flag2)
