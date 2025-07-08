@@ -5105,7 +5105,7 @@ async def getcategory(id:GetRows):
     print(id.id)
     res_dt = {}
     select = "@a:=@a+1 serial_number, d.sl_no,d.po_no,d.proj_id as project_id,d.created_by,d.created_at, pr.proj_name,pr.proj_id, 'A' as po_status,'Siemens' as vendor_name"
-    schema = "td_siemens_details d join td_project pr on d.proj_id=pr.sl_no,(SELECT @a:= 0) AS a"
+    schema = "td_siemens_details d join td_project pr on d.proj_id=pr.sl_no or d.proj_id=0,(SELECT @a:= 0) AS a"
     where = f"d.sl_no='{id.id}'" if id.id>0 else f""
     order = "order by d.created_at desc"
     flag = 1
