@@ -2372,14 +2372,14 @@ async def getitemforedit(id:GetPoForTc):
 
 
 @poRouter.post('/getsiemensitemforedit')
-async def getitemforedit(id:GetPo):
+async def getitemforedit(id:GetPoForTc):
 
     # print(id.id)
     res_dt = {}
 
     select = f"i.sl_no,i.parent_id as po_sl_no,i.prod_id as item_id,i.approved_qty as quantity,p.prod_name,p.part_no,p.model_no,p.article_no,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.prod_id and proj_id=b.proj_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.prod_id and proj_id='0') as warehouse_stock"
     schema = "td_siemens_log i, td_siemens_details b, md_product p"
-    where = f"i.prod_id=p.sl_no and i.parent_id=b.sl_no and i.parent_id='{id.id}'" if id.id>0 else ""
+    where = f"i.prod_id=p.sl_no and i.parent_id=b.sl_no and i.parent_id='{id.id}' and i.po_no='{id.po_no}'" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
@@ -2487,13 +2487,13 @@ async def getprojectpoc(id:GetPoForTc):
     return result
 
 @poRouter.post('/getsiemensitemfordel')
-async def getprojectpoc(id:GetPo):
+async def getprojectpoc(id:GetPoForTc):
     # print(id.id)
     res_dt = {}
 
     select = "i.sl_no,i.parent_id as po_sl_no,i.prod_id,i.approved_qty as quantity,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.prod_id) as stock"
     schema = "td_siemens_log i left join md_product p on i.prod_id=p.sl_no left join td_item_delivery_details d on d.prod_id=i.prod_id left join td_item_delivery_invoice t on t.invoice=d.invoice"
-    where = f"i.parent_id='{id.id}' and d.delete_flag='N'" if id.id>0 else ""
+    where = f"i.parent_id='{id.id}' and d.delete_flag='N' and i.po_no='{id.po_no}'" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
