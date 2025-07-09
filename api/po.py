@@ -12,7 +12,7 @@ import datetime as dt
 import random
 from typing import Optional, Annotated, Union
 import os
-
+from collections import defaultdict
 import logging
 from decimal import Decimal, ROUND_HALF_UP
 
@@ -3440,7 +3440,25 @@ async def get_item_dtls(data:ProjId):
     flag2= 1 
     result2 = await db_select(select2, schema2, where2, order2, flag2)
 
-    result = {'suc':1,'msg':result1['msg']+result2['msg'],'sql':result2}
+    combined_items = defaultdict(lambda: {
+    'item_id': None,
+    'prod_name': '',
+    'quantity': 0,
+    'po_no_list': [],
+    'project_stock': 0,
+    'warehouse_stock': 0
+})
+
+    for item in result1['msg'] + result2['msg']:
+        key = item['item_id']
+        combined_items[key]['item_id'] = key
+        combined_items[key]['prod_name'] = item['prod_name']
+        combined_items[key]['quantity'] += item.get('quantity', 0)
+        combined_items[key]['project_stock'] += item.get('project_stock', 0) or 0
+        combined_items[key]['warehouse_stock'] += item.get('warehouse_stock', 0) or 0
+        combined_items[key]['po_no_list'].append(item.get('po_no'))
+
+    result = {'suc':1,'msg':list(combined_items.values())}
         
     return result
 
