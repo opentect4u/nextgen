@@ -3451,7 +3451,7 @@ async def get_item_dtls(data:ProjId):
         item_id = item['item_id']
 
         merged_items[item_id]['tot_rc_qty'] += item.get('rc_qty') or 0
-        merged_items[item_id]['tot_req'] = item.get('quantity') or 0
+        merged_items[item_id]['tot_req'] = item.get('quantity') 
         merged_items[item_id]['po_no_list'].append(item.get('po_no'))
         merged_items[item_id]['entries'].append(item)
 
@@ -3466,7 +3466,7 @@ async def get_item_dtls(data:ProjId):
         final_merged.append(base)
         # result = {'suc':1,'msg':list(combined_items.values())}
         
-    return final_merged
+    return {'suc':1,'msg':final_merged}
 
 
 
