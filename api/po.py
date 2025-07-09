@@ -3440,27 +3440,33 @@ async def get_item_dtls(data:ProjId):
     flag2= 1 
     result2 = await db_select(select2, schema2, where2, order2, flag2)
 
-    combined_items = defaultdict(lambda: {
-    'item_id': None,
-    'prod_name': '',
-    'quantity': 0,
+    merged_items = defaultdict(lambda: {
     'po_no_list': [],
-    'project_stock': 0,
-    'warehouse_stock': 0
+    'tot_rc_qty': 0,
+    'tot_req': 0,
+    'entries': []  # keep all entries for later flattening
 })
 
     for item in result1['msg'] + result2['msg']:
-        key = item['item_id']
-        combined_items[key]['item_id'] = key
-        combined_items[key]['prod_name'] = item['prod_name']
-        combined_items[key]['quantity'] += item.get('quantity', 0)
-        combined_items[key]['project_stock'] += item.get('project_stock', 0) or 0
-        combined_items[key]['warehouse_stock'] += item.get('warehouse_stock', 0) or 0
-        combined_items[key]['po_no_list'].append(item.get('po_no'))
+        item_id = item['item_id']
 
-    result = {'suc':1,'msg':list(combined_items.values())}
+        merged_items[item_id]['tot_rc_qty'] += item.get('rc_qty') or 0
+        merged_items[item_id]['tot_req'] += item.get('quantity') or 0
+        merged_items[item_id]['po_no_list'].append(item.get('po_no'))
+        merged_items[item_id]['entries'].append(item)
+
+# Now flatten merged items with updated totals but keep full record
+    final_merged = []
+    for item_id, data in merged_items.items():
+    # Base off first entry
+        base = data['entries'][0].copy()
+        base['tot_rc_qty'] = data['tot_rc_qty']
+        base['tot_req'] = data['tot_req']
+        base['po_no_list'] = data['po_no_list']
+        final_merged.append(base)
+        # result = {'suc':1,'msg':list(combined_items.values())}
         
-    return result
+    return final_merged
 
 
 
