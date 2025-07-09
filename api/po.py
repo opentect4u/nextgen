@@ -2356,14 +2356,14 @@ async def gettcbypo(id:GetPo):
 
 
 @poRouter.post('/getpoitemforedit')
-async def getitemforedit(id:GetPo):
+async def getitemforedit(id:GetPoForTc):
 
     # print(id.id)
     res_dt = {}
 
     select = f"i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,p.part_no,p.model_no,p.article_no,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id=b.project_id) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id and proj_id='0') as warehouse_stock"
     schema = "td_po_items i, td_po_basic b, md_product p"
-    where = f"i.item_id=p.sl_no and i.po_sl_no=b.sl_no and i.po_sl_no='{id.id}'" if id.id>0 else ""
+    where = f"i.item_id=p.sl_no and i.po_sl_no=b.sl_no and i.po_sl_no='{id.id}' and b.po_no='{id.po_no}'" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
@@ -2471,14 +2471,15 @@ async def deletetc(id:deleteDoc):
 #     return result
 
 @poRouter.post('/getpoitemfordel')
-async def getprojectpoc(id:GetPo):
+async def getprojectpoc(id:GetPoForTc):
     # print(id.id)
     res_dt = {}
 
     select = "i.sl_no,i.po_sl_no,i.item_id,i.quantity,i.currency,p.prod_name,d.rc_qty,d.sl,d.sl_no as item_sl,d.remarks,d.invoice,d.mrn_no,t.invoice_dt,d.created_at,d.created_by,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=i.item_id) as stock"
     # schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.item_id=i.sl_no left join td_item_delivery_invoice t on t.invoice=d.invoice"
     schema = "td_po_items i left join md_product p on i.item_id=p.sl_no left join td_item_delivery_details d on d.prod_id=i.item_id left join td_item_delivery_invoice t on t.invoice=d.invoice"
-    where = f"i.po_sl_no='{id.id}' and d.delete_flag='N'" if id.id>0 else ""
+    # where = f"i.po_sl_no='{id.id}' and d.delete_flag='N'" if id.id>0 else ""
+    where = f"i.po_sl_no='{id.id}' and d.delete_flag='N' and t.po_no = '{id.po_no}'" if id.id>0 else ""
     order = ""
     flag = 1 if id.id>0 else 0
     result = await db_select(select, schema, where, order, flag)
