@@ -3427,7 +3427,7 @@ async def get_item_dtls(data:ProjId):
 @poRouter.post('/get_item_dtls')
 async def get_item_dtls(data:ProjId):
     select1 = f"b.sl_no,b.project_id,b.po_no,c.po_sl_no,c.quantity,c.item_id,p.prod_name,c.sl_no as po_item_no,d.mrn_no,d.rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.item_id and proj_id='0') as warehouse_stock"
-    schema1 = "td_po_basic b LEFT JOIN td_po_items c on c.po_sl_no = b.sl_no left join md_product p on c.item_id=p.sl_no left join td_item_delivery_details d on d.prod_id=c.item_id and d.item_id=c.sl_no"
+    schema1 = "td_po_basic b LEFT JOIN td_po_items c on c.po_sl_no = b.sl_no left join md_product p on c.item_id=p.sl_no left join td_item_delivery_details d on d.prod_id=c.item_id"
     where1 = f"b.project_id={data.Proj_id}"
     order1 = ""
     flag1 = 1 
