@@ -83,6 +83,7 @@ class SiemensData(BaseModel):
     shipped_dt:str
     list_price:float
     order_dt:str
+    description:str
 
 class SiemensInput(BaseModel):
     items:list[SiemensData]
