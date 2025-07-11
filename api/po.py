@@ -5145,6 +5145,13 @@ async def getcategory(id:GetRows):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
+    select1 = "proj_id"
+    schema1 = "td_siemens_log"
+    where1 = f"parent_id='{id.id}'"
+    order1= ""
+    flag1 = 1
+    result1 = await db_select(select1, schema1, where1, order1, flag1)
+
     select = "l.proj_id,l.sl_no as `#`,l.po_no as `PO No.`,p.prod_name as Product,Coalesce(p.part_no,p.article_no,'') as `Article No./Part No.`,l.order_qty as `Order Quantity`,l.approved_qty as `Approved Quantity`, l.shipped_qty as `Shipped Quantity`, DATE_FORMAT(l.po_issue_dt,'%d/%m/%Y') as `PO Issue Date`, DATE_FORMAT(l.po_approve_dt,'%d/%m/%Y') as `Approval Date`,l.sie_sale_ord as `Siemens Sale Order`,l.customer_no as `Customer No.`, FORMAT(l.net_price,2) as `Net Price`,FORMAT(l.total_price , 2) as `Total Price`,DATE_FORMAT(l.order_dt,'%d/%m/%Y') as `Order Date`"
     schema = "td_siemens_log l join md_product p on l.prod_id=p.sl_no"
     where = f"parent_id='{id.id}'"
@@ -5152,7 +5159,10 @@ async def getcategory(id:GetRows):
     flag = 1
     result = await db_select(select, schema, where, order, flag)
     print(result, 'RESULT')
-    return result
+    if result['suc']>0:
+        return {"suc":1,"msg":result['msg'],"proj_id":result1['msg'][0]['proj_id']}
+    else:
+        return {"suc":0,"msg":[]}
 
 @poRouter.post('/check_duplicate_po')
 async def checkduplicate(id:GetPur):
