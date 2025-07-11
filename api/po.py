@@ -5145,7 +5145,7 @@ async def getcategory(id:GetRows):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
-    select = "sl_no as #,po_no as PO No.,customer_article_no as Article No./Part No.,order_qty as Order Quantity,approved_qty as Approved Quantity, shipped_qty as Shipped Quantity, po_issue_dt as PO Issue Date, po_approve_dt as Approval Date,sie_sale_ord as Siemens Sale Order,customer_no as Customer No., net_price as net_price,total_price as Total Price,order_dt as Order Date"
+    select = "sl_no as sl,po_no as PO No.,customer_article_no as Article No./Part No.,order_qty as Order Quantity,approved_qty as Approved Quantity, shipped_qty as Shipped Quantity, po_issue_dt as PO Issue Date, po_approve_dt as Approval Date,sie_sale_ord as Siemens Sale Order,customer_no as Customer No., net_price as net_price,total_price as Total Price,order_dt as Order Date"
     schema = "td_siemens_log"
     where = f"parent_id='{id.id}'"
     order = ""
