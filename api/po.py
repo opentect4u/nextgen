@@ -5145,7 +5145,7 @@ async def getcategory(id:GetRows):
     print('I am logging in!')
     print(id.id)
     res_dt = {}
-    select = "l.sl_no as `#`,l.po_no as `PO No.`,l.customer_article_no as `Article No./Part No.`,l.order_qty as `Order Quantity`,l.approved_qty as `Approved Quantity`, l.shipped_qty as `Shipped Quantity`, DATE_FORMAT(l.po_issue_dt,'%d/%m/%Y') as `PO Issue Date`, DATE_FORMAT(l.po_approve_dt,'%d/%m/%Y') as `Approval Date`,l.sie_sale_ord as `Siemens Sale Order`,l.customer_no as `Customer No.`, FORMAT(l.net_price,2) as `Net Price`,FORMAT(l.total_price , 2) as `Total Price`,DATE_FORMAT(l.order_dt,'%d/%m/%Y') as `Order Date`"
+    select = "l.sl_no as `#`,l.po_no as `PO No.`,p.prod_name as Product,p.part_no as `Article No./Part No.`,l.order_qty as `Order Quantity`,l.approved_qty as `Approved Quantity`, l.shipped_qty as `Shipped Quantity`, DATE_FORMAT(l.po_issue_dt,'%d/%m/%Y') as `PO Issue Date`, DATE_FORMAT(l.po_approve_dt,'%d/%m/%Y') as `Approval Date`,l.sie_sale_ord as `Siemens Sale Order`,l.customer_no as `Customer No.`, FORMAT(l.net_price,2) as `Net Price`,FORMAT(l.total_price , 2) as `Total Price`,DATE_FORMAT(l.order_dt,'%d/%m/%Y') as `Order Date`"
     schema = "td_siemens_log l join md_product p on l.prod_id=p.sl_no"
     where = f"parent_id='{id.id}'"
     order = ""
