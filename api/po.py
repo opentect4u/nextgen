@@ -5112,8 +5112,8 @@ async def getParentPoDate(items:SiemensInput):
                     result = await db_Insert(table_name, fields, values, whr, flag)
                     print(result)
 
-                fields1= f'po_no,order_dt,line_no,proj_id,mfn,customer_article_no,delivery_no,prod_id,order_qty,approved_qty,shipped_qty,po_issue_dt,status,po_approve_dt,shipped_dt,sie_sale_ord,customer_no,net_price,total_price,list_price,parent_id'
-                values1 = f'"{c.po_no}","{c.order_dt}",{c.line_no},"{c.proj_id}","{c.mfn}","{c.customer_article_no}","{c.delivery_no}","{c.prod_id}",{c.order_qty},{c.approved_qty},{c.shipped_qty},"{c.po_issue_dt}","{c.status}","{c.po_approve_dt}","{c.shipped_dt}","{c.sie_sale_ord}","{c.customer_no}",{c.net_price},{c.total_price},{c.list_price},{result['lastId']}'
+                fields1= f'po_no,order_dt,line_no,proj_id,mfn,customer_article_no,description,delivery_no,prod_id,order_qty,approved_qty,shipped_qty,po_issue_dt,status,po_approve_dt,shipped_dt,sie_sale_ord,customer_no,net_price,total_price,list_price,parent_id'
+                values1 = f'"{c.po_no}","{c.order_dt}",{c.line_no},"{c.proj_id}","{c.mfn}","{c.customer_article_no}","{c.description}","{c.delivery_no}","{c.prod_id}",{c.order_qty},{c.approved_qty},{c.shipped_qty},"{c.po_issue_dt}","{c.status}","{c.po_approve_dt}","{c.shipped_dt}","{c.sie_sale_ord}","{c.customer_no}",{c.net_price},{c.total_price},{c.list_price},{result['lastId']}'
                 table_name1 = "td_siemens_log"
                 whr1=None
                 flag1 =  0
@@ -5153,7 +5153,7 @@ async def getcategory(id:GetRows):
     flag1 = 1
     result1 = await db_select(select1, schema1, where1, order1, flag1)
 
-    select = "l.sl_no as `#`,l.po_no as `PO No.`,p.prod_name as Product,Coalesce(p.part_no,p.article_no,'') as `Article No./Part No.`,l.order_qty as `Order Quantity`,l.approved_qty as `Approved Quantity`, l.shipped_qty as `Shipped Quantity`, DATE_FORMAT(l.po_issue_dt,'%d/%m/%Y') as `PO Issue Date`, DATE_FORMAT(l.po_approve_dt,'%d/%m/%Y') as `Approval Date`,l.sie_sale_ord as `Siemens Sale Order`,l.customer_no as `Customer No.`, FORMAT(l.net_price,2) as `Net Price`,FORMAT(l.total_price , 2) as `Total Price`,DATE_FORMAT(l.order_dt,'%d/%m/%Y') as `Order Date`"
+    select = "l.sl_no as `#`,l.po_no as `PO No.`,p.prod_name as Product,Coalesce(p.part_no,p.article_no,'') as `Article No./Part No.`,l.description as Description,l.order_qty as `Order Quantity`,l.approved_qty as `Approved Quantity`, l.shipped_qty as `Shipped Quantity`, DATE_FORMAT(l.po_issue_dt,'%d/%m/%Y') as `PO Issue Date`, DATE_FORMAT(l.po_approve_dt,'%d/%m/%Y') as `Approval Date`,l.sie_sale_ord as `Siemens Sale Order`,l.customer_no as `Customer No.`, FORMAT(l.net_price,2) as `Net Price`,FORMAT(l.total_price , 2) as `Total Price`,DATE_FORMAT(l.order_dt,'%d/%m/%Y') as `Order Date`"
     schema = "td_siemens_log l join md_product p on l.prod_id=p.sl_no"
     where = f"parent_id='{id.id}'"
     order = ""
