@@ -466,3 +466,19 @@ async def getprojectpoc(id:mrnpur):
     result = await db_select(select, schema, where, order, flag)
     print(result)
     return result
+
+
+
+@reportRouter.post('/po_dashboard_report')
+async def getprojectpoc(id:mrnpur):
+    select = f" @a:=@a+1 AS '#', b.po_no as 'PO No.',b.po_issue_date as 'Date',IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) as 'Status',COALESCE(p.proj_name,'Warehouse') as 'Intended For',v.vendor_name as 'Vendor',b.created_by as 'Created By'"
+    schema = f'''td_po_basic b
+ left join td_project p ON p.sl_no=b.project_id
+ join md_vendor v ON v.sl_no=b.vendor_id  cross join (SELECT @a := 0) AS a "
+    '''
+    where = f""
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    print(result)
+    return result
