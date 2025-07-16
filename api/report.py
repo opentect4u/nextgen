@@ -473,10 +473,10 @@ async def getprojectpoc(id:mrnpur):
 
 
 @reportRouter.post('/po_dashboard_report')
-async def getprojectpoc(id:mrnpur):
-    if flag==0:
+async def getprojectpoc(flag:dashboardReport):
+    if flag.flag==0:
         criteria="b.fresh_flag='Y'"
-    elif flag==1:
+    elif flag.flag==1:
         criteria="b.fresh_flag='N'"
     else:
         criteria="b.amend_flag='Y'"
