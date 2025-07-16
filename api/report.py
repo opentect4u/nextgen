@@ -489,3 +489,15 @@ async def getprojectpoc(flag:dashboardReport):
     result = await db_select(select, schema, where, order, flag)
     print(result)
     return result
+
+
+@reportRouter.post('/siemens_dashboard_report')
+async def getprojectpoc(flag:dashboardReport):
+    select = f"@a:=@a+1 '#', b.po_no 'PO No.',DATE_FORMAT(b.created_at,'%d/%m/%Y') 'Date',b.created_by 'Created By','Approved' as 'Status',COALESCE(CONCAT(p.proj_name,'(ID:',p.proj_id,')'),'Warehouse') 'Intended For','Siemens' as 'Vendor',ROUND(SUM(i.net_price), 2) 'Total Basic Value',ROUND(SUM(i.total_price), 2)  AS 'Grand Total'"
+    schema = f"td_siemens_details b left join td_project p ON p.sl_no=b.proj_id JOIN td_siemens_log i ON i.parent_id = b.sl_no cross join (SELECT @a := 0) AS a group by b.po_no"
+    where = f""
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    print(result)
+    return result
