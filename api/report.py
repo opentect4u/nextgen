@@ -482,8 +482,8 @@ async def getprojectpoc(flag:dashboardReport):
         criteria="b.amend_flag='Y'"
     
     select = f"@a:=@a+1 '#', b.po_no 'PO No.',DATE_FORMAT(b.po_issue_date,'%d/%m/%Y') 'Date',IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery'))) 'Status',COALESCE(CONCAT(p.proj_name,'(',p.proj_id,')'),'Warehouse') 'Intended For',v.vendor_name 'Vendor',b.created_by 'Created By',ROUND(SUM(i.quantity * (i.item_rt - i.discount)), 2) 'Basic Value',ROUND(SUM(i.quantity * i.discount), 2) AS 'Total Discount', ROUND(SUM(i.quantity * (i.item_rt - i.discount) * ((COALESCE(i.cgst_id, 0) + COALESCE(i.sgst_id, 0) + COALESCE(i.igst_id, 0)) / 100)), 2) AS 'Total GST', ROUND(SUM(i.quantity * (i.item_rt - i.discount) + i.quantity * (i.item_rt - i.discount) * ((COALESCE(i.cgst_id, 0) + COALESCE(i.sgst_id, 0) + COALESCE(i.igst_id, 0))) / 100), 2) AS 'Gross Value'"
-    schema = f"td_po_basic b left join td_project p ON p.sl_no=b.project_id join md_vendor v ON v.sl_no=b.vendor_id JOIN td_po_items i ON i.po_sl_no = b.sl_no cross join (SELECT @a := 0) AS a group by b.po_no"
-    where = f"{criteria}"
+    schema = f"td_po_basic b left join td_project p ON p.sl_no=b.project_id join md_vendor v ON v.sl_no=b.vendor_id JOIN td_po_items i ON i.po_sl_no = b.sl_no cross join (SELECT @a := 0) AS a "
+    where = f"{criteria} group by b.po_no"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
