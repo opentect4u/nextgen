@@ -471,7 +471,7 @@ async def getprojectpoc(id:mrnpur):
 
 @reportRouter.post('/po_dashboard_report')
 async def getprojectpoc(id:mrnpur):
-    select = f"@a:=@a+1 '#', b.po_no 'PO No.',b.po_issue_date 'Date',IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery')))) 'Status',COALESCE(p.proj_name,'Warehouse') 'Intended For',v.vendor_name 'Vendor',b.created_by 'Created By'"
+    select = f"@a:=@a+1 '#', b.po_no 'PO No.',b.po_issue_date 'Date',IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery'))) 'Status',COALESCE(p.proj_name,'Warehouse') 'Intended For',v.vendor_name 'Vendor',b.created_by 'Created By'"
     schema = f"td_po_basic b left join td_project p ON p.sl_no=b.project_id join md_vendor v ON v.sl_no=b.vendor_id  cross join (SELECT @a := 0) AS a "
     where = f""
     order = ""
