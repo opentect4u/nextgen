@@ -479,8 +479,8 @@ async def getprojectpoc(id:mrnpur):
     result = await db_select(select, schema, where, order, flag)
 
     select = f"@a:=@a+1 '#', b.po_no 'PO No.',DATE_FORMAT(b.po_issue_date,'%d/%m/%Y') 'Date',IF(b.po_status='A','Approved',IF(b.po_status='U','Approval Pending',IF(b.po_status='D','Delivered','Partial Delivery'))) 'Status',COALESCE(p.proj_name,'Warehouse') 'Intended For',v.vendor_name 'Vendor',b.created_by 'Created By', ROUND(SUM(i.quantity * (i.rate - i.discount)), 2) 'PO Value'"
-    schema = f"td_po_basic b left join td_project p ON p.sl_no=b.project_id join md_vendor v ON v.sl_no=b.vendor_id JOIN td_po_items i ON i.po_sl_no = b.sl_no cross join (SELECT @a := 0) AS a "
-    where = f"group by b.po_no"
+    schema = f"td_po_basic b left join td_project p ON p.sl_no=b.project_id join md_vendor v ON v.sl_no=b.vendor_id JOIN td_po_items i ON i.po_sl_no = b.sl_no cross join (SELECT @a := 0) AS a group by b.po_no"
+    where = f""
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
