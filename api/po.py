@@ -3276,7 +3276,7 @@ async def item_dtls(data:ProjId):
     res_dt1 = await db_select(select1,table1,where1,order1,flag1)
     print('res_dt1==========================',res_dt1)
 
-    select3 = f"distinct t.trans_no,c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.approved_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1) as tot_del,(select sum(a.approved_qty) from td_transfer_items a join td_transfer b where b.to_proj_id={data.Proj_id} and a.item_id=c.sl_no) as tot_req"
+    select3 = f"distinct t.trans_no,c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.approved_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1) as tot_del,(select sum(req_qty) from td_requisition_items where project_id={data.Proj_id} and item_id=c.sl_no) as tot_req"
     table3 = "td_transfer t join td_transfer_items b on b.trans_no=t.trans_no join md_product c on b.item_id=c.sl_no"
     # table1 = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_item_delivery_details b ON d.sl_no=b.item_id"
     where3 = f" t.to_proj_id = {data.Proj_id} group by prod_id"
