@@ -3264,7 +3264,7 @@ async def item_dtls(data:ProjId):
     res_dt = {'suc':1, 'msg':res_dt1['msg']+res_dt2['msg']}
     return res_dt
 
-poRouter.post("/item_dtls")
+@poRouter.post("/item_dtls")
 async def item_dtls(data:ProjId):
     # select1 = f"distinct c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.rc_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(req_qty) from td_requisition_items where project_id={data.Proj_id} and item_id=d.item_id) as tot_req,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1 and ref_no not like '%T%') as tot_del"
     select1 = f"distinct c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.rc_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(req_qty) from td_requisition_items where project_id={data.Proj_id} and item_id=d.item_id) as tot_req,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1) as tot_del"
