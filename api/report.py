@@ -304,14 +304,14 @@ async def get_project_po(id: mrnprojreport):
     if id.type == 'P':  # Project type
         select = """
             DISTINCT i.item_id, pb.fresh_flag,
-            GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y')) AS invoice_dt,
+            GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR '\n') AS invoice_dt,
             CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
                 ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
                 ', Description:', p.prod_desc, ')') AS prod_name,
             pb.po_no, i.quantity,
             COALESCE(SUM(DISTINCT d.rc_qty),0) AS rc_qty,
             GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,
-            GROUP_CONCAT(DISTINCT d.invoice) AS invoice,
+            GROUP_CONCAT(DISTINCT d.invoice SEPARATOR '\n') AS invoice,
             pi.approved_ord_qty,
             pi.approved_ord_qty - COALESCE(SUM(DISTINCT d.rc_qty),0) as pending_qty,
             pb.pur_req,
@@ -335,13 +335,13 @@ async def get_project_po(id: mrnprojreport):
     else:  # Warehouse type
         select = """
             DISTINCT i.item_id, pb.fresh_flag,
-            GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y')) AS invoice_dt,
+            GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR '\n') AS invoice_dt,
             CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
                 ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
                 ', Description:', p.prod_desc, ')') AS prod_name,
             SUM(d.rc_qty) AS rc_qty,
             GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,
-            GROUP_CONCAT(DISTINCT d.invoice) AS invoice,
+            GROUP_CONCAT(DISTINCT d.invoice SEPARATOR '\n') AS invoice,
             i.quantity,
             pi.approved_ord_qty,
             pi.approved_ord_qty - COALESCE(SUM(DISTINCT d.rc_qty),0) as pending_qty,
