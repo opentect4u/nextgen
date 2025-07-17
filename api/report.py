@@ -313,6 +313,7 @@ async def get_project_po(id: mrnprojreport):
             GROUP_CONCAT(DISTINCT d.mrn_no) AS mrn_no,
             GROUP_CONCAT(DISTINCT d.invoice) AS invoice,
             pi.approved_ord_qty,
+            pi.approved_ord_qty - rc_qty as pending_qty,
             pb.pur_req,
             v.vendor_name,
             CONCAT(pd.proj_name, ' (ID:', pd.proj_id, ')') AS proj_name
