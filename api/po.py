@@ -3281,7 +3281,7 @@ async def item_dtls(data:ProjId):
     where3 = f"a.trans_no=b.trans_no and d.sl_no=b.item_id and a.project_id={data.Proj_id} and b.to_proj_id={data.Proj_id} group by item_id"
     order3 = ""
     flag3 = 1 
-    res_dt3 = await db_select(select1,table1,where1,order1,flag1)
+    res_dt3 = await db_select(select3,table3,where3,order3,flag3)
     
     # print(res_dt1)
 
