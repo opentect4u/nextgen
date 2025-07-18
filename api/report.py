@@ -346,6 +346,7 @@ async def get_project_po(id: mrnprojreport):
             pi.approved_ord_qty,
             pi.approved_ord_qty - COALESCE(SUM(DISTINCT d.rc_qty),0) as pending_qty,
             pb.pur_req,
+            pb.po_no,
             'Warehouse' AS proj_name,
             v.vendor_name
         """
