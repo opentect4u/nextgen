@@ -335,7 +335,7 @@ async def get_project_po(id: mrnprojreport):
             LEFT JOIN td_item_delivery_invoice inv ON d.mrn_no = inv.mrn_no
         """
     else:  # Warehouse type
-        select = """
+        select = f"""
             DISTINCT i.item_id, pb.fresh_flag,
             GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR '\n') AS invoice_dt,
             CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
@@ -351,6 +351,7 @@ async def get_project_po(id: mrnprojreport):
             pb.po_no,
             'Warehouse' AS proj_name,
             v.vendor_name
+            where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'
         """
         group_by = """
             GROUP BY i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty,
@@ -368,7 +369,7 @@ async def get_project_po(id: mrnprojreport):
 
     # Execute final query
     # result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
-    result = await db_select(select, join_schema + group_by, where=f"inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'", order="", flag=1)
+    result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
     return result
 
 
