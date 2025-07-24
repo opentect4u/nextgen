@@ -35,6 +35,8 @@ class mrnprojreport(BaseModel):
     proj_id:int
     vendor_id:int
     po_no:str
+    from_dt:str
+    to_dt:str
 
 class mrnpur(BaseModel):
     pur_no:str
@@ -365,7 +367,8 @@ async def get_project_po(id: mrnprojreport):
         """
 
     # Execute final query
-    result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
+    # result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
+    result = await db_select(select, join_schema + group_by, where=f"inv.invoice_dt between {id.from_dt} and {id.to_dt}", order="", flag=1)
     return result
 
 
