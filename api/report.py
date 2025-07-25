@@ -687,7 +687,7 @@ async def getprojectpoc(id:mrnpur):
 
 @reportRouter.post('/pending_ord_create')
 async def getprojectpoc(id:mrnpur):
-    select = f" @a:=@a+1 AS '#',DATE_FORMAT(req.pur_date,'%d/%m/%Y') as 'Requisition Date',req.created_by,req.created_at as 'Requisition By', COALESCE(concat(pr.proj_name,'(',pr.proj_id,')'),'Warehouse') as 'Intended For', req.pur_no as 'PR No.', IF(sum(pur.approved_ord_qty)=0,'Not Ordered','Partially Ordered') as Status"
+    select = f" @a:=@a+1 AS '#',req.pur_no as 'PR No.',COALESCE(concat(pr.proj_name,'(',pr.proj_id,')'),'Warehouse') as 'Intended For',IF(sum(pur.approved_ord_qty)=0,'Not Ordered','Partially Ordered') as Status,DATE_FORMAT(req.pur_date,'%d/%m/%Y') as 'Requisition Date',req.created_by as 'Requisition By'"
     schema = f'''td_purchase_req req left join td_purchase_items pur on req.pur_no=pur.pur_no left join td_project pr on pr.sl_no=req.pur_proj cross join (SELECT @a := 0) AS a group by pur.pur_no having sum(pur.qty)>sum(pur.approved_ord_qty)
     '''
     where = f""
