@@ -369,6 +369,7 @@ async def get_project_po(id: mrnprojreport):
 
     # Execute final query
     # result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
+    print('query===========',join_schema + group_by)
     result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
     return result
 
