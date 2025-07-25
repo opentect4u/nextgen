@@ -415,7 +415,7 @@ async def get_project_po(id: mrnprojreport):
 @reportRouter.post('/mrnpurreq')
 async def getprojectpoc(id:mrnpur):
   
-    select = f"@a:=@a+1 '#', concat(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,',  Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') as 'Product', i.quantity as 'Ordered Quantity',COALESCE(SUM(rc_qty),'Not Received') AS 'Received Quantity',GROUP_CONCAT(DISTINCT d.mrn_no) AS 'MRN No.',GROUP_CONCAT(DISTINCT d.invoice) AS 'Invoice',GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt,'%d/%m/%Y')) 'Invoice Date"
+    select = f"@a:=@a+1 '#', concat(pr.prod_name,'(Make:',pr.prod_make,', Part No.:',pr.part_no,',  Article No.:',pr.article_no,', Model No.:',pr.model_no,', Description:',pr.prod_desc,')') as 'Product', i.quantity as 'Ordered Quantity',COALESCE(SUM(rc_qty),'Not Received') AS 'Received Quantity',GROUP_CONCAT(DISTINCT d.mrn_no) AS 'MRN No.',GROUP_CONCAT(DISTINCT d.invoice) AS 'Invoice',GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt,'%d/%m/%Y')) 'Invoice Date'"
     schema = f" td_purchase_items p LEFT JOIN td_po_items i ON i.item_id = p.item_id AND p.pur_no LIKE '%{id.pur_no}%' LEFT JOIN md_product pr ON pr.sl_no = i.item_id LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no IN (SELECT po_no FROM td_po_basic     WHERE pur_req LIKE '%{id.pur_no}%') left join td_item_delivery_invoice inv on inv.mrn_no=d.mrn_no,(SELECT @a:= 0) AS a"
     where = f" i.po_sl_no IN (SELECT sl_no FROM td_po_basic WHERE pur_req LIKE '%{id.pur_no}%') GROUP BY i.item_id, i.quantity,p.approved_ord_qty, pr.prod_name"
     order = ""
