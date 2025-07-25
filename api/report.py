@@ -121,14 +121,14 @@ async def getprojectpoc(id:Itemwise):
 @reportRouter.post('/itemwise')
 async def getprojectpoc(id:Itemwise):
   
-    select = f"@a:=@a+1 '#',SUM(st.qty*st.in_out_flag)  'Project Quantity',concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') 'Product',CONCAT(pr.proj_name,'(ID: ',pr.proj_id,')') as 'Project' "
+    select = f"@a:=@a+1 '#',concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') 'Product',CONCAT(pr.proj_name,'(ID: ',pr.proj_id,')') as 'Project',SUM(st.qty*st.in_out_flag)  'Project Quantity' "
     schema = "td_stock_new st, md_product p,td_project pr,(SELECT @a:= 0) AS a"
     where = f"st.item_id ={id.item_id} and pr.sl_no=st.proj_id and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.proj_id"
     order = ""
     flag = 1 
     result = await db_select(select, schema, where, order, flag)
 
-    select1 = f"SUM(qty*in_out_flag) as 'Warehouse Quantity', p.prod_name as 'Product'"
+    select1 = f", p.prod_name as 'Product',SUM(qty*in_out_flag) as 'Warehouse Quantity'"
     schema1 = "td_stock_new st, md_product p"
     where1 = f"st.item_id ={id.item_id} and st.proj_id = 0 and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.proj_id"
     order1 = ""
