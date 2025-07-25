@@ -301,7 +301,7 @@ async def getprojectpoc(id:mrnprojreport):
 
 
 
-@reportRouter.post('/mrnprojreport')
+@reportRouter.post('/mrnprojreport1')
 async def get_project_po(id: mrnprojreport):
     # Determine criteria based on po_no and type
     if id.po_no == '0':
@@ -387,6 +387,116 @@ async def get_project_po(id: mrnprojreport):
             pb.po_no,
             'Warehouse' AS proj_name,
             v.vendor_name
+        """
+        group_by = """
+            GROUP BY i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty,
+            pb.pur_req, v.vendor_name, pb.po_no
+        """
+        join_schema = f"""
+            td_po_items i
+            LEFT JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND {criteria}
+            LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no
+            LEFT JOIN md_product p ON i.item_id = p.sl_no
+            LEFT JOIN md_vendor v ON pb.vendor_id = v.sl_no
+            LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id
+            LEFT JOIN td_item_delivery_invoice inv ON d.mrn_no = inv.mrn_no
+            where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'
+
+        """
+
+    # Execute final query
+    # result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
+    print('query===========',join_schema + group_by)
+    result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
+    return result
+
+
+@reportRouter.post('/mrnprojreport')
+async def get_project_po(id: mrnprojreport):
+    # Determine criteria based on po_no and type
+    if id.po_no == '0':
+        if id.type == 'P':  # Project PO
+            if id.vendor_id and id.proj_id:
+                criteria = f"pb.vendor_id = {id.vendor_id} AND pb.project_id = {id.proj_id}"
+            elif id.vendor_id:
+                criteria = f"pb.vendor_id = {id.vendor_id} AND pb.project_id != 0"
+            elif id.proj_id:
+                criteria = f"pb.project_id = {id.proj_id}"
+            else:
+                criteria = "pb.project_id != 0"
+        else:  # Warehouse PO
+            if id.vendor_id:
+                criteria = f"pb.vendor_id = {id.vendor_id} AND pb.project_id = 0"
+            else:
+                criteria = "pb.project_id = 0"
+    else:
+        # po_no is specific (not '0')
+        if id.type == 'P':
+            if id.vendor_id and id.proj_id:
+                criteria = f"pb.vendor_id = {id.vendor_id} AND pb.project_id = {id.proj_id} AND pb.po_no = '{id.po_no}'"
+            elif id.vendor_id:
+                criteria = f"pb.vendor_id = {id.vendor_id} AND pb.project_id != 0 AND pb.po_no = '{id.po_no}'"
+            elif id.proj_id:
+                criteria = f"pb.project_id = {id.proj_id} AND pb.po_no = '{id.po_no}'"
+            else:
+                criteria = f"pb.po_no = '{id.po_no}'"
+        else:
+            if id.vendor_id:
+                criteria = f"pb.vendor_id = {id.vendor_id} AND pb.project_id = 0 AND pb.po_no = '{id.po_no}'"
+            else:
+                criteria = f"pb.po_no = '{id.po_no}' AND pb.project_id = 0"
+
+    print(f"Criteria: {criteria}")
+
+    # Build SELECT query
+    if id.type == 'P':  # Project type
+        select = """
+            DISTINCT
+            GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR '\n') AS 'Invoice Date',
+            CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
+                ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
+                ', Description:', p.prod_desc, ')') AS 'Product',
+            pb.po_no as 'PO NO.',
+            COALESCE(SUM(DISTINCT d.rc_qty),0) AS 'Received Quantity',
+            GROUP_CONCAT(DISTINCT d.invoice SEPARATOR '\n') AS 'Invoice',
+            pi.approved_ord_qty as 'Ordered Quantity',
+            pi.approved_ord_qty - COALESCE(SUM(DISTINCT d.rc_qty),0) as 'Pending Quantity',
+            pb.pur_req as 'Purchase Requisition',
+            v.vendor_name as 'Vendor',
+            CONCAT(pd.proj_name, ' (ID:', pd.proj_id, ')') AS 'Project'
+
+        """
+        group_by = """
+            GROUP BY i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty,
+            pb.pur_req, v.vendor_name, pb.po_no
+        """
+        join_schema = f"""
+            td_po_items i
+            LEFT JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND {criteria}
+            LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no
+            LEFT JOIN md_product p ON i.item_id = p.sl_no
+            LEFT JOIN td_project pd ON pb.project_id = pd.sl_no
+            LEFT JOIN md_vendor v ON pb.vendor_id = v.sl_no
+            LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id
+            LEFT JOIN td_item_delivery_invoice inv ON d.mrn_no = inv.mrn_no
+            where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'
+
+        """
+    else:  # Warehouse type
+        select = f"""
+            DISTINCT 
+            GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR '\n') AS 'Invoice Date',
+            CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
+                ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
+                ', Description:', p.prod_desc, ')') AS 'Product',
+            SUM(d.rc_qty) AS 'Received Quantity',
+            GROUP_CONCAT(DISTINCT d.invoice SEPARATOR '\n') AS 'Invoice',
+            pi.approved_ord_qty as 'Ordered Quantity',
+            pi.approved_ord_qty - COALESCE(SUM(DISTINCT d.rc_qty),0) as 'Pending Quantity',
+            pb.pur_req as 'Purchase Requisition',
+            pb.po_no as 'PO No.',
+            'Warehouse' AS 'Project',
+            v.vendor_name as 'Vendor'
         """
         group_by = """
             GROUP BY i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty,
