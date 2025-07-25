@@ -351,7 +351,6 @@ async def get_project_po(id: mrnprojreport):
             pb.po_no,
             'Warehouse' AS proj_name,
             v.vendor_name
-            where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'
         """
         group_by = """
             GROUP BY i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty,
@@ -365,6 +364,8 @@ async def get_project_po(id: mrnprojreport):
             LEFT JOIN md_vendor v ON pb.vendor_id = v.sl_no
             LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id
             LEFT JOIN td_item_delivery_invoice inv ON d.mrn_no = inv.mrn_no
+            where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'
+
         """
 
     # Execute final query
