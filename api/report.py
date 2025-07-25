@@ -54,11 +54,23 @@ class dashboardReport(BaseModel):
     
 
 
+@reportRouter.post('/allstock1')
+async def getprojectpoc(id:Allstock):
+    res_dt = {}
+
+    select = f"@a:=@a+1 serial_number,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') prod_name,SUM(st.qty*st.in_out_flag) stock,st.item_id,"
+    schema = "td_stock_new st, md_product p,(SELECT @a:= 0) AS a"
+    where = f"st.proj_id ={id.project_id} and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.item_id"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
 @reportRouter.post('/allstock')
 async def getprojectpoc(id:Allstock):
     res_dt = {}
 
-    select = f"@a:=@a+1 serial_number,SUM(st.qty*st.in_out_flag) stock,st.item_id,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') prod_name"
+    select = f"@a:=@a+1 as '#',concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') as 'Product',SUM(st.qty*st.in_out_flag) as 'Quantity'"
     schema = "td_stock_new st, md_product p,(SELECT @a:= 0) AS a"
     where = f"st.proj_id ={id.project_id} and st.item_id=p.sl_no and '{id.dt}'>=st.date group by st.item_id"
     order = ""
