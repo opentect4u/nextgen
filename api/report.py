@@ -136,7 +136,7 @@ async def getprojectpoc(id:Itemwise):
     result1 = await db_select(select1, schema1, where1, order1, flag1)
     print(result1)
     for i in result['msg']:
-        i['warehouse_stock'] = result1['msg'][0]['warehouse_stock'] if len(result1['msg']) else 0
+        i['Warehouse Quantity'] = result1['msg'][0]['Warehouse Quantity'] if len(result1['msg']) else 0
 
     if len(result['msg']):
        return result
