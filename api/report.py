@@ -618,11 +618,31 @@ async def getprojectpoc(id:MatVal):
 
 
 
-@reportRouter.post('/matvalstockout')
+@reportRouter.post('/matvalstockout1')
 async def getprojectpoc(id:MatVal):
     # res_dt = {}
 
     select = f"@a:=@a+1 serial_number,b.po_no,b.sl_no,i.item_id,i.quantity,i.discount,i.currency,i.discount_percent,i.cgst_id,i.sgst_id,i.igst_id,i.item_rt,(i.item_rt-i.discount)*sum(st.qty) as net_unit_price, if(i.igst_id>0,(i.item_rt-i.discount)*sum(st.qty)*i.igst_id/100, ((i.item_rt - i.discount) * sum(st.qty) * i.cgst_id / 100) + ((i.item_rt - i.discount) * sum(st.qty) * i.sgst_id / 100)) as total_gst, IF(i.igst_id > 0,( i.item_rt - i.discount ) * sum(st.qty) * i.igst_id / 100+((i.item_rt-i.discount)*sum(st.qty)), ( ((i.item_rt - i.discount ) * sum(st.qty) * i.cgst_id / 100)+((i.item_rt-i.discount)*sum(st.qty)) ) + (( (i.item_rt - i.discount ) * sum(st.qty) * i.sgst_id / 100 ))) AS total,sum(st.qty) as qty, (select sum(qty) as qty from td_stock_new where proj_id={id.proj_id} and item_id=st.item_id and in_out_flag=-1 and ref_no like '%REQ%' group by st.item_id) stock_out_qty,concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as prod_name"
+    schema = f'''td_po_basic b 
+    left join td_po_items i on b.sl_no=i.po_sl_no 
+    left join md_product pd on pd.sl_no=i.item_id
+    join td_stock_new st on st.item_id=i.item_id and st.ref_no like '%REQ%' and st.in_out_flag=-1 and st.proj_id='{id.proj_id}',
+    (SELECT @a:= 0) AS a
+    '''
+   
+    where = f"b.project_id={id.proj_id} and b.po_no is not null GROUP BY i.item_id"
+    order = ""
+    flag = 1 
+    result = await db_select(select, schema, where, order, flag)
+    print(result)
+    return result
+
+
+@reportRouter.post('/matvalstockout')
+async def getprojectpoc(id:MatVal):
+    # res_dt = {}
+
+    select = f"@a:=@a+1 as '#',concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as Product,i.cgst_id as 'CGST',i.sgst_id as 'SGST',i.igst_id as 'IGST',(i.item_rt-i.discount)*sum(st.qty) as 'Net Unit Price', IF(i.igst_id > 0,( i.item_rt - i.discount ) * sum(st.qty) * i.igst_id / 100+((i.item_rt-i.discount)*sum(st.qty)), ( ((i.item_rt - i.discount ) * sum(st.qty) * i.cgst_id / 100)+((i.item_rt-i.discount)*sum(st.qty)) ) + (( (i.item_rt - i.discount ) * sum(st.qty) * i.sgst_id / 100 ))) AS Total, (select sum(qty) as qty from td_stock_new where proj_id={id.proj_id} and item_id=st.item_id and in_out_flag=-1 and ref_no like '%REQ%' group by st.item_id) 'Stocked Out Quantity'"
     schema = f'''td_po_basic b 
     left join td_po_items i on b.sl_no=i.po_sl_no 
     left join md_product pd on pd.sl_no=i.item_id
