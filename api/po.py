@@ -218,9 +218,9 @@ class GetTc(BaseModel):
     id:int
     po_no:str
     item:int
-    quantity:Union[int,str]
-    tc_quantity:Union[int,str]
-    rc_quantity:Union[int,str]
+    quantity:Union[int,str,float]
+    tc_quantity:Union[int,str,float]
+    rc_quantity:Union[int,str,float]
     user:str
 
 class GetMdcc(BaseModel):
@@ -356,9 +356,9 @@ class ProjId(BaseModel):
 class ReqItems(BaseModel):
     sl_no:int
     item_id:int
-    rc_qty:Union[float,int]
-    req_qty:Union[float,int]
-    stock:Union[float,int]
+    rc_qty:Union[float,int,str]
+    req_qty:Union[float,int,str]
+    stock:Union[float,int,str]
 
 class ReqItemsAppr(BaseModel):
     sl_no:int
