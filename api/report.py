@@ -460,7 +460,7 @@ async def get_project_po(id: mrnprojreport):
             COALESCE(SUM(DISTINCT d.rc_qty),0) AS 'Received Quantity',
             GROUP_CONCAT(DISTINCT d.invoice SEPARATOR '\n') AS 'Invoice',
             pi.approved_ord_qty as 'Ordered Quantity',
-            pi.approved_ord_qty - COALESCE(SUM(DISTINCT d.rc_qty),0) as 'Pending Quantity',
+            pi.approved_ord_qty - SUM(d.rc_qty) as 'Pending Quantity',
             pb.pur_req as 'Purchase Requisition',
             v.vendor_name as 'Vendor',
             CONCAT(pd.proj_name, ' (ID:', pd.proj_id, ')') AS 'Project'
@@ -492,7 +492,7 @@ async def get_project_po(id: mrnprojreport):
             SUM(d.rc_qty) AS 'Received Quantity',
             GROUP_CONCAT(DISTINCT d.invoice SEPARATOR '\n') AS 'Invoice',
             pi.approved_ord_qty as 'Ordered Quantity',
-            pi.approved_ord_qty - COALESCE(SUM(DISTINCT d.rc_qty),0) as 'Pending Quantity',
+            pi.approved_ord_qty - SUM(d.rc_qty) as 'Pending Quantity',
             pb.pur_req as 'Purchase Requisition',
             pb.po_no as 'PO No.',
             'Warehouse' AS 'Project',
