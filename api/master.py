@@ -1308,9 +1308,9 @@ async def add_edit_permissions(data:Permission):
 
 
     if res_dt["msg"][0]["sl_no"]>0:
-        await user_log_update(data['user'],'E','td_permission',formatted_dt,res_dt["msg"][0]["sl_no"])
+        await user_log_update(data.user_id,'E','td_permission',formatted_dt,res_dt["msg"][0]["sl_no"])
     else:
-        await user_log_update(data['user'],'N','td_permission',formatted_dt,result['lastId'])
+        await user_log_update(data.user_id,'N','td_permission',formatted_dt,result['lastId'])
 
 
     
