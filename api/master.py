@@ -900,9 +900,9 @@ async def addclient(request: Request,client_data:str = Form(...)):
         index += 1
 
     if data['c_id']>0:
-        await user_log_update(data['user'],'N','md_client',formatted_dt, data['c_id'])
+        await user_log_update(data['user'],'E','md_client',formatted_dt, data['c_id'])
     else:
-        await user_log_update(data['user'],'E','md_client',formatted_dt,lastID)
+        await user_log_update(data['user'],'N','md_client',formatted_dt,lastID)
 
     return res_dt
 
@@ -1098,9 +1098,9 @@ async def addvendor(data:addVendor):
             res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
     
     if data.v_id>0:
-        await user_log_update(data.user,'N','md_vendor',formatted_dt, data.v_id)
+        await user_log_update(data.user,'E','md_vendor',formatted_dt, data.v_id)
     else:
-        await user_log_update(data.user,'E','md_vendor',formatted_dt,lastID)
+        await user_log_update(data.user,'N','md_vendor',formatted_dt,lastID)
     return res_dt
 
 
