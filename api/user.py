@@ -180,3 +180,11 @@ async def checkinvoice(id:getFlag):
    print(result1,'res')
 
    return result1
+
+
+@userRouter.post('/logout')
+async def userLogout(id:getFlag):
+   current_datetime = datetime.now()
+   formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+   result1=await user_log_update(id.id,'O','md_user',formatted_dt, '')
+   return result1
