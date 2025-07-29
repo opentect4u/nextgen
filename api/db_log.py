@@ -15,8 +15,10 @@ async def user_log_update(user_id,flag,table_nm,time,id):
     fields= f'user_id,activity_flag,table_nm,activity_dt,narration'
     values = f'"{user_id}","{flag}","{table_nm}","{time}","{narration}"'
     table_name = "td_user_log"
-    whr =  f'user_id="{user_id}"' if flag=='O' else None
-    log_flag = 1 if flag=='O' else 0
+    # whr =  f'user_id="{user_id}"' if flag=='O' else None
+    whr = ''
+    # log_flag = 1 if flag=='O' else 0
+    log_flag =0
    
     result = await db_Insert(table_name, fields, values, whr, log_flag)
 
