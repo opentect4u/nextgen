@@ -5053,7 +5053,7 @@ async def getprojectpoc(id:DeletePurReq):
     else:
         res_dt={'suc':0,'msg':'Error while deleting!'}
         
-    await user_log_update(id.user,'D','td_purchase_req',formatted_dt,result['lastId'])
+    # await user_log_update(id.user,'D','td_purchase_req',formatted_dt,result['lastId'])
     
     return res_dt
 
