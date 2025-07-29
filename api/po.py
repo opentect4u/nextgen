@@ -15,6 +15,7 @@ import os
 from collections import defaultdict
 import logging
 from decimal import Decimal, ROUND_HALF_UP
+from api.db_log import user_log_update
 
 UPLOAD_FOLDER = "upload_file/upload_tc"
 UPLOAD_FOLDER2 = "upload_file/upload_mdcc"
@@ -467,6 +468,9 @@ class StockReturn(BaseModel):
     item_id:int
     items:list[StockRetList]
     dt:str
+    user:str
+class DeletePurReq(BaseModel):
+    id:str
     user:str
 
 
@@ -5015,7 +5019,7 @@ join (SELECT @a:= 0) AS a '''
 
 
 @poRouter.post('/delete_pur_req')
-async def getprojectpoc(id:GetPur):
+async def getprojectpoc(id:DeletePurReq):
     current_datetime = datetime.now()
     res_dt={}
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -5049,6 +5053,8 @@ async def getprojectpoc(id:GetPur):
     else:
         res_dt={'suc':0,'msg':'Error while deleting!'}
         
+    await user_log_update(id.user,'D','td_purchase_req',formatted_dt,result['lastId'])
+    
     return res_dt
 
 

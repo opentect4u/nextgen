@@ -11,6 +11,7 @@ import random
 from models.utils import get_hashed_password, verify_password
 import json
 from decimal import Decimal, ROUND_HALF_UP
+from api.db_log import user_log_update
 
 stockRouter = APIRouter()
 
@@ -1137,6 +1138,10 @@ async def save_trans(data:SavePur):
     else:
                  res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
             
+    if data.sl_no>0:
+        await user_log_update(data.user,'E','td_purchase_req',formatted_dt, data.sl_no)
+    else:
+        await user_log_update(data.user,'N','td_purchase_req',formatted_dt,lastID)
     
     return res_dt
 
