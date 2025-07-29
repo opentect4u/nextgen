@@ -65,7 +65,7 @@ async def firstRoute(user:getUser):
         if check==True:
             result = await db_select(select, schema, where, order, flag)
             print(result, 'RESULT')
-            await user_log_update(user.id,'I','md_user',formatted_dt, '')
+            await user_log_update(result['msg'][0]['user_email'],'I','md_user',formatted_dt, '')
             return result
         else:
             return {'suc':0,'msg':'Invalid credentials'}
