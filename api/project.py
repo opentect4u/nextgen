@@ -12,6 +12,7 @@ import datetime as dt
 import random
 from typing import Optional, Annotated, Union
 import os
+from api.db_log import user_log_update
 
 import logging
 

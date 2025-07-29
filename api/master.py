@@ -1162,6 +1162,12 @@ async def approvepo(id:approvePO):
         res_dt = {"suc": 1, "msg": f"Action Successful!"}
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!"}
+
+
+    if id.id>0:
+        await user_log_update(id.user,'E','md_user',formatted_dt, id.id)
+    # else:
+    #     await user_log_update(id.user,'N','md_vendor',formatted_dt,result['lastId'])
   
     return res_dt
 
@@ -1299,6 +1305,15 @@ async def add_edit_permissions(data:Permission):
     whr = f"user_id={data.user_id}" if res_dt["msg"][0]["sl_no"] > 0 else f""
     flag = 1 if res_dt["msg"][0]["sl_no"] > 0 else 0
     result = await db_Insert(table_name, fields, values, whr, flag)
+
+
+    if res_dt["msg"][0]["sl_no"]>0:
+        await user_log_update(data['user'],'E','td_permission',formatted_dt,res_dt["msg"][0]["sl_no"])
+    else:
+        await user_log_update(data['user'],'N','td_permission',formatted_dt,result['lastId'])
+
+
+    
 
     return result
 
