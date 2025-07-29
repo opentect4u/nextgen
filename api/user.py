@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from fastapi import APIRouter
 from enum import Enum
 from pydantic import BaseModel
+from api.db_log import user_log_update
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from models.masterApiModel import db_select, db_Insert
@@ -45,6 +46,8 @@ def firstRoute():
 @userRouter.post('/login')
 async def firstRoute(user:getUser):
     print(user)
+    current_datetime = datetime.now()
+    formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     select = "user_password"
     schema = "md_user"
     where = f"user_email='{user.id}' and active_flag='Y'" 
@@ -62,6 +65,7 @@ async def firstRoute(user:getUser):
         if check==True:
             result = await db_select(select, schema, where, order, flag)
             print(result, 'RESULT')
+            await user_log_update(user.id,'I','md_user',formatted_dt, '')
             return result
         else:
             return {'suc':0,'msg':'Invalid credentials'}
