@@ -189,6 +189,9 @@ async def addcategory(dt:getMaster):
             res_dt = {"suc": 1, "msg": "Category saved successfully!"}
         else:
             res_dt = {"suc": 0, "msg": "Error while saving!"}
+
+        await user_log_update(dt.user,'N','md_category',formatted_dt,result['lastId'])
+        
     else:
         print(flag)
         fields=f'catg_name="{dt.name}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
@@ -198,6 +201,9 @@ async def addcategory(dt:getMaster):
             res_dt = {"suc": 1, "msg": "Category updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": "Error while updating!"}
+
+        await user_log_update(dt.user,'E','md_category',formatted_dt,dt.id)
+        
     return res_dt
 
 @masterRouter.post('/getcategory')
@@ -686,6 +692,11 @@ async def addproduct(data:addProduct):
             res_dt = {"suc": 1, "msg": "Product saved successfully!"}
         else:
             res_dt = {"suc": 0, "msg": "Error while saving!"}
+
+        # await user_log_update(dt.user,'E','md_gst',formatted_dt,dt.gst_id)
+        await user_log_update(data.user,'N','md_product',formatted_dt,result['lastId'])
+
+        
     else:
         print(flag)
         fields=f'''prod_name="{p_name}",prod_cat="{data.p_cat}",prod_make="{p_make}",part_no="{data.p_part}",model_no="{data.p_model}",article_no="{data.p_article}",hsn_code="{data.p_hsn}",prod_desc="{p_detailed}",modified_by="{data.user}",modified_at="{formatted_dt}"'''
@@ -695,6 +706,9 @@ async def addproduct(data:addProduct):
             res_dt = {"suc": 1, "msg": "Product updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": "Error while updating!"}
+
+        await user_log_update(data.user,'E','md_product',formatted_dt,data.p_id)
+        
     return res_dt
 
 @masterRouter.post('/getproduct')
@@ -747,6 +761,9 @@ async def adduser(data:addUser):
             res_dt = {"suc": 1, "msg": "User saved successfully!"}
         else:
             res_dt = {"suc": 0, "msg": "Error while saving!"}
+
+        await user_log_update(data.user,'N','md_user',formatted_dt,result['lastId'])
+        
     else:
         print(flag)
         fields=f'user_name="{data.u_name}",user_location="{data.u_loc}",user_dept="{data.u_dept}",user_desig="{data.u_desig}",user_phone="{data.u_phone}",user_email="{data.u_email}",user_type="{data.u_type}",modified_by="{data.user}",modified_at="{formatted_dt}"'
@@ -756,6 +773,9 @@ async def adduser(data:addUser):
             res_dt = {"suc": 1, "msg": "User updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": "Error while updating!"}
+
+        await user_log_update(data.user,'E','md_user',formatted_dt,data.u_id)
+        
     return res_dt
 
 
