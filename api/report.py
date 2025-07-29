@@ -451,7 +451,7 @@ async def get_project_po(id: mrnprojreport):
     # Build SELECT query
     if id.type == 'P':  # Project type
         select = """
-            DISTINCT
+            DISTINCT i.item_id,
             CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
                 ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
                 ', Description:', p.prod_desc, ')') AS 'Product',
@@ -484,7 +484,7 @@ async def get_project_po(id: mrnprojreport):
         """
     else:  # Warehouse type
         select = f"""
-            DISTINCT 
+            DISTINCT i.item_id,
             CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
                 ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
                 ', Description:', p.prod_desc, ')') AS 'Product',
