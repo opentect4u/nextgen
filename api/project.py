@@ -236,6 +236,8 @@ async def addproject(dt:Project):
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=dt.id if dt.id>0 else result["lastId"]
 
+   
+
     if(result['suc']>0):
         fields1= f'proj_id,proj_manager,created_by,created_at' if dt.id==0 else f'proj_manager="{dt.proj_manager}",modified_by="{dt.user}",modified_at="{formatted_dt}"'
         values1 = f'"{dt.proj_id}","{dt.proj_manager}","{dt.user}","{formatted_dt}"'
@@ -275,7 +277,10 @@ async def addproject(dt:Project):
     else:
         res_dt = {"suc": 0, "msg": result1}
     
-
+    if dt.id>0:
+        await user_log_update(dt.user,'E','td_project',formatted_dt, dt.id)
+    else:
+        await user_log_update(dt.user,'N','td_project',formatted_dt,lastID)
     return res_dt
 
 

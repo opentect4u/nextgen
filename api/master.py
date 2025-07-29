@@ -1312,9 +1312,6 @@ async def add_edit_permissions(data:Permission):
     else:
         await user_log_update(data.user,'N','td_permission',formatted_dt,result['lastId'])
 
-
-    
-
     return result
 
 
