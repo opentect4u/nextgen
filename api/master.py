@@ -837,6 +837,9 @@ async def addclient(request: Request,client_data:str = Form(...)):
 
     lastID=data['c_id'] if data['c_id']>0 else result["lastId"]
 
+   
+
+
     # del_table_name = 'md_client_poc'
     # del_whr = f"sl_no not in()"
     # del_qry = await db_Delete(del_table_name, del_whr)
@@ -895,6 +898,11 @@ async def addclient(request: Request,client_data:str = Form(...)):
         else:
             res_dt = {"suc": 0, "msg": f"Error while saving!" if c['sl_no']==0 else f"Error while updating"}
         index += 1
+
+    if data['c_id']>0:
+        await user_log_update(data['user'],'N','md_client',formatted_dt, data['c_id'])
+    else:
+        await user_log_update(data['user'],'E','md_client',formatted_dt,lastID)
 
     return res_dt
 
@@ -1013,6 +1021,8 @@ async def addvendor(data:addVendor):
     # del_whr = f"sl_no not in()"
     # del_qry = await db_Delete(del_table_name, del_whr)
 
+   
+
     # 
     if(data.v_id > 0):
         catg_ids = ",".join(str(dt.sl_no) for dt in data.v_bank)
@@ -1086,6 +1096,11 @@ async def addvendor(data:addVendor):
             res_dt = {"suc": 1, "msg": f"Vendor saved successfully!" if v.sl_no==0 else f"Vendor updated successfully!"}
         else:
             res_dt = {"suc": 0, "msg": f"Error while saving!" if v.sl_no==0 else f"Error while updating"}
+    
+    if data.v_id>0:
+        await user_log_update(data.user,'N','md_vendor',formatted_dt, data.v_id)
+    else:
+        await user_log_update(data.user,'E','md_vendor',formatted_dt,lastID)
     return res_dt
 
 
