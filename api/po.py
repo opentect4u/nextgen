@@ -5184,6 +5184,7 @@ async def getParentPoDate(items:SiemensInput):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     count = 0
+    po_no=''
     for c in items.items:
                 if count == 0:
                     fields= f'po_no,proj_id,created_by,created_at'
@@ -5191,6 +5192,7 @@ async def getParentPoDate(items:SiemensInput):
                     table_name = "td_siemens_details"
                     whr=None
                     flag =  0
+                    po_no=f"{c.po_no}"
                     result = await db_Insert(table_name, fields, values, whr, flag)
                     print(result)
 
@@ -5205,7 +5207,7 @@ async def getParentPoDate(items:SiemensInput):
                 count=count+1
 
     if item_save ==  1:
-        await user_log_update(items.user,'N','td_siemens_details',formatted_dt,items.items[0]['po_no'])
+        await user_log_update(items.user,'N','td_siemens_details',formatted_dt,po_no)
 
         return {'suc':1,'msg':'Saved Successfully!!'}
     
