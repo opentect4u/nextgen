@@ -5046,14 +5046,15 @@ async def getprojectpoc(id:DeletePurReq):
     whr1=f'pur_no="{id.id}"'
     result1 = await db_Delete(table_name1, whr1)
 
-  
+    
 
     if result1['suc']>0 and result['suc']>0 :
         res_dt={'suc':1,'msg':'Deleted successfully!'}
+        await user_log_update(id.user,'D','td_purchase_req',formatted_dt,id.id)
+
     else:
         res_dt={'suc':0,'msg':'Error while deleting!'}
         
-    # await user_log_update(id.user,'D','td_purchase_req',formatted_dt,result['lastId'])
     
     return res_dt
 
