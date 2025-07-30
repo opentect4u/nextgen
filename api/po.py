@@ -5203,8 +5203,12 @@ async def getParentPoDate(items:SiemensInput):
                 print(result1)
                 item_save=1 if result1['suc']>0 else 0
                 count=count+1
+                
     if item_save ==  1:
+        await user_log_update(items.user,'N','td_siemens_details',formatted_dt,items[0]['po_no'])
+
         return {'suc':1,'msg':'Saved Successfully!!'}
+    
     else:
         return {'suc':0,'msg':'Error saving!!'}
 
