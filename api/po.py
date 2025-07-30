@@ -2253,6 +2253,9 @@ async def adddelivery(data:getDelivery):
 
     if result['suc']>0 :
                 res_dt = {"suc": 1, "msg": f"Updated Successfully"}
+                await user_log_update(data.user,'N','td_item_delivery_invoice',formatted_dt,lastID)
+
+                
     else:
                  res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
             
@@ -2416,6 +2419,7 @@ async def deletecustomerdel(po_no:DeleteDelivery):
 
         if(result['suc']>0):
                 res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+                await user_log_update(po_no.user,'N','td_item_delivery_invoice',formatted_dt,po_no.po_no)
         else:
                 res_dt = {"suc": 0, "msg": "Error while deleting!"}
             
@@ -2433,10 +2437,9 @@ async def deletecustomerdel(po_no:DeleteDelivery):
         values=''
         whr=f'po_no="{po_no.po_no}" and sl_no={po_no.item}'
         result = await db_Insert(table_name, fields, values, whr, flag)
-
-
         if(result['suc']>0):
                 res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+                await user_log_update(po_no.user,'N','td_item_delivery_invoice',formatted_dt,po_no.po_no)
         else:
                 res_dt = {"suc": 0, "msg": "Error while deleting!"}
             
@@ -4337,18 +4340,22 @@ async def approvepo(id:approveMRN):
             if(result3['suc']>0): 
                 stock_save = 1
                 res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
-
+                await user_log_update(id.user,'N','td_stock_new',formatted_dt,id.inv_no)
             else:
                 stock_save = 0
-
                 res_dt2= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
     else:
        stock_save =1
        res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+       await user_log_update(id.user,'N','td_stock_new',formatted_dt,id.inv_no)
+
 
    
     if result['suc'] and stock_save:
         res_dt = {"suc": 1, "msg": f"Action Successful!","msg2":res_dt2}
+        await user_log_update(id.user,'A','td_item_delivery_invoice',formatted_dt,id.po_no)
+
+        
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!" ,"msg2":res_dt2}
   
@@ -4417,6 +4424,8 @@ async def approvepo(id:approveMRN):
             if(result3['suc']>0): 
                 stock_save = 1
                 res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+                await user_log_update(id.user,'N','td_stock_new',formatted_dt,id.inv_no)
+
 
             else:
                 stock_save = 0
@@ -4425,6 +4434,8 @@ async def approvepo(id:approveMRN):
     else:
        stock_save =1
        res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
+       await user_log_update(id.user,'N','td_stock_new',formatted_dt,id.inv_no)
+
 
    
     if result['suc'] and stock_save:
