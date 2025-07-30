@@ -1163,6 +1163,8 @@ async def addpocomments(id:getComments):
     result = await db_Insert(table_name, fields, values, whr, flag)
     if result['suc']:
         res_dt = {"suc": 1, "msg": f"Comments updated!"}
+        await user_log_update(id.user,'E','td_project_remarks',formatted_dt,id.id)
+
     else:
         res_dt = {"suc": 0, "msg": f"Error while updated!"}
   
@@ -2686,6 +2688,8 @@ async def add_proj_files(po_sl_no:str = Form(...),docs1:Optional[Union[UploadFil
                 # if(id==0):
                 result3 = await db_Insert(table_name3, fields3, values3, whr3, flag3)
                 res_dt = result3
+                await user_log_update(user,'E','td_po_log_doc',formatted_dt,po_sl_no)
+
         return res_dt
 
 async def uploadfileToLocal4(file):
