@@ -1,4 +1,5 @@
 from models.masterApiModel import db_Insert
+
 async def user_log_update(user_id,flag,table_nm,time,id):
     if flag == 'N':
         activity = 'inserted into'
@@ -8,6 +9,10 @@ async def user_log_update(user_id,flag,table_nm,time,id):
         activity = 'deleted from'
     elif flag == 'I':
         activity = 'logged in'
+    elif flag == 'A':
+        activity = 'approved item in'
+    elif flag == 'C':
+        activity = 'cancelled item in'
     else:
         activity = 'logged out'
         

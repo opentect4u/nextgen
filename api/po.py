@@ -1037,6 +1037,7 @@ async def approvepo(id:approvePO):
 
     if result['suc']:
         res_dt = {"suc": 1, "msg": f"Action Successful!"}
+        await user_log_update(id.user,'A','td_po_basic',formatted_dt,id.id)
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!"}
   
@@ -1142,6 +1143,8 @@ async def approvepo(id:approvePO):
 
     if result['suc']:
         res_dt = {"suc": 1, "msg": f"Action Successful!"}
+        await user_log_update(id.user,'C','td_po_basic',formatted_dt,id.id)
+
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!"}
   
