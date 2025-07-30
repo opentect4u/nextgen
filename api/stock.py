@@ -1074,6 +1074,7 @@ async def save_stock_out(data:StockOutList):
             whr_out=f""
             flag2_out=  0
             result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
+            await user_log_update(data.user,'E','td_stock_new',formatted_dt, i.req_no)
 
         return result3_out
 

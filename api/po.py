@@ -3186,9 +3186,12 @@ async def addmin(data:AddMin):
         result = await db_Insert(table_name, fields, values, whr, flag)
     
         if result['suc']:
-         res_dt = {"suc": 1, "msg": f"Updated successfully!"}
+            res_dt = {"suc": 1, "msg": f"Updated successfully!"}
         else:
-         res_dt = {"suc": 0, "msg": f"Error while updating!"}
+            res_dt = {"suc": 0, "msg": f"Error while updating!"}
+
+   await user_log_update(data.user,'N','td_min',formatted_dt,data.req_no)
+    
   
    return res_dt
 
@@ -3380,8 +3383,9 @@ async def save_requisition(data:SaveReq):
 
     if result['suc']>0 :
                 res_dt = {"suc": 1, "msg": f"Saved Successfully"}
+                await user_log_update(data.user,'N','td_requisition',formatted_dt,reqNo)
     else:
-                 res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
+                res_dt = {"suc": 0, "msg": f"Error while updating invoice"}
             
     
     return res_dt
@@ -3663,11 +3667,12 @@ async def approvepo(id:approveReq):
                     result3 = await db_Insert(table_name1, fields1, values1, whr1, flag2)
 
                     if(result3['suc']>0): 
-
                         res_dt = {"suc": 1, "msg": f"Saved Successfully"}
-
                     else:
-                        res_dt = {"suc": 0, "msg": f"Error while inserting "}
+                        res_dt = {"suc": 0, "msg": f"Error while inserting"}
+
+            await user_log_update(id.user,'A','td_requisition',formatted_dt,id.id)
+            
 
         else:
 
@@ -3747,6 +3752,8 @@ async def approvepo(id:approveReq):
             result2 = await db_Delete(table_name2, whr2)
 
             if result1['suc']>0 and result['suc']>0 and result2['suc']>0:
+                await user_log_update(id.user,'C','td_requisition',formatted_dt,id.ref_no)
+
                 res_dt={'suc':1,'msg':'Cancelled successfully!'}
             else:
                 res_dt={'suc':0,'msg':'Error while deleting!'}
