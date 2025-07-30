@@ -4347,13 +4347,11 @@ async def approvepo(id:approveMRN):
     else:
        stock_save =1
        res_dt2 = {"suc": 1, "msg": f"Updated Successfully And Inserted to stock"}
-       await user_log_update(id.user,'N','td_stock_new',formatted_dt,id.inv_no)
-
-
+       await user_log_update(id.user,'C','td_item_delivery_invoice',formatted_dt,id.inv_no)
    
     if result['suc'] and stock_save:
         res_dt = {"suc": 1, "msg": f"Action Successful!","msg2":res_dt2}
-        await user_log_update(id.user,'A','td_item_delivery_invoice',formatted_dt,id.po_no)
+        await user_log_update(id.user,'A' if id.status == 'A' else 'C','td_item_delivery_invoice',formatted_dt,id.po_no)
 
         
     else:
