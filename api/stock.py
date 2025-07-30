@@ -193,6 +193,8 @@ async def save_trans(data:SaveTrans):
     flag = 0
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=result["lastId"]
+    await user_log_update(data.user,'N','td_Transfer',formatted_dt,lastID)
+
     #========================================================================================================
     for i in data.items:
                 fields= f'trans_no,item_id,qty,created_by,created_at,approved_qty,balance'
