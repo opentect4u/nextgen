@@ -3131,6 +3131,8 @@ async def approvepo(id:approvePO):
     result = await db_Insert(table_name, fields, values, whr, flag)
     if result['suc']:
         res_dt = {"suc": 1, "msg": f"Action Successful!"}
+        await user_log_update(id.user,'E','td_po_basic',formatted_dt,id.id)
+
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!"}
   
