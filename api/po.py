@@ -2742,6 +2742,8 @@ async def getprojectpoc(id:delLog):
    result = await db_Insert(table_name, fields, values, whr, flag)
    if(result['suc']>0):
         res_dt = {"suc": 1, "msg": "Deleted successfully!"}
+        await user_log_update(id.user,'D','td_po_log_doc',formatted_dt,id.id)
+
    else:
         res_dt = {"suc": 0, "msg": "Error while deleting!"}
        
