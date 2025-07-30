@@ -12,6 +12,7 @@ import datetime as dt
 import random
 from typing import Optional, Annotated, Union
 import os
+from api.db_log import user_log_update
 
 import logging
 amendRouter = APIRouter()
@@ -19,6 +20,9 @@ amendRouter = APIRouter()
 
 class GetPo(BaseModel):
     id:int
+class amendPO(BaseModel):
+    id:int
+    user:str
 
 @amendRouter.post('/getamendproject1')
 async def getamendprojectpoc(id:GetPo):
@@ -96,7 +100,7 @@ join (SELECT @a:= 0) AS a '''
     return result
 
 @amendRouter.post('/addpoamend')
-async def addpoamend(data:GetPo):
+async def addpoamend(data:amendPO):
     current_datetime = datetime.now()
     formatted_dt = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     po_dt = current_datetime.strftime("%Y-%m-%d")
@@ -142,6 +146,8 @@ async def addpoamend(data:GetPo):
             fields5= f'SELECT NULL sl_no, "{lastID}" po_sl_no, price_basis, price_basis_desc, packing_fwd_extra, packing_fwd_extra_val, packing_fwd_val,pf_currency, pf_cgst,pf_sgst,pf_igst, freight_ins, freight_ins_val,freight_extra,freight_extra_val,freight_currency,freight_cgst,freight_sgst,freight_igst,ins, ins_val, ins_extra,ins_extra_val,ins_currency,ins_cgst,ins_sgst,ins_igst, test_certificate, test_certificate_desc,ld_date, ld_date_desc, ld_val, ld_val_desc, ld_val_per, min_per, warranty_guarantee, dispatch_dt,comm_dt, duration, duration_value,duration_value_to, o_m_manual, o_m_desc, operation_installation, operation_installation_desc, packing_type,packing_val, manufacture_clearance, manufacture_clearance_desc,created_by,created_at, NULL modified_by, NULL modified_at FROM td_po_terms_condition WHERE po_sl_no = "{data.id}"'
             table_name5 = "td_po_terms_condition"
             result5 = await db_Insert(table_name5, fields5, None, None, 0, True)
+            await user_log_update(data.user,'M','td_po_basic',formatted_dt,data.id+'(amended to)'+lastID)
+
     except:
         print('Error While saving')
 

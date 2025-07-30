@@ -13,6 +13,8 @@ async def user_log_update(user_id,flag,table_nm,time,id):
         activity = 'approved item in'
     elif flag == 'C':
         activity = 'cancelled item in'
+    elif flag == 'M':
+        activity = 'amended item in'
     else:
         activity = 'logged out'
         
