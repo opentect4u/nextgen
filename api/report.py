@@ -208,13 +208,13 @@ async def getprojectpoc(id:GetStockOut):
         result_req = await db_select(select_req, schema_req, where_req, order_req, flag_req)
         print(result_req)
 
-        select_trans = f"i.approved_qty, i.approved_qty as copy_qty,r.trans_no as req_no,i.item_id,r.to_proj_id as proj_id,(select sum(qty) from td_stock_new st where st.item_id={i['item_id']} and st.proj_id={id.proj_id} and st.ref_no=r.trans_no and in_out_flag=-1) del_qty"
-        schema_trans = "td_transfer_items i,td_transfer r"
-        where_trans = f"i.item_id={i['item_id']} and r.to_proj_id={id.proj_id} and (i.approve_flag='A' || i.approve_flag='H') and i.trans_no=r.trans_no"
-        order_trans = ""
-        flag_trans = 1 
-        result_trans = await db_select(select_trans, schema_trans, where_trans, order_trans, flag_trans)
-        print(result_req)
+        # select_trans = f"i.approved_qty, i.approved_qty as copy_qty,r.trans_no as req_no,i.item_id,r.to_proj_id as proj_id,(select sum(qty) from td_stock_new st where st.item_id={i['item_id']} and st.proj_id={id.proj_id} and st.ref_no=r.trans_no and in_out_flag=-1) del_qty"
+        # schema_trans = "td_transfer_items i,td_transfer r"
+        # where_trans = f"i.item_id={i['item_id']} and r.to_proj_id={id.proj_id} and (i.approve_flag='A' || i.approve_flag='H') and i.trans_no=r.trans_no"
+        # order_trans = ""
+        # flag_trans = 1 
+        # result_trans = await db_select(select_trans, schema_trans, where_trans, order_trans, flag_trans)
+        # print(result_req)
 
         select2 = f"sum(i.approved_qty) as qty,r.req_no as req_no"
         schema2 = "td_requisition_items i,td_requisition r"
