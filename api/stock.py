@@ -241,6 +241,8 @@ async def save_trans(data:SaveTrans):
     flag = 0
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=result["lastId"]
+    await user_log_update(data.user,'N','td_Transfer',formatted_dt,lastID)
+
     #========================================================================================================
     for i in data.items:
                 fields= f'trans_no,item_id,qty,created_by,created_at,approved_qty,balance'
@@ -349,6 +351,8 @@ async def save_trans(data:SaveTransPtoP):
     flag = 0
     result = await db_Insert(table_name, fields, values, whr, flag)
     lastID=result["lastId"]
+    await user_log_update(data.user,'N','td_Transfer',formatted_dt,lastID)
+
     #========================================================================================================
     for i in data.items:
                 fields= f'trans_no,item_id,qty,created_by,created_at,approved_qty,balance'
@@ -823,6 +827,7 @@ async def save_trans(data:GetApproveItems):
                     whr_out=f""
                     flag2_out=  0
                     result3_out= await db_Insert(table_out, flds_out, val_out, whr_out, flag2_out)
+
                     # if balance>0:
                     #     select_stck = f"max(date) as max_dt"
                     #     schema_stck = "td_stock_new"
@@ -856,6 +861,7 @@ async def save_trans(data:GetApproveItems):
                         res_dt2_out= {"suc": 0, "msg": f"Error while inserting into td_stock_new"}
 
                         # ======================================================
+        
             else:
                 # fields= f"cancel_flag='{i.approve_flag}',cancelled_by='{data.user}',cancelled_at='{formatted_dt}'"
                 # values = f''
@@ -977,6 +983,8 @@ async def save_trans(data:GetApproveItems):
                         res_dt={'suc':0,'msg':'Error while deleting!'}
                  
     res_dt = {"suc": 1, "msg": "Action Successful!"}
+    await user_log_update(data.user,'A' if data.status=='A' else 'C','td_Transfer',formatted_dt,data.trans_no)
+
    
     return res_dt
 
