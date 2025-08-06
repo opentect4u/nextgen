@@ -27,6 +27,9 @@ UPLOAD_FOLDER7 = "upload_file/upload_more"
 UPLOAD_FOLDER8 = "upload_file/upload_vtoc"
 
 # Ensure the upload folder exists
+# rc_qty:Union[float,int,str]
+# req_qty:Union[float,int,str]
+# stock:Union[float,int,str]
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER2, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER3, exist_ok=True)
@@ -357,9 +360,9 @@ class ProjId(BaseModel):
 class ReqItems(BaseModel):
     sl_no:int
     item_id:int
-    rc_qty:Union[float,int,str]
-    req_qty:Union[float,int,str]
-    stock:Union[float,int,str]
+    rc_qty:Optional[Union[float,int,str,None]]=None
+    req_qty:Optional[Union[float,int,str,None]]=None
+    stock:Optional[Union[float,int,str,None]]=None
 
 class ReqItemsAppr(BaseModel):
     sl_no:int
@@ -1577,7 +1580,7 @@ async def addfreshpo(data:PoModel):
     print('---------------------------------------------------------------------')
     if(result['suc']>0 and item_save>0 and result2['suc']>0 and payment_save>0 and result4['suc']>0 and result5['suc']>0):
         res_dt = {"suc": 1, "msg": f"Saved successfully with {data.pur_req}" if data.sl_no==0 else f"Updated successfully!", "po_sl_no": lastID}
-        await user_log_update(data.user,'N','td_po_basic',formatted_dt,lastID) if data.sl_no==0 else  await user_log_update(data.user,'E','td_po_basic',data.sl_no)
+        await user_log_update(data.user,'N','td_po_basic',formatted_dt,lastID) if data.sl_no==0 else  await user_log_update(data.user,'E','td_po_basic',formatted_dt,data.sl_no)
 
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating", "po_sl_no": lastID}
