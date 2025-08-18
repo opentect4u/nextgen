@@ -516,7 +516,7 @@ async def get_project_po(id: mrnprojreport):
         #     v.vendor_name as 'Vendor'
         # """
         select = """
-            pur.pur_no as 'Purchase Requisition',pb.po_no as 'PO No.', pr.proj_name as 'Project',v.vendor_name as 'Vendor',
+            pur.pur_no as 'Purchase Requisition',pb.po_no as 'PO No.', 'Warehouse' as 'Project',v.vendor_name as 'Vendor',
             GROUP_CONCAT(d.invoice SEPARATOR ',\n') AS 'Invoice',
     		GROUP_CONCAT(DATE_FORMAT(d.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice Date',
             CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:',p.part_no,
@@ -537,7 +537,6 @@ async def get_project_po(id: mrnprojreport):
             JOIN td_po_items i ON i.po_sl_no = pb.sl_no
             JOIN md_product p ON i.item_id = p.sl_no 
             JOIN td_purchase_req pur on pur.pur_proj = pb.project_id 
-            JOIN td_project pr on pur.pur_proj = pr.sl_no
             JOIN md_vendor v ON pb.vendor_id = v.sl_no
             JOIN td_purchase_items pi on pi.pur_no = pb.pur_req AND pi.item_id = i.item_id
             LEFT JOIN td_item_delivery_invoice d on d.po_no = pb.po_no
