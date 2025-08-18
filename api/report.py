@@ -497,7 +497,7 @@ async def get_project_po(id: mrnprojreport):
             JOIN td_purchase_items pi on pi.pur_no = pb.pur_req AND pi.item_id = i.item_id
             LEFT JOIN td_item_delivery_invoice d on d.po_no = pb.po_no
             LEFT JOIN td_item_delivery_details dd on dd.mrn_no = d.mrn_no and pi.item_id = dd.prod_id
-            where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'  AND {criteria}
+            where d.invoice_dt between '{id.from_dt}' and '{id.to_dt}'  AND {criteria}
 
         """
     else:  # Warehouse type
@@ -541,7 +541,7 @@ async def get_project_po(id: mrnprojreport):
             JOIN td_purchase_items pi on pi.pur_no = pb.pur_req AND pi.item_id = i.item_id
             LEFT JOIN td_item_delivery_invoice d on d.po_no = pb.po_no
             LEFT JOIN td_item_delivery_details dd on dd.mrn_no = d.mrn_no and pi.item_id = dd.prod_id
-            where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}' AND {criteria}
+            where d.invoice_dt between '{id.from_dt}' and '{id.to_dt}' AND {criteria}
 
         """
 
