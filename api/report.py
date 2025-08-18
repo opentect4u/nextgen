@@ -487,7 +487,6 @@ async def get_project_po(id: mrnprojreport):
             pur.pur_no
         """
         join_schema = f"""
-            td_po_items i
             td_po_basic pb
             JOIN td_po_items i ON i.po_sl_no = pb.sl_no
             JOIN md_product p ON i.item_id = p.sl_no 
@@ -534,7 +533,6 @@ async def get_project_po(id: mrnprojreport):
             pur.pur_no
         """
         join_schema = f"""
-            td_po_items i
             td_po_basic pb
             JOIN td_po_items i ON i.po_sl_no = pb.sl_no
             JOIN md_product p ON i.item_id = p.sl_no 
