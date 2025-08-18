@@ -355,6 +355,7 @@ async def get_project_po(id: mrnprojreport):
             pb.pur_req,
             v.vendor_name,
             CONCAT(pd.proj_name, ' (ID:', pd.proj_id, ')') AS proj_name
+            
         """
         group_by = """
             GROUP BY i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty,
@@ -450,66 +451,96 @@ async def get_project_po(id: mrnprojreport):
 
     
     if id.type == 'P':  # Project type
-        select = """
-            DISTINCT i.item_id,
-            CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
-                ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
-                ', Description:', p.prod_desc, ')') AS 'Product',
-            pb.po_no as 'PO No.',
-            GROUP_CONCAT(DISTINCT d.invoice SEPARATOR ',\n') AS 'Invoice',
-            GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice Date',
-            pi.approved_ord_qty as 'Ordered Quantity',
-            (select SUM(rc_qty) AS 'Received Quantity' from td_item_delivery_details dd join td_item_delivery_invoice ii where dd.mrn_no=ii.mrn_no and ii.po_no = 'NGAPL/6789/00001/25-26' group by dd.prod_id) AS 'Received Quantity',
-            pi.approved_ord_qty - (select SUM(rc_qty) from td_item_delivery_details dd join td_item_delivery_invoice ii where dd.mrn_no=ii.mrn_no) as 'Pending Quantity',
-            pb.pur_req as 'Purchase Requisition',
-            v.vendor_name as 'Vendor',
-            CONCAT(pd.proj_name, ' (ID:', pd.proj_id, ')') AS 'Project'
+        # select = """
+        #     DISTINCT i.item_id,
+        #     CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
+        #         ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
+        #         ', Description:', p.prod_desc, ')') AS 'Product',
+        #     pb.po_no as 'PO No.',
+        #     GROUP_CONCAT(DISTINCT d.invoice SEPARATOR ',\n') AS 'Invoice',
+        #     GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice Date',
+        #     pi.approved_ord_qty as 'Ordered Quantity',
+        #     (select SUM(rc_qty) AS 'Received Quantity' from td_item_delivery_details dd join td_item_delivery_invoice ii where dd.mrn_no=ii.mrn_no and ii.po_no = 'NGAPL/6789/00001/25-26' group by dd.prod_id) AS 'Received Quantity',
+        #     pi.approved_ord_qty - (select SUM(rc_qty) from td_item_delivery_details dd join td_item_delivery_invoice ii where dd.mrn_no=ii.mrn_no) as 'Pending Quantity',
+        #     pb.pur_req as 'Purchase Requisition',
+        #     v.vendor_name as 'Vendor',
+        #     CONCAT(pd.proj_name, ' (ID:', pd.proj_id, ')') AS 'Project'
 
-        """
+        # """
+        select = """
+
+            pur.pur_no as 'Purchase Requisition',pb.po_no as 'PO No.', pr.proj_name as 'Project',v.vendor_name as 'Vendor',
+            GROUP_CONCAT(d.invoice SEPARATOR ',\n') AS 'Invoice',
+    		GROUP_CONCAT(DATE_FORMAT(d.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice Date',
+            CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:',p.part_no,
+            ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
+            ', Description:', p.prod_desc, ')') AS 'Product',pi.approved_ord_qty as 'Ordered Quantity',
+            COALESCE(SUM(dd.rc_qty), 0)  AS 'Received Quantity',
+            (pi.approved_ord_qty - COALESCE(SUM(dd.rc_qty), 0)) AS 'Pending Quantity'
+
+"""
         group_by = """
-            GROUP BY i.item_id, i.quantity, p.prod_name,
-            pb.pur_req, v.vendor_name, pb.po_no
+            GROUP BY pb.po_no, 
+            p.prod_name, p.prod_make, p.part_no, p.article_no, p.model_no, p.prod_desc,
+            pi.approved_ord_qty,
+            pr.proj_name,
+            pur.pur_no
         """
         join_schema = f"""
             td_po_items i
-            INNER JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no
-            LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no
-            LEFT JOIN md_product p ON i.item_id = p.sl_no
-            LEFT JOIN td_project pd ON pb.project_id = pd.sl_no
-            LEFT JOIN md_vendor v ON pb.vendor_id = v.sl_no
-            LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id
-            LEFT JOIN td_item_delivery_invoice inv ON d.mrn_no = inv.mrn_no
+            td_po_basic pb
+            JOIN td_po_items i ON i.po_sl_no = pb.sl_no
+            JOIN md_product p ON i.item_id = p.sl_no 
+            JOIN td_purchase_req pur on pur.pur_proj = pb.project_id 
+            JOIN td_project pr on pur.pur_proj = pr.sl_no
+            JOIN md_vendor v ON pb.vendor_id = v.sl_no
+            JOIN td_purchase_items pi on pi.pur_no = pb.pur_req AND pi.item_id = i.item_id
+            LEFT JOIN td_item_delivery_invoice d on d.po_no = pb.po_no
+            LEFT JOIN td_item_delivery_details dd on dd.mrn_no = d.mrn_no and pi.item_id = dd.prod_id
             where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'  AND {criteria}
 
         """
     else:  # Warehouse type
-        select = f"""
-            DISTINCT i.item_id,
-            CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
-                ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
-                ', Description:', p.prod_desc, ')') AS 'Product',
-            GROUP_CONCAT(DISTINCT d.invoice SEPARATOR ',\n') AS 'Invoice',
-            GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice Date',
-            pi.approved_ord_qty as 'Ordered Quantity',
-             (select SUM(rc_qty) AS 'Received Quantity' from td_item_delivery_details dd join td_item_delivery_invoice ii where dd.mrn_no=ii.mrn_no and ii.po_no = 'NGAPL/6789/00001/25-26' group by dd.prod_id) AS 'Received Quantity',
-            pi.approved_ord_qty - (select SUM(rc_qty) from td_item_delivery_details dd join td_item_delivery_invoice ii where dd.mrn_no=ii.mrn_no) as 'Pending Quantity',
-            pb.pur_req as 'Purchase Requisition',
-            pb.po_no as 'PO No.',
-            'Warehouse' AS 'Project',
-            v.vendor_name as 'Vendor'
-        """
+        # select = f"""
+        #     DISTINCT i.item_id,
+        #     CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
+        #         ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
+        #         ', Description:', p.prod_desc, ')') AS 'Product',
+        #     GROUP_CONCAT(DISTINCT d.invoice SEPARATOR ',\n') AS 'Invoice',
+        #     GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice Date',
+        #     pi.approved_ord_qty as 'Ordered Quantity',
+        #      (select SUM(rc_qty) AS 'Received Quantity' from td_item_delivery_details dd join td_item_delivery_invoice ii where dd.mrn_no=ii.mrn_no and ii.po_no = 'NGAPL/6789/00001/25-26' group by dd.prod_id) AS 'Received Quantity',
+        #     pi.approved_ord_qty - (select SUM(rc_qty) from td_item_delivery_details dd join td_item_delivery_invoice ii where dd.mrn_no=ii.mrn_no) as 'Pending Quantity',
+        #     pb.pur_req as 'Purchase Requisition',
+        #     pb.po_no as 'PO No.',
+        #     'Warehouse' AS 'Project',
+        #     v.vendor_name as 'Vendor'
+        # """
+        select = """
+            pur.pur_no as 'Purchase Requisition',pb.po_no as 'PO No.', pr.proj_name as 'Project',v.vendor_name as 'Vendor',
+            GROUP_CONCAT(d.invoice SEPARATOR ',\n') AS 'Invoice',
+    		GROUP_CONCAT(DATE_FORMAT(d.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice Date',
+            CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:',p.part_no,
+            ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
+            ', Description:', p.prod_desc, ')') AS 'Product',pi.approved_ord_qty as 'Ordered Quantity',
+            COALESCE(SUM(dd.rc_qty), 0)  AS 'Received Quantity',
+            (pi.approved_ord_qty - COALESCE(SUM(dd.rc_qty), 0)) AS 'Pending Quantity'
+"""
         group_by = """
             GROUP BY i.item_id, i.quantity, p.prod_name,
             pb.pur_req, v.vendor_name, pb.po_no
         """
         join_schema = f"""
             td_po_items i
-            LEFT JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no 
-            LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no
-            LEFT JOIN md_product p ON i.item_id = p.sl_no
-            LEFT JOIN md_vendor v ON pb.vendor_id = v.sl_no
-            LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id
-            LEFT JOIN td_item_delivery_invoice inv ON d.mrn_no = inv.mrn_no
+            td_po_basic pb
+            JOIN td_po_items i ON i.po_sl_no = pb.sl_no
+            JOIN md_product p ON i.item_id = p.sl_no 
+            JOIN td_purchase_req pur on pur.pur_proj = pb.project_id 
+            JOIN td_project pr on pur.pur_proj = pr.sl_no
+            JOIN md_vendor v ON pb.vendor_id = v.sl_no
+            JOIN td_purchase_items pi on pi.pur_no = pb.pur_req AND pi.item_id = i.item_id
+            LEFT JOIN td_item_delivery_invoice d on d.po_no = pb.po_no
+            LEFT JOIN td_item_delivery_details dd on dd.mrn_no = d.mrn_no and pi.item_id = dd.prod_id
             where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}' AND {criteria}
 
         """
