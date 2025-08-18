@@ -526,7 +526,7 @@ async def get_project_po(id: mrnprojreport):
             (pi.approved_ord_qty - COALESCE(SUM(dd.rc_qty), 0)) AS 'Pending Quantity'
 """
         group_by = """
-            GROUP BY GROUP BY pb.po_no, 
+            GROUP BY pb.po_no, 
             p.prod_name, p.prod_make, p.part_no, p.article_no, p.model_no, p.prod_desc,
             pi.approved_ord_qty,
             pr.proj_name,
