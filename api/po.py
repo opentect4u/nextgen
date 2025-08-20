@@ -984,6 +984,7 @@ async def approvepo(id:approvePO):
     flag = 1 if id.id>0 else 0
     result1 = await db_select(select, schema, where, order, flag)
     pur_req_list = str(result1['msg'][0]['pur_req']).split(',')
+    po_no = result1['msg'][0]['po_no']
     print(pur_req_list, 'RESULT')
 
 
@@ -1027,7 +1028,7 @@ async def approvepo(id:approvePO):
                                         sum_qty = 0
                         
 
-                        fields= f'approved_ord_qty={approved_ord_qty}'
+                        fields= f'approved_ord_qty={approved_ord_qty},po_no="{po_no}"'
                         values = f''
                         table_name = "td_purchase_items"
                         whr = f'pur_no="{pur_req}" and item_id={item["item_id"]}' 
