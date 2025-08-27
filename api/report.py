@@ -917,8 +917,11 @@ async def get_project_po(id: mrnprojreport):
         select = """
            a.po_no,a.pur_no,a.project_id,a.proj_name,a.vendor_id,a.vendor_name,a.item_id,
            a.prod_name,a.orderd_qty,a.rcvd_qty,a.pending_qty,b.Invoice,b.Invoice_Date
-            FROM
-            (SELECT   a.po_no,a.pur_no,e.project_id,f.proj_name,e.vendor_id,g.vendor_name,a.item_id,
+          
+        """
+        schema = """
+
+ (SELECT   a.po_no,a.pur_no,e.project_id,f.proj_name,e.vendor_id,g.vendor_name,a.item_id,
                 c.prod_name,a.approved_ord_qty "orderd_qty",
                 SUM(b.rc_qty)"rcvd_qty",(a.approved_ord_qty - SUM(b.rc_qty))"pending_qty"
                 FROM     
@@ -942,7 +945,7 @@ async def get_project_po(id: mrnprojreport):
         GROUP BY a.po_no,b.prod_id)b
         WHERE a.po_no  = b.po_no AND a.item_id=b.prod_id
 
-        """
+"""
         group_by = """
             GROUP BY i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty,
             pb.pur_req, v.vendor_name, pb.po_no
@@ -996,6 +999,6 @@ async def get_project_po(id: mrnprojreport):
     # print('query===========',join_schema + group_by)
     print('query===========',join_schema + group_by)
     # result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
-    result = await db_select(select,'', where="", order="", flag=1)
+    result = await db_select(select,schema, where="", order="", flag=1)
     return result
 
