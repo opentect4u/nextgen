@@ -924,7 +924,7 @@ async def get_project_po(id: mrnprojreport):
         schema = f"""
 
  (SELECT   a.po_no,a.pur_no,e.project_id,f.proj_name,e.vendor_id,g.vendor_name,a.item_id,
-                c.prod_name,a.approved_ord_qty "orderd_qty",
+                c.prod_name,c.prod_make,c.part_no,c.article_no,c.model_no,c.prod_desc,a.approved_ord_qty "orderd_qty",
                 SUM(b.rc_qty)"rcvd_qty",(a.approved_ord_qty - SUM(b.rc_qty))"pending_qty"
                 FROM     
                 td_purchase_items a,td_item_delivery_details b,md_product c,
@@ -975,7 +975,7 @@ async def get_project_po(id: mrnprojreport):
         schema = f"""
 
              (SELECT   a.po_no,a.pur_no,e.vendor_id,g.vendor_name,a.item_id,
-                c.prod_name,a.approved_ord_qty "orderd_qty",
+                c.prod_name,c.prod_make,c.part_no,c.article_no,c.model_no,c.prod_desc,a.approved_ord_qty "orderd_qty",
                 SUM(b.rc_qty)"rcvd_qty",(a.approved_ord_qty - SUM(b.rc_qty))"pending_qty"
                 FROM     
                 td_purchase_items a,td_item_delivery_details b,md_product c,
