@@ -965,7 +965,7 @@ async def get_project_po(id: mrnprojreport):
     else:  # Warehouse type
         select = """
            a.po_no as 'PO No.',a.pur_no as 'Purchase Requisition','Warehouse' as 'Project',a.vendor_id,a.vendor_name as 'Vendor',a.item_id,
-           a.prod_name as 'Product',a.orderd_qty as 'Ordered Quantity',a.rcvd_qty as 'Received Quantity',a.pending_qty as 'Pending Quantity',b.Invoice as 'Invoice,b.Invoice_Date as 'Invoice Date'
+           a.prod_name as 'Product',a.orderd_qty as 'Ordered Quantity',a.rcvd_qty as 'Received Quantity',a.pending_qty as 'Pending Quantity',b.Invoice as 'Invoice',b.Invoice_Date as 'Invoice Date'
           
         """
         schema = f"""
