@@ -964,7 +964,7 @@ async def get_project_po(id: mrnprojreport):
         """
     else:  # Warehouse type
         select = """
-           a.po_no,a.pur_no,a.project_id,'Warehouse' as proj_name,a.vendor_id,a.vendor_name,a.item_id,
+           a.po_no,a.pur_no,'Warehouse' as proj_name,a.vendor_id,a.vendor_name,a.item_id,
            a.prod_name,a.orderd_qty,a.rcvd_qty,a.pending_qty,b.Invoice,b.Invoice_Date
           
         """
