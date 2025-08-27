@@ -910,7 +910,7 @@ async def get_project_po(id: mrnprojreport):
             else:
                 criteria = f"e.po_no = '{id.po_no}' AND e.project_id = 0"
 
-    print(f"Criteria: {criteria}")
+    # print(f"Criteria: {criteria}")
 
     
     if id.type == 'P':  # Project type
@@ -923,12 +923,12 @@ async def get_project_po(id: mrnprojreport):
                 SUM(b.rc_qty)"rcvd_qty",(a.approved_ord_qty - SUM(b.rc_qty))"pending_qty"
                 FROM     
                 td_purchase_items a,td_item_delivery_details b,md_product c,
-         td_item_delivery_invoice d,td_po_basic e,td_project f,md_vendor g
-         WHERE    a.po_no = b.po_no
-         AND      a.item_id = b.prod_id
-         AND      a.item_id = c.sl_no
-         AND      b.invoice   = d.invoice
-         AND      a.po_no   = e.po_no
+                td_item_delivery_invoice d,td_po_basic e,td_project f,md_vendor g
+                WHERE    a.po_no = b.po_no
+                AND      a.item_id = b.prod_id
+                AND      a.item_id = c.sl_no
+                AND      b.invoice   = d.invoice
+                AND      a.po_no   = e.po_no
          AND      e.project_id = f.sl_no
          AND      e.vendor_id = g.sl_no
          AND      d.invoice_dt BETWEEN '2025-01-01' AND '2025-08-26'
@@ -993,6 +993,7 @@ async def get_project_po(id: mrnprojreport):
 
     
     # result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
+    # print('query===========',join_schema + group_by)
     print('query===========',join_schema + group_by)
     # result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
     result = await db_select(select,'', where="", order="", flag=1)
