@@ -871,3 +871,130 @@ async def getprojectpoc(flag:dashboardReport):
     result = await db_select(select, schema, where, order, flag)
     print(result)
     return result
+
+
+
+
+@reportRouter.post('/powise_mrn_report')
+async def get_project_po(id: mrnprojreport):
+    
+    if id.po_no == '0':
+        if id.type == 'P':  # Project PO
+            if id.vendor_id and id.proj_id:
+                criteria = f"e.vendor_id = {id.vendor_id} AND e.project_id = {id.proj_id}"
+            elif id.vendor_id:
+                criteria = f"e.vendor_id = {id.vendor_id} AND e.project_id != 0"
+            elif id.proj_id:
+                criteria = f"e.project_id = {id.proj_id}"
+            else:
+                criteria = "e.project_id != 0"
+        else:  # Warehouse PO
+            if id.vendor_id:
+                criteria = f"e.vendor_id = {id.vendor_id} AND e.project_id = 0"
+            else:
+                criteria = "e.project_id = 0"
+    else:
+        # po_no is specific (not '0')
+        if id.type == 'P':
+            if id.vendor_id and id.proj_id:
+                criteria = f"e.vendor_id = {id.vendor_id} AND e.project_id = {id.proj_id} AND e.po_no = '{id.po_no}'"
+            elif id.vendor_id:
+                criteria = f"e.vendor_id = {id.vendor_id} AND e.project_id != 0 AND e.po_no = '{id.po_no}'"
+            elif id.proj_id:
+                criteria = f"e.project_id = {id.proj_id} AND e.po_no = '{id.po_no}'"
+            else:
+                criteria = f"e.po_no = '{id.po_no}'"
+        else:
+            if id.vendor_id:
+                criteria = f"e.vendor_id = {id.vendor_id} AND e.project_id = 0 AND e.po_no = '{id.po_no}'"
+            else:
+                criteria = f"e.po_no = '{id.po_no}' AND e.project_id = 0"
+
+    print(f"Criteria: {criteria}")
+
+    
+    if id.type == 'P':  # Project type
+        select = """
+           a.po_no,a.pur_no,a.project_id,a.proj_name,a.vendor_id,a.vendor_name,a.item_id,
+           a.prod_name,a.orderd_qty,a.rcvd_qty,a.pending_qty,b.Invoice,b.Invoice_Date
+            FROM
+            (SELECT   a.po_no,a.pur_no,e.project_id,f.proj_name,e.vendor_id,g.vendor_name,a.item_id,
+                c.prod_name,a.approved_ord_qty "orderd_qty",
+                SUM(b.rc_qty)"rcvd_qty",(a.approved_ord_qty - SUM(b.rc_qty))"pending_qty"
+                FROM     
+                td_purchase_items a,td_item_delivery_details b,md_product c,
+         td_item_delivery_invoice d,td_po_basic e,td_project f,md_vendor g
+         WHERE    a.po_no = b.po_no
+         AND      a.item_id = b.prod_id
+         AND      a.item_id = c.sl_no
+         AND      b.invoice   = d.invoice
+         AND      a.po_no   = e.po_no
+         AND      e.project_id = f.sl_no
+         AND      e.vendor_id = g.sl_no
+         AND      d.invoice_dt BETWEEN '2025-01-01' AND '2025-08-26'
+         GROUP BY a.po_no,a.pur_no,e.project_id,f.proj_name,e.vendor_id,g.vendor_name,a.item_id,c.prod_name,a.approved_ord_qty
+         ORDER BY po_no,pur_no,item_id)a,
+
+        (SELECT a.po_no,b.prod_id,GROUP_CONCAT(a.invoice SEPARATOR ',\n') AS 'Invoice',
+        GROUP_CONCAT(DATE_FORMAT(a.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice_Date'
+        FROM td_item_delivery_invoice a, td_item_delivery_details b
+        WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN '2025-01-01' AND '2025-08-20'
+        GROUP BY a.po_no,b.prod_id)b
+        WHERE a.po_no  = b.po_no AND a.item_id=b.prod_id
+
+        """
+        group_by = """
+            GROUP BY i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty,
+            pb.pur_req, v.vendor_name, pb.po_no
+        """
+        join_schema = f"""
+            td_po_items i
+            LEFT JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND {criteria}
+            LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no
+            LEFT JOIN md_product p ON i.item_id = p.sl_no
+            LEFT JOIN td_project pd ON pb.project_id = pd.sl_no
+            LEFT JOIN md_vendor v ON pb.vendor_id = v.sl_no
+            LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id
+            LEFT JOIN td_item_delivery_invoice inv ON d.mrn_no = inv.mrn_no
+            where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'
+
+        """
+    else:  # Warehouse type
+        select = f"""
+            DISTINCT i.item_id,
+            CONCAT(p.prod_name, '(Make:', p.prod_make, ', Part No.:', p.part_no,
+                ',  Article No.:', p.article_no, ', Model No.:', p.model_no,
+                ', Description:', p.prod_desc, ')') AS 'Product',
+            GROUP_CONCAT(DISTINCT d.invoice SEPARATOR ',\n') AS 'Invoice',
+            GROUP_CONCAT(DATE_FORMAT(inv.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice Date',
+            pi.approved_ord_qty as 'Ordered Quantity',
+            SUM(d.rc_qty) AS 'Received Quantity',
+            pi.approved_ord_qty - SUM(d.rc_qty) as 'Pending Quantity',
+            pb.pur_req as 'Purchase Requisition',
+            pb.po_no as 'PO No.',
+            'Warehouse' AS 'Project',
+            v.vendor_name as 'Vendor'
+        """
+        group_by = """
+            GROUP BY i.item_id, i.quantity, p.prod_name, pi.approved_ord_qty,
+            pb.pur_req, v.vendor_name, pb.po_no
+        """
+        join_schema = f"""
+            td_po_items i
+            LEFT JOIN td_po_basic pb ON i.po_sl_no = pb.sl_no AND {criteria}
+            LEFT JOIN td_item_delivery_details d ON i.item_id = d.prod_id AND d.po_no = pb.po_no
+            LEFT JOIN md_product p ON i.item_id = p.sl_no
+            LEFT JOIN md_vendor v ON pb.vendor_id = v.sl_no
+            LEFT JOIN td_purchase_items pi ON i.item_id = pi.item_id
+            LEFT JOIN td_item_delivery_invoice inv ON d.mrn_no = inv.mrn_no
+            where inv.invoice_dt between '{id.from_dt}' and '{id.to_dt}'
+
+        """
+
+    
+    # result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
+    print('query===========',join_schema + group_by)
+    # result = await db_select(select, join_schema + group_by, where="", order="", flag=1)
+    result = await db_select(select,'', where="", order="", flag=1)
+    return result
+
