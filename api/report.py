@@ -934,14 +934,14 @@ async def get_project_po(id: mrnprojreport):
                 AND      a.po_no   = e.po_no
          AND      e.project_id = f.sl_no
          AND      e.vendor_id = g.sl_no
-         AND      d.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt} AND {criteria}
+         AND      d.invoice_dt BETWEEN '{id.from_dt}' AND '{id.to_dt}' AND {criteria}
          GROUP BY a.po_no,a.pur_no,e.project_id,f.proj_name,e.vendor_id,g.vendor_name,a.item_id,c.prod_name,a.approved_ord_qty
          ORDER BY po_no,pur_no,item_id)a,
 
         (SELECT a.po_no,b.prod_id,GROUP_CONCAT(a.invoice SEPARATOR ',\n') AS 'Invoice',
         GROUP_CONCAT(DATE_FORMAT(a.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice_Date'
         FROM td_item_delivery_invoice a, td_item_delivery_details b
-        WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt}
+        WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN '{id.from_dt}' AND '{id.to_dt}'
         GROUP BY a.po_no,b.prod_id)b
         WHERE a.po_no  = b.po_no AND a.item_id=b.prod_id
 
