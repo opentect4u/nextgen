@@ -3560,6 +3560,7 @@ async def get_item_dtls(data:ProjId):
         final_merged.append(base)
         # result = {'suc':1,'msg':list(combined_items.values())}
         
+    # return {'suc':1,'msg':final_merged}
     return {'suc':1,'msg':final_merged}
 
 
