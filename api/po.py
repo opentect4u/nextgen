@@ -3293,8 +3293,9 @@ async def item_dtls(data:ProjId):
 #     res_dt = {'suc':1, 'msg':res_dt1['msg']+res_dt2['msg']}
 #     return res_dt
 
-@poRouter.post("/item_dtls")
+@poRouter.post("/item_dtls_previous")
 async def item_dtls(data:ProjId):
+    # this is the previous one before system hang. May need to be reverted back to this
     select1 = f"distinct c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.rc_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(req_qty) from td_requisition_items where project_id={data.Proj_id} and item_id=d.item_id) as tot_req,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1 and ref_no not like '%T%') as tot_del"
     # select1 = f"distinct c.prod_name, c.sl_no prod_id,c.article_no,c.part_no,c.model_no,c.part_no, sum(b.rc_qty) tot_rc_qty,(SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id={data.Proj_id}) as project_stock, (SELECT SUM(qty*in_out_flag) FROM `td_stock_new` WHERE item_id=c.sl_no and proj_id='0') as warehouse_stock,(select sum(req_qty) from td_requisition_items where project_id={data.Proj_id} and item_id=d.item_id) as tot_req,(select sum(qty) from td_stock_new where proj_id={data.Proj_id} and item_id=c.sl_no and in_out_flag=-1) as tot_del"
     table1 = "td_po_basic a, md_product c LEFT JOIN td_po_items d ON c.sl_no=d.item_id LEFT JOIN td_item_delivery_details b ON d.item_id=b.prod_id "
@@ -3327,6 +3328,28 @@ async def item_dtls(data:ProjId):
 
     res_dt = {'suc':1, 'msg':res_dt1['msg']+res_dt2['msg']+res_dt3['msg']}
     return res_dt
+
+@poRouter.post("/item_dtls")
+async def item_dtls(data:ProjId):
+    # This is done after hanging
+    select1 = f"SELECT item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc,SUM(warehouse_stock)warehouse_stock,SUM(req_qty)req_qty,(SUM(warehouse_stock) - SUM(req_qty))available"
+    table1 = f"""SELECT a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,SUM(a.qty * a.in_out_flag)warehouse_stock,0 req_qty FROM td_stock_new a, md_product b
+                WHERE  a.item_id = b.sl_no
+                AND    a.proj_id = '{data.Proj_id}'
+                GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc
+                UNION
+                SELECT a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,0 warehouse_stock,SUM(a.req_qty)req_qty
+                FROM   td_requisition_items a, md_product b
+                WHERE  a.item_id = b.sl_no
+                AND    a.project_id = '{data.Proj_id}'
+                GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc)a"""
+    
+    where1 = f"item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc"
+    order1 = "ORDER BY item_id"
+    flag1 = 1 
+    res_dt1 = await db_select(select1,table1,where1,order1,flag1)
+    return res_dt1
+
 
 @poRouter.post("/item_dtls_trans")
 async def item_dtls_req(data:ProjId):
@@ -3762,8 +3785,6 @@ async def approvepo(id:approveReq):
                 res_dt={'suc':1,'msg':'Cancelled successfully!'}
             else:
                 res_dt={'suc':0,'msg':'Error while deleting!'}
-       
-
 
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!"}
