@@ -3348,6 +3348,7 @@ async def item_dtls(data:ProjId):
     order1 = "ORDER BY item_id"
     flag1 = 1 
     res_dt1 = await db_select(select1,table1,where1,order1,flag1)
+    print('res_dt1==========================',res_dt1)
     return res_dt1
 
 
