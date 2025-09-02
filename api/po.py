@@ -3342,9 +3342,12 @@ async def item_dtls(data:ProjId):
                 FROM   td_requisition_items a, md_product b
                 WHERE  a.item_id = b.sl_no
                 AND    a.project_id = '{data.Proj_id}'
-                GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc)a"""
+                GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc)a
+                
+                GROUP BY item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc
+                """
     
-    where1 = f"item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc"
+    where1 = f""
     order1 = "ORDER BY item_id"
     flag1 = 1 
     res_dt1 = await db_select(select1,table1,where1,order1,flag1)
