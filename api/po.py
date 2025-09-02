@@ -3332,26 +3332,25 @@ async def item_dtls(data:ProjId):
 @poRouter.post("/item_dtls")
 async def item_dtls(data:ProjId):
     # This is done after hanging
-    select1 = f"item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc,SUM(warehouse_stock)tot_rc_qty,SUM(req_qty)tot_req,(SUM(warehouse_stock) - SUM(req_qty))available"
-    table1 = f"""(SELECT a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,SUM(a.qty * a.in_out_flag)tot_rc_qty,0 tot_req FROM td_stock_new a, md_product b
+    select1 = f"SELECT item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc,SUM(warehouse_stock)tot_rc_qty,SUM(req_qty)req_qty,(SUM(warehouse_stock) - SUM(req_qty))available"
+    table1 = f"""SELECT a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,SUM(a.qty * a.in_out_flag)warehouse_stock,0 req_qty FROM td_stock_new a, md_product b
                 WHERE  a.item_id = b.sl_no
                 AND    a.proj_id = '{data.Proj_id}'
                 GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc
                 UNION
-                SELECT a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,0 warehouse_stock,SUM(a.req_qty)tot_req
+                SELECT a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,0 warehouse_stock,SUM(a.req_qty)req_qty
                 FROM   td_requisition_items a, md_product b
                 WHERE  a.item_id = b.sl_no
                 AND    a.project_id = '{data.Proj_id}'
                 GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc)a
                 
-                GROUP BY item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc
+                group by item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc
                 """
     
     where1 = f""
     order1 = "ORDER BY item_id"
     flag1 = 1 
     res_dt1 = await db_select(select1,table1,where1,order1,flag1)
-    print('res_dt1==========================',res_dt1)
     return res_dt1
 
 
