@@ -1067,18 +1067,19 @@ async def get_project_po(id: mrnprojreport):
            CONCAT(a.prod_name , '(Make:', a.prod_make, ', Part No.:', a.part_no,
                 ',  Article No.:', a.article_no, ', Model No.:', a.model_no,
                 ', Description:', a.prod_desc, ')') as 'Product',a.orderd_qty as 'Ordered Quantity',a.rcvd_qty as 'Received Quantity',a.pending_qty as 'Pending Quantity',b.Invoice as 'Invoice',b.Invoice_Date as 'Invoice Date'
+          
         """
         schema =f"""
             (SELECT  a.po_no,a.pur_no,e.project_id,f.proj_name,e.vendor_id,g.vendor_name,a.item_id,
-            c.prod_name AS prod_name_subquery,a.approved_ord_qty "orderd_qty",c.prod_make,c.part_no,c.article_no,c.model_no,c.prod_desc,
+            c.prod_name,a.approved_ord_qty "orderd_qty",c.prod_make,c.part_no,c.article_no,c.model_no,c.prod_desc,
             IFNULL(SUM(b.rc_qty),0) "rcvd_qty",(a.approved_ord_qty - SUM(b.rc_qty))"pending_qty"
             FROM      td_purchase_items a
             LEFT JOIN td_item_delivery_details b ON a.po_no = b.po_no AND a.item_id = b.prod_id
             JOIN      md_product c ON a.item_id = c.sl_no
             LEFT JOIN td_item_delivery_invoice d ON b.invoice = d.invoice AND d.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt}
             JOIN      td_po_basic e ON a.po_no   = e.po_no
-            JOIN      td_project f ON e.project_id = f.sl_no
-            JOIN      md_vendor g ON e.vendor_id = g.sl_no  
+            JOIN 	  td_project f ON e.project_id = f.sl_no
+            JOIN	  md_vendor g ON e.vendor_id = g.sl_no  
             WHERE  {criteria} 
             GROUP BY a.po_no,a.pur_no,e.project_id,f.proj_name,e.vendor_id,g.vendor_name,a.item_id,c.prod_name,a.approved_ord_qty
             ORDER BY po_no,pur_no,item_id)a
@@ -1088,7 +1089,9 @@ async def get_project_po(id: mrnprojreport):
             FROM td_item_delivery_invoice a, td_item_delivery_details b
             WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt}
             GROUP BY a.po_no,b.prod_id)b ON a.po_no  = b.po_no AND a.item_id=b.prod_id
-        """
+
+
+"""
         
         
         
