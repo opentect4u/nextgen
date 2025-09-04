@@ -1141,36 +1141,32 @@ async def get_project_po(id: mrnprojreport):
         """
     else:  # Warehouse type
         select = """
-           a.po_no as 'PO No.',a.pur_no as 'Purchase Requisition','Warehouse' as 'Project',a.vendor_id,a.vendor_name as 'Vendor',a.item_id,
-            CONCAT(a.prod_name , '(Make:', a.prod_make, ', Part No.:', a.part_no,
+                    a.po_no 'PO No.',a.pur_no 'Purchase Requisition','Warehouse' as 'Project',a.vendor_id,a.vendor_name 'Vendor',a.item_id,
+           CONCAT(a.prod_name , '(Make:', a.prod_make, ', Part No.:', a.part_no,
                 ',  Article No.:', a.article_no, ', Model No.:', a.model_no,
-                ', Description:', a.prod_desc, ')') as 'Product' ,a.orderd_qty as 'Ordered Quantity',a.rcvd_qty as 'Received Quantity',a.pending_qty as 'Pending Quantity',b.Invoice as 'Invoice',b.Invoice_Date as 'Invoice Date'
+                ', Description:', a.prod_desc, ')') 'Product',a.orderd_qty 'Ordered Quantity',a.rcvd_qty 'Received Quantity',a.pending_qty 'Pending Quantity',b.Invoice as 'Invoice',b.Invoice_Date as 'Invoice Date'
           
         """
         schema = f"""
 
-             (SELECT   a.po_no,a.pur_no,e.vendor_id,g.vendor_name,a.item_id,
-                c.prod_name,c.prod_make,c.part_no,c.article_no,c.model_no,c.prod_desc,a.approved_ord_qty "orderd_qty",
-                SUM(b.rc_qty)"rcvd_qty",(a.approved_ord_qty - SUM(b.rc_qty))"pending_qty"
-                FROM     
-                td_purchase_items a,td_item_delivery_details b,md_product c,
-                td_item_delivery_invoice d,td_po_basic e,md_vendor g
-                WHERE    a.po_no = b.po_no
-                AND      a.item_id = b.prod_id
-                AND      a.item_id = c.sl_no
-                AND      b.invoice   = d.invoice
-                AND      a.po_no   = e.po_no
-            AND      e.vendor_id = g.sl_no
-         AND      d.invoice_dt BETWEEN '{id.from_dt}' AND '{id.to_dt}' AND {criteria}
-         GROUP BY a.po_no,a.pur_no,e.project_id,e.vendor_id,g.vendor_name,a.item_id,c.prod_name,a.approved_ord_qty
-         ORDER BY po_no,pur_no,item_id)a,
-
-        (SELECT a.po_no,b.prod_id,GROUP_CONCAT(a.invoice SEPARATOR ',\n') AS 'Invoice',
-        GROUP_CONCAT(DATE_FORMAT(a.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice_Date'
-        FROM td_item_delivery_invoice a, td_item_delivery_details b
-        WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN '{id.from_dt}' AND '{id.to_dt}'
-        GROUP BY a.po_no,b.prod_id)b
-        WHERE a.po_no  = b.po_no AND a.item_id=b.prod_id
+            (SELECT  a.po_no,a.pur_no,e.project_id,e.vendor_id,g.vendor_name,a.item_id,
+            c.prod_name,a.approved_ord_qty "orderd_qty",c.prod_make,c.part_no,c.article_no,c.model_no,c.prod_desc,
+            IFNULL(SUM(b.rc_qty),0) "rcvd_qty",(a.approved_ord_qty - IFNULL(SUM(b.rc_qty),0))"pending_qty"
+            FROM      td_purchase_items a
+            LEFT JOIN td_item_delivery_details b ON a.po_no = b.po_no AND a.item_id = b.prod_id
+            JOIN      md_product c ON a.item_id = c.sl_no
+            LEFT JOIN td_item_delivery_invoice d ON b.invoice = d.invoice AND d.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt}
+            JOIN      td_po_basic e ON a.po_no   = e.po_no
+            JOIN	  md_vendor g ON e.vendor_id = g.sl_no  
+            WHERE  {criteria} 
+            GROUP BY a.po_no,a.pur_no,e.project_id,e.vendor_id,g.vendor_name,a.item_id,c.prod_name,a.approved_ord_qty
+            ORDER BY po_no,pur_no,item_id)a
+            LEFT JOIN
+            (SELECT a.po_no,b.prod_id,GROUP_CONCAT(a.invoice SEPARATOR ',\n') AS 'Invoice',
+            GROUP_CONCAT(DATE_FORMAT(a.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice_Date'
+            FROM td_item_delivery_invoice a, td_item_delivery_details b
+            WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt}
+            GROUP BY a.po_no,b.prod_id)b ON a.po_no  = b.po_no AND a.item_id=b.prod_id
 
 """
         group_by = """
