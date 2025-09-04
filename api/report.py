@@ -1072,7 +1072,7 @@ async def get_project_po(id: mrnprojreport):
         schema =f"""
             (SELECT  a.po_no,a.pur_no,e.project_id,f.proj_name,e.vendor_id,g.vendor_name,a.item_id,
             c.prod_name,a.approved_ord_qty "orderd_qty",c.prod_make,c.part_no,c.article_no,c.model_no,c.prod_desc,
-            IFNULL(SUM(b.rc_qty),0) "rcvd_qty",(a.approved_ord_qty - SUM(b.rc_qty))"pending_qty"
+            IFNULL(SUM(b.rc_qty),0) "rcvd_qty",IFNULL((a.approved_ord_qty - SUM(b.rc_qty)),0)"pending_qty"
             FROM      td_purchase_items a
             LEFT JOIN td_item_delivery_details b ON a.po_no = b.po_no AND a.item_id = b.prod_id
             JOIN      md_product c ON a.item_id = c.sl_no
