@@ -1066,7 +1066,7 @@ async def get_project_po(id: mrnprojreport):
           a.po_no 'PO No.',a.pur_no 'Purchase Requisition',a.project_id,a.proj_name 'Project',a.vendor_id,a.vendor_name 'Vendor',a.item_id,
            CONCAT(a.prod_name , '(Make:', a.prod_make, ', Part No.:', a.part_no,
                 ',  Article No.:', a.article_no, ', Model No.:', a.model_no,
-                ', Description:', a.prod_desc, ')') 'Product',a.orderd_qty 'Ordered Quantity',a.rcvd_qty 'Received Quantity',a.pending_qty 'Pending Quantity',b.Invoice as 'Invoice',b.Invoice_Date as 'Invoice Date'
+                ', Description:', a.prod_desc, ')') 'Product',a.orderd_qty 'Ordered Quantity',a.rcvd_qty 'Received Quantity',IFNULL(a.pending_qty,0) 'Pending Quantity',b.Invoice as 'Invoice',b.Invoice_Date as 'Invoice Date'
           
         """
         schema =f"""
