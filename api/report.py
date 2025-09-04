@@ -1064,7 +1064,7 @@ async def get_project_po(id: mrnprojreport):
     if id.type == 'P':  # Project type
         select = """
           a.po_no,a.pur_no,a.project_id,a.proj_name,a.vendor_id,a.vendor_name,a.item_id,
-       a.prod_name,a.orderd_qty,a.rcvd_qty,a.pending_qty,b.Invoice,b.Invoice_Date
+       a.prod_name,a.prod_make,a.prod_desc,a.part_no,a.article_no,a.model_no,a.orderd_qty,a.rcvd_qty,a.pending_qty,b.Invoice,b.Invoice_Date
           
         """
         schema =f"""
