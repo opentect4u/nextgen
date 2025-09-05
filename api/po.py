@@ -5314,7 +5314,7 @@ async def checkduplicate(id:GetPur):
 async def checkduplicate(id:GetPur):
     select = "max(invoice_dt) as to_dt,min(invoice_dt) as from_dt"
     schema = "td_item_delivery_invoice"
-    where =  f'po_no="{id.id}"'
+    where =  f'po_no="{id.id}" and approve_flag="A"'
     order = ""
     flag = 1
     result = await db_select(select,schema,where,order,flag)
