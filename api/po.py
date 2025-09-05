@@ -5307,6 +5307,19 @@ async def checkduplicate(id:GetPur):
     result = await db_select(select,schema,where,order,flag)
     print(result)
     return result
+
+
+
+@poRouter.post('/get_invoice_dt')
+async def checkduplicate(id:GetPur):
+    select = "select max(invoice_dt) as to_dt,min(invoice_dt) as from_dt"
+    schema = "td_item_delivery_invoice"
+    where =  f'po_no="{id.id}"'
+    order = ""
+    flag = 1
+    result = await db_select(select,schema,where,order,flag)
+    print(result)
+    return result
     
 
   
