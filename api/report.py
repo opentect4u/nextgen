@@ -1076,7 +1076,7 @@ async def get_project_po(id: mrnprojreport):
             FROM      td_purchase_items a
             LEFT JOIN td_item_delivery_details b ON a.po_no = b.po_no AND a.item_id = b.prod_id
             JOIN      md_product c ON a.item_id = c.sl_no
-            LEFT JOIN td_item_delivery_invoice d ON b.invoice = d.invoice AND d.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt}
+            LEFT JOIN td_item_delivery_invoice d ON b.invoice = d.invoice AND d.invoice_dt BETWEEN '{id.from_dt}' AND '{id.to_dt}'
             JOIN      td_po_basic e ON a.po_no   = e.po_no
             JOIN 	  td_project f ON e.project_id = f.sl_no
             JOIN	  md_vendor g ON e.vendor_id = g.sl_no  
@@ -1087,7 +1087,7 @@ async def get_project_po(id: mrnprojreport):
             (SELECT a.po_no,b.prod_id,GROUP_CONCAT(a.invoice SEPARATOR ',\n') AS 'Invoice',
             GROUP_CONCAT(DATE_FORMAT(a.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice_Date'
             FROM td_item_delivery_invoice a, td_item_delivery_details b
-            WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt}
+            WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN '{id.from_dt}' AND '{id.to_dt}'
             GROUP BY a.po_no,b.prod_id)b ON a.po_no  = b.po_no AND a.item_id=b.prod_id
 
 
@@ -1155,7 +1155,7 @@ async def get_project_po(id: mrnprojreport):
             FROM      td_purchase_items a
             LEFT JOIN td_item_delivery_details b ON a.po_no = b.po_no AND a.item_id = b.prod_id
             JOIN      md_product c ON a.item_id = c.sl_no
-            LEFT JOIN td_item_delivery_invoice d ON b.invoice = d.invoice AND d.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt}
+            LEFT JOIN td_item_delivery_invoice d ON b.invoice = d.invoice AND d.invoice_dt BETWEEN '{id.from_dt}' AND '{id.to_dt}'
             JOIN      td_po_basic e ON a.po_no   = e.po_no
             JOIN	  md_vendor g ON e.vendor_id = g.sl_no  
             WHERE  {criteria} 
@@ -1165,7 +1165,7 @@ async def get_project_po(id: mrnprojreport):
             (SELECT a.po_no,b.prod_id,GROUP_CONCAT(a.invoice SEPARATOR ',\n') AS 'Invoice',
             GROUP_CONCAT(DATE_FORMAT(a.invoice_dt, '%d/%m/%Y') SEPARATOR ',\n') AS 'Invoice_Date'
             FROM td_item_delivery_invoice a, td_item_delivery_details b
-            WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN {id.from_dt} AND {id.to_dt}
+            WHERE a.sl_no=b.del_last_id AND a.invoice_dt BETWEEN '{id.from_dt}' AND '{id.to_dt}'
             GROUP BY a.po_no,b.prod_id)b ON a.po_no  = b.po_no AND a.item_id=b.prod_id
 
 """
