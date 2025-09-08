@@ -3346,7 +3346,6 @@ async def item_dtls(data:ProjId):
                 
                 group by item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc
                 """
-    
     where1 = f""
     order1 = "ORDER BY item_id"
     flag1 = 1 
