@@ -511,9 +511,23 @@ async def getprojectpoc(id:GetStock):
     # result_can = await db_select(select_can, schema_can, where_can, order_can, flag_can)
     # print("can_stock=======",result_can['msg']['can_stock'])
 
+    # /////////////////////////////////////////////////////////////////
+
+    # select2 = f"sum(qty) as del_stock"
+    # schema2 = "td_stock_new"
+    # where2 = f"item_id={id.prod_id} and proj_id ={id.proj_id} and in_out_flag=-1 and ref_no not like '%TP%'"
+    # order2 = ""
+    # flag2 = 0 
+    # result2 = await db_select(select2, schema2, where2, order2, flag2)
+    # print(result2)
+
+    
+
+    # ///////////////////////////////////////////////////////////////
+
     select2 = f"sum(qty) as del_stock"
     schema2 = "td_stock_new"
-    where2 = f"item_id={id.prod_id} and proj_id ={id.proj_id} and in_out_flag=-1 and ref_no not like '%TP%'"
+    where2 = f"item_id={id.prod_id} and proj_id ={id.proj_id} and in_out_flag=-1 and ref_no not like '%T%'"
     order2 = ""
     flag2 = 0 
     result2 = await db_select(select2, schema2, where2, order2, flag2)
