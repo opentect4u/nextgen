@@ -1319,7 +1319,7 @@ async def addexistingpo(data:PoModel):
 
     if(result['suc']>0 and item_save>0 and result2['suc']>0 and payment_save>0 and result4['suc']>0 and result5['suc']>0):
         res_dt = {"suc": 1, "msg": f"Saved successfully!" if data.sl_no==0 else f"Updated successfully!","po_sl_no": lastID}
-        await user_log_update(data.user,'N','td_po_basic',formatted_dt,lastID) if data.sl_no==0 else  await user_log_update(data.user,'E','td_po_basic',data.sl_no)
+        await user_log_update(data.user,'N','td_po_basic',formatted_dt,lastID) if data.sl_no==0 else  await user_log_update(data.user,'E','td_po_basic',formatted_dt,data.sl_no)
 
     else:
         res_dt = {"suc": 0, "msg": f"Error while saving!" if data.sl_no==0 else f"Error while updating","po_sl_no": lastID}
