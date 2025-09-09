@@ -3361,13 +3361,13 @@ async def item_dtls(data:ProjId):
                 WHERE  a.item_id = b.sl_no
                 AND    a.proj_id = '{data.Proj_id}'
                 GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc
-                UNION
+                UNION ALL
                 SELECT a.item_id,b.prod_name,b.sl_no,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,0 warehouse_stock,SUM(a.req_qty)req_qty, 0 tot_del
                 FROM   td_requisition_items a, md_product b
                 WHERE  a.item_id = b.sl_no
                 AND    a.project_id = '{data.Proj_id}'
                 GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc
-                UNION
+                UNION ALL
                 SELECT a.item_id,b.prod_name,b.sl_no,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,0 warehouse_stock,0 req_qty,SUM(a.qty) tot_del
                 FROM   td_stock_new a, md_product b
                 WHERE  a.item_id = b.sl_no
