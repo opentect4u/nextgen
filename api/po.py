@@ -3329,7 +3329,7 @@ async def item_dtls(data:ProjId):
     res_dt = {'suc':1, 'msg':res_dt1['msg']+res_dt2['msg']+res_dt3['msg']}
     return res_dt
 
-@poRouter.post("/item_dtls")
+@poRouter.post("/item_dtls_final_backup")
 async def item_dtls(data:ProjId):
     # This is done after hanging
     select1 = f"item_id,prod_name,sl_no prod_id, prod_make,part_no,model_no,article_no,prod_desc,SUM(warehouse_stock)tot_rc_qty,SUM(req_qty)tot_req,(SUM(warehouse_stock) - SUM(req_qty))available"
@@ -3343,6 +3343,39 @@ async def item_dtls(data:ProjId):
                 WHERE  a.item_id = b.sl_no
                 AND    a.project_id = '{data.Proj_id}'
                 GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc)a
+                
+                group by item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc
+                """
+    where1 = f""
+    order1 = "ORDER BY item_id"
+    flag1 = 1 
+    res_dt1 = await db_select(select1,table1,where1,order1,flag1)
+    return res_dt1
+
+
+@poRouter.post("/item_dtls")
+async def item_dtls(data:ProjId):
+    # This is done after hanging
+    select1 = f"item_id,prod_name,sl_no prod_id, prod_make,part_no,model_no,article_no,prod_desc,SUM(warehouse_stock)tot_rc_qty,SUM(req_qty)tot_req,(SUM(warehouse_stock) - SUM(req_qty))available"
+    table1 = f"""(SELECT a.item_id,b.prod_name,b.sl_no,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,SUM(a.qty * a.in_out_flag)warehouse_stock,0 req_qty,0 tot_del FROM td_stock_new a, md_product b
+                WHERE  a.item_id = b.sl_no
+                AND    a.proj_id = '{data.Proj_id}'
+                GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc
+                UNION
+                SELECT a.item_id,b.prod_name,b.sl_no,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,0 warehouse_stock,SUM(a.req_qty)req_qty, 0 tot_del
+                FROM   td_requisition_items a, md_product b
+                WHERE  a.item_id = b.sl_no
+                AND    a.project_id = '{data.Proj_id}'
+                GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc
+                UNION
+                SELECT a.item_id,b.prod_name,b.sl_no,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,0 warehouse_stock,0 req_qty,SUM(a.qty) tot_del
+                FROM   td_stock a, md_product b
+                WHERE  a.item_id = b.sl_no
+                AND    a.proj_id = '{data.Proj_id}'
+                AND    a.ref_no NOT LIKE '%T%'
+                AND    a.in_out_flag = -1
+                GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc
+                )a
                 
                 group by item_id,prod_name,prod_make,part_no,model_no,article_no,prod_desc
                 """
