@@ -3369,7 +3369,7 @@ async def item_dtls(data:ProjId):
                 GROUP BY a.item_id,b.prod_name,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc
                 UNION
                 SELECT a.item_id,b.prod_name,b.sl_no,b.prod_make,b.part_no,b.model_no,b.article_no,b.prod_desc,0 warehouse_stock,0 req_qty,SUM(a.qty) tot_del
-                FROM   td_stock a, md_product b
+                FROM   td_stock_new a, md_product b
                 WHERE  a.item_id = b.sl_no
                 AND    a.proj_id = '{data.Proj_id}'
                 AND    a.ref_no NOT LIKE '%T%'
