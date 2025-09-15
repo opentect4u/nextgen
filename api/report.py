@@ -232,6 +232,14 @@ async def getprojectpoc(id:GetStockOut):
 
 @reportRouter.post('/get_stock_out_data1')
 async def getprojectpoc(id:GetStockOut):
+    select_stck1 = f"distinct st.item_id as item_id, p.prod_name as item_name"
+    schema_stck1 = "td_stock_new st,md_product p"
+    where_stck1= f"st.proj_id='{id.proj_id}' and st.item_id=p.sl_no" 
+    order_stck1 = ""
+    flag_stck1 = 1 
+    result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+    print(result_stck1)
+    stock = []
 
     rows = result_stck1.get("msg") or []
     normalized_rows = []
