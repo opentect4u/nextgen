@@ -233,7 +233,7 @@ async def getprojectpoc(id:GetStockOut):
 @reportRouter.post('/get_stock_out_data1')
 async def getprojectpoc(id:GetStockOut):
 
-    select_stck1 = f"st.item_id,p.prod_name AS item_name,latest.balance,COALESCE(reqs.total_req, 0) AS req_stock,COALESCE(reqs.req_list, '[]'::json) AS req_list"
+    select_stck1 = f" st.item_id,p.prod_name AS item_name,latest.balance,COALESCE(reqs.total_req, 0) AS req_stock,COALESCE(reqs.req_list, JSON_ARRAY()) AS req_list"
     schema_stck1 = f"""(SELECT DISTINCT item_id FROM td_stock_new WHERE proj_id = {id.proj_id}) st JOIN md_product p ON p.sl_no = st.item_id LEFT JOIN (  SELECT s.item_id, s.balance
   FROM td_stock_new s
   JOIN (
