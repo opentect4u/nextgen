@@ -233,68 +233,35 @@ async def getprojectpoc(id:GetStockOut):
 @reportRouter.post('/get_stock_out_data1')
 async def getprojectpoc(id:GetStockOut):
 
-    select_stck1 = f"distinct st.item_id as item_id, p.prod_name as item_name"
-    schema_stck1 = "td_stock_new st,md_product p"
-    where_stck1= f"st.proj_id='{id.proj_id}' and st.item_id=p.sl_no" 
-    order_stck1 = ""
+    select_stck1 = f"st.item_id,p.prod_name AS item_name,latest.balance,COALESCE(reqs.total_req, 0) AS req_stock,COALESCE(reqs.req_list, '[]'::json) AS req_list"
+    schema_stck1 = f"""(SELECT DISTINCT item_id FROM td_stock_new WHERE proj_id = {id.proj_id}) st JOIN md_product p ON p.sl_no = st.item_id LEFT JOIN (  SELECT s.item_id, s.balance
+  FROM td_stock_new s
+  JOIN (
+    SELECT item_id, MAX(sl_no) AS max_sl
+    FROM td_stock_new
+    WHERE proj_id = {id.proj_id}
+    GROUP BY item_id
+  ) mx ON s.item_id = mx.item_id AND s.sl_no = mx.max_sl
+  WHERE s.proj_id = {id.proj_id}
+) latest ON latest.item_id = st.item_id
+LEFT JOIN (
+  SELECT i.item_id,
+         SUM(i.approved_qty) AS total_req,
+         json_agg(json_build_object('approved_qty', i.approved_qty, 'req_no', r.req_no, 'project_id', r.project_id)) AS req_list
+  FROM td_requisition_items i
+  JOIN td_requisition r ON i.req_no = r.req_no
+  WHERE r.project_id = {id.proj_id} AND i.approve_flag IN ('A','H')
+  GROUP BY i.item_id
+) reqs ON reqs.item_id = st.item_id"""
+    where_stck1= f"" 
+    order_stck1 = "ORDER BY st.item_id"
     flag_stck1 = 1 
     result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
     print(result_stck1)
     stock = []
+    return result_stck1
 
-    for i in result_stck1['msg']:
-        
-        select_stck = f"max(sl_no) as max_sl"
-        schema_stck = "td_stock_new"
-        where_stck = f"item_id={i['item_id']} and proj_id='{id.proj_id}'"
-        order_stck = ""
-        flag_stck = 0 
-        result_stck = await db_select(select_stck, schema_stck, where_stck, order_stck, flag_stck)
-        
-        select = f"balance"
-        schema = "td_stock_new"
-        where = f"sl_no={result_stck['msg']['max_sl']}"
-        order = ""
-        flag = 0 
-        result = await db_select(select, schema, where, order, flag)
-         
-        select_req = f"i.approved_qty, i.approved_qty as copy_qty,r.req_no as req_no,i.item_id,r.project_id,(select sum(qty) from td_stock_new st where st.item_id={i['item_id']} and st.proj_id={id.proj_id} and st.ref_no=r.req_no) del_qty"
-        schema_req = "td_requisition_items i,td_requisition r"
-        where_req = f"i.item_id={i['item_id']} and r.project_id={id.proj_id} and (i.approve_flag='A' || i.approve_flag='H') and i.req_no=r.req_no"
-        order_req = ""
-        flag_req = 1 
-        result_req = await db_select(select_req, schema_req, where_req, order_req, flag_req)
-        print(result_req)
-
-        # select_trans = f"i.approved_qty, i.approved_qty as copy_qty,r.trans_no as req_no,i.item_id,r.to_proj_id as proj_id,(select sum(qty) from td_stock_new st where st.item_id={i['item_id']} and st.proj_id={id.proj_id} and st.ref_no=r.trans_no and in_out_flag=-1) del_qty"
-        # schema_trans = "td_transfer_items i,td_transfer r"
-        # where_trans = f"i.item_id={i['item_id']} and r.to_proj_id={id.proj_id} and (i.approve_flag='A' || i.approve_flag='H') and i.trans_no=r.trans_no"
-        # order_trans = ""
-        # flag_trans = 1 
-        # result_trans = await db_select(select_trans, schema_trans, where_trans, order_trans, flag_trans)
-        # print(result_req)
-
-        select2 = f"sum(i.approved_qty) as qty,r.req_no as req_no"
-        schema2 = "td_requisition_items i,td_requisition r"
-        where2 = f"i.item_id={i['item_id']} and r.project_id={id.proj_id} and (i.approve_flag='A' || i.approve_flag='H') and i.req_no=r.req_no"
-        order2 = ""
-        flag2= 0 
-        result2 = await db_select(select2, schema2, where2, order2, flag2)
-        print(result2)
-        stock.append({"id":i['item_id'],"name":i['item_name'],"stock":result['msg']['balance'],"req_stock":result2['msg']['qty'],"req_list":result_req['msg']})
-        stock.reverse()
-    return {'suc':1,'msg':stock}
-
-
-
-    # select = f"sum(i.req_qty) req_qty"
-    # schema = "td_stock_new"
-    # where = f"sl_no={result_stck1['msg']['max_sl']}"
-    # order = ""
-    # flag = 1 
-    # result = await db_select(select, schema, where, order, flag)
-    return stock
-
+   
 
 @reportRouter.post('/allitemwise')
 async def getprojectpoc(id:AllItemwise):
