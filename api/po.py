@@ -4394,7 +4394,7 @@ async def approvepo(id:approveMRN):
                  flag_stck2 = 0 
                  result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
                  print(result_stck2)
-                 qty = result_stck2['msg']['balance'] + i.rc_qty 
+                 qty = result_stck2['msg']['balance'] + Decimal(i.rc_qty) 
             else:
                  qty=i.rc_qty
 
