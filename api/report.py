@@ -247,7 +247,7 @@ async def getprojectpoc(id:GetStockOut):
 LEFT JOIN (
   SELECT i.item_id,
          SUM(i.approved_qty) AS total_req,
-         json_agg(json_build_object('approved_qty', i.approved_qty, 'req_no', r.req_no, 'project_id', r.project_id)) AS req_list
+         json_agg(JSON_OBJECT('approved_qty', i.approved_qty, 'req_no', r.req_no, 'project_id', r.project_id)) AS req_list
   FROM td_requisition_items i
   JOIN td_requisition r ON i.req_no = r.req_no
   WHERE r.project_id = {id.proj_id} AND i.approve_flag IN ('A','H')
