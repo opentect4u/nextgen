@@ -232,35 +232,81 @@ async def getprojectpoc(id:GetStockOut):
 
 @reportRouter.post('/get_stock_out_data1')
 async def getprojectpoc(id:GetStockOut):
-    select_stck1 = f"distinct st.item_id as item_id, p.prod_name as item_name"
-    schema_stck1 = "td_stock_new st,md_product p"
-    where_stck1= f"st.proj_id='{id.proj_id}' and st.item_id=p.sl_no" 
-    order_stck1 = ""
-    flag_stck1 = 1 
-    result_stck1= await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
-    print(result_stck1)
-    stock = []
+    select_stck1 = (
+    "st.item_id, p.prod_name AS item_name, latest.balance, "
+    "COALESCE(reqs.total_req, 0) AS req_stock, "
+    "COALESCE(reqs.req_list, JSON_ARRAY()) AS req_list"
+)
 
+    schema_stck1 = f"""
+    (SELECT DISTINCT item_id FROM td_stock_new WHERE proj_id = {id.proj_id}) st
+    JOIN md_product p ON p.sl_no = st.item_id
+    LEFT JOIN (
+        SELECT s.item_id, s.balance
+        FROM td_stock_new s
+        JOIN (
+            SELECT item_id, MAX(sl_no) AS max_sl
+            FROM td_stock_new
+            WHERE proj_id = {id.proj_id}
+            GROUP BY item_id
+        ) mx ON s.item_id = mx.item_id AND s.sl_no = mx.max_sl
+        WHERE s.proj_id = {id.proj_id}
+    ) latest ON latest.item_id = st.item_id
+    LEFT JOIN (
+        SELECT i.item_id,
+               SUM(i.approved_qty) AS total_req,
+               JSON_ARRAYAGG(
+                   JSON_OBJECT(
+                       'approved_qty', i.approved_qty,
+                       'copy_qty', i.approved_qty,
+                       'req_no', r.req_no,
+                       'item_id', i.item_id,
+                       'project_id', r.project_id,
+                       'del_qty', IFNULL(
+                           (SELECT SUM(st2.qty)
+                            FROM td_stock_new st2
+                            WHERE st2.item_id = i.item_id
+                              AND st2.proj_id = {id.proj_id}
+                              AND st2.ref_no = r.req_no), 0)
+                   )
+               ) AS req_list
+        FROM td_requisition_items i
+        JOIN td_requisition r ON i.req_no = r.req_no
+        WHERE r.project_id = {id.proj_id} AND i.approve_flag IN ('A','H')
+        GROUP BY i.item_id
+    ) reqs ON reqs.item_id = st.item_id
+"""
+
+    where_stck1 = ""
+    order_stck1 = "ORDER BY st.item_id"
+    flag_stck1 = 1
+
+    result_stck1 = await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
+    print(result_stck1)
+
+# Post-process: ensure req_list is Python list with numeric fields
     rows = result_stck1.get("msg") or []
     normalized_rows = []
 
     for row in rows:
-        # normalize top-level numeric fields
-        bal = row.get("balance", 0)
-        rs = row.get("req_stock", 0)
         try:
-            bal = float(bal) if bal is not None else 0.0
+            item_id = int(row.get('item_id'))
         except Exception:
-            bal = 0.0
-        try:
-            rs = float(rs) if rs is not None else 0.0
-        except Exception:
-            rs = 0.0
+            continue
 
-        raw_req_list = row.get("req_list", [])
+        balance = row.get('balance', 0)
+        req_stock = row.get('req_stock', 0)
+        try:
+            balance = float(balance) if balance is not None else 0.0
+        except Exception:
+            balance = 0.0
+        try:
+            req_stock = float(req_stock) if req_stock is not None else 0.0
+        except Exception:
+            req_stock = 0.0
+
+        raw_req_list = row.get('req_list', [])
         parsed = []
-
-        # parse driver-returned JSON string or bytes
         if isinstance(raw_req_list, str):
             try:
                 parsed = json.loads(raw_req_list)
@@ -274,35 +320,23 @@ async def getprojectpoc(id:GetStockOut):
         elif isinstance(raw_req_list, list):
             parsed = raw_req_list
         else:
-            # fallback: try to json.loads anyway
             try:
                 parsed = json.loads(raw_req_list)
-                if not isinstance(parsed, list):
-                    parsed = []
             except Exception:
                 parsed = []
 
-    # normalize each req object to have numeric fields and expected keys
     normalized_req_list = []
     for r in parsed:
-        # r might be a dict or string; skip non-dicts
         if not isinstance(r, dict):
             continue
 
-        # approved_qty / copy_qty
         approved_qty = r.get("approved_qty", r.get("copy_qty", 0))
         del_qty = r.get("del_qty", 0)
 
-        # coerce decimals/strings to float
-        if isinstance(approved_qty, Decimal):
-            approved_qty = float(approved_qty)
         try:
             approved_qty = float(approved_qty) if approved_qty is not None else 0.0
         except Exception:
             approved_qty = 0.0
-
-        if isinstance(del_qty, Decimal):
-            del_qty = float(del_qty)
         try:
             del_qty = float(del_qty) if del_qty is not None else 0.0
         except Exception:
@@ -310,24 +344,21 @@ async def getprojectpoc(id:GetStockOut):
 
         normalized_req_list.append({
             "approved_qty": approved_qty,
-            "copy_qty": approved_qty,                # keep legacy key if frontend expects it
+            "copy_qty": approved_qty,
             "del_qty": del_qty,
             "req_no": r.get("req_no"),
-            "item_id": int(r.get("item_id")) if r.get("item_id") is not None else int(row.get("item_id")),
+            "item_id": int(r.get("item_id")) if r.get("item_id") is not None else item_id,
             "project_id": r.get("project_id"),
-            # include any other fields you want to preserve:
-            **{k: v for k, v in r.items() if k not in ("approved_qty","copy_qty","del_qty","req_no","item_id","project_id")}
         })
 
     normalized_rows.append({
-        "item_id": int(row.get("item_id")) if row.get("item_id") is not None else None,
+        "item_id": item_id,
         "item_name": row.get("item_name"),
-        "balance": bal,
-        "req_stock": rs,
+        "balance": balance,
+        "req_stock": req_stock,
         "req_list": normalized_req_list
     })
 
-# return normalized result (same shape your FE expects)
     return {"suc": 1, "msg": normalized_rows}
 
    
