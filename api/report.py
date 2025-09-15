@@ -268,7 +268,7 @@ async def getprojectpoc(id:GetStockOut):
     rows = result_flat.get('msg') or []
     grouped = defaultdict(lambda: {
         "id": None,
-        "name": None,
+        "item_name": None,
         "balance": 0.0,
         "req_stock": 0.0,
         "req_list": []
@@ -299,7 +299,7 @@ async def getprojectpoc(id:GetStockOut):
                 "approved_qty": approved_qty,
                 "copy_qty": approved_qty,
                 "req_no": row.get('req_no'),
-                "id": item_id,
+                "item_id": item_id,
                 "project_id": row.get('project_id'),
                 "del_qty": 0.0  # You can compute this later if needed
             })
