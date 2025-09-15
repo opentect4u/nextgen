@@ -14,7 +14,7 @@ import os
 from fastapi import FastAPI, Depends, File, UploadFile, Form
 reportRouter = APIRouter()
 from decimal import Decimal
-
+from collections import defaultdict
 class Allstock(BaseModel):
     dt:str
     project_id:int
@@ -232,134 +232,81 @@ async def getprojectpoc(id:GetStockOut):
 
 @reportRouter.post('/get_stock_out_data1')
 async def getprojectpoc(id:GetStockOut):
-    select_stck1 = (
-    "st.item_id, p.prod_name AS item_name, latest.balance, "
-    "COALESCE(reqs.total_req, 0) AS req_stock, "
-    "COALESCE(reqs.req_list, JSON_ARRAY()) AS req_list"
-)
+    select_fields = """
+        st.item_id,
+        p.prod_name AS item_name,
+        latest.balance,
+        i.approved_qty,
+        r.req_no,
+        r.project_id
+    """
 
-    schema_stck1 = f"""
-    (SELECT DISTINCT item_id FROM td_stock_new WHERE proj_id = {id.proj_id}) st
-    JOIN md_product p ON p.sl_no = st.item_id
-    LEFT JOIN (
-        SELECT s.item_id, s.balance
-        FROM td_stock_new s
-        JOIN (
-            SELECT item_id, MAX(sl_no) AS max_sl
-            FROM td_stock_new
-            WHERE proj_id = {id.proj_id}
-            GROUP BY item_id
-        ) mx ON s.item_id = mx.item_id AND s.sl_no = mx.max_sl
-        WHERE s.proj_id = {id.proj_id}
-    ) latest ON latest.item_id = st.item_id
-    LEFT JOIN (
-        SELECT i.item_id,
-               SUM(i.approved_qty) AS total_req,
-               JSON_ARRAYAGG(
-                   JSON_OBJECT(
-                       'approved_qty', i.approved_qty,
-                       'copy_qty', i.approved_qty,
-                       'req_no', r.req_no,
-                       'item_id', i.item_id,
-                       'project_id', r.project_id,
-                       'del_qty', IFNULL(
-                           (SELECT SUM(st2.qty)
-                            FROM td_stock_new st2
-                            WHERE st2.item_id = i.item_id
-                              AND st2.proj_id = {id.proj_id}
-                              AND st2.ref_no = r.req_no), 0)
-                   )
-               ) AS req_list
-        FROM td_requisition_items i
-        JOIN td_requisition r ON i.req_no = r.req_no
-        WHERE r.project_id = {id.proj_id} AND i.approve_flag IN ('A','H')
-        GROUP BY i.item_id
-    ) reqs ON reqs.item_id = st.item_id
-"""
+    schema = f"""
+        (SELECT DISTINCT item_id FROM td_stock_new WHERE proj_id = '{id.proj_id}') st
+        JOIN md_product p ON p.sl_no = st.item_id
+        LEFT JOIN (
+            SELECT s.item_id, s.balance
+            FROM td_stock_new s
+            JOIN (
+                SELECT item_id, MAX(sl_no) AS max_sl
+                FROM td_stock_new
+                WHERE proj_id = '{id.proj_id}'
+                GROUP BY item_id
+            ) mx ON s.item_id = mx.item_id AND s.sl_no = mx.max_sl
+            WHERE s.proj_id = '{id.proj_id}'
+        ) latest ON latest.item_id = st.item_id
+        LEFT JOIN td_requisition_items i ON i.item_id = st.item_id
+        LEFT JOIN td_requisition r ON i.req_no = r.req_no AND r.project_id = '{id.proj_id}' AND i.approve_flag IN ('A', 'H')
+    """
 
-    where_stck1 = ""
-    order_stck1 = "ORDER BY st.item_id"
-    flag_stck1 = 1
+    where_clause = ""
+    order_clause = "ORDER BY st.item_id"
+    flag = 1
 
-    result_stck1 = await db_select(select_stck1, schema_stck1, where_stck1, order_stck1, flag_stck1)
-    print(result_stck1)
+    result_flat = await db_select(select_fields, schema, where_clause, order_clause, flag)
 
-# Post-process: ensure req_list is Python list with numeric fields
-    rows = result_stck1.get("msg") or []
-    normalized_rows = []
-
-    for row in rows:
-        try:
-            item_id = int(row.get('item_id'))
-        except Exception:
-            continue
-
-        balance = row.get('balance', 0)
-        req_stock = row.get('req_stock', 0)
-        try:
-            balance = float(balance) if balance is not None else 0.0
-        except Exception:
-            balance = 0.0
-        try:
-            req_stock = float(req_stock) if req_stock is not None else 0.0
-        except Exception:
-            req_stock = 0.0
-
-        raw_req_list = row.get('req_list', [])
-        parsed = []
-        if isinstance(raw_req_list, str):
-            try:
-                parsed = json.loads(raw_req_list)
-            except Exception:
-                parsed = []
-        elif isinstance(raw_req_list, (bytes, bytearray)):
-            try:
-                parsed = json.loads(raw_req_list.decode())
-            except Exception:
-                parsed = []
-        elif isinstance(raw_req_list, list):
-            parsed = raw_req_list
-        else:
-            try:
-                parsed = json.loads(raw_req_list)
-            except Exception:
-                parsed = []
-
-    normalized_req_list = []
-    for r in parsed:
-        if not isinstance(r, dict):
-            continue
-
-        approved_qty = r.get("approved_qty", r.get("copy_qty", 0))
-        del_qty = r.get("del_qty", 0)
-
-        try:
-            approved_qty = float(approved_qty) if approved_qty is not None else 0.0
-        except Exception:
-            approved_qty = 0.0
-        try:
-            del_qty = float(del_qty) if del_qty is not None else 0.0
-        except Exception:
-            del_qty = 0.0
-
-        normalized_req_list.append({
-            "approved_qty": approved_qty,
-            "copy_qty": approved_qty,
-            "del_qty": del_qty,
-            "req_no": r.get("req_no"),
-            "item_id": int(r.get("item_id")) if r.get("item_id") is not None else item_id,
-            "project_id": r.get("project_id"),
-        })
-
-    normalized_rows.append({
-        "item_id": item_id,
-        "item_name": row.get("item_name"),
-        "balance": balance,
-        "req_stock": req_stock,
-        "req_list": normalized_req_list
+    rows = result_flat.get('msg') or []
+    grouped = defaultdict(lambda: {
+        "item_id": None,
+        "item_name": None,
+        "balance": 0.0,
+        "req_stock": 0.0,
+        "req_list": []
     })
 
-    return {"suc": 1, "msg": normalized_rows}
+    for row in rows:
+        item_id = int(row['item_id'])
+        group = grouped[item_id]
+
+        # Set static fields
+        group["item_id"] = item_id
+        group["item_name"] = row.get('item_name')
+
+        try:
+            group["balance"] = float(row.get('balance') or 0)
+        except Exception:
+            group["balance"] = 0.0
+
+        # Only aggregate if requisition data is present
+        if row.get('approved_qty') is not None:
+            try:
+                approved_qty = float(row['approved_qty'])
+            except Exception:
+                approved_qty = 0.0
+
+            group["req_stock"] += approved_qty
+            group["req_list"].append({
+                "approved_qty": approved_qty,
+                "copy_qty": approved_qty,
+                "req_no": row.get('req_no'),
+                "item_id": item_id,
+                "project_id": row.get('project_id'),
+                "del_qty": 0.0  # You can compute this later if needed
+            })
+
+    result_grouped = list(grouped.values())
+
+    return {"suc": 1, "msg": result_grouped}
 
    
 
