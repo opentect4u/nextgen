@@ -784,7 +784,7 @@ async def save_trans(data:GetApproveItems):
                         order_stck2 = ""
                         flag_stck2 = 0 
                         result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
-                        qty = result_stck2['msg']['balance'] + i.qty 
+                        qty = result_stck2['msg']['balance'] + Decimal(i.qty) 
                     else:
                         qty=i.qty
 
@@ -833,7 +833,7 @@ async def save_trans(data:GetApproveItems):
                     flag_stck2 = 0 
                     result_stck2= await db_select(select_stck2, schema_stck2, where_stck2, order_stck2, flag_stck2)
 
-                    qty = result_stck2['msg']['balance'] - i.qty
+                    qty = result_stck2['msg']['balance'] - Decimal(i.qty)
 
                     flds_out= f'date,ref_no,proj_id,item_id,qty,in_out_flag,balance,created_by,created_at'
                     val_out= f'"{formatted_appr_dt}","{data.trans_no}","{data.from_proj_id}",{i.item_id},{i.qty},{stock_out},{qty},"{data.user}","{formatted_dt}"'
