@@ -259,7 +259,7 @@ async def getprojectpoc(id:GetStockOut):
         LEFT JOIN td_requisition r ON i.req_no = r.req_no AND r.project_id = '{id.proj_id}' AND i.approve_flag IN ('A', 'H')
     """
 
-    where_clause = ""
+    where_clause = "r.req_no IS NOT NULL"
     order_clause = "ORDER BY st.item_id"
     flag = 1
 
@@ -304,7 +304,7 @@ async def getprojectpoc(id:GetStockOut):
             (int(row['item_id']), row['req_no']): float(row['del_qty'] or 0)
                 for row in del_rows
                     if row['item_id'] is not None and row['req_no'] is not None
-}
+        }
 
     # Aggregate the final structure
     for row in rows:
