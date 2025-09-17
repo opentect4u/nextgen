@@ -264,8 +264,8 @@ async def getprojectpoc(id:GetStockOut):
     flag = 1
 
     result_flat = await db_select(select_fields, schema, where_clause, order_clause, flag)
-
     rows = result_flat.get('msg') or []
+
     grouped = defaultdict(lambda: {
         "id": None,
         "item_name": None,
@@ -274,40 +274,71 @@ async def getprojectpoc(id:GetStockOut):
         "req_list": []
     })
 
+    # Collect (item_id, req_no) pairs for batch del_qty calculation
+    item_req_pairs = set()
+    for row in rows:
+        if row.get('req_no'):
+            item_req_pairs.add((int(row['item_id']), row['req_no']))
+
+    # Batch fetch del_qty (stock out quantity)
+    del_map = {}
+    if item_req_pairs:
+        where_in_clause = " OR ".join([
+            f"(item_id={item_id} AND ref_no='{req_no}')"
+            for item_id, req_no in item_req_pairs
+        ])
+
+        select_del = """
+            item_id, ref_no AS req_no, SUM(qty) AS del_qty
+        """
+        schema_del = "td_stock_new"
+        where_del = f"proj_id = '{id.proj_id}' AND in_out_flag = -1 AND ({where_in_clause})"
+        order_del = ""
+        flag_del = 1
+
+        result_del = await db_select(select_del, schema_del, where_del, order_del, flag_del)
+        del_rows = result_del.get('msg') or []
+
+        # Build lookup map for (item_id, req_no) → del_qty
+        del_map = {
+            (int(row['item_id']), row['req_no']): float(row['del_qty'] or 0)
+            for row in del_rows
+        }
+
+    # Aggregate the final structure
     for row in rows:
         item_id = int(row['item_id'])
         group = grouped[item_id]
 
-        # Set static fields
         group["item_id"] = item_id
         group["item_name"] = row.get('item_name')
-
         try:
             group["balance"] = float(row.get('balance') or 0)
         except Exception:
             group["balance"] = 0.0
 
-        # Only aggregate if requisition data is present
         if row.get('approved_qty') is not None:
             try:
                 approved_qty = float(row['approved_qty'])
             except Exception:
                 approved_qty = 0.0
 
+            req_no = row.get('req_no')
+            del_qty = del_map.get((item_id, req_no), 0.0)
+
             group["req_stock"] += approved_qty
             group["req_list"].append({
                 "approved_qty": approved_qty,
                 "copy_qty": approved_qty,
-                "req_no": row.get('req_no'),
+                "req_no": req_no,
                 "item_id": item_id,
                 "project_id": row.get('project_id'),
-                "del_qty": 0.0  # You can compute this later if needed
+                "del_qty": del_qty  # This is the stock out quantity now
             })
 
     result_grouped = list(grouped.values())
 
     return {"suc": 1, "msg": result_grouped}
-
    
 
 @reportRouter.post('/allitemwise')
