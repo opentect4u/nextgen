@@ -292,7 +292,7 @@ async def getprojectpoc(id:GetStockOut):
             item_id, ref_no AS req_no, SUM(qty) AS del_qty
         """
         schema_del = "td_stock_new"
-        where_del = f"proj_id = '{id.proj_id}' AND in_out_flag = -1 AND ({where_in_clause})"
+        where_del = f"proj_id = '{id.proj_id}' AND in_out_flag = -1 AND ({where_in_clause}) group by item_id, ref_no"
         order_del = ""
         flag_del = 1
 
