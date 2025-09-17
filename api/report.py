@@ -302,8 +302,9 @@ async def getprojectpoc(id:GetStockOut):
         # Build lookup map for (item_id, req_no) → del_qty
         del_map = {
             (int(row['item_id']), row['req_no']): float(row['del_qty'] or 0)
-            for row in del_rows
-        }
+                for row in del_rows
+                    if row['item_id'] is not None and row['req_no'] is not None
+}
 
     # Aggregate the final structure
     for row in rows:
