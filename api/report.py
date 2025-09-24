@@ -861,7 +861,7 @@ async def getprojectpoc(id:MatVal):
 @reportRouter.post('/matvalstockin')
 async def getprojectpoc(id:MatVal):
     select = f"st.item_id,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') prod_name,SUM(st.qty * st.in_out_flag) AS stock,i.cgst_id as 'CGST',i.sgst_id as 'SGST',i.igst_id 'IGST',(i.item_rt-i.discount)*sum(st.qty * st.in_out_flag) as 'Net Unit Price', IF(i.igst_id > 0,( i.item_rt - i.discount ) * sum(st.qty * st.in_out_flag) * i.igst_id / 100+((i.item_rt-i.discount)*sum(st.qty * st.in_out_flag)), ( ((i.item_rt - i.discount ) *sum(st.qty * st.in_out_flag) * i.cgst_id / 100)+((i.item_rt-i.discount)*sum(st.qty * st.in_out_flag)) ) + (( (i.item_rt - i.discount ) * sum(st.qty * st.in_out_flag) * i.sgst_id / 100 ))) AS Total"
-    where = f"st.proj_id={id.proj_id} and b.project_id=st.proj_id group by st.item_id, p.prod_name, i.cgst_id, i.sgst_id, i.igst_id, i.item_rt, i.discount,st.qty"
+    where = f"st.proj_id={id.proj_id} group by st.item_id, p.prod_name, i.cgst_id, i.sgst_id, i.igst_id, i.item_rt, i.discount,st.qty"
     schema = f"td_po_basic b join td_po_items i on b.sl_no = i.po_sl_no join td_stock_new st on i.item_id=st.item_id left join md_product p ON st.item_id = p.sl_no"
     order = ""
     flag =1 
