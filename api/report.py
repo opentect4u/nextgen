@@ -860,28 +860,9 @@ async def getprojectpoc(id:MatVal):
 
 @reportRouter.post('/matvalstockin')
 async def getprojectpoc(id:MatVal):
-  
-
-    # select = f"@a:=@a+1 '#',concat(pd.prod_name,'(Part No.:',pd.part_no,', Article No.:',pd.article_no,', Model No.:',pd.model_no,', Make:',pd.prod_make,', Description:',pd.prod_desc,')') as 'Product',GROUP_CONCAT(m.invoice  SEPARATOR '\n') as 'Invoice',GROUP_CONCAT(DATE_FORMAT(m.invoice_dt,'%d/%m/%Y')  SEPARATOR '\n') as 'Invoice Date',i.cgst_id as 'CGST',i.sgst_id as 'SGST',i.igst_id 'IGST',(i.item_rt-i.discount)*sum(st.qty) as 'Net Unit Price', IF(i.igst_id > 0,( i.item_rt - i.discount ) * sum(st.qty*st.in_out_flag) * i.igst_id / 100+((i.item_rt-i.discount)*sum(st.qty*st.in_out_flag)), ( ((i.item_rt - i.discount ) *sum(st.qty*st.in_out_flag) * i.cgst_id / 100)+((i.item_rt-i.discount)*sum(st.qty*st.in_out_flag)) ) + (( (i.item_rt - i.discount ) * sum(st.qty*st.in_out_flag) * i.sgst_id / 100 ))) AS Total,sum(st.qty*st.in_out_flag) as 'Quantity', SUM(d.rc_qty) AS 'Received Quantity', SUM(st.qty*st.in_out_flag) AS 'Stock In Quantity'"
-    # schema = '''td_po_basic b 
-    # left join td_po_items i on b.sl_no=i.po_sl_no 
-    # left join md_product pd on pd.sl_no=i.item_id
-    # join td_item_delivery_details d on d.po_no=b.po_no and d.prod_id=i.item_id 
-    # join td_stock_new st on st.item_id=d.prod_id and st.ref_no=d.mrn_no 
-    # join td_item_delivery_invoice m on m.mrn_no=d.mrn_no,(SELECT @a:= 0) AS a
-    # '''
-  
-   
-    # where = f"b.project_id={id.proj_id} and b.po_no is not null GROUP BY i.item_id"
-    # order = ""
-    # flag = 1 
-    # result = await db_select(select, schema, where, order, flag)
-    # print(result)
-    # return result
-
     select = f"st.item_id,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') prod_name,SUM(st.qty * st.in_out_flag) AS stock,i.cgst_id as 'CGST',i.sgst_id as 'SGST',i.igst_id 'IGST',(i.item_rt-i.discount)*sum(st.qty * st.in_out_flag) as 'Net Unit Price', IF(i.igst_id > 0,( i.item_rt - i.discount ) * sum(st.qty * st.in_out_flag) * i.igst_id / 100+((i.item_rt-i.discount)*sum(st.qty * st.in_out_flag)), ( ((i.item_rt - i.discount ) *sum(st.qty * st.in_out_flag) * i.cgst_id / 100)+((i.item_rt-i.discount)*sum(st.qty * st.in_out_flag)) ) + (( (i.item_rt - i.discount ) * sum(st.qty * st.in_out_flag) * i.sgst_id / 100 ))) AS Total"
     where = f"st.proj_id={id.proj_id} group by st.item_id, p.prod_name"
-    schema = f"td_po_items i join td_stock_new st on i.item_id=st.item_id left md_product p ON st.item_id = p.sl_no"
+    schema = f"td_po_basic b join td_po_items i on b.sl_no=i.po_sl_no join td_stock_new st on i.item_id=st.item_id and st.proj_id=b.project_id left md_product p ON st.item_id = p.sl_no"
     order = ""
     flag =1 
     result = await db_select(select, schema, where, order, flag)
