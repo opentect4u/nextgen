@@ -869,6 +869,18 @@ async def getprojectpoc(id:MatVal):
     return result
 
 
+
+@reportRouter.post('/matvalstockintest')
+async def getprojectpoc(id:MatVal):
+    select = f"b.po_no,st.item_id,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') prod_name,st.qty * st.in_out_flag AS stock"
+    where = f"st.proj_id={id.proj_id} group by st.item_id, p.prod_name, i.item_rt, i.discount"
+    schema = f"td_po_basic b join td_po_items i on b.sl_no = i.po_sl_no join td_stock_new st on i.item_id=st.item_id left join md_product p ON st.item_id = p.sl_no"
+    order = ""
+    flag =1 
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
+
 @reportRouter.post('/matvalstockout1')
 async def getprojectpoc(id:MatVal):
     # res_dt = {}

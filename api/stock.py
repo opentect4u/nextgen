@@ -494,7 +494,6 @@ async def getprojectpoc(id:GetStock):
     flag1 = 0 
     result1 = await db_select(select1, schema1, where1, order1, flag1)
 
-
     select_tot = f"sum(i.req_qty) as tot_stock"
     schema_tot = "td_requisition t,td_requisition_items i"
     where_tot = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.req_no=t.req_no"
@@ -502,28 +501,6 @@ async def getprojectpoc(id:GetStock):
     flag_tot = 0 
     result_tot = await db_select(select_tot, schema_tot, where_tot, order_tot, flag_tot)
     print("tot_stock=======",result_tot['msg']['tot_stock'])
-
-    # select_can = f"sum(i.cancelled_qty) as can_stock"
-    # schema_can = "td_requisition t,td_requisition_items i"
-    # where_can = f"i.item_id={id.prod_id} and t.project_id ={id.proj_id} and i.req_no=t.req_no"
-    # order_can = ""
-    # flag_can = 0 
-    # result_can = await db_select(select_can, schema_can, where_can, order_can, flag_can)
-    # print("can_stock=======",result_can['msg']['can_stock'])
-
-    # /////////////////////////////////////////////////////////////////
-
-    # select2 = f"sum(qty) as del_stock"
-    # schema2 = "td_stock_new"
-    # where2 = f"item_id={id.prod_id} and proj_id ={id.proj_id} and in_out_flag=-1 and ref_no not like '%TP%'"
-    # order2 = ""
-    # flag2 = 0 
-    # result2 = await db_select(select2, schema2, where2, order2, flag2)
-    # print(result2)
-
-    
-
-    # ///////////////////////////////////////////////////////////////
 
     select2 = f"sum(qty) as del_stock"
     schema2 = "td_stock_new"
@@ -1447,17 +1424,6 @@ async def save_trans(data:GetLog):
 
 @stockRouter.post("/get_purchase_req_items_search")
 async def save_trans(data:GetPurItem):
-
-    # select = "t.pur_no,t.pur_proj,i.item_id,prod_name,tp.proj_name,p.prod_make,p.part_no,p.article_no,p.model_no"
-    # schema = f"td_purchase_req t left join td_purchase_items i on t.pur_no=i.pur_no left join md_product p on i.item_id=p.sl_no left join td_project tp on t.pur_proj=tp.sl_no"
-    # where = f""
-    # order = ""
-    # flag =  1
-    # result = await db_select(select, schema, where, order, flag)
-    # print(result, 'RESULT')
-    # return result
-
-    
     select = "t.pur_no,t.pur_proj, GROUP_CONCAT(i.item_id) AS item_id,GROUP_CONCAT(p.prod_name) AS prod_name,tp.proj_name, GROUP_CONCAT(p.prod_make) AS prod_make,GROUP_CONCAT(p.part_no) AS part_no, GROUP_CONCAT(p.article_no) AS article_no,GROUP_CONCAT(p.model_no) AS model_no,sum(i.qty) as qty, sum(i.ordered_qty) as ordered_qty"
     schema = f"td_purchase_req t left join td_purchase_items i on t.pur_no=i.pur_no left join md_product p on i.item_id=p.sl_no left join td_project tp on t.pur_proj=tp.sl_no GROUP BY t.pur_no, t.pur_proj, tp.proj_name"
     where = f""
