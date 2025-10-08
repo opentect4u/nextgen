@@ -922,7 +922,27 @@ async def getprojectpoc(id:StockValueReport):
     ON i.item_id = stagg.item_id
 
   LEFT JOIN md_product p
-    ON stagg.item_id = p.sl_no"""
+    ON stagg.item_id = p.sl_no""" if id.from_dt else f"""
+td_po_basic b
+  JOIN td_po_items i
+    ON b.sl_no = i.po_sl_no
+
+  JOIN (
+    SELECT
+      item_id,
+      SUM(qty * in_out_flag) AS total_stock
+    FROM
+      td_stock_new
+    WHERE
+      proj_id = {id.proj_id} 
+    GROUP BY
+      item_id
+  ) stagg
+    ON i.item_id = stagg.item_id
+
+  LEFT JOIN md_product p
+    ON stagg.item_id = p.sl_no
+"""
     order = ""
     flag =1 
     result = await db_select(select, schema, where, order, flag)
