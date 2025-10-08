@@ -883,17 +883,12 @@ async def getprojectpoc(id:StockValueReport):
     ' Model No.: ', MIN(p.model_no),
     ' Desc: ', MIN(p.prod_desc), ') '
   ) AS prod_name,
-  
-
   stagg.total_stock AS stock,
-  
   /* Tax / rate fields: use MIN (or MAX / any value) since they should be same across POs */
   MIN(i.cgst_id) AS CGST,
   MIN(i.sgst_id) AS SGST,
   MIN(i.igst_id) AS IGST,
-  
   ( MIN(i.item_rt) - MIN(i.discount) ) * stagg.total_stock AS `Net Unit Price`,
-  
   IF(
     MIN(i.igst_id) > 0,
     ( MIN(i.item_rt) - MIN(i.discount) ) * stagg.total_stock * MIN(i.igst_id) / 100
@@ -906,7 +901,6 @@ async def getprojectpoc(id:StockValueReport):
       ( MIN(i.item_rt) - MIN(i.discount) ) * stagg.total_stock * MIN(i.sgst_id) / 100
     )
   ) AS Total,
-
   GROUP_CONCAT(DISTINCT b.po_no ORDER BY b.po_no SEPARATOR ', ') AS po_list
 """
     where = f""" b.project_id = {id.proj_id} AND stagg.total_stock > 0 GROUP BY stagg.item_id,stagg.total_stock"""
