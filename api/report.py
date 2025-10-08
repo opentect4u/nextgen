@@ -922,7 +922,7 @@ async def getprojectpoc(id:StockValueReport):
     ON i.item_id = stagg.item_id
 
   LEFT JOIN md_product p
-    ON stagg.item_id = p.sl_no""" if id.from_dt else f"""
+    ON stagg.item_id = p.sl_no""" if id.from_dt!="" else f"""
 td_po_basic b
   JOIN td_po_items i
     ON b.sl_no = i.po_sl_no
