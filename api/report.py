@@ -51,6 +51,11 @@ class MatVal(BaseModel):
 
 class dashboardReport(BaseModel):
     flag:int
+
+class StockValueReport(BaseModel):
+    from_dt:str
+    to_dt:str
+    proj_id:int
     
 
 
@@ -869,7 +874,7 @@ async def getprojectpoc(id:MatVal):
     return result
 
 @reportRouter.post('/matvalstockin')
-async def getprojectpoc(id:MatVal):
+async def getprojectpoc(id:StockValueReport):
     select = f"""stagg.item_id,
   CONCAT(
     MIN(p.prod_name),
@@ -916,7 +921,7 @@ async def getprojectpoc(id:MatVal):
     FROM
       td_stock_new
     WHERE
-      proj_id = 0
+      proj_id = {id.proj_id} and date between '{id.from_dt}' and '{id.to_dt}'
     GROUP BY
       item_id
   ) stagg
