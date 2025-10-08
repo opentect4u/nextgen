@@ -858,17 +858,76 @@ async def getprojectpoc(id:MatVal):
     print(result)
     return result
 
-@reportRouter.post('/matvalstockin')
+@reportRouter.post('/matvalstockin1')
 async def getprojectpoc(id:MatVal):
     select = f"b.po_no,st.item_id,concat(p.prod_name,' (Part No.: ',p.part_no,' Article No.: ',p.article_no,' Model No.: ',p.model_no,' Desc: ',p.prod_desc,') ') prod_name,SUM(st.qty * st.in_out_flag) AS stock,i.cgst_id as 'CGST',i.sgst_id as 'SGST',i.igst_id 'IGST',(i.item_rt-i.discount)*sum(st.qty * st.in_out_flag) as 'Net Unit Price', IF(i.igst_id > 0,( i.item_rt - i.discount ) * sum(st.qty * st.in_out_flag) * i.igst_id / 100+((i.item_rt-i.discount)*sum(st.qty * st.in_out_flag)), ( ((i.item_rt - i.discount ) *sum(st.qty * st.in_out_flag) * i.cgst_id / 100)+((i.item_rt-i.discount)*sum(st.qty * st.in_out_flag)) ) + (( (i.item_rt - i.discount ) * sum(st.qty * st.in_out_flag) * i.sgst_id / 100 ))) AS Total"
-    where = f"st.proj_id={id.proj_id} group by st.item_id, p.prod_name, i.item_rt, i.discount"
+    where = f"st.proj_id={id.proj_id} and b.project_id={id.proj_id} group by st.item_id, p.prod_name, i.item_rt, i.discount HAVING SUM(st.qty * st.in_out_flag) > 0"
     schema = f"td_po_basic b join td_po_items i on b.sl_no = i.po_sl_no join td_stock_new st on i.item_id=st.item_id left join md_product p ON st.item_id = p.sl_no"
     order = ""
     flag =1 
     result = await db_select(select, schema, where, order, flag)
     return result
 
+@reportRouter.post('/matvalstockin')
+async def getprojectpoc(id:MatVal):
+    select = f"""stagg.item_id,
+  CONCAT(
+    MIN(p.prod_name),
+    ' (Part No.: ', MIN(p.part_no),
+    ' Article No.: ', MIN(p.article_no),
+    ' Model No.: ', MIN(p.model_no),
+    ' Desc: ', MIN(p.prod_desc), ') '
+  ) AS prod_name,
+  
 
+  stagg.total_stock AS stock,
+  
+  /* Tax / rate fields: use MIN (or MAX / any value) since they should be same across POs */
+  MIN(i.cgst_id) AS CGST,
+  MIN(i.sgst_id) AS SGST,
+  MIN(i.igst_id) AS IGST,
+  
+  ( MIN(i.item_rt) - MIN(i.discount) ) * stagg.total_stock AS `Net Unit Price`,
+  
+  IF(
+    MIN(i.igst_id) > 0,
+    ( MIN(i.item_rt) - MIN(i.discount) ) * stagg.total_stock * MIN(i.igst_id) / 100
+      + ( MIN(i.item_rt) - MIN(i.discount) ) * stagg.total_stock,
+    (
+      ( MIN(i.item_rt) - MIN(i.discount) ) * stagg.total_stock * MIN(i.cgst_id) / 100
+      + ( MIN(i.item_rt) - MIN(i.discount) ) * stagg.total_stock
+    )
+    + (
+      ( MIN(i.item_rt) - MIN(i.discount) ) * stagg.total_stock * MIN(i.sgst_id) / 100
+    )
+  ) AS Total,
+
+  GROUP_CONCAT(DISTINCT b.po_no ORDER BY b.po_no SEPARATOR ', ') AS po_list
+"""
+    where = f""" b.project_id = {id.proj_id} AND stagg.total_stock > 0 GROUP BY stagg.item_id,stagg.total_stock"""
+    schema = f"""td_po_basic b
+  JOIN td_po_items i
+    ON b.sl_no = i.po_sl_no
+
+  JOIN (
+    SELECT
+      item_id,
+      SUM(qty * in_out_flag) AS total_stock
+    FROM
+      td_stock_new
+    WHERE
+      proj_id = 0
+    GROUP BY
+      item_id
+  ) stagg
+    ON i.item_id = stagg.item_id
+
+  LEFT JOIN md_product p
+    ON stagg.item_id = p.sl_no"""
+    order = ""
+    flag =1 
+    result = await db_select(select, schema, where, order, flag)
+    return result
 
 @reportRouter.post('/matvalstockintest')
 async def getprojectpoc(id:MatVal):
