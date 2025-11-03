@@ -981,7 +981,7 @@ AND DATE BETWEEN '{id.from_dt}' AND '{id.to_dt}'
 GROUP BY a.item_id,b.prod_desc
 HAVING SUM(a.qty * a.in_out_flag) > 0)a
 """
-    order = " GROUP BY item_id,prod_desc,total_stock ORDER BY item_id"
+    order = "GROUP BY item_id,prod_desc,total_stock ORDER BY item_id"
     flag =1 
     result = await db_select(select, schema, where, order, flag)
     return result
