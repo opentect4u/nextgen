@@ -954,7 +954,7 @@ async def getprojectpoc(id:StockValueReport):
 IF(igst_id > 0,(item_rt - discount)*total_stock *igst_id / 100 + (item_rt - discount) * total_stock,
   ((item_rt - discount) * total_stock * cgst_id / 100 + (item_rt - discount) * total_stock) + ((item_rt - discount) * total_stock * sgst_id / 100))total_val
 """
-    where = f""" GROUP BY item_id,prod_desc,total_stock"""
+    where = f""""""
     schema = f"""(
 SELECT a.item_id,
        CONCAT(b.prod_name,'-',b.part_no,'-',b.article_no,'-',b.model_no,'-',b.prod_desc)prod_desc,
@@ -981,7 +981,7 @@ AND DATE BETWEEN '{id.from_dt}' AND '{id.to_dt}'
 GROUP BY a.item_id,b.prod_desc
 HAVING SUM(a.qty * a.in_out_flag) > 0)a
 """
-    order = "ORDER BY item_id"
+    order = " GROUP BY item_id,prod_desc,total_stock ORDER BY item_id"
     flag =1 
     result = await db_select(select, schema, where, order, flag)
     return result
