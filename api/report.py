@@ -950,7 +950,12 @@ td_po_basic b
 
 @reportRouter.post('/matvalstockin')
 async def getprojectpoc(id:StockValueReport):
-    select = f"""item_id,prod_desc,total_stock,MAX(cgst_id)cgst,MAX(sgst_id)sgst,MAX(igst_id)igst,item_rt,discount,
+    select = f"""item_id, CONCAT(prod_name,
+    ' (Part No.: ', p.part_no,
+    ' Article No.: ',p.article_no,
+    ' Model No.: ', p.model_no,
+    ' Desc: ', p.prod_desc, ') '
+  ) AS prod_name,total_stock,MAX(cgst_id)cgst,MAX(sgst_id)sgst,MAX(igst_id)igst,item_rt,discount,
 IF(igst_id > 0,(item_rt - discount)*total_stock *igst_id / 100 + (item_rt - discount) * total_stock,
   ((item_rt - discount) * total_stock * cgst_id / 100 + (item_rt - discount) * total_stock) + ((item_rt - discount) * total_stock * sgst_id / 100))total_val
 """
