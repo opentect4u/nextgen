@@ -873,7 +873,7 @@ async def getprojectpoc(id:MatVal):
     result = await db_select(select, schema, where, order, flag)
     return result
 
-@reportRouter.post('/matvalstockin')
+@reportRouter.post('/matvalstockin_previous')
 async def getprojectpoc(id:StockValueReport):
     select = f"""stagg.item_id,
   CONCAT(
@@ -944,6 +944,44 @@ td_po_basic b
     ON stagg.item_id = p.sl_no
 """
     order = ""
+    flag =1 
+    result = await db_select(select, schema, where, order, flag)
+    return result
+
+@reportRouter.post('/matvalstockin')
+async def getprojectpoc(id:StockValueReport):
+    select = f"""SELECT item_id,prod_desc,total_stock,MAX(cgst_id)cgst,MAX(sgst_id)sgst,MAX(igst_id)igst,item_rt,discount,
+IF(igst_id > 0,(item_rt - discount)*total_stock *igst_id / 100 + (item_rt - discount) * total_stock,
+  ((item_rt - discount) * total_stock * cgst_id / 100 + (item_rt - discount) * total_stock) + ((item_rt - discount) * total_stock * sgst_id / 100))total_val
+"""
+    where = f""" GROUP BY item_id,prod_desc,total_stock"""
+    schema = f"""(
+SELECT a.item_id,
+       CONCAT(b.prod_name,'-',b.part_no,'-',b.article_no,'-',b.model_no,'-',b.prod_desc)prod_desc,
+       SUM(a.qty * a.in_out_flag) AS total_stock,
+       c.cgst_id,c.sgst_id,c.igst_id,c.item_rt,c.discount
+FROM td_stock_new a,md_product b,td_po_items c,td_po_basic d
+WHERE a.item_id = b.sl_no
+AND   a.item_id = c.item_id
+AND   c.po_sl_no = d.sl_no
+AND  a.proj_id = {id.proj_id} 
+AND  d.project_id = {id.proj_id}
+AND DATE BETWEEN '{id.from_dt}' AND '{id.to_dt}'
+GROUP BY a.item_id,b.prod_desc
+HAVING SUM(a.qty * a.in_out_flag) > 0
+UNION
+SELECT a.item_id,
+       CONCAT(b.prod_name,'-',b.part_no,'-',b.article_no,'-',b.model_no,'-',b.prod_desc)prod_desc,
+       SUM(a.qty * a.in_out_flag) AS total_stock,
+       0 cgst_id,0 sgst_id,0 igst_id,0 item_rt,0 discount
+FROM td_stock_new a,md_product b
+WHERE a.item_id = b.sl_no
+AND  a.proj_id = {id.proj_id} 
+AND DATE BETWEEN '{id.from_dt}' AND '{id.to_dt}'
+GROUP BY a.item_id,b.prod_desc
+HAVING SUM(a.qty * a.in_out_flag) > 0)a
+"""
+    order = "ORDER BY item_id"
     flag =1 
     result = await db_select(select, schema, where, order, flag)
     return result
