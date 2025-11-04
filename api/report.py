@@ -952,7 +952,7 @@ td_po_basic b
 async def getprojectpoc(id:StockValueReport):
     select = f"""item_id,prod_desc as prod_name,total_stock as stock,MAX(cgst_id)CGST,MAX(sgst_id)SGST,MAX(igst_id)IGST,item_rt,discount,
 IF(igst_id > 0,(item_rt - discount)*total_stock *igst_id / 100 + (item_rt - discount) * total_stock,
-  ((item_rt - discount) * total_stock * cgst_id / 100 + (item_rt - discount) * total_stock) + ((item_rt - discount) * total_stock * sgst_id / 100))total_val
+  ((item_rt - discount) * total_stock * cgst_id / 100 + (item_rt - discount) * total_stock) + ((item_rt - discount) * total_stock * sgst_id / 100))total_val as Total
 """
     where = f""""""
     schema = f"""(
