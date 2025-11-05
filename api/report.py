@@ -950,38 +950,70 @@ td_po_basic b
 
 @reportRouter.post('/matvalstockin')
 async def getprojectpoc(id:StockValueReport):
-    select = f"""item_id,prod_desc as prod_name,total_stock as stock,MAX(cgst_id)CGST,MAX(sgst_id)SGST,MAX(igst_id)IGST,item_rt,discount,
-IF(igst_id > 0,(item_rt - discount)*total_stock *igst_id / 100 + (item_rt - discount) * total_stock,
-  ((item_rt - discount) * total_stock * cgst_id / 100 + (item_rt - discount) * total_stock) + ((item_rt - discount) * total_stock * sgst_id / 100))Total
+    select = f""" a.proj_id,
+
+  a.ref_no,
+
+  a.item_id,
+
+  a.req_qty,
+
+  a.qty,
+
+  a.in_out_flag,
+
+  a.prod_name,
+
+  a.balance stock,
+
+  ROUND(act_val,2) "Net Unit Price",
+
+  ROUND(act_val * (c.cgst_id/100),2) AS "CGST",
+
+  ROUND(act_val * (c.sgst_id/100),2) AS "SGST",
+
+  ROUND(act_val * (c.igst_id/100),2) AS "IGST",
+
+  ROUND(act_val * (1 + (c.cgst_id + c.sgst_id + c.igst_id)/100),2) AS "Total"
+
 """
     where = f""""""
     schema = f"""(
-SELECT a.item_id,
-       CONCAT(b.prod_name,'-',b.part_no,'-',b.article_no,'-',b.model_no,'-',b.prod_desc)prod_desc,
-       SUM(a.qty * a.in_out_flag) AS total_stock,
-       c.cgst_id,c.sgst_id,c.igst_id,c.item_rt,c.discount
-FROM td_stock_new a,md_product b,td_po_items c,td_po_basic d
-WHERE a.item_id = b.sl_no
-AND   a.item_id = c.item_id
-AND   c.po_sl_no = d.sl_no
-AND  a.proj_id = {id.proj_id} 
-AND  d.project_id = {id.proj_id}
-AND DATE BETWEEN '{id.from_dt}' AND '{id.to_dt}'
-GROUP BY a.item_id,b.prod_desc
-HAVING SUM(a.qty * a.in_out_flag) > 0
-UNION
-SELECT a.item_id,
-       CONCAT(b.prod_name,'-',b.part_no,'-',b.article_no,'-',b.model_no,'-',b.prod_desc)prod_desc,
-       SUM(a.qty * a.in_out_flag) AS total_stock,
-       0 cgst_id,0 sgst_id,0 igst_id,0 item_rt,0 discount
-FROM td_stock_new a,md_product b
-WHERE a.item_id = b.sl_no
-AND  a.proj_id = {id.proj_id} 
-AND DATE BETWEEN '{id.from_dt}' AND '{id.to_dt}'
-GROUP BY a.item_id,b.prod_desc
-HAVING SUM(a.qty * a.in_out_flag) > 0)a
+  SELECT s.*, CONCAT(p.prod_name, ' (Part No.: )', p.part_no) prod_name
+  FROM td_stock_new s, md_product p
+  WHERE s.item_id=p.sl_no AND s.proj_id = {id.proj_id} AND s.date BETWEEN "{id.from_dt}" AND "{id.to_dt}"
+    AND s.sl_no = (
+      SELECT b.sl_no
+      FROM td_stock_new b
+      WHERE b.proj_id = s.proj_id AND b.item_id = s.item_id
+      ORDER BY b.sl_no DESC
+      LIMIT 1
+    )
+) a
+LEFT JOIN (
+    SELECT DISTINCT g.to_proj_id, g.from_proj_id, h.item_id
+	FROM td_transfer g, td_transfer_items h
+	WHERE g.trans_no=h.trans_no
+) i ON a.proj_id=i.to_proj_id AND a.item_id=i.item_id
+LEFT JOIN (
+  SELECT DISTINCT
+    e.item_id,
+    e.item_rt,
+    e.discount,
+    e.cgst_id,
+    e.sgst_id,
+    e.igst_id,
+    f.project_id
+  FROM td_po_items e
+  JOIN td_po_basic f ON e.po_sl_no = f.sl_no
+) c
+  ON a.item_id = c.item_id
+AND c.project_id = COALESCE(i.from_proj_id, a.proj_id)
+CROSS JOIN LATERAL (
+  SELECT a.balance * (c.item_rt - c.discount) AS act_val
+) calc
 """
-    order = "GROUP BY item_id,prod_desc,total_stock ORDER BY item_id"
+    order = "GROUP BY a.proj_id, a.ref_no, a.item_id, a.req_qty, a.qty, a.in_out_flag, a.balance, c.cgst_id, c.sgst_id, c.igst_id, act_val"
     flag =1 
     result = await db_select(select, schema, where, order, flag)
     return result
