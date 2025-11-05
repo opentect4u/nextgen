@@ -979,7 +979,7 @@ async def getprojectpoc(id:StockValueReport):
 """
     where = f""""""
     schema = f"""(
-  SELECT s.*, CONCAT(p.prod_name, ' (Part No.: )', p.part_no) prod_name
+  SELECT s.*, CONCAT(p.prod_name, ' (Part No.: ', p.part_no,'Modal No.: ',p.model_no,'Article No.: ',p.article_no,'Desc: ',p.prod_desc,')') prod_name
   FROM td_stock_new s, md_product p
   WHERE s.item_id=p.sl_no AND s.proj_id = {id.proj_id} AND s.date BETWEEN "{id.from_dt}" AND "{id.to_dt}"
     AND s.sl_no = (
